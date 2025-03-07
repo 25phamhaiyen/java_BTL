@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class CustomerDAO implements DAOInterface<Customer> {
 			Statement st = con.createStatement();
 
 			// thực thi câu lệnh SQL
-			String sql = "INSERT INTO customer (Customer_ID, lastName, firstName, phoneNumber, Sex, CitizenNumber, Address) "
+			String sql = "INSERT INTO customer (customer_ID, lastName, firstName, phoneNumber, sex, citizenNumber, address) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 			// Dùng PreparedStatement để truyền tham số vào câu SQL
@@ -63,11 +64,8 @@ public class CustomerDAO implements DAOInterface<Customer> {
 			// Tạo kết nối đến CSDL
 			Connection con = JDBC_Util.getConnection();
 
-			// tạo ra đối tượng statement
-			Statement st = con.createStatement();
-
 			// thực thi câu lệnh SQL
-			String sql = "UPDATE customer SET lastName = ?, firstName = ?, phoneNumber = ?, Sex = ?, CitizenNumber = ?, Address = ? WHERE Customer_ID = ?";
+			String sql = "UPDATE customer SET lastName = ?, firstName = ?, phoneNumber = ?, sex = ?, citizenNumber = ?, address = ? WHERE customer_ID = ?";
 
 
 			// Dùng PreparedStatement để truyền tham số vào câu SQL
@@ -81,8 +79,7 @@ public class CustomerDAO implements DAOInterface<Customer> {
 				pstmt.setInt(7, t.getCustomer_ID()); // Đặt ID cuối cùng
 
 
-				// Thực thi lệnh INSERT
-				 ketQua = pstmt.executeUpdate();
+				ketQua = pstmt.executeUpdate();
 			}
 
 			// In thông tin số dòng bị thay đổi
@@ -92,7 +89,6 @@ public class CustomerDAO implements DAOInterface<Customer> {
 			JDBC_Util.closeConnection(con);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ketQua;
@@ -105,22 +101,90 @@ public class CustomerDAO implements DAOInterface<Customer> {
 			// Tạo kết nối đến CSDL
 			Connection con = JDBC_Util.getConnection();
 
-			// tạo ra đối tượng statement
-			Statement st = con.createStatement();
-
 			// thực thi câu lệnh SQL
-			 String sql = "DELETE FROM Customer WHERE Customer_ID = ?";
+			 String sql = "DELETE FROM Customer WHERE customer_ID = ?";
 	         PreparedStatement pstmt = con.prepareStatement(sql);
 	         pstmt.setInt(1, t.getCustomer_ID());
 
-			// Thực thi lệnh INSERT
+	         
 			 ketQua = pstmt.executeUpdate();
 			// In thông tin số dòng bị thay đổi
 			System.out.println("Bạn đã thực thi DELETE, có " + ketQua + " dòng bị thay đổi.");
 
 			// ngắt kết nối
 			JDBC_Util.closeConnection(con);
+ 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ketQua;
+	}
 
+	@Override
+	public ArrayList<Customer> selectAll() {
+		ArrayList<Customer> ketQua = new ArrayList<Customer>();
+		try {
+			// Tạo kết nối đến CSDL
+			Connection con = JDBC_Util.getConnection();
+
+			// thực thi câu lệnh SQL
+			 String sql = "SELECT * FROM customer";
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         
+	         ResultSet rs = pstmt.executeQuery(sql);
+
+	         while (rs.next()) {
+	        	 int id = rs.getInt("customer_ID");
+	        	 String lName = rs.getString("lastName");
+	        	 String fName = rs.getString("firstName");
+	        	 String phone = rs.getString("phoneNumber");
+	        	 int sex = rs.getInt("sex");
+	        	 String citizenNumber = rs.getString("citizenNumber");
+	        	 String address = rs.getString("address");
+	        	 
+	        	 Customer cus = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
+	        	 ketQua.add(cus);
+	         }
+
+			// ngắt kết nối
+			JDBC_Util.closeConnection(con);
+ 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ketQua;
+	}
+
+	@Override
+	public Customer selectById(Customer t) {
+		Customer ketQua = null;
+		try {
+			// Tạo kết nối đến CSDL
+			Connection con = JDBC_Util.getConnection();
+
+			// thực thi câu lệnh SQL
+			 String sql = "SELECT * FROM customer where customer_ID=?";
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         pstmt.setInt(1, t.getCustomer_ID());
+	         
+	         ResultSet rs = pstmt.executeQuery();
+
+	         while (rs.next()) {
+	        	 int id = rs.getInt("customer_ID");
+	        	 String lName = rs.getString("lastName");
+	        	 String fName = rs.getString("firstName");
+	        	 String phone = rs.getString("phoneNumber");
+	        	 int sex = rs.getInt("sex");
+	        	 String citizenNumber = rs.getString("citizenNumber");
+	        	 String address = rs.getString("address");
+	        	 
+	        	 ketQua = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
+	        	 
+	         }
+
+			// ngắt kết nối
+			JDBC_Util.closeConnection(con);
+ 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,21 +193,39 @@ public class CustomerDAO implements DAOInterface<Customer> {
 	}
 
 	@Override
-	public ArrayList<Customer> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Customer selectById(Customer t) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ArrayList<Customer> selectByCondition(String condition) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Customer> ketQua = new ArrayList<Customer>();
+		try {
+			// Tạo kết nối đến CSDL
+			Connection con = JDBC_Util.getConnection();
+
+			// thực thi câu lệnh SQL
+			 String sql = "SELECT * FROM customer where " + condition;
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         
+	         ResultSet rs = pstmt.executeQuery(sql);
+
+	         while (rs.next()) {
+	        	 int id = rs.getInt("customer_ID");
+	        	 String lName = rs.getString("lastName");
+	        	 String fName = rs.getString("firstName");
+	        	 String phone = rs.getString("phoneNumber");
+	        	 int sex = rs.getInt("sex");
+	        	 String citizenNumber = rs.getString("citizenNumber");
+	        	 String address = rs.getString("address");
+	        	 
+	        	 Customer cus = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
+	        	 ketQua.add(cus);
+	         }
+
+			// ngắt kết nối
+			JDBC_Util.closeConnection(con);
+ 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ketQua;
 	}
 
 }
