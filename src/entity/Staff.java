@@ -1,94 +1,83 @@
 package entity;
 
-public class Customer {
-	private int customer_ID;
+public class Staff {
+	private int staffID;
 	private String lastName;
 	private String firstName;
-	private String phoneNumber;
 	private int sex;
+	private String phoneNumber;
 	private String citizenNumber;
 	private String address;
-	
-	public Customer() {
+	private int roleID;
+	public Staff() {
 		super();
 	}
-	
-	public Customer(int customer_ID, String lastName, String firstName, String phoneNumber, int sex,
-			String citizenNumber, String address) {
+	public Staff(int staffID, String lastName, String firstName, int sex, String phoneNumber, String citizenNumber,
+			String address, int roleID) {
 		super();
-		this.customer_ID = customer_ID;
+		this.staffID = staffID;
 		this.lastName = lastName;
 		this.firstName = firstName;
-		this.phoneNumber = phoneNumber;
 		this.sex = sex;
+		this.phoneNumber = phoneNumber;
 		this.citizenNumber = citizenNumber;
 		this.address = address;
+		this.roleID = roleID;
 	}
-
-	public int getCustomer_ID() {
-		return customer_ID;
+	public int getStaffID() {
+		return staffID;
 	}
-
-	public void setCustomer_ID(int customer_ID) {
-		this.customer_ID = customer_ID;
+	public void setStaffID(int staffID) {
+		this.staffID = staffID;
 	}
-
 	public String getLastName() {
 		return lastName;
 	}
-
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 	public String getFirstName() {
 		return firstName;
 	}
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	public int getSex() {
 		return sex;
 	}
-
 	public void setSex(int sex) {
 		this.sex = sex;
 	}
-
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 	public String getCitizenNumber() {
 		return citizenNumber;
 	}
-
 	public void setCitizenNumber(String citizenNumber) {
 		this.citizenNumber = citizenNumber;
 	}
-
 	public String getAddress() {
 		return address;
 	}
-
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	public int getRoleID() {
+		return roleID;
+	}
+	public void setRoleID(int roleID) {
+		this.roleID = roleID;
+	}
 	@Override
 	public String toString() {
-		return "Customer: ID " + customer_ID + "\n\\t\\tName: " + lastName + " " + firstName
-				+ "\n\\t\\tPhone Number: " + phoneNumber + "\n\\t\\tSex: " + sex + "\n\\t\\tCitizen Number: " + citizenNumber + "\n\\t\\tAddress: "
-				+ address;
+		return "Staff: ID: " + staffID + "\n\t  Name: " + lastName + " " + firstName + "\n\t  Sex: " + sex
+				+ "\n\t  Phone Number: " + phoneNumber + "\n\t  Citizen Number: " + citizenNumber + "\n\t  Address: " + address
+				+ "\n\t  Role ID=" + roleID;
 	}
-	
-	
 	
 	
 }
