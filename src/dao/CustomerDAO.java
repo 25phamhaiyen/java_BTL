@@ -1,231 +1,194 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
-import datatbase.JDBC_Util;
+import datatbase.DatabaseConnection;
 import entity.Customer;
+import utils.DBUtil;
 
 public class CustomerDAO implements DAOInterface<Customer> {
 
-	public static CustomerDAO getInstance() {
-		return new CustomerDAO();
-	}
+    public static CustomerDAO getInstance() {
+        return new CustomerDAO();
+    }
 
-	@Override
-	public int insert(Customer t) {
-		int ketQua = 0; 
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+    @Override
+    public int insert(Customer t) {
+        int ketQua = 0;
+        String sql = "INSERT INTO customer (customer_ID, lastName, firstName, phoneNumber, sex, citizenNumber, address) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-			// tạo ra đối tượng statement
-			Statement st = con.createStatement();
+        Connection con = null;
+        PreparedStatement pstmt = null;
 
-			// thực thi câu lệnh SQL
-			String sql = "INSERT INTO customer (customer_ID, lastName, firstName, phoneNumber, sex, citizenNumber, address) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
 
-			// Dùng PreparedStatement để truyền tham số vào câu SQL
-			try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-				pstmt.setInt(1, t.getCustomer_ID());
-				pstmt.setString(2, t.getLastName());
-				pstmt.setString(3, t.getFirstName());
-				pstmt.setString(4, t.getPhoneNumber());
-				pstmt.setInt(5, t.getSex());
-				pstmt.setString(6, t.getCitizenNumber());
-				pstmt.setString(7, t.getAddress());
+            pstmt.setInt(1, t.getCustomer_ID());
+            pstmt.setString(2, t.getLastName());
+            pstmt.setString(3, t.getFirstName());
+            pstmt.setString(4, t.getPhoneNumber());
+            pstmt.setInt(5, t.getSex());
+            pstmt.setString(6, t.getCitizenNumber());
+            pstmt.setString(7, t.getAddress());
 
-				// Thực thi lệnh INSERT
-				 ketQua = pstmt.executeUpdate();
-			}
+            ketQua = pstmt.executeUpdate();
+            System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
 
-			// In thông tin số dòng bị thay đổi
-			System.out.println("Bạn đã thực thi INSERT, có " + ketQua + " dòng bị thay đổi.");
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
+    @Override
+    public int update(Customer t) {
+        int ketQua = 0;
+        String sql = "UPDATE customer SET lastName = ?, firstName = ?, phoneNumber = ?, sex = ?, citizenNumber = ?, address = ? " +
+                     "WHERE customer_ID = ?";
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+        Connection con = null;
+        PreparedStatement pstmt = null;
 
-	@Override
-	public int update(Customer t) {
-		int ketQua = 0; 
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
 
-			// thực thi câu lệnh SQL
-			String sql = "UPDATE customer SET lastName = ?, firstName = ?, phoneNumber = ?, sex = ?, citizenNumber = ?, address = ? WHERE customer_ID = ?";
+            pstmt.setString(1, t.getLastName());
+            pstmt.setString(2, t.getFirstName());
+            pstmt.setString(3, t.getPhoneNumber());
+            pstmt.setInt(4, t.getSex());
+            pstmt.setString(5, t.getCitizenNumber());
+            pstmt.setString(6, t.getAddress());
+            pstmt.setInt(7, t.getCustomer_ID());
 
+            ketQua = pstmt.executeUpdate();
+            System.out.println("UPDATE thành công, " + ketQua + " dòng bị thay đổi.");
 
-			// Dùng PreparedStatement để truyền tham số vào câu SQL
-			try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-				pstmt.setString(1, t.getLastName());
-				pstmt.setString(2, t.getFirstName());
-				pstmt.setString(3, t.getPhoneNumber());
-				pstmt.setInt(4, t.getSex());
-				pstmt.setString(5, t.getCitizenNumber());
-				pstmt.setString(6, t.getAddress());
-				pstmt.setInt(7, t.getCustomer_ID()); // Đặt ID cuối cùng
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
 
+    @Override
+    public int delete(Customer t) {
+        int ketQua = 0;
+        String sql = "DELETE FROM Customer WHERE customer_ID = ?";
 
-				ketQua = pstmt.executeUpdate();
-			}
+        Connection con = null;
+        PreparedStatement pstmt = null;
 
-			// In thông tin số dòng bị thay đổi
-			System.out.println("Bạn đã thực thi UPDATE, có " + ketQua + " dòng bị thay đổi.");
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, t.getCustomer_ID());
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
+            ketQua = pstmt.executeUpdate();
+            System.out.println("DELETE thành công, " + ketQua + " dòng bị thay đổi.");
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
 
-	@Override
-	public int delete(Customer t) {
-		int ketQua = 0; 
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+    @Override
+    public ArrayList<Customer> selectAll() {
+        ArrayList<Customer> ketQua = new ArrayList<>();
+        String sql = "SELECT * FROM customer";
 
-			// thực thi câu lệnh SQL
-			 String sql = "DELETE FROM Customer WHERE customer_ID = ?";
-	         PreparedStatement pstmt = con.prepareStatement(sql);
-	         pstmt.setInt(1, t.getCustomer_ID());
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-	         
-			 ketQua = pstmt.executeUpdate();
-			// In thông tin số dòng bị thay đổi
-			System.out.println("Bạn đã thực thi DELETE, có " + ketQua + " dòng bị thay đổi.");
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
- 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+            while (rs.next()) {
+                ketQua.add(getCustomerFromResultSet(rs));
+            }
 
-	@Override
-	public ArrayList<Customer> selectAll() {
-		ArrayList<Customer> ketQua = new ArrayList<Customer>();
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return ketQua;
+    }
 
-			// thực thi câu lệnh SQL
-			 String sql = "SELECT * FROM customer";
-	         PreparedStatement pstmt = con.prepareStatement(sql);
-	         
-	         ResultSet rs = pstmt.executeQuery(sql);
+    @Override
+    public Customer selectById(Customer t) {
+        Customer ketQua = null;
+        String sql = "SELECT * FROM customer WHERE customer_ID = ?";
 
-	         while (rs.next()) {
-	        	 int id = rs.getInt("customer_ID");
-	        	 String lName = rs.getString("lastName");
-	        	 String fName = rs.getString("firstName");
-	        	 String phone = rs.getString("phoneNumber");
-	        	 int sex = rs.getInt("sex");
-	        	 String citizenNumber = rs.getString("citizenNumber");
-	        	 String address = rs.getString("address");
-	        	 
-	        	 Customer cus = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
-	        	 ketQua.add(cus);
-	         }
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
- 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, t.getCustomer_ID());
 
-	@Override
-	public Customer selectById(Customer t) {
-		Customer ketQua = null;
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                ketQua = getCustomerFromResultSet(rs);
+            }
 
-			// thực thi câu lệnh SQL
-			 String sql = "SELECT * FROM customer where customer_ID=?";
-	         PreparedStatement pstmt = con.prepareStatement(sql);
-	         pstmt.setInt(1, t.getCustomer_ID());
-	         
-	         ResultSet rs = pstmt.executeQuery();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return ketQua;
+    }
 
-	         while (rs.next()) {
-	        	 int id = rs.getInt("customer_ID");
-	        	 String lName = rs.getString("lastName");
-	        	 String fName = rs.getString("firstName");
-	        	 String phone = rs.getString("phoneNumber");
-	        	 int sex = rs.getInt("sex");
-	        	 String citizenNumber = rs.getString("citizenNumber");
-	        	 String address = rs.getString("address");
-	        	 
-	        	 ketQua = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
-	        	 
-	         }
+    @Override
+    public ArrayList<Customer> selectByCondition(String condition) {
+        ArrayList<Customer> ketQua = new ArrayList<>();
+        String sql = "SELECT * FROM customer WHERE " + condition;
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
- 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-	@Override
-	public ArrayList<Customer> selectByCondition(String condition) {
-		ArrayList<Customer> ketQua = new ArrayList<Customer>();
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-			// thực thi câu lệnh SQL
-			 String sql = "SELECT * FROM customer where " + condition;
-	         PreparedStatement pstmt = con.prepareStatement(sql);
-	         
-	         ResultSet rs = pstmt.executeQuery(sql);
+            while (rs.next()) {
+                ketQua.add(getCustomerFromResultSet(rs));
+            }
 
-	         while (rs.next()) {
-	        	 int id = rs.getInt("customer_ID");
-	        	 String lName = rs.getString("lastName");
-	        	 String fName = rs.getString("firstName");
-	        	 String phone = rs.getString("phoneNumber");
-	        	 int sex = rs.getInt("sex");
-	        	 String citizenNumber = rs.getString("citizenNumber");
-	        	 String address = rs.getString("address");
-	        	 
-	        	 Customer cus = new Customer(id, lName, fName, phone, sex, citizenNumber, address);
-	        	 ketQua.add(cus);
-	         }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm kiếm khách hàng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return ketQua;
+    }
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
- 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+    private Customer getCustomerFromResultSet(ResultSet rs) throws SQLException {
+        int id = rs.getInt("customer_ID");
+        String lName = rs.getString("lastName");
+        String fName = rs.getString("firstName");
+        String phone = rs.getString("phoneNumber");
+        int sex = rs.getInt("sex");
+        String citizenNumber = rs.getString("citizenNumber");
+        String address = rs.getString("address");
 
+        return new Customer(id, lName, fName, phone, sex, citizenNumber, address);
+    }
 }

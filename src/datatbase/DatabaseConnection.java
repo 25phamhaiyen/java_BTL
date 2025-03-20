@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.mysql.cj.jdbc.Driver;
 
-public class JDBC_Util {
+public class DatabaseConnection {
 	public static Connection getConnection() {
 		Connection c = null;
 		try {
@@ -20,7 +20,6 @@ public class JDBC_Util {
 			//tạo kết nối
 			c = DriverManager.getConnection(url, username, password);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return c;

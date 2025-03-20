@@ -1,41 +1,39 @@
 package entity;
 
+import Enum.RoleType;
+
 public class Role {
-	private int roleID;
-	private String roleName;
-	
-	public Role() {
-		super();
-	}
+    private int roleID;
+    private RoleType roleName;
 
-	public Role(int roleID, String roleName) {
-		super();
-		this.roleID = roleID;
-		this.roleName = roleName;
-	}
-	
+    public Role() {
+        super();
+    }
 
-	public int getRoleID() {
-		return roleID;
-	}
+    public Role(int roleID, RoleType roleName) {
+        super();
+        this.roleID = roleID;
+        this.roleName = roleName;
+    }
 
-	public void setRoleID(int roleID) {
-		this.roleID = roleID;
-	}
+    public int getRoleID() {
+        return roleID;
+    }
 
-	public String getRoleName() {
-		return roleName;
-	}
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public RoleType getRoleName() {
+        return roleName;
+    }
 
-	@Override
-	public String toString() {
-		return "Role: ID: " + roleID + "\b\t Name: " + roleName;
-	}
+    public void setRoleName(RoleType roleName) {
+        this.roleName = roleName;
+    }
 
-	
-	
+    @Override
+    public String toString() {
+        return "Role: ID: " + roleID + "\t Name: " + roleName;
+    }
 }

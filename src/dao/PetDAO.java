@@ -3,85 +3,194 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
-import datatbase.JDBC_Util;
+import datatbase.DatabaseConnection;
 import entity.Pet;
+import utils.DBUtil;
 
-public class PetDAO implements DAOInterface<Pet>{
+public class PetDAO implements DAOInterface<Pet> {
 
-	public static PetDAO getInstance() {
-		return new PetDAO();
-	}
-	
-	@Override
-	public int insert (Pet t) {
-		int ketQua = 0; 
-		try {
-			// Tạo kết nối đến CSDL
-			Connection con = JDBC_Util.getConnection();
+    public static PetDAO getInstance() {
+        return new PetDAO();
+    }
 
-			// tạo ra đối tượng statement
-			Statement st = con.createStatement();
+    @Override
+    public int insert(Pet t) {
+        int ketQua = 0;
+        String sql = "INSERT INTO pet (PetID, PetName, age, Customer_ID, TypePetID) VALUES (?, ?, ?, ?, ?)";
 
-			// thực thi câu lệnh SQL
-			String sql = "INSERT INTO pet (PetID, PetName, age, Customer_ID, TypePetID) "
-					+ "VALUES (?, ?, ?, ?, ?)";
+        Connection con = null;
+        PreparedStatement pstmt = null;
 
-			// Dùng PreparedStatement để truyền tham số vào câu SQL
-			try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-				pstmt.setInt(1, t.getPetID());
-				pstmt.setString(2, t.getPetName());
-				pstmt.setInt(3, t.getAge());
-				pstmt.setInt(4, t.getCustomerID());
-				pstmt.setInt(5, t.getTypePetID());
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            
+            pstmt.setInt(1, t.getPetID());
+            pstmt.setString(2, t.getPetName());
+            pstmt.setInt(3, t.getAge());
+            pstmt.setInt(4, t.getCustomerID());
+            pstmt.setInt(5, t.getTypePetID());
 
-				// Thực thi lệnh INSERT
-				 ketQua = pstmt.executeUpdate();
-			}
+            ketQua = pstmt.executeUpdate();
+            System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
 
-			// In thông tin số dòng bị thay đổi
-			System.out.println("Bạn đã thực thi INSERT, có " + ketQua + " dòng bị thay đổi.");
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
 
-			// ngắt kết nối
-			JDBC_Util.closeConnection(con);
+    @Override
+    public int update(Pet t) {
+        int ketQua = 0;
+        String sql = "UPDATE pet SET PetName = ?, age = ?, Customer_ID = ?, TypePetID = ? WHERE PetID = ?";
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return ketQua;
-	}
+        Connection con = null;
+        PreparedStatement pstmt = null;
 
-	@Override
-	public int update(Pet t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
 
-	@Override
-	public int delete(Pet t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+            pstmt.setString(1, t.getPetName());
+            pstmt.setInt(2, t.getAge());
+            pstmt.setInt(3, t.getCustomerID());
+            pstmt.setInt(4, t.getTypePetID());
+            pstmt.setInt(5, t.getPetID());
 
-	@Override
-	public ArrayList<Pet> selectAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            ketQua = pstmt.executeUpdate();
+            System.out.println("UPDATE thành công, " + ketQua + " dòng bị thay đổi.");
 
-	@Override
-	public Pet selectById(Pet t) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
 
-	@Override
-	public ArrayList<Pet> selectByCondition(String condition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public int delete(Pet t) {
+        int ketQua = 0;
+        String sql = "DELETE FROM pet WHERE PetID = ?";
 
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, t.getPetID());
+
+            ketQua = pstmt.executeUpdate();
+            System.out.println("DELETE thành công, " + ketQua + " dòng bị thay đổi.");
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt);
+        }
+        return ketQua;
+    }
+
+    @Override
+    public ArrayList<Pet> selectAll() {
+        ArrayList<Pet> list = new ArrayList<>();
+        String sql = "SELECT * FROM pet";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        java.sql.ResultSet rs = null;
+
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Pet(
+                        rs.getInt("PetID"),
+                        rs.getString("PetName"),
+                        rs.getInt("age"),
+                        rs.getInt("Customer_ID"),
+                        rs.getInt("TypePetID")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return list;
+    }
+
+    @Override
+    public Pet selectById(Pet t) {
+        Pet pet = null;
+        String sql = "SELECT * FROM pet WHERE PetID = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        java.sql.ResultSet rs = null;
+
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, t.getPetID());
+
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                pet = new Pet(
+                        rs.getInt("PetID"),
+                        rs.getString("PetName"),
+                        rs.getInt("age"),
+                        rs.getInt("Customer_ID"),
+                        rs.getInt("TypePetID")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return pet;
+    }
+
+    @Override
+    public ArrayList<Pet> selectByCondition(String condition) {
+        ArrayList<Pet> list = new ArrayList<>();
+        String sql = "SELECT * FROM pet WHERE " + condition;
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        java.sql.ResultSet rs = null;
+
+        try {
+            con = DatabaseConnection.getConnection();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Pet(
+                        rs.getInt("PetID"),
+                        rs.getString("PetName"),
+                        rs.getInt("age"),
+                        rs.getInt("Customer_ID"),
+                        rs.getInt("TypePetID")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm thú cưng: " + e.getMessage());
+        } finally {
+            DBUtil.closeResources(con, pstmt, rs);
+        }
+        return list;
+    }
 }

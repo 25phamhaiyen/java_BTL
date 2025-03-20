@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import datatbase.JDBC_Util;
+import datatbase.DatabaseConnection;
 
 public class testJDBC {
 	public static void main(String[] args) {
 		try {
 			// tạo kết nối
-			Connection connection = JDBC_Util.getConnection();
+			Connection connection = DatabaseConnection.getConnection();
 //		JDBC_Util.printInfo(connection);
 //		
 //		JDBC_Util.closeConnection(connection);
