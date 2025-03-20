@@ -1,31 +1,39 @@
 package entity;
 
+import Enum.TypeServiceEnum;
+
 public class TypeService {
-	private int typeServiceID;
-	private String UN_TypeService;
-	public TypeService() {
-		super();
-	}
-	public TypeService(int typeServiceID, String uN_TypeService) {
-		super();
-		this.typeServiceID = typeServiceID;
-		UN_TypeService = uN_TypeService;
-	}
-	public int getTypeServiceID() {
-		return typeServiceID;
-	}
-	public void setTypeServiceID(int typeServiceID) {
-		this.typeServiceID = typeServiceID;
-	}
-	public String getUN_TypeService() {
-		return UN_TypeService;
-	}
-	public void setUN_TypeService(String uN_TypeService) {
-		UN_TypeService = uN_TypeService;
-	}
-	@Override
-	public String toString() {
-		return "Type Service: ID: " + typeServiceID + "\n\t\t\tService: " + UN_TypeService;
-	}
-	
+    private int typeServiceID;
+    private TypeServiceEnum typeServiceName;
+
+    public TypeService() {
+        super();
+    }
+
+    public TypeService(int typeServiceID, TypeServiceEnum typeServiceName) {
+        super();
+        this.typeServiceID = typeServiceID;
+        this.typeServiceName = typeServiceName;
+    }
+
+    public int getTypeServiceID() {
+        return typeServiceID;
+    }
+
+    public void setTypeServiceID(int typeServiceID) {
+        this.typeServiceID = typeServiceID;
+    }
+
+    public TypeServiceEnum getTypeServiceName() {
+        return typeServiceName;
+    }
+
+    public void setTypeServiceName(TypeServiceEnum typeServiceName) {
+        this.typeServiceName = typeServiceName;
+    }
+
+    @Override
+    public String toString() {
+        return "Type Service: ID: " + typeServiceID + "\n\t\t\tService: " + typeServiceName.getDescription();
+    }
 }

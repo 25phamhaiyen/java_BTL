@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import datatbase.DatabaseConnection;
+import entity.Customer;
 import entity.Pet;
+import entity.TypePet;
 import utils.DBUtil;
 
 public class PetDAO implements DAOInterface<Pet> {
@@ -30,8 +32,8 @@ public class PetDAO implements DAOInterface<Pet> {
             pstmt.setInt(1, t.getPetID());
             pstmt.setString(2, t.getPetName());
             pstmt.setInt(3, t.getAge());
-            pstmt.setInt(4, t.getCustomerID());
-            pstmt.setInt(5, t.getTypePetID());
+            pstmt.setInt(4, t.getCustomer().getCustomerID());
+            pstmt.setInt(5, t.getTypePet().getTypePetID());
 
             ketQua = pstmt.executeUpdate();
             System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
@@ -58,8 +60,8 @@ public class PetDAO implements DAOInterface<Pet> {
 
             pstmt.setString(1, t.getPetName());
             pstmt.setInt(2, t.getAge());
-            pstmt.setInt(3, t.getCustomerID());
-            pstmt.setInt(4, t.getTypePetID());
+            pstmt.setInt(3, t.getCustomer().getCustomerID());
+            pstmt.setInt(4, t.getTypePet().getTypePetID());
             pstmt.setInt(5, t.getPetID());
 
             ketQua = pstmt.executeUpdate();
@@ -112,12 +114,21 @@ public class PetDAO implements DAOInterface<Pet> {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
+                // Lấy customer từ database dựa vào customerID
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.selectById(rs.getInt("Customer_ID"));
+
+                // Lấy typePet từ database dựa vào typePetID
+                TypePetDAO typePetDAO = new TypePetDAO();
+                TypePet typePet = typePetDAO.selectById(rs.getInt("TypePetID"));
+
+                // Tạo đối tượng Pet với đúng constructor
                 list.add(new Pet(
-                        rs.getInt("PetID"),
-                        rs.getString("PetName"),
-                        rs.getInt("age"),
-                        rs.getInt("Customer_ID"),
-                        rs.getInt("TypePetID")
+                    rs.getInt("PetID"),
+                    rs.getString("PetName"),
+                    rs.getInt("age"),
+                    customer, // Truyền Customer thay vì int
+                    typePet   // Truyền TypePet thay vì int
                 ));
             }
 
@@ -144,14 +155,24 @@ public class PetDAO implements DAOInterface<Pet> {
             pstmt.setInt(1, t.getPetID());
 
             rs = pstmt.executeQuery();
+            
+         // Lấy customer từ database dựa vào customerID
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.selectById(rs.getInt("Customer_ID"));
+
+            // Lấy typePet từ database dựa vào typePetID
+            TypePetDAO typePetDAO = new TypePetDAO();
+            TypePet typePet = typePetDAO.selectById(rs.getInt("TypePetID"));
+
+            // Tạo đối tượng Pet với đúng constructor
             if (rs.next()) {
                 pet = new Pet(
                         rs.getInt("PetID"),
                         rs.getString("PetName"),
                         rs.getInt("age"),
-                        rs.getInt("Customer_ID"),
-                        rs.getInt("TypePetID")
-                );
+                        customer, // Truyền Customer thay vì int
+                        typePet   // Truyền TypePet thay vì int
+                 );
             }
 
         } catch (SQLException e) {
@@ -177,12 +198,21 @@ public class PetDAO implements DAOInterface<Pet> {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
+                // Lấy customer từ database dựa vào customerID
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.selectById(rs.getInt("Customer_ID"));
+
+                // Lấy typePet từ database dựa vào typePetID
+                TypePetDAO typePetDAO = new TypePetDAO();
+                TypePet typePet = typePetDAO.selectById(rs.getInt("TypePetID"));
+
+                // Tạo đối tượng Pet với đúng constructor
                 list.add(new Pet(
-                        rs.getInt("PetID"),
-                        rs.getString("PetName"),
-                        rs.getInt("age"),
-                        rs.getInt("Customer_ID"),
-                        rs.getInt("TypePetID")
+                    rs.getInt("PetID"),
+                    rs.getString("PetName"),
+                    rs.getInt("age"),
+                    customer, // Truyền Customer thay vì int
+                    typePet   // Truyền TypePet thay vì int
                 ));
             }
 

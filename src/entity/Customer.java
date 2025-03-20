@@ -1,94 +1,103 @@
 package entity;
 
+import Enum.GenderEnum;
+
 public class Customer {
-	private int customer_ID;
-	private String lastName;
-	private String firstName;
-	private String phoneNumber;
-	private int sex;
-	private String citizenNumber;
-	private String address;
-	
-	public Customer() {
-		super();
-	}
-	
-	public Customer(int customer_ID, String lastName, String firstName, String phoneNumber, int sex,
-			String citizenNumber, String address) {
-		super();
-		this.customer_ID = customer_ID;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.phoneNumber = phoneNumber;
-		this.sex = sex;
-		this.citizenNumber = citizenNumber;
-		this.address = address;
-	}
+    private int customerID;
+    private String lastName;
+    private String firstName;
+    private String phoneNumber;
+    private GenderEnum gender; // Dùng enum thay vì int
+    private String citizenNumber;
+    private String address;
+    private Account account; // Khóa ngoại
 
-	public int getCustomer_ID() {
-		return customer_ID;
-	}
+    public Customer() {
+        super();
+    }
 
-	public void setCustomer_ID(int customer_ID) {
-		this.customer_ID = customer_ID;
-	}
+    public Customer(int customerID, String lastName, String firstName, String phoneNumber, GenderEnum gender,
+                    String citizenNumber, String address, Account account) {
+        super();
+        this.customerID = customerID;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.citizenNumber = citizenNumber;
+        this.address = address;
+        this.account = account;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public int getCustomerID() {
+        return customerID;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public int getSex() {
-		return sex;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public void setSex(int sex) {
-		this.sex = sex;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public String getCitizenNumber() {
-		return citizenNumber;
-	}
+    public GenderEnum getGender() {
+        return gender;
+    }
 
-	public void setCitizenNumber(String citizenNumber) {
-		this.citizenNumber = citizenNumber;
-	}
+    public void setGender(GenderEnum gender) {
+        this.gender = gender;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getCitizenNumber() {
+        return citizenNumber;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setCitizenNumber(String citizenNumber) {
+        this.citizenNumber = citizenNumber;
+    }
 
-	@Override
-	public String toString() {
-		return "Customer: ID " + customer_ID + "\n\\t\\tName: " + lastName + " " + firstName
-				+ "\n\\t\\tPhone Number: " + phoneNumber + "\n\\t\\tSex: " + sex + "\n\\t\\tCitizen Number: " + citizenNumber + "\n\\t\\tAddress: "
-				+ address;
-	}
-	
-	
-	
-	
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer: ID " + customerID + "\n\tName: " + lastName + " " + firstName
+                + "\n\tPhone Number: " + phoneNumber + "\n\tGender: " + gender.getDescription()
+                + "\n\tCitizen Number: " + citizenNumber + "\n\tAddress: " + address
+                + "\n\tAccount ID: " + (account != null ? account.getAccountID() : "None");
+    }
 }
