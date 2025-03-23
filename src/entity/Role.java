@@ -1,16 +1,15 @@
 package entity;
 
-import Enum.RoleType;
 
 public class Role {
     private int roleID;
-    private RoleType roleName;
+    private String roleName;
 
     public Role() {
         super();
     }
 
-    public Role(int roleID, RoleType roleName) {
+    public Role(int roleID, String roleName) {
         super();
         this.roleID = roleID;
         this.roleName = roleName;
@@ -24,11 +23,11 @@ public class Role {
         this.roleID = roleID;
     }
 
-    public RoleType getRoleName() {
+    public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(RoleType roleName) {
+    public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 

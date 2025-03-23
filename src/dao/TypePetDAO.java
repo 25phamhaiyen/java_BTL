@@ -2,10 +2,10 @@ package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
-import datatbase.DatabaseConnection;
+import database.DatabaseConnection;
 import entity.TypePet;
-import utils.DBUtil;
 
 public class TypePetDAO implements DAOInterface<TypePet> {
 
@@ -73,8 +73,8 @@ public class TypePetDAO implements DAOInterface<TypePet> {
     }
 
     @Override
-    public ArrayList<TypePet> selectAll() {
-        ArrayList<TypePet> list = new ArrayList<>();
+    public List<TypePet> selectAll() {
+        List<TypePet> list = new ArrayList<>();
         String sql = "SELECT * FROM typepet";
 
         try (Connection con = DatabaseConnection.getConnection();
@@ -117,8 +117,34 @@ public class TypePetDAO implements DAOInterface<TypePet> {
     }
 
     @Override
-    public ArrayList<TypePet> selectByCondition(String condition) {
-        throw new UnsupportedOperationException("Không hỗ trợ `selectByCondition` để tránh SQL Injection.");
+    public List<TypePet> selectByCondition(String condition, Object... params) {
+        List<TypePet> list = new ArrayList<>();
+        
+        // Tránh nối chuỗi trực tiếp, sử dụng tham số hóa
+        String sql = "SELECT * FROM TypePet WHERE " + condition;
+        
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            // Truyền tham số vào câu lệnh SQL
+            for (int i = 0; i < params.length; i++) {
+                pstmt.setObject(i + 1, params[i]);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new TypePet(
+                        rs.getInt("TypePetID"),
+                        rs.getString("TypePetName")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn TypePet: " + e.getMessage());
+        }
+        
+        return list;
     }
+
 }
 

@@ -55,14 +55,14 @@ public class Account {
         return email;
     }
 
-    // Kiểm tra định dạng email hợp lệ
     public void setEmail(String email) {
-        if (email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (email != null && email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             this.email = email;
         } else {
-            throw new IllegalArgumentException("Email không hợp lệ!");
+            this.email = null; // Hoặc gán giá trị mặc định nếu cần
         }
     }
+
 
     public Role getRole() {
         return role;
