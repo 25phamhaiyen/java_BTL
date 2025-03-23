@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import Enum.GenderEnum;
-import datatbase.DatabaseConnection;
+import database.DatabaseConnection;
 import entity.Customer;
 import entity.Account;
 import utils.DBUtil;

@@ -3,7 +3,7 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 
-import datatbase.DatabaseConnection;
+import database.DatabaseConnection;
 import entity.TypePet;
 import utils.DBUtil;
 

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import datatbase.DatabaseConnection;
+import database.DatabaseConnection;
 import entity.Customer;
 import entity.Pet;
 import entity.TypePet;
