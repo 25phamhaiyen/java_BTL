@@ -7,6 +7,7 @@ import utils.DBUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerService {
     private CustomerDAO customerDAO;
@@ -53,7 +54,7 @@ public class CustomerService {
         return customerDAO.delete(customer);
     }
 
-    public ArrayList<Customer> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerDAO.selectAll();
     }
 

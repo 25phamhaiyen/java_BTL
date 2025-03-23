@@ -1,7 +1,6 @@
 package entity;
 
 import Enum.GenderEnum;
-import Enum.RoleType;
 
 public class Staff {
     private int staffID;
@@ -11,14 +10,14 @@ public class Staff {
     private String phoneNumber;
     private String citizenNumber;
     private String address;
-    private RoleType role;
+    private Role role;
 
     public Staff() {
         super();
     }
 
     public Staff(int staffID, String lastName, String firstName, GenderEnum sex, String phoneNumber, String citizenNumber,
-                 String address, RoleType role) {
+                 String address, Role role) {
         super();
         this.staffID = staffID;
         this.lastName = lastName;
@@ -86,11 +85,11 @@ public class Staff {
         this.address = address;
     }
 
-    public RoleType getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(RoleType role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -102,6 +101,6 @@ public class Staff {
                "\n\t  Phone Number: " + phoneNumber +
                "\n\t  Citizen Number: " + citizenNumber +
                "\n\t  Address: " + address +
-               "\n\t  Role: " + role.getName();
+               "\n\t  Role: " + role.getRoleName();
     }
 }

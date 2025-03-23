@@ -1,31 +1,65 @@
 package test;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import Enum.GenderEnum;
+import dao.AccountDAO;
 import dao.CustomerDAO;
+import entity.Account;
 import entity.Customer;
 
 public class testCustomerDAO {
 	public static void main(String[] args) {
-//		Customer c1 =new Customer( 5 , "Nguyễn", "Thiện", "0321654988", 1, "012345688932", "");
+//		
+		CustomerDAO customerDAO = CustomerDAO.getInstance();
 		
-//		CustomerDAO.getInstance().insert(c1);
-//		CustomerDAO.getInstance().update(c1);
-//		CustomerDAO.getInstance().delete(c1);
 		
-//		ArrayList<Customer> list = CustomerDAO.getInstance().selectAll();
-//		for(Customer cus : list ) {
-//			System.out.println(cus.toString());
-//		}
-		
-//		Customer c2 = new Customer();
-//		c2.setCustomer_ID(1);
-//		Customer c3 = CustomerDAO.getInstance().selectById(c2);
-//		System.out.println(c3.toString());
-		
-		ArrayList<Customer> list2 = CustomerDAO.getInstance().selectByCondition("sex=1");
-		for(Customer cus : list2 ) {
-			System.out.println(cus.toString());
-		}
+		AccountDAO accountDAO = AccountDAO.getInstance();
+		Account account = new Account();
+		account = accountDAO.getAccountByUsername("user123");
+        // 1️⃣ Thêm khách hàng mới (INSERT)
+        Customer newCustomer = new Customer(0, "Nguyễn", "Thiện", "0321654988", 
+                                            GenderEnum.MALE, "012345688932", 
+                                            "Hà Nội", account);
+        int insertResult = customerDAO.insert(newCustomer);
+        System.out.println("Insert Result: " + insertResult);
+
+        // 2️⃣ Lấy danh sách tất cả khách hàng (SELECT ALL)
+        List<Customer> customers = customerDAO.selectAll();
+        System.out.println("Danh sách khách hàng:");
+        for (Customer c : customers) {
+            System.out.println(c);
+        }
+
+        // 3️⃣ Cập nhật thông tin khách hàng (UPDATE)
+        if (!customers.isEmpty()) {
+            Customer updateCustomer = customers.get(0); // Lấy khách hàng đầu tiên
+            updateCustomer.setAddress("TP. Hồ Chí Minh");
+            updateCustomer.setPhoneNumber("0999888777");
+
+            int updateResult = customerDAO.update(updateCustomer);
+            System.out.println("Update Result: " + updateResult);
+        }
+
+        // 4️⃣ Tìm khách hàng theo ID (SELECT BY ID)
+        if (!customers.isEmpty()) {
+            Customer foundCustomer = customerDAO.selectById(customers.get(0).getCustomerID());
+            System.out.println("Khách hàng tìm thấy: " + foundCustomer);
+        }
+
+        // 5️⃣ Tìm khách hàng theo điều kiện (SELECT BY CONDITION)
+        List<Customer> maleCustomers = customerDAO.selectByCondition("sex = ?", GenderEnum.MALE.getCode());
+        System.out.println("Danh sách khách hàng nam:");
+        for (Customer c : maleCustomers) {
+            System.out.println(c);
+        }
+
+//         6️⃣ Xóa khách hàng (DELETE)
+//        if (!customers.isEmpty()) {
+//            Customer deleteCustomer = customers.get(customers.size() - 1); // Xóa khách hàng cuối cùng
+//            int deleteResult = customerDAO.delete(deleteCustomer);
+//            System.out.println("Delete Result: " + deleteResult);
+//        }
+        
 	}
 }

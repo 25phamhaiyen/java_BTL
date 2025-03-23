@@ -1,20 +1,104 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mindrot.jbcrypt.BCrypt;
 
-import Enum.RoleType;
-import database.DatabaseConnection;
 import entity.Account;
 import entity.Role;
+import database.DatabaseConnection;
 
-public class AccountDAO {
+public class AccountDAO implements DAOInterface<Account> {
+
+	public static AccountDAO getInstance() {
+		return new AccountDAO();
+	}
+
+	@Override
+	public int insert(Account account) {
+		String sql = "INSERT INTO account (UN_UserName, Password, Email, Role_ID) VALUES (?, ?, ?, ?)";
+
+		// Mã hóa mật khẩu trước khi lưu
+		String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(12));
+
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+			pstmt.setString(1, account.getUserName());
+			pstmt.setString(2, hashedPassword);
+			pstmt.setString(3, account.getEmail());
+			pstmt.setInt(4, account.getRole().getRoleID());
+
+			int affectedRows = pstmt.executeUpdate();
+			if (affectedRows > 0) {
+				try (ResultSet rs = pstmt.getGeneratedKeys()) {
+					if (rs.next()) {
+						account.setAccountID(rs.getInt(1));
+					}
+				}
+			}
+			return affectedRows;
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi thêm tài khoản: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	@Override
+	public int update(Account account) {
+		String sql = "UPDATE account SET UN_UserName=?, Password=?, Email=?, Role_ID=? WHERE AccountID=?";
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+			pstmt.setString(1, account.getUserName());
+
+			// Nếu mật khẩu thay đổi, mã hóa trước khi lưu
+			String newPassword = account.getPassword();
+			if (!newPassword.isEmpty()) {
+				newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+			} else {
+				// Nếu không thay đổi, lấy mật khẩu cũ từ DB
+				newPassword = getPasswordById(account.getAccountID());
+			}
+			pstmt.setString(2, newPassword);
+
+			pstmt.setString(3, account.getEmail());
+			pstmt.setInt(4, account.getRole().getRoleID());
+			pstmt.setInt(5, account.getAccountID());
+
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi cập nhật tài khoản: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	// Hàm lấy mật khẩu cũ từ DB nếu không cập nhật mật khẩu mới
+	private String getPasswordById(int accountID) throws SQLException {
+		String sql = "SELECT Password FROM account WHERE AccountID = ?";
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, accountID);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getString("Password");
+				}
+			}
+		}
+		return ""; // Trả về chuỗi rỗng nếu không tìm thấy
+	}
+
+	@Override
+	public int delete(Account account) {
+		String sql = "DELETE FROM account WHERE AccountID=?";
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+			pstmt.setInt(1, account.getAccountID());
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi xóa tài khoản: " + e.getMessage());
+			return 0;
+		}
+	}
 
 	// Kiểm tra tài khoản có tồn tại hay không
 	public boolean isAccountExist(String username) {
@@ -34,141 +118,98 @@ public class AccountDAO {
 		return false; // Tài khoản chưa tồn tại
 	}
 
-	// Lấy thông tin tài khoản theo username
-	public Account getAccountByUsername(String username) {
-		Account account = null;
-		String sql = "SELECT a.accountID, a.userName, a.password, a.email, r.roleID, r.roleName "
-				+ "FROM Account a JOIN Role r ON a.roleID = r.roleID WHERE a.userName = ?";
-
-		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			ResultSet rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				RoleType roleType = RoleType.valueOf(rs.getString("roleName").toUpperCase());
-				Role role = new Role(rs.getInt("roleID"), roleType);
-				account = new Account(rs.getInt("accountID"), rs.getString("userName"), rs.getString("password"),
-						rs.getString("email"), role);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return account;
-	}
-
-	// Lấy danh sách tất cả tài khoản
-	public List<Account> getAllAccounts() {
-		List<Account> accounts = new ArrayList<>();
-		String sql = "SELECT a.accountID, a.userName, a.password, a.email, r.roleID, r.roleName "
-				+ "FROM Account a JOIN Role r ON a.roleID = r.roleID";
+	@Override
+	public List<Account> selectAll() {
+		List<Account> list = new ArrayList<>();
+		String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
+				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql);
 				ResultSet rs = pstmt.executeQuery()) {
 
 			while (rs.next()) {
-				int accountID = rs.getInt("accountID");
-				String userName = rs.getString("userName");
-				String password = rs.getString("password");
-				String email = rs.getString("email");
-				int roleID = rs.getInt("roleID");
-				String roleName = rs.getString("roleName");
-
-				RoleType roleType = RoleType.valueOf(roleName.toUpperCase());
-				Role role = new Role(roleID, roleType);
-				Account account = new Account(accountID, userName, password, email, role);
-				accounts.add(account);
+				list.add(mapResultSetToAccount(rs));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Lỗi khi lấy danh sách tài khoản: " + e.getMessage());
 		}
-		return accounts;
+		return list;
 	}
 
-	// Đăng ký tài khoản mới
-	public boolean createAccount(Account account) {
-		if (isAccountExist(account.getUserName())) {
-			System.out.println("Tài khoản đã tồn tại!");
-			return false;
-		}
-
-		String sql = "INSERT INTO Account (userName, password, email, roleID) VALUES (?, ?, ?, ?)";
+	public Account selectById(int accountID) {
+		String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
+				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a.AccountID = ?";
 
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setString(1, account.getUserName());
-			pstmt.setString(2, BCrypt.hashpw(account.getPassword(), BCrypt.gensalt())); // Mã hóa mật khẩu
-			pstmt.setString(3, account.getEmail());
-			pstmt.setInt(4, account.getRole().getRoleID());
 
-			return pstmt.executeUpdate() > 0;
+			pstmt.setInt(1, accountID);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return mapResultSetToAccount(rs);
+				}
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Lỗi khi tìm tài khoản theo ID: " + e.getMessage());
 		}
-		return false;
+		return null;
 	}
 
-	// Xác thực đăng nhập
-	public boolean authenticate(String username, String password) {
-		Account account = getAccountByUsername(username);
-		return account != null && BCrypt.checkpw(password, account.getPassword());
+	@Override
+	public Account selectById(Account account) {
+		return selectById(account.getAccountID());
 	}
 
-	// Đổi mật khẩu tài khoản
-	public boolean changePassword(String username, String oldPassword, String newPassword) {
-		Account account = getAccountByUsername(username);
-		if (account == null) {
-			System.out.println("Tài khoản không tồn tại!");
-			return false;
-		}
-		if (!BCrypt.checkpw(oldPassword, account.getPassword())) {
-			System.out.println("Mật khẩu cũ không chính xác!");
-			return false;
-		}
+	public Account getAccountByUsername(String username) {
+	    String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
+	               + "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a.UN_UserName = ?";
 
-		String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-		String sql = "UPDATE Account SET password = ? WHERE userName = ?";
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setString(1, hashedPassword);
-			pstmt.setString(2, username);
-			return pstmt.executeUpdate() > 0;
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return mapResultSetToAccount(rs);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Lỗi khi tìm tài khoản theo username: " + e.getMessage());
+	    }
+	    return null; 
+	}
+
+
+	private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
+		String roleName = rs.getString("RoleName").toUpperCase();
+		Role role = new Role(rs.getInt("Role_ID"), roleName);
+
+		return new Account(rs.getInt("AccountID"), rs.getString("UN_UserName"), rs.getString("Password"),
+				rs.getString("Email"), role);
+	}
+
+	public List<Account> selectByCondition(String whereClause, Object... params) {
+		List<Account> list = new ArrayList<>();
+		String baseQuery = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
+				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a." +  whereClause;
+
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(baseQuery)) {
+
+			for (int i = 0; i < params.length; i++) {
+				pstmt.setObject(i + 1, params[i]); 
+			}
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					list.add(mapResultSetToAccount(rs));
+				}
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Lỗi khi truy vấn Account theo điều kiện: " + e.getMessage());
 		}
-		return false;
+		return list;
 	}
+	
 
-	// Cập nhật tài khoản
-	public boolean updateAccount(Account account) {
-		String sql = "UPDATE Account SET email = ?, roleID = ? WHERE userName = ?";
-
-		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setString(1, account.getEmail());
-			pstmt.setInt(2, account.getRole().getRoleID());
-			pstmt.setString(3, account.getUserName());
-
-			return pstmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	// Xóa tài khoản
-	public boolean deleteAccount(String username) {
-		if (!isAccountExist(username)) {
-			System.out.println("Tài khoản không tồn tại!");
-			return false;
-		}
-
-		String sql = "DELETE FROM Account WHERE userName = ?";
-
-		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			return pstmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
 }

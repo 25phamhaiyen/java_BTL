@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import Enum.GenderEnum;
 import database.DatabaseConnection;
@@ -31,7 +32,7 @@ public class CustomerDAO implements DAOInterface<Customer> {
             pstmt.setString(1, t.getLastName());
             pstmt.setString(2, t.getFirstName());
             pstmt.setString(3, t.getPhoneNumber());
-            pstmt.setString(4, t.getGender().name());
+            pstmt.setInt(4, t.getGender().getCode()); 
             pstmt.setString(5, t.getCitizenNumber());
             pstmt.setString(6, t.getAddress());
             pstmt.setInt(7, t.getAccount().getAccountID());
@@ -69,7 +70,7 @@ public class CustomerDAO implements DAOInterface<Customer> {
             pstmt.setString(1, t.getLastName());
             pstmt.setString(2, t.getFirstName());
             pstmt.setString(3, t.getPhoneNumber());
-            pstmt.setString(4, t.getGender().name());
+            pstmt.setInt(4, t.getGender().getCode()); 
             pstmt.setString(5, t.getCitizenNumber());
             pstmt.setString(6, t.getAddress());
             pstmt.setInt(7, t.getAccount().getAccountID());
@@ -111,9 +112,10 @@ public class CustomerDAO implements DAOInterface<Customer> {
     }
 
     @Override
-    public ArrayList<Customer> selectAll() {
-        ArrayList<Customer> ketQua = new ArrayList<>();
-        String sql = "SELECT c.*, a.accountID, a.userName FROM customer c JOIN account a ON c.accountID = a.accountID";
+    public List<Customer> selectAll() {
+        List<Customer> ketQua = new ArrayList<>();
+        String sql = "SELECT c.*, a.accountID, a.UN_Username, a.Email FROM customer c " +
+                "JOIN account a ON c.accountID = a.AccountID";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -138,9 +140,10 @@ public class CustomerDAO implements DAOInterface<Customer> {
     
     public Customer selectById(int customerID) {
         Customer ketQua = null;
-        String sql = "SELECT c.*, a.accountID, a.userName FROM customer c " +
-                     "JOIN account a ON c.accountID = a.accountID WHERE c.customer_ID = ?";
-
+        String sql = "SELECT c.*, a.accountID, a.UN_Username, a.Email " +
+                "FROM customer c " +
+                "JOIN account a ON c.accountID = a.accountID " +
+                "WHERE c.customer_ID = ?";
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -148,7 +151,7 @@ public class CustomerDAO implements DAOInterface<Customer> {
         try {
             con = DatabaseConnection.getConnection();
             pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, customerID);
+            pstmt.setInt(1, customerID); 
 
             rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -170,26 +173,54 @@ public class CustomerDAO implements DAOInterface<Customer> {
 
     
     @Override
-    public ArrayList<Customer> selectByCondition(String condition) {
-        throw new UnsupportedOperationException("Không hỗ trợ `selectByCondition` để tránh SQL Injection.");
-    }
+    public List<Customer> selectByCondition(String condition, Object... params) {
+        List<Customer> customers = new ArrayList<>();
 
+        if (condition == null || condition.trim().isEmpty()) {
+            throw new IllegalArgumentException("Điều kiện truy vấn không hợp lệ.");
+        }
+
+        String sql = "SELECT c.*, a.accountID, a.UN_Username, a.Email FROM customer c " +
+                "JOIN account a ON c.accountID = a.accountID WHERE " + condition;
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+            for (int i = 0; i < params.length; i++) {
+                pstmt.setObject(i + 1, params[i]);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    customers.add(getCustomerFromResultSet(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn Customer theo điều kiện: " + e.getMessage());
+        }
+        return customers;
+    }
     private Customer getCustomerFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("customer_ID");
         String lName = rs.getString("lastName");
         String fName = rs.getString("firstName");
         String phone = rs.getString("phoneNumber");
-        // Chuyển đổi từ int sang GenderEnum
-        int genderValue = rs.getInt("sex"); // Giá trị 1, 2, 3 từ database
+
+        // Chuyển đổi từ int sang GenderEnum (có kiểm tra null)
+        int genderValue = rs.getInt("sex");
         GenderEnum gender = GenderEnum.fromCode(genderValue);
+
         String citizenNumber = rs.getString("citizenNumber");
         String address = rs.getString("address");
 
-        // Lấy thông tin tài khoản
+        // Lấy thông tin tài khoản (có kiểm tra NULL)
         int accountID = rs.getInt("accountID");
-        String userName = rs.getString("userName");
-        Account account = new Account(accountID, userName, null, null, null); // Không lấy mật khẩu/email để bảo mật
+        String userName = rs.getString("UN_Username");
+        String email = rs.getString("Email"); // 🛠 Lấy email từ DB
+
+        Account account = new Account(accountID, userName, null, email, null);
 
         return new Customer(id, lName, fName, phone, gender, citizenNumber, address, account);
     }
+
 }
