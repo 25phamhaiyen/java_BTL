@@ -230,12 +230,13 @@ CREATE TABLE `order_detail` (
     `OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `OrderID` INT UNSIGNED NOT NULL,
     `ServiceID` INT UNSIGNED NOT NULL,
-    `Quantity` INT UNSIGNED NOT NULL DEFAULT 1,
-    `UnitPrice` DOUBLE NOT NULL,
-    `TotalPrice` DOUBLE GENERATED ALWAYS AS (Quantity * UnitPrice) STORED,
+    `Quantity` INT UNSIGNED NOT NULL DEFAULT 1 CHECK (`Quantity` > 0),
+    `UnitPrice` DECIMAL(10,2) NOT NULL CHECK (`UnitPrice` >= 0),
+    `TotalPrice` DECIMAL(10,2) GENERATED ALWAYS AS (Quantity * UnitPrice) STORED,
     PRIMARY KEY (`OrderDetailID`),
     INDEX `FkOrderDetail_OrderID` (`OrderID`),
     INDEX `FkOrderDetail_ServiceID` (`ServiceID`),
     CONSTRAINT `FkOrderDetail_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order`(`orderID`) ON DELETE CASCADE,
     CONSTRAINT `FkOrderDetail_ServiceID` FOREIGN KEY (`ServiceID`) REFERENCES `service`(`serviceID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
