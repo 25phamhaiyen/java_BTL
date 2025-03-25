@@ -9,7 +9,7 @@ public class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/bestpets";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "25122005yen";
+    private static final String PASSWORD = "thanhdat05";
 
     // Kết nối đến database
     public static Connection getConnection() {
@@ -17,6 +17,7 @@ public class DatabaseConnection {
         try {
             // Đăng ký MySQL Driver (chỉ cần gọi Class.forName)
             Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("✅ Kết nối thành công đến MySQL Server!");
             // Tạo kết nối
             conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (ClassNotFoundException e) {
