@@ -10,6 +10,10 @@ import java.util.List;
 
 public class PaymentStatusDAO implements DAOInterface<PaymentStatus> {
 
+	public static PaymentStatusDAO getInstance() {
+        return new PaymentStatusDAO();
+    }
+	
     @Override
     public int insert(PaymentStatus t) {
         String sql = "INSERT INTO PaymentStatus (statusCode) VALUES (?)";
@@ -35,7 +39,7 @@ public class PaymentStatusDAO implements DAOInterface<PaymentStatus> {
 
     @Override
     public int update(PaymentStatus t) {
-        String sql = "UPDATE PaymentStatus SET statusCode = ? WHERE paymentStatusID = ?";
+        String sql = "UPDATE PaymentStatus SET statusName = ? WHERE paymentStatusID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
@@ -86,7 +90,7 @@ public class PaymentStatusDAO implements DAOInterface<PaymentStatus> {
     }
 
     public PaymentStatus selectById(int id) {
-        String sql = "SELECT * FROM PaymentStatus WHERE paymentStatusID = ?";
+        String sql = "SELECT * FROM paymentStatus WHERE PaymentStatusID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
@@ -134,7 +138,7 @@ public class PaymentStatusDAO implements DAOInterface<PaymentStatus> {
 
     // Phương thức private để map ResultSet thành PaymentStatus
     private PaymentStatus mapResultSetToPaymentStatus(ResultSet rs) throws SQLException {
-        int statusCode = rs.getInt("statusCode");
+        int statusCode = rs.getInt("UN_StatusCode");
 
         // Kiểm tra xem statusCode có hợp lệ không
         PaymentStatusEnum statusEnum = PaymentStatusEnum.fromCode(statusCode);

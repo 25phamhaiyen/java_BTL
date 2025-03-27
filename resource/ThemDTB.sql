@@ -14,10 +14,14 @@ INSERT INTO customer (lastName, firstName, phoneNumber, sex, citizenNumber, addr
 INSERT INTO staff (lastName, firstName, Sex, phoneNumber, CitizenNumber, Address, Role_ID, AccountID) VALUES
 ('Phạm', 'Thanh Hùng', 1, '0934567890', '345678901234', 'Hà Nội', 2, 2),
 ('Lê', 'Thị Mai', 0, '0945678901', '456789012345', 'Đà Nẵng', 2, 3);
+INSERT INTO happenstatus (UN_StatusCode, StatusName) VALUES
+(1, 'PENDING'),
+(2, 'PROCESSING'),
+(3, 'COMPLETED');
 INSERT INTO paymentstatus (UN_StatusCode, StatusName) VALUES
-(1, 'Chưa thanh toán'),
-(2, 'Đã thanh toán'),
-(3, 'Hoàn tiền');
+(1, 'PENDING'),
+(2, 'Paid'),
+(3, 'Failed');
 INSERT INTO typeservice (UN_TypeName) VALUES
 ('Tắm vệ sinh'),
 ('Cắt tỉa lông'),
@@ -41,18 +45,14 @@ INSERT INTO pet (PetName, age, Customer_ID, TypePetID) VALUES
 ('Bella', 4, 2, 1),
 ('Coco', 1, 2, 3),
 ('Luna', 5, 1, 4);
-INSERT INTO `order` (orderDate, appointmentDate, orderType, Total, Customer_ID, StaffID, PaymentStatusID) VALUES
+INSERT INTO `order` (orderDate, appointmentDate, orderType, Total, Customer_ID, StaffID, HappenStatusID) VALUES
 ('2024-03-20 10:00:00', '2024-03-22 10:30:00', 'Appointment', 350000, 1, 1, 1),
 ('2024-03-21 15:00:00', NULL, 'AtStore', 150000, 2, 2, 2);
 INSERT INTO order_detail (OrderID, ServiceID, Quantity, UnitPrice) VALUES
 (1, 1, 1, 100000),
 (1, 5, 1, 250000),
 (2, 2, 1, 150000);
-INSERT INTO invoice (OrderID, TotalAmount) VALUES
-(1, 350000),
-(2, 150000);
-INSERT INTO invoice_detail (InvoiceID, ServiceID, Quantity, UnitPrice) VALUES
-(1, 1, 1, 100000),
-(1, 5, 1, 250000),
-(2, 2, 1, 150000);
+INSERT INTO invoice (OrderID, TotalAmount, PaymentStatusID) VALUES
+(1, 350000, 1),
+(2, 150000, 2);
 

@@ -13,12 +13,12 @@ public class Order {
     
     private Customer customer;
     private Staff staff;
-    private PaymentStatus paymentStatus;
+    private HappenStatus happenStatus;
     
     public Order() {}
 
     public Order(int orderId, Timestamp orderDate, Timestamp appointmentDate, String orderType, double total, 
-                 Customer customer, Staff staff, PaymentStatus paymentStatus) {
+                 Customer customer, Staff staff, HappenStatus happenStatus) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.appointmentDate = appointmentDate;
@@ -26,7 +26,7 @@ public class Order {
         this.total = total;
         this.customer = customer;
         this.staff = staff;
-        this.paymentStatus = paymentStatus;
+        this.happenStatus = happenStatus;
     }
 
     // Getter & Setter
@@ -86,12 +86,12 @@ public class Order {
         this.staff = staff;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
+    public HappenStatus getHappentStatus() {
+        return happenStatus;
     }
 
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setHappenStatus(HappenStatus happenStatus) {
+        this.happenStatus = happenStatus;
     }
 
     // Format ngày tháng
