@@ -72,7 +72,7 @@ CREATE TABLE `service` (
 	`serviceName` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
 	`CostPrice` DOUBLE NOT NULL DEFAULT '0',
 	`TypeServiceID` INT UNSIGNED NOT NULL,
-	`Mô tả` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
+	`MoTa` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
 	PRIMARY KEY (`serviceID`) USING BTREE,
 	INDEX `FkService_TypeServiceID` (`TypeServiceID`) USING BTREE,
 	CONSTRAINT `FkService_TypeServiceID` FOREIGN KEY (`TypeServiceID`) REFERENCES `typeservice` (`TypeServiceID`) ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -150,50 +150,64 @@ AUTO_INCREMENT=1
 
 -- 				Tạo bảng Đơn hàng
 CREATE TABLE `order` (
-    `orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `orderDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Ngày đặt hàng
-    `appointmentDate` DATETIME NULL, -- Ngày khách hẹn
-    `orderType` ENUM('AtStore', 'Appointment') NOT NULL DEFAULT 'AtStore', -- Loại đơn
-    `Total` DOUBLE NOT NULL DEFAULT 0,
-    `Customer_ID` INT UNSIGNED NOT NULL,
-    `StaffID` INT UNSIGNED NULL,
-    `PaymentStatusID` INT UNSIGNED NOT NULL,
-    PRIMARY KEY (`orderID`),
-    INDEX `Fkorder_Customer_ID` (`Customer_ID`),
-    INDEX `Fkorder_StaffID` (`StaffID`),
-    INDEX `Fkorder_PaymentStatusID` (`PaymentStatusID`),
-    CONSTRAINT `Fkorder_Customer_ID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`customer_ID`) ON DELETE CASCADE,
-    CONSTRAINT `Fkorder_StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`StaffID`) ON DELETE CASCADE,
-    CONSTRAINT `Fkorder_PaymentStatusID` FOREIGN KEY (`PaymentStatusID`) REFERENCES `paymentstatus` (`PaymentStatusID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+	`orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`orderDate` DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+	`appointmentDate` DATETIME NULL DEFAULT NULL,
+	`orderType` ENUM('AtStore','Appointment') NOT NULL DEFAULT 'AtStore' COLLATE 'utf8mb4_unicode_ci',
+	`Total` DOUBLE NOT NULL DEFAULT '0',
+	`Customer_ID` INT UNSIGNED NOT NULL,
+	`StaffID` INT UNSIGNED NULL DEFAULT NULL,
+	`HappenStatusID` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`orderID`) USING BTREE,
+	INDEX `Fkorder_Customer_ID` (`Customer_ID`) USING BTREE,
+	INDEX `Fkorder_StaffID` (`StaffID`) USING BTREE,
+	INDEX `Fkorder_PaymentStatusID` (`HappenStatusID`) USING BTREE,
+	CONSTRAINT `Fkorder_Customer_ID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`customer_ID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+	CONSTRAINT `Fkorder_StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`StaffID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+	CONSTRAINT `FK_order_happenstatus` FOREIGN KEY (`HappenStatusID`) REFERENCES `happenstatus` (`HappenStatusID`) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+;
+
+-- Tạo bảng chi tiết đơn hàng (order_detail)
+CREATE TABLE `order_detail` (
+	`OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`OrderID` INT UNSIGNED NOT NULL,
+	`ServiceID` INT UNSIGNED NOT NULL,
+	`Quantity` INT UNSIGNED NOT NULL DEFAULT '1',
+	`UnitPrice` DECIMAL(10,2) NOT NULL,
+	`TotalPrice` DECIMAL(10,2) AS ((`Quantity` * `UnitPrice`)) stored,
+	PRIMARY KEY (`OrderDetailID`) USING BTREE,
+	INDEX `FkOrderDetail_OrderID` (`OrderID`) USING BTREE,
+	INDEX `FkOrderDetail_ServiceID` (`ServiceID`) USING BTREE,
+	CONSTRAINT `FkOrderDetail_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+	CONSTRAINT `FkOrderDetail_ServiceID` FOREIGN KEY (`ServiceID`) REFERENCES `service` (`serviceID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+	CONSTRAINT `order_detail_chk_1` CHECK ((`Quantity` > 0)),
+	CONSTRAINT `order_detail_chk_2` CHECK ((`UnitPrice` >= 0))
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+;
 
 
 -- Tạo bảng hóa đơn (invoice)
 CREATE TABLE `invoice` (
-    `InvoiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `OrderID` INT UNSIGNED NOT NULL,
-    `TotalAmount` DOUBLE NOT NULL DEFAULT 0,
-    `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`InvoiceID`),
-    UNIQUE INDEX `UnInvoice_OrderID` (`OrderID`),
-    INDEX `FkInvoice_OrderID` (`OrderID`),
-    CONSTRAINT `FkInvoice_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order`(`orderID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=UTF8MB4_UNICODE_CI;
--- Chi tiết HD
-CREATE TABLE `invoice_detail` (
-    `InvoiceDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `InvoiceID` INT UNSIGNED NOT NULL,
-    `ServiceID` INT UNSIGNED NOT NULL,
-    `Quantity` INT UNSIGNED NOT NULL,
-    `UnitPrice` DOUBLE NOT NULL,
-    `TotalPrice` DOUBLE GENERATED ALWAYS AS (Quantity * UnitPrice) STORED,
-    PRIMARY KEY (`InvoiceDetailID`),
-    INDEX `FkInvoiceDetail_InvoiceID` (`InvoiceID`),
-    INDEX `FkInvoiceDetail_ServiceID` (`ServiceID`),
-    CONSTRAINT `FkInvoiceDetail_InvoiceID` FOREIGN KEY (`InvoiceID`) REFERENCES `invoice`(`InvoiceID`) ON DELETE CASCADE,
-    CONSTRAINT `FkInvoiceDetail_ServiceID` FOREIGN KEY (`ServiceID`) REFERENCES `service`(`serviceID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
+	`InvoiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`OrderID` INT UNSIGNED NOT NULL,
+	`TotalAmount` DOUBLE NOT NULL DEFAULT '0',
+	`CreatedAt` TIMESTAMP NULL DEFAULT (CURRENT_TIMESTAMP),
+	`PaymentStatusID` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`InvoiceID`) USING BTREE,
+	UNIQUE INDEX `UnInvoice_OrderID` (`OrderID`) USING BTREE,
+	INDEX `FkInvoice_OrderID` (`OrderID`) USING BTREE,
+	INDEX `PaymentStatusID` (`PaymentStatusID`) USING BTREE,
+	CONSTRAINT `FkInvoice_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+	CONSTRAINT `FK_invoice_paymentstatus` FOREIGN KEY (`PaymentStatusID`) REFERENCES `paymentstatus` (`PaymentStatusID`) ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+;
 
 -- 				Tạo bảng loại thú cưng
 CREATE TABLE `typepet` (
@@ -225,18 +239,5 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
--- Tạo bảng chi tiết đơn hàng (order_detail)
-CREATE TABLE `order_detail` (
-    `OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `OrderID` INT UNSIGNED NOT NULL,
-    `ServiceID` INT UNSIGNED NOT NULL,
-    `Quantity` INT UNSIGNED NOT NULL DEFAULT 1 CHECK (`Quantity` > 0),
-    `UnitPrice` DECIMAL(10,2) NOT NULL CHECK (`UnitPrice` >= 0),
-    `TotalPrice` DECIMAL(10,2) GENERATED ALWAYS AS (Quantity * UnitPrice) STORED,
-    PRIMARY KEY (`OrderDetailID`),
-    INDEX `FkOrderDetail_OrderID` (`OrderID`),
-    INDEX `FkOrderDetail_ServiceID` (`ServiceID`),
-    CONSTRAINT `FkOrderDetail_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order`(`orderID`) ON DELETE CASCADE,
-    CONSTRAINT `FkOrderDetail_ServiceID` FOREIGN KEY (`ServiceID`) REFERENCES `service`(`serviceID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
