@@ -1,7 +1,7 @@
 package Enum;
 
 public enum StatusCode {
-    PENDING(0), PROCESSING(1), COMPLETED(2);
+    PENDING(0), PROCESSING(1), COMPLETED(2), TEST(5);
 
     private final int code;
 

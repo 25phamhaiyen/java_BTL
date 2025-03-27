@@ -3,7 +3,6 @@ package dao;
 import entity.HappenStatus;
 import Enum.StatusCode;
 import database.DatabaseConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
 
     @Override
     public int insert(HappenStatus t) {
-        String sql = "INSERT INTO HappenStatus (statusCode, statusName) VALUES (?, ?)";
+        String sql = "INSERT INTO happenstatus (UN_StatusCode, StatusName) VALUES (?, ?)";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -36,7 +35,7 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
 
     @Override
     public int update(HappenStatus t) {
-        String sql = "UPDATE HappenStatus SET statusCode = ?, statusName = ? WHERE happenStatusID = ?";
+        String sql = "UPDATE happenstatus SET UN_StatusCode = ?, StatusName = ? WHERE HappenStatusID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
@@ -53,7 +52,7 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
 
     @Override
     public int delete(HappenStatus t) {
-        String sql = "DELETE FROM HappenStatus WHERE happenStatusID = ?";
+        String sql = "DELETE FROM happenstatus WHERE HappenStatusID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
@@ -68,16 +67,16 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
     @Override
     public List<HappenStatus> selectAll() {
         List<HappenStatus> list = new ArrayList<>();
-        String sql = "SELECT * FROM HappenStatus";
+        String sql = "SELECT * FROM happenstatus";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             
             while (rs.next()) {
                 list.add(new HappenStatus(
-                    rs.getInt("happenStatusID"),
-                    StatusCode.values()[rs.getInt("statusCode")],
-                    rs.getString("statusName")
+                    rs.getInt("HappenStatusID"),
+                    StatusCode.values()[rs.getInt("UN_StatusCode")],
+                    rs.getString("StatusName")
                 ));
             }
         } catch (SQLException e) {
@@ -93,7 +92,7 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
 
     public HappenStatus selectById(int id) {
         HappenStatus happenStatus = null;
-        String sql = "SELECT * FROM HappenStatus WHERE happenStatusID = ?";
+        String sql = "SELECT * FROM happenstatus WHERE HappenStatusID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
@@ -102,9 +101,9 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
             
             if (rs.next()) {
                 happenStatus = new HappenStatus(
-                    rs.getInt("happenStatusID"),
-                    StatusCode.values()[rs.getInt("statusCode")],
-                    rs.getString("statusName")
+                    rs.getInt("HappenStatusID"),
+                    StatusCode.values()[rs.getInt("UN_StatusCode")],
+                    rs.getString("StatusName")
                 );
             }
         } catch (SQLException e) {
@@ -116,29 +115,21 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
     @Override
     public List<HappenStatus> selectByCondition(String condition, Object... params) {
         List<HappenStatus> list = new ArrayList<>();
-        String sql = "SELECT * FROM HappenStatus WHERE " + condition;
+        String sql = "SELECT * FROM happenstatus WHERE " + condition;
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
-            // Set tham số vào PreparedStatement
             for (int i = 0; i < params.length; i++) {
                 pstmt.setObject(i + 1, params[i]);
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    int statusCodeIndex = rs.getInt("statusCode");
-                    
-                    // Kiểm tra tránh lỗi ArrayIndexOutOfBoundsException
-                    StatusCode statusCode = (statusCodeIndex >= 0 && statusCodeIndex < StatusCode.values().length) 
-                        ? StatusCode.values()[statusCodeIndex] 
-                        : null; // Hoặc có thể throw exception tùy yêu cầu
-
                     list.add(new HappenStatus(
-                        rs.getInt("happenStatusID"),
-                        statusCode,
-                        rs.getString("statusName")
+                        rs.getInt("HappenStatusID"),
+                        StatusCode.values()[rs.getInt("UN_StatusCode")],
+                        rs.getString("StatusName")
                     ));
                 }
             }
@@ -147,5 +138,4 @@ public class HappenStatusDAO implements DAOInterface<HappenStatus> {
         }
         return list;
     }
-
 }
