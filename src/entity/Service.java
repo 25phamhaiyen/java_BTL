@@ -13,6 +13,10 @@ public class Service {
         super();
     }
 
+    public Service(int serviceID) {
+        this.serviceID = serviceID;
+    }
+
     public Service(int serviceID, String serviceName, double costPrice, TypeServiceEnum typeService, String description) {
         super();
         this.serviceID = serviceID;

@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Enum.TypeOrder;
+
 public class Order {
     private int orderId;
     private Timestamp orderDate;
     private Timestamp appointmentDate;
-    private String orderType;
+    private TypeOrder orderType;
     private double total;
     
     private Customer customer;
@@ -17,7 +19,7 @@ public class Order {
     
     public Order() {}
 
-    public Order(int orderId, Timestamp orderDate, Timestamp appointmentDate, String orderType, double total, 
+    public Order(int orderId, Timestamp orderDate, Timestamp appointmentDate, TypeOrder orderType, double total, 
                  Customer customer, Staff staff, HappenStatus happenStatus) {
         this.orderId = orderId;
         this.orderDate = orderDate;
@@ -54,11 +56,11 @@ public class Order {
         this.appointmentDate = appointmentDate;
     }
 
-    public String getOrderType() {
+    public TypeOrder getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(String orderType) {
+    public void setOrderType(TypeOrder orderType) {
         this.orderType = orderType;
     }
 
@@ -104,6 +106,19 @@ public class Order {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date(appointmentDate.getTime()));
     }
-    
+    @Override
+    public String toString() {
+        return "Order{" +
+               "orderId=" + orderId +
+               ", orderDate=" + orderDate +
+               ", appointmentDate=" + appointmentDate +
+               ", orderType=" + orderType +
+               ", total=" + total +
+               ", customer=" + (customer != null ? customer.getCustomerID() : "null") +
+               ", staff=" + (staff != null ? staff.getStaffID() : "null") +
+               ", status=" + (happenStatus != null ? happenStatus.getHappenStatusID() : "null") +
+               '}';
+    }
+
     
 }

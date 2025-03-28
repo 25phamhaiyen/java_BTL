@@ -19,6 +19,9 @@ public class OrderDetail {
         this.order = order;
         this.service = service;
         this.quantity = quantity;
+        if (unitPrice == null) {
+            throw new IllegalArgumentException("unitPrice không thể là null");
+        }
         this.unitPrice = unitPrice;
         this.totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity)); // Tính tổng tiền
     }

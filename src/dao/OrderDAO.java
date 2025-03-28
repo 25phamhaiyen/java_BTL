@@ -1,21 +1,65 @@
 package dao;
 
-import database.DatabaseConnection;
 import entity.Order;
 import entity.Customer;
 import entity.HappenStatus;
 import entity.Staff;
+import utils.DatabaseConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import Enum.TypeOrder;
 
 public class OrderDAO implements DAOInterface<Order> {
     
     public static OrderDAO getInstance() {
         return new OrderDAO();
     }
+    
+    public double calculateTotal(int orderId) {
+        String sql = "SELECT SUM(TotalPrice) FROM order_detail WHERE OrderID = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setInt(1, orderId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1); // Lấy tổng tiền từ SQL
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng tiền: " + e.getMessage());
+        }
+        return 0.0; // Nếu có lỗi, trả về 0
+    }
 
-    @Override
+    public void updateTotal(int orderId, double total) {
+        String sql = "UPDATE `order` SET Total = ? WHERE orderID = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setDouble(1, total);
+            pstmt.setInt(2, orderId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật tổng tiền: " + e.getMessage());
+        }
+    }
+
+    public void updateTotalPrice(int orderId) {
+        String sql = "UPDATE `order` SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = ?) WHERE orderID = ?";
+        
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, orderId);
+            pstmt.setInt(2, orderId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật tổng tiền đơn hàng: " + e.getMessage());
+        }
+    }
+
     public int insert(Order order) {
         String sql = "INSERT INTO `order` (orderDate, appointmentDate, orderType, Total, Customer_ID, StaffID, HappenStatusID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -24,49 +68,64 @@ public class OrderDAO implements DAOInterface<Order> {
             
             pstmt.setTimestamp(1, order.getOrderDate());
             pstmt.setTimestamp(2, order.getAppointmentDate());
-            pstmt.setString(3, order.getOrderType());
-            pstmt.setDouble(4, order.getTotal());
+            pstmt.setString(3, order.getOrderType().getDescription());
+            pstmt.setDouble(4, 0.0); // Ban đầu đặt tổng tiền là 0
             pstmt.setInt(5, order.getCustomer().getCustomerID());
-            pstmt.setInt(6, order.getStaff() != null ? order.getStaff().getStaffID() : null);
+            pstmt.setObject(6, order.getStaff() != null ? order.getStaff().getStaffID() : null);
             pstmt.setInt(7, order.getHappentStatus().getHappenStatusID());
-            
+
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        order.setOrderId(rs.getInt(1));
+                        int orderId = rs.getInt(1);
+                        order.setOrderId(orderId);
+                        
+                        System.out.println("✅ Thêm đơn hàng thành công! OrderID = " + orderId);
+                        
+                        // Quan trọng: Cập nhật tổng tiền sau khi thêm OrderDetail
+                        updateTotalPrice(orderId);
                     }
                 }
             }
             return affectedRows;
         } catch (SQLException e) {
-            System.err.println("Lỗi khi thêm đơn hàng: " + e.getMessage());
+            System.err.println("❌ Lỗi khi thêm đơn hàng: " + e.getMessage());
             return 0;
         }
     }
 
+
+
     @Override
     public int update(Order order) {
-        String sql = "UPDATE `order` SET orderDate=?, appointmentDate=?, orderType=?, Total=?, Customer_ID=?, StaffID=?, HappenStatusID=? WHERE orderID=?";
+        String sql = "UPDATE `order` SET orderDate=?, appointmentDate=?, orderType=?, Customer_ID=?, StaffID=?, HappenStatusID=? WHERE orderID=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
             pstmt.setTimestamp(1, order.getOrderDate());
             pstmt.setTimestamp(2, order.getAppointmentDate());
-            pstmt.setString(3, order.getOrderType());
-            pstmt.setDouble(4, order.getTotal());
-            pstmt.setInt(5, order.getCustomer().getCustomerID());
-            pstmt.setInt(6, order.getStaff() != null ? order.getStaff().getStaffID() : null);
-            pstmt.setInt(7, order.getHappentStatus().getHappenStatusID());
-            pstmt.setInt(8, order.getOrderId());
+            pstmt.setString(3, order.getOrderType().getDescription());
+            pstmt.setInt(4, order.getCustomer().getCustomerID());
+            pstmt.setObject(5, order.getStaff() != null ? order.getStaff().getStaffID() : null);
+            pstmt.setInt(6, order.getHappentStatus().getHappenStatusID());
+            pstmt.setInt(7, order.getOrderId());
             
-            return pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("✅ Cập nhật đơn hàng thành công! OrderID = " + order.getOrderId());
+                
+                // Cập nhật lại tổng tiền của đơn hàng sau khi update
+                updateTotalPrice(order.getOrderId());
+            }
+            return affectedRows;
         } catch (SQLException e) {
-            System.err.println("Lỗi khi cập nhật đơn hàng: " + e.getMessage());
+            System.err.println("❌ Lỗi khi cập nhật đơn hàng: " + e.getMessage());
             return 0;
         }
     }
+
 
     @Override
     public int delete(Order order) {
@@ -151,22 +210,39 @@ public class OrderDAO implements DAOInterface<Order> {
         int orderId = rs.getInt("orderID");
         Timestamp orderDate = rs.getTimestamp("orderDate");
         Timestamp appointmentDate = rs.getTimestamp("appointmentDate");
-        String orderType = rs.getString("orderType");
         double total = rs.getDouble("Total");
+
+        // Kiểm tra TypeOrder NULL
+        TypeOrder orderType = null;
+        String orderTypeStr = rs.getString("orderType");
+        if (orderTypeStr != null) {
+            try {
+                orderType = TypeOrder.valueOf(orderTypeStr.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.err.println("Lỗi: orderType không hợp lệ trong DB: " + orderTypeStr);
+            }
+        }
 
         Customer customer = new Customer();
         customer.setCustomerID(rs.getInt("Customer_ID"));
 
-        Staff staff = new Staff();
+        // Kiểm tra Staff NULL
+        Staff staff = null;
         if (rs.getObject("StaffID") != null) {
+            staff = new Staff();
             staff.setStaffID(rs.getInt("StaffID"));
         }
 
-        HappenStatus happenStatus = new HappenStatus();
-        happenStatus.setHappenStatusID(rs.getInt("HappenStatusID"));
+        // Kiểm tra HappenStatus NULL
+        HappenStatus happenStatus = null;
+        if (rs.getObject("HappenStatusID") != null) {
+            happenStatus = new HappenStatus();
+            happenStatus.setHappenStatusID(rs.getInt("HappenStatusID"));
+        }
 
         return new Order(orderId, orderDate, appointmentDate, orderType, total, customer, staff, happenStatus);
     }
+
 
 
 }

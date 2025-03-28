@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Enum.GenderEnum;
-import database.DatabaseConnection;
 import entity.Customer;
+import exception.BusinessException;
 import entity.Account;
 import utils.DBUtil;
+import utils.DatabaseConnection;
 
 public class CustomerDAO implements DAOInterface<Customer> {
 
@@ -47,7 +48,10 @@ public class CustomerDAO implements DAOInterface<Customer> {
 
             System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
         } catch (SQLException e) {
-            System.err.println("Lỗi khi thêm khách hàng: " + e.getMessage());
+        	if (e.getMessage().contains("Duplicate entry")) {
+                throw new BusinessException("Số điện thoại hoặc CMND/CCCD đã tồn tại.");
+            }
+            throw new BusinessException("Lỗi SQL khi thêm khách hàng: " + e.getMessage());
         } finally {
             DBUtil.closeResources(con, pstmt);
         }
@@ -80,7 +84,10 @@ public class CustomerDAO implements DAOInterface<Customer> {
             System.out.println("UPDATE thành công, " + ketQua + " dòng bị thay đổi.");
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi cập nhật khách hàng: " + e.getMessage());
+        	if (e.getMessage().contains("Duplicate entry")) {
+                throw new BusinessException("Số điện thoại hoặc CMND/CCCD đã tồn tại.");
+            }
+            throw new BusinessException("Lỗi SQL khi cập nhật khách hàng: " + e.getMessage());
         } finally {
             DBUtil.closeResources(con, pstmt);
         }
@@ -110,6 +117,15 @@ public class CustomerDAO implements DAOInterface<Customer> {
         }
         return ketQua;
     }
+    
+    public void deleteAll(Connection conn) throws SQLException {
+        String sql = "DELETE FROM Customer";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.executeUpdate();
+        }
+    }
+
+
 
     @Override
     public List<Customer> selectAll() {
@@ -200,6 +216,15 @@ public class CustomerDAO implements DAOInterface<Customer> {
         }
         return customers;
     }
+    
+    public void resetAutoIncrement(Connection conn) throws SQLException {
+        String sql = "ALTER TABLE Customer AUTO_INCREMENT = 1";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.executeUpdate();
+        }
+    }
+
+    
     private Customer getCustomerFromResultSet(ResultSet rs) throws SQLException {
         int id = rs.getInt("customer_ID");
         String lName = rs.getString("lastName");

@@ -1,9 +1,10 @@
 package dao;
 
-import database.DatabaseConnection;
 import entity.OrderDetail;
 import entity.Order;
 import entity.Service;
+import utils.DatabaseConnection;
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,54 +12,86 @@ import java.util.List;
 
 public class OrderDetailDAO implements DAOInterface<OrderDetail> {
     
-    public static OrderDetailDAO getInstance() {
-        return new OrderDetailDAO();
-    }
-    
-    @Override
-    public int insert(OrderDetail orderDetail) {
-        String sql = "INSERT INTO order_detail (OrderID, ServiceID, Quantity, UnitPrice) VALUES (?, ?, ?, ?)";
-        
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
-            pstmt.setInt(1, orderDetail.getOrder().getOrderId());
-            pstmt.setInt(2, orderDetail.getService().getServiceID());
-            pstmt.setInt(3, orderDetail.getQuantity());
-            pstmt.setBigDecimal(4, orderDetail.getUnitPrice());
-            
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        orderDetail.setOrderDetailId(rs.getInt(1));
-                    }
-                }
-            }
-            return affectedRows;
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi thêm chi tiết đơn hàng: " + e.getMessage());
-            return 0;
-        }
-    }
+	private static OrderDetailDAO instance;
+
+	public static OrderDetailDAO getInstance() {
+	    if (instance == null) {
+	        instance = new OrderDetailDAO();
+	    }
+	    return instance;
+	}
+
+
+	public int insert(OrderDetail orderDetail) {
+	    String sql = "INSERT INTO order_detail (OrderID, ServiceID, Quantity, UnitPrice) VALUES (?, ?, ?, ?)";
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+	        //  Lấy giá từ bảng service
+	        ServiceDAO serviceDAO = ServiceDAO.getInstance();
+	        Service service = serviceDAO.selectById(orderDetail.getService().getServiceID());
+	        if (service == null) {
+	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
+	            return 0;
+	        }
+	        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
+
+
+	        pstmt.setInt(1, orderDetail.getOrder().getOrderId());
+	        pstmt.setInt(2, orderDetail.getService().getServiceID());
+	        pstmt.setInt(3, orderDetail.getQuantity());
+	        pstmt.setBigDecimal(4, unitPrice);
+
+	        int affectedRows = pstmt.executeUpdate();
+	        if (affectedRows > 0) {
+	            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                    orderDetail.setOrderDetailId(rs.getInt(1));
+	                }
+	            }
+	            OrderDAO.getInstance().updateTotalPrice(orderDetail.getOrder().getOrderId());
+	        }
+	        return affectedRows;
+	    } catch (SQLException e) {
+	        System.err.println("❌ Lỗi khi thêm chi tiết đơn hàng: " + e.getMessage());
+	        return 0;
+	    }
+	}
+
 
     @Override
     public int update(OrderDetail orderDetail) {
-        String sql = "UPDATE order_detail SET Quantity=?, UnitPrice=? WHERE OrderDetailID=?";
+        String sql = "UPDATE order_detail SET ServiceID=?, Quantity=?, UnitPrice=? WHERE OrderDetailID=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
+        //  Lấy giá từ bảng service
+	        ServiceDAO serviceDAO = ServiceDAO.getInstance();
+	        Service service = serviceDAO.selectById(orderDetail.getService().getServiceID());
+	        if (service == null) {
+	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
+	            return 0;
+	        }
+	        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
+
+	        pstmt.setInt(1, orderDetail.getService().getServiceID());
+            pstmt.setInt(2, orderDetail.getQuantity());
+            pstmt.setBigDecimal(3, unitPrice);
+            pstmt.setInt(4, orderDetail.getOrderDetailId());
             
-            pstmt.setInt(1, orderDetail.getQuantity());
-            pstmt.setBigDecimal(2, orderDetail.getUnitPrice());
-            pstmt.setInt(3, orderDetail.getOrderDetailId());
-            
-            return pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                // Cập nhật tổng tiền đơn hàng sau khi sửa
+                OrderDAO.getInstance().updateTotalPrice(orderDetail.getOrder().getOrderId());
+            }
+            return affectedRows;
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật chi tiết đơn hàng: " + e.getMessage());
             return 0;
         }
     }
+
 
     @Override
     public int delete(OrderDetail orderDetail) {
@@ -68,12 +101,20 @@ public class OrderDetailDAO implements DAOInterface<OrderDetail> {
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
             pstmt.setInt(1, orderDetail.getOrderDetailId());
-            return pstmt.executeUpdate();
+            
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                // Cập nhật tổng tiền đơn hàng sau khi xóa
+            	 OrderDAO.getInstance().updateTotalPrice(orderDetail.getOrder().getOrderId());
+
+            }
+            return affectedRows;
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa chi tiết đơn hàng: " + e.getMessage());
             return 0;
         }
     }
+
 
     @Override
     public List<OrderDetail> selectAll() {
@@ -144,13 +185,16 @@ public class OrderDetailDAO implements DAOInterface<OrderDetail> {
         int orderId = rs.getInt("OrderID");
         int serviceId = rs.getInt("ServiceID");
         int quantity = rs.getInt("Quantity");
-        BigDecimal unitPrice = rs.getBigDecimal("UnitPrice");
+        //  Lấy costPrice từ Service
+        Service service = ServiceDAO.getInstance().selectById(serviceId);
+        if (service == null) {
+            throw new SQLException("Không tìm thấy service với ID: " + serviceId);
+        }
+        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
         
         Order order = new Order();
         order.setOrderId(orderId);
         
-        Service service = new Service();
-        service.setServiceID(serviceId);
         
         return new OrderDetail(orderDetailId, order, service, quantity, unitPrice);
     }

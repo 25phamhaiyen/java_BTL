@@ -4,10 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import Enum.PaymentStatusEnum;
 import entity.Invoice;
 import entity.Order;
 import entity.PaymentStatus;
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class InvoiceDAO implements DAOInterface<Invoice> {
 
@@ -142,8 +143,16 @@ public class InvoiceDAO implements DAOInterface<Invoice> {
         Order order = new Order();
         order.setOrderId(rs.getInt("OrderID"));
         
-        PaymentStatus paymentStatus = new PaymentStatus();
-        paymentStatus.setPaymentStatusID(rs.getInt("PaymentStatusID"));
+        PaymentStatus paymentStatus = null;
+        int paymentStatusId = rs.getInt("PaymentStatusID");
+        if (!rs.wasNull()) {  
+            paymentStatus = new PaymentStatus();
+            paymentStatus.setPaymentStatusID(paymentStatusId);
+            
+            paymentStatus.setStatus(PaymentStatusEnum.fromCode(paymentStatusId));  
+        } else {
+            System.err.println("Lưu ý: PaymentStatusID NULL cho InvoiceID = " + rs.getInt("InvoiceID"));
+        }
         
         return new Invoice(
                 rs.getInt("InvoiceID"),

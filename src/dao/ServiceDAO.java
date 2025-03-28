@@ -1,7 +1,7 @@
 package dao;
 
-import database.DatabaseConnection;
 import entity.Service;
+import utils.DatabaseConnection;
 import Enum.TypeServiceEnum;
 import java.sql.*;
 import java.util.ArrayList;

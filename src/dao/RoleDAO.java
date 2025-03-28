@@ -1,7 +1,7 @@
 package dao;
 
 import entity.Role;
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
