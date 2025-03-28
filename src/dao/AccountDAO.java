@@ -7,13 +7,23 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import entity.Account;
 import entity.Role;
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class AccountDAO implements DAOInterface<Account> {
 
+	private static AccountDAO instance;
+
 	public static AccountDAO getInstance() {
-		return new AccountDAO();
+	    if (instance == null) {
+	        synchronized (AccountDAO.class) {
+	            if (instance == null) {
+	                instance = new AccountDAO();
+	            }
+	        }
+	    }
+	    return instance;
 	}
+
 
 	@Override
 	public int insert(Account account) {
@@ -47,31 +57,31 @@ public class AccountDAO implements DAOInterface<Account> {
 
 	@Override
 	public int update(Account account) {
-		String sql = "UPDATE account SET UN_UserName=?, Password=?, Email=?, Role_ID=? WHERE AccountID=?";
-		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+	    String sql = "UPDATE account SET UN_UserName=?, Password=?, Email=?, Role_ID=? WHERE AccountID=?";
+	    try (Connection con = DatabaseConnection.getConnection(); 
+	         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-			pstmt.setString(1, account.getUserName());
+	        pstmt.setString(1, account.getUserName());
 
-			// Nếu mật khẩu thay đổi, mã hóa trước khi lưu
-			String newPassword = account.getPassword();
-			if (!newPassword.isEmpty()) {
-				newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
-			} else {
-				// Nếu không thay đổi, lấy mật khẩu cũ từ DB
-				newPassword = getPasswordById(account.getAccountID());
-			}
-			pstmt.setString(2, newPassword);
+	        String newPassword = account.getPassword();
+	        if (newPassword != null && !newPassword.trim().isEmpty()) {
+	            newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
+	        } else {
+	            newPassword = getPasswordById(account.getAccountID());
+	        }
+	        pstmt.setString(2, newPassword);
 
-			pstmt.setString(3, account.getEmail());
-			pstmt.setInt(4, account.getRole().getRoleID());
-			pstmt.setInt(5, account.getAccountID());
+	        pstmt.setString(3, account.getEmail());
+	        pstmt.setInt(4, account.getRole().getRoleID());
+	        pstmt.setInt(5, account.getAccountID());
 
-			return pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.err.println("Lỗi khi cập nhật tài khoản: " + e.getMessage());
-			return 0;
-		}
+	        return pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        System.err.println("Lỗi khi cập nhật tài khoản: " + e.getMessage());
+	        return 0;
+	    }
 	}
+
 
 	// Hàm lấy mật khẩu cũ từ DB nếu không cập nhật mật khẩu mới
 	private String getPasswordById(int accountID) throws SQLException {

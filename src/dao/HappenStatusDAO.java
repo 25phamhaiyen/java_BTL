@@ -1,8 +1,8 @@
 package dao;
 
 import entity.HappenStatus;
+import utils.DatabaseConnection;
 import Enum.StatusCode;
-import database.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

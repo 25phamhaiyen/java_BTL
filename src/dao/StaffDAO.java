@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 
 import entity.Role;
 import entity.Staff;
+import utils.DatabaseConnection;
 import Enum.GenderEnum;
-import database.DatabaseConnection;
 
 public class StaffDAO implements DAOInterface<Staff> {
     private static final Logger LOGGER = Logger.getLogger(StaffDAO.class.getName());

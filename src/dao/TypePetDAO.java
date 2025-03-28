@@ -4,8 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.DatabaseConnection;
 import entity.TypePet;
+import utils.DatabaseConnection;
 
 public class TypePetDAO implements DAOInterface<TypePet> {
 

@@ -240,4 +240,18 @@ ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
 
+DELIMITER //
+
+CREATE TRIGGER after_order_detail_delete
+AFTER DELETE ON order_detail
+FOR EACH ROW
+BEGIN
+    UPDATE `order`
+    SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = OLD.OrderID)
+    WHERE OrderID = OLD.OrderID;
+END;
+
+//
+
+DELIMITER ;
 
