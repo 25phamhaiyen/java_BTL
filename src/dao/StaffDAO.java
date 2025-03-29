@@ -85,12 +85,29 @@ public class StaffDAO implements DAOInterface<Staff> {
         return executeQuery(sql);
     }
 
+    public Staff selectById(int staffID) {
+        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, " +
+                     "s.citizenNumber, s.address, r.roleID, r.roleName " +
+                     "FROM Staff s JOIN Role r ON s.roleID = r.roleID WHERE s.staffID = ?";
+        
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, staffID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToStaff(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm nhân viên theo ID: " + e.getMessage());
+        }
+        return null;
+    }
+
     @Override
     public Staff selectById(Staff staff) {
-        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.roleID, r.roleName " +
-                     "FROM Staff s JOIN Role r ON s.roleID = r.roleID WHERE s.staffID = ?";
-        List<Staff> results = executeQuery(sql, staff.getStaffID());
-        return results.isEmpty() ? null : results.get(0);
+        return selectById(staff.getStaffID());
     }
 
     public List<Staff> selectByCondition(String whereClause, Object... params) {

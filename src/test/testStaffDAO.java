@@ -10,13 +10,13 @@ public class testStaffDAO {
     public static void main(String[] args) {
         StaffDAO staffDAO = new StaffDAO();
 
-        // 1. Thêm mới Staff với kiểm tra trùng lặp
+        // 1. INSERT
         System.out.println("INSERT");
         Role role = new Role(1, "Manager"); // Giả định roleID 1 tồn tại
         Staff newStaff = new Staff(0, "Nguyen", "Van A", GenderEnum.MALE, "123456789", "CIT001", "Hanoi", role);
 
         try {
-            // Kiểm tra xem số điện thoại đã tồn tại chưa (giả sử phoneNumber là duy nhất)
+           
             List<Staff> existing = staffDAO.selectByCondition(
                 "phoneNumber = ?", 
                 newStaff.getPhoneNumber()
@@ -35,7 +35,7 @@ public class testStaffDAO {
         }
         System.out.println("\n");
 
-        // 2. Lấy danh sách tất cả Staff
+        // 2. List all Staff
         System.out.println("SELECT ALL");
         List<Staff> staffList = staffDAO.selectAll();
         System.out.println("Total staffs: " + staffList.size());
@@ -44,7 +44,7 @@ public class testStaffDAO {
         }
         System.out.println("\n");
 
-        // 3. Cập nhật Staff với kiểm tra trùng lặp
+        // 3. UPDATE Staff 
         if (!staffList.isEmpty()) {
             System.out.println("UPDATE");
             Staff updateStaff = staffList.get(0);
@@ -54,7 +54,7 @@ public class testStaffDAO {
             String newPhoneNumber = "555555555";
 
             try {
-                // Kiểm tra xem số điện thoại mới đã tồn tại chưa (trừ bản ghi hiện tại)
+    
                 List<Staff> checkDup = staffDAO.selectByCondition(
                     "phoneNumber = ? AND staffID != ?", 
                     newPhoneNumber,
@@ -80,7 +80,7 @@ public class testStaffDAO {
             System.out.println("\n");
         }
 
-        // 4. Tìm Staff theo ID
+        // 4. SELECT Staff BY ID
         if (!staffList.isEmpty()) {
             System.out.println("SELECT BY ID");
             int testId = staffList.get(0).getStaffID();
@@ -90,7 +90,7 @@ public class testStaffDAO {
             System.out.println("\n");
         }
 
-        // 5. Tìm Staff theo điều kiện
+        // 5. SELECT Staff  BY CONDITIO
         System.out.println("SELECT BY CONDITION");
         String searchLastName = "Nguyen";
         List<Staff> filteredStaffs = staffDAO.selectByCondition(
@@ -103,13 +103,13 @@ public class testStaffDAO {
         }
         System.out.println("\n");
 
-        // 6. Xóa Staff với kiểm tra trước khi tạo bản ghi tạm
+        // 6.Delete Staff 
         System.out.println("DELETE");
         Role tempRole = new Role(1, "Manager");
         Staff tempStaff = new Staff(0, "Pham", "Van C", GenderEnum.MALE, "111222333", "CIT003", "Da Nang", tempRole);
 
         try {
-            // Kiểm tra xem số điện thoại tạm đã tồn tại chưa
+       
             List<Staff> checkTemp = staffDAO.selectByCondition(
                 "phoneNumber = ?", 
                 tempStaff.getPhoneNumber()
