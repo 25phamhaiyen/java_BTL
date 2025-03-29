@@ -2,6 +2,8 @@ package test;
 
 import java.util.List;
 import dao.StaffDAO;
+import dao.AccountDAO;
+import entity.Account;
 import entity.Role;
 import entity.Staff;
 import Enum.GenderEnum;
@@ -9,73 +11,99 @@ import Enum.GenderEnum;
 public class testStaffDAO {
     public static void main(String[] args) {
         StaffDAO staffDAO = new StaffDAO();
+        AccountDAO accountDAO = AccountDAO.getInstance();
 
-        // 1. INSERT
-        System.out.println("INSERT");
-        Role role = new Role(1, "Manager"); // Giả định roleID 1 tồn tại
+        // 1. Tạo tài khoản trước khi tạo nhân viên
+        System.out.println("=== TẠO TÀI KHOẢN ===");
+        Role managerRole = new Role(1, "Manager");
         
-        // Tạo citizenNumber ngẫu nhiên để tránh trùng lặp
-        String uniqueCitizenNumber = "CIT" + System.currentTimeMillis() % 1000000;
-        if (uniqueCitizenNumber.length() > 12) {
-            uniqueCitizenNumber = uniqueCitizenNumber.substring(0, 12);
-        }
-        
-        Staff newStaff = new Staff(0, "Nguyen", "Van A", GenderEnum.MALE, 
-                                 "0123456789", "123456789012", "Hanoi", role, 1);
+        Account managerAccount = new Account();
+        managerAccount.setUserName("manager_test");
+        managerAccount.setPassword("password123");
+        managerAccount.setEmail("manager_test@bestpets.com");
+        managerAccount.setRole(managerRole);
         
         try {
-            // Validate trước khi insert
-            newStaff.validate();
-            
-            // Kiểm tra trùng số điện thoại
-            List<Staff> existingPhone = staffDAO.selectByCondition(
-                "phoneNumber = ?", 
-                newStaff.getPhoneNumber()
-            );
-
-            if (!existingPhone.isEmpty()) {
-                System.out.println("Số điện thoại " + newStaff.getPhoneNumber() + " đã tồn tại. Sử dụng bản ghi hiện có.");
-                newStaff = existingPhone.get(0);
-            } 
-            // Kiểm tra trùng CCCD
-            else if (!staffDAO.selectByCondition("citizenNumber = ?", newStaff.getCitizenNumber()).isEmpty()) {
-                System.out.println("Số CCCD " + newStaff.getCitizenNumber() + " đã tồn tại.");
-            }
-            else {
-                int insertResult = staffDAO.insert(newStaff);
-                if (insertResult > 0) {
-                    System.out.println("Insert thành công. ID: " + newStaff.getStaffID());
+            // Kiểm tra nếu tài khoản đã tồn tại
+            Account existingAccount = accountDAO.getAccountByUsername(managerAccount.getUserName());
+            if (existingAccount != null) {
+                System.out.println("Tài khoản đã tồn tại, sử dụng AccountID: " + existingAccount.getAccountID());
+                managerAccount = existingAccount;
+            } else {
+                int accountResult = accountDAO.insert(managerAccount);
+                if (accountResult > 0) {
+                    System.out.println("Tạo tài khoản thành công. AccountID: " + managerAccount.getAccountID());
                 } else {
-                    System.out.println("Insert không thành công");
+                    System.out.println("Không thể tạo tài khoản");
+                    return;
                 }
             }
-        } catch (IllegalArgumentException e) {
-            System.err.println("Lỗi dữ liệu: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("Lỗi hệ thống: " + e.getMessage());
-        }
-        System.out.println("\n");
 
-        // 2. List all Staff
-        System.out.println("SELECT ALL");
-        try {
+            // 2. INSERT NHÂN VIÊN
+            System.out.println("\n=== THÊM NHÂN VIÊN ===");
+            String uniqueCitizenNumber = "CIT" + System.currentTimeMillis() % 1000000;
+            if (uniqueCitizenNumber.length() > 12) {
+                uniqueCitizenNumber = uniqueCitizenNumber.substring(0, 12);
+            }
+            
+            Staff newStaff = new Staff(
+                0, "Nguyen", "Van A", GenderEnum.MALE, 
+                "0123456789", "123456789012", "Hanoi", 
+                managerRole, managerAccount.getAccountID() // Sử dụng AccountID từ tài khoản vừa tạo
+            );
+            
+            try {
+                newStaff.validate();
+                
+             
+                List<Staff> existingPhone = staffDAO.selectByCondition(
+                    "phoneNumber = ?", 
+                    newStaff.getPhoneNumber()
+                );
+
+                if (!existingPhone.isEmpty()) {
+                    System.out.println("Số điện thoại " + newStaff.getPhoneNumber() + " đã tồn tại. Sử dụng bản ghi hiện có.");
+                    newStaff = existingPhone.get(0);
+                } 
+         
+                else if (!staffDAO.selectByCondition("citizenNumber = ?", newStaff.getCitizenNumber()).isEmpty()) {
+                    System.out.println("Số CCCD " + newStaff.getCitizenNumber() + " đã tồn tại.");
+                }
+                else {
+                    int insertResult = staffDAO.insert(newStaff);
+                    if (insertResult > 0) {
+                        System.out.println("Thêm nhân viên thành công. StaffID: " + newStaff.getStaffID());
+                        
+                
+                        Staff addedStaff = staffDAO.selectById(newStaff.getStaffID());
+                        System.out.println("Thông tin chi tiết:\n" + addedStaff);
+                    } else {
+                        System.out.println("Thêm nhân viên không thành công");
+                    }
+                }
+            } catch (IllegalArgumentException e) {
+                System.err.println("Lỗi dữ liệu nhân viên: " + e.getMessage());
+            }
+
+            // 3. DANH SÁCH NHÂN VIÊN
+            System.out.println("\n=== DANH SÁCH NHÂN VIÊN ===");
             List<Staff> staffList = staffDAO.selectAll();
-            System.out.println("Total staffs: " + staffList.size());
+            System.out.println("Tổng số nhân viên: " + staffList.size());
             for (Staff staff : staffList) {
                 System.out.println(staff);
             }
             
-            // 3. UPDATE Staff (nếu có dữ liệu)
+            // 4. CẬP NHẬT NHÂN VIÊN (nếu có dữ liệu)
             if (!staffList.isEmpty()) {
-                System.out.println("\nUPDATE");
+                System.out.println("\n=== CẬP NHẬT NHÂN VIÊN ===");
                 Staff updateStaff = staffList.get(0);
-                System.out.println("Before update:");
+                System.out.println("Trước khi cập nhật:");
                 System.out.println(updateStaff);
 
-                String newPhoneNumber = "0987654321"; // Số điện thoại mới hợp lệ
+                String newPhoneNumber = "0987654321"; 
 
                 try {
-                    // Kiểm tra số điện thoại mới có trùng không
+                   
                     List<Staff> checkDup = staffDAO.selectByCondition(
                         "phoneNumber = ? AND StaffID != ?", 
                         newPhoneNumber,
@@ -88,39 +116,38 @@ public class testStaffDAO {
                         updateStaff.setLastName("Le");
                         updateStaff.setPhoneNumber(newPhoneNumber);
                         int updateResult = staffDAO.update(updateStaff);
-                        System.out.println("Update Result: " + updateResult + " row(s) affected");
+                        System.out.println("Kết quả cập nhật: " + updateResult + " bản ghi bị ảnh hưởng");
 
-                        // In ra thông tin sau khi cập nhật
+                        // In thông tin sau cập nhật
                         Staff updatedStaff = staffDAO.selectById(updateStaff);
-                        System.out.println("After update:");
+                        System.out.println("Sau khi cập nhật:");
                         System.out.println(updatedStaff);
                     }
                 } catch (Exception e) {
                     System.err.println("Lỗi khi cập nhật: " + e.getMessage());
                 }
                 
-                // 4. SELECT BY ID
-                System.out.println("\nSELECT BY ID");
-                int testId = updateStaff.getStaffID();
-                Staff foundStaff = staffDAO.selectById(testId);
-                System.out.println("Staff found by ID " + testId + ":");
+                // 5. TÌM NHÂN VIÊN THEO ID
+                System.out.println("\nTÌM NHÂN VIÊN THEO ID");
+                Staff foundStaff = staffDAO.selectById(updateStaff.getStaffID());
+                System.out.println("Nhân viên có ID " + updateStaff.getStaffID() + ":");
                 System.out.println(foundStaff);
                 
-                // 5. SELECT BY CONDITION
-                System.out.println("\nSELECT BY CONDITION");
+                // 6. TÌM NHÂN VIÊN THEO ĐIỀU KIỆN
+                System.out.println("\n=== TÌM NHÂN VIÊN THEO HỌ ===");
                 String searchLastName = "Nguyen";
                 List<Staff> filteredStaffs = staffDAO.selectByCondition(
                     "lastName = ?", 
                     searchLastName
                 );
-                System.out.println("Found " + filteredStaffs.size() + " staff(s) with last name " + searchLastName + ":");
+                System.out.println("Tìm thấy " + filteredStaffs.size() + " nhân viên có họ " + searchLastName + ":");
                 for (Staff staff : filteredStaffs) {
                     System.out.println(staff);
                 }
                 
-                // 6. DELETE Staff 
-                System.out.println("\nDELETE");
-                // Tạo staff tạm với thông tin ngẫu nhiên
+                // 7. XÓA NHÂN VIÊN TẠM
+                System.out.println("\n=== XÓA NHÂN VIÊN TẠM ===");
+                // Tạo nhân viên tạm với thông tin ngẫu nhiên
                 String tempPhone = "09" + (System.currentTimeMillis() % 100000000);
                 if (tempPhone.length() > 10) {
                     tempPhone = tempPhone.substring(0, 10);
@@ -130,30 +157,48 @@ public class testStaffDAO {
                     tempCitizen = tempCitizen.substring(0, 12);
                 }
                 
-                Staff tempStaff = new Staff(0, "Pham", "Van C", GenderEnum.MALE, 
-                                          tempPhone, tempCitizen, "Da Nang", role, 1);
+                // Tạo tài khoản tạm trước
+                Account tempAccount = new Account();
+                tempAccount.setUserName("temp_account");
+                tempAccount.setPassword("temp123");
+                tempAccount.setEmail("temp@bestpets.com");
+                tempAccount.setRole(managerRole);
+                
+                // Thêm tài khoản tạm
+                if (accountDAO.getAccountByUsername(tempAccount.getUserName()) == null) {
+                    accountDAO.insert(tempAccount);
+                } else {
+                    tempAccount = accountDAO.getAccountByUsername(tempAccount.getUserName());
+                }
+                
+                Staff tempStaff = new Staff(
+                    0, "Pham", "Van C", GenderEnum.MALE, 
+                    tempPhone, "321456789023", "Da Nang", 
+                    managerRole, tempAccount.getAccountID()
+                );
 
                 try {
-                    // Thêm mới nếu chưa tồn tại
+                    // Thêm nhân viên tạm nếu chưa tồn tại
                     if (staffDAO.selectByCondition("phoneNumber = ?", tempStaff.getPhoneNumber()).isEmpty()) {
                         staffDAO.insert(tempStaff);
-                        System.out.println("Đã tạo bản ghi tạm với ID: " + tempStaff.getStaffID());
+                        System.out.println("Đã tạo nhân viên tạm với ID: " + tempStaff.getStaffID());
                     }
 
                     // Thực hiện xóa
                     int deleteResult = staffDAO.delete(tempStaff);
-                    System.out.println("Delete Result: " + deleteResult + " row(s) affected");
+                    System.out.println("Kết quả xóa: " + deleteResult + " bản ghi bị ảnh hưởng");
 
-                    // Kiểm tra lại sau khi xóa
+                    // Kiểm tra sau khi xóa
                     Staff deletedStaff = staffDAO.selectById(tempStaff.getStaffID());
-                    System.out.println("Staff after deletion: " + 
-                        (deletedStaff == null ? "Not found (deleted successfully)" : "Still exists"));
+                    System.out.println("Nhân viên sau khi xóa: " + 
+                        (deletedStaff == null ? "Không tìm thấy (xóa thành công)" : "Vẫn tồn tại"));
                 } catch (Exception e) {
-                    System.err.println("Lỗi trong quá trình xóa: " + e.getMessage());
+                    System.err.println("Lỗi khi xóa nhân viên: " + e.getMessage());
                 }
             }
         } catch (Exception e) {
-            System.err.println("Lỗi khi lấy danh sách nhân viên: " + e.getMessage());
+            System.err.println("Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
