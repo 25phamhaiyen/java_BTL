@@ -12,54 +12,132 @@ import database.DatabaseConnection;
 
 public class StaffDAO implements DAOInterface<Staff> {
     private static final Logger LOGGER = Logger.getLogger(StaffDAO.class.getName());
+   
+
+    private boolean isFieldExists(String fieldName, String value, Integer excludeId) throws SQLException {
+        String sql = String.format("SELECT COUNT(*) FROM staff WHERE %s = ? AND StaffID != ?", fieldName);
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setString(1, value);
+            pstmt.setInt(2, excludeId != null ? excludeId : 0);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        }
+    }
+
+    // Validate dữ liệu theo ràng buộc database
+    private void validateStaff(Staff staff) throws IllegalArgumentException {
+        // Validate tên
+        if (staff.getLastName() == null || staff.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Họ không được để trống");
+        }
+        if (staff.getFirstName() == null || staff.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên không được để trống");
+        }
+
+        // Validate số điện thoại (đúng 10 số)
+        if (staff.getPhoneNumber() == null || !staff.getPhoneNumber().matches("^[0-9]{10}$")) {
+            throw new IllegalArgumentException("Số điện thoại phải có đúng 10 chữ số");
+        }
+
+        // Validate số CCCD (đúng 12 số)
+        if (staff.getCitizenNumber() == null || !staff.getCitizenNumber().matches("^[0-9]{12}$")) {
+            throw new IllegalArgumentException("Số CCCD phải có đúng 12 chữ số");
+        }
+
+        // Validate địa chỉ
+        if (staff.getAddress() == null || staff.getAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("Địa chỉ không được để trống");
+        }
+    }
 
     @Override
     public int insert(Staff staff) {
-        String sql = "INSERT INTO Staff (lastName, firstName, sex, phoneNumber, citizenNumber, address, Role_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            // 1. Validate dữ liệu
+            validateStaff(staff);
 
-            pstmt.setString(1, staff.getLastName());
-            pstmt.setString(2, staff.getFirstName());
-            pstmt.setString(3, staff.getSex().name());
-            pstmt.setString(4, staff.getPhoneNumber());
-            pstmt.setString(5, staff.getCitizenNumber());
-            pstmt.setString(6, staff.getAddress());
-            pstmt.setInt(7, staff.getRole().getRoleID());
-
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
-                try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        staff.setStaffID(rs.getInt(1));
-                    }
-                }
+            // 2. Kiểm tra trùng lặp
+            if (isFieldExists("phoneNumber", staff.getPhoneNumber(), null)) {
+                throw new IllegalArgumentException("Số điện thoại đã tồn tại trong hệ thống");
             }
-            return affectedRows;
+            if (isFieldExists("CitizenNumber", staff.getCitizenNumber(), null)) {
+                throw new IllegalArgumentException("Số CCCD đã tồn tại trong hệ thống");
+            }
+
+            // 3. Thực hiện insert
+            String sql = "INSERT INTO staff (lastName, firstName, Sex, phoneNumber, CitizenNumber, Address, Role_ID, AccountID) "
+                       + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            try (Connection con = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                pstmt.setString(1, staff.getLastName());
+                pstmt.setString(2, staff.getFirstName());
+                pstmt.setInt(3, staff.getSex().getCode());
+                pstmt.setString(4, staff.getPhoneNumber());
+                pstmt.setString(5, staff.getCitizenNumber());
+                pstmt.setString(6, staff.getAddress());
+                pstmt.setInt(7, staff.getRole().getRoleID());
+                pstmt.setInt(8, staff.getAccountID());
+
+                int affectedRows = pstmt.executeUpdate();
+                
+                if (affectedRows > 0) {
+                    try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            staff.setStaffID(rs.getInt(1));
+                        }
+                    }
+                    LOGGER.info("Thêm nhân viên thành công. ID: " + staff.getStaffID());
+                }
+                return affectedRows;
+            }
+        } catch (IllegalArgumentException e) {
+            LOGGER.warning("Lỗi dữ liệu: " + e.getMessage());
+            throw e;
         } catch (SQLException e) {
-            LOGGER.severe("Lỗi khi thêm nhân viên: " + e.getMessage());
+            LOGGER.severe("Lỗi database: " + e.getMessage());
             return 0;
         }
     }
 
     @Override
     public int update(Staff staff) {
-        String sql = "UPDATE Staff SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=?, Role_ID=? WHERE staffID=?";
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try {
+            // 1. Validate dữ liệu
+            validateStaff(staff);
 
-            pstmt.setString(1, staff.getLastName());
-            pstmt.setString(2, staff.getFirstName());
-            pstmt.setString(3, staff.getSex().name());
-            pstmt.setString(4, staff.getPhoneNumber());
-            pstmt.setString(5, staff.getCitizenNumber());
-            pstmt.setString(6, staff.getAddress());
-            pstmt.setInt(7, staff.getRole().getRoleID());
-            pstmt.setInt(8, staff.getStaffID());
+            // 2. Kiểm tra trùng lặp (trừ bản ghi hiện tại)
+            if (isFieldExists("phoneNumber", staff.getPhoneNumber(), staff.getStaffID())) {
+                throw new IllegalArgumentException("Số điện thoại đã tồn tại cho nhân viên khác");
+            }
+            if (isFieldExists("CitizenNumber", staff.getCitizenNumber(), staff.getStaffID())) {
+                throw new IllegalArgumentException("Số CCCD đã tồn tại cho nhân viên khác");
+            }
 
-            return pstmt.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.severe("Lỗi khi cập nhật nhân viên: " + e.getMessage());
+            // 3. Thực hiện update
+            String sql = "UPDATE staff SET lastName=?, firstName=?, Sex=?, phoneNumber=?, CitizenNumber=?, Address=?, Role_ID=?, AccountID=? "
+                       + "WHERE StaffID=?";
+            
+            try (Connection con = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+                pstmt.setString(1, staff.getLastName());
+                pstmt.setString(2, staff.getFirstName());
+                pstmt.setInt(3, staff.getSex().getCode());
+                pstmt.setString(4, staff.getPhoneNumber());
+                pstmt.setString(5, staff.getCitizenNumber());
+                pstmt.setString(6, staff.getAddress());
+                pstmt.setInt(7, staff.getRole().getRoleID());
+                pstmt.setInt(8, staff.getAccountID());
+                pstmt.setInt(9, staff.getStaffID());
+
+                return pstmt.executeUpdate();
+            }
+        } catch (IllegalArgumentException | SQLException e) {
+            LOGGER.severe("Lỗi khi cập nhật: " + e.getMessage());
             return 0;
         }
     }
@@ -80,19 +158,17 @@ public class StaffDAO implements DAOInterface<Staff> {
 
     @Override
     public List<Staff> selectAll() {
-        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.Role_ID, r.roleName " +
-                     "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID";
+        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, s.AccountID, " +
+                     "r.Role_ID, r.roleName FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID";
         return executeQuery(sql);
     }
 
     public Staff selectById(int staffID) {
-        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, " +
-                     "s.citizenNumber, s.address, r.Role_ID, r.roleName " +
-                     "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE s.staffID = ?";
-        
+        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, s.AccountID, " +
+                     "r.Role_ID, r.roleName FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE s.staffID = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
+
             pstmt.setInt(1, staffID);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -111,8 +187,8 @@ public class StaffDAO implements DAOInterface<Staff> {
     }
 
     public List<Staff> selectByCondition(String whereClause, Object... params) {
-        String baseQuery = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.Role_ID, r.roleName " +
-                           "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE " + whereClause;
+        String baseQuery = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, s.AccountID, " +
+                           "r.Role_ID, r.roleName FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE " + whereClause;
         return executeQuery(baseQuery, params);
     }
 
@@ -137,22 +213,9 @@ public class StaffDAO implements DAOInterface<Staff> {
     }
 
     private Staff mapResultSetToStaff(ResultSet rs) throws SQLException {
-        // Lấy giới tính từ DB (kiểm tra null)
-        String genderStr = rs.getString("sex");
-        GenderEnum gender = GenderEnum.UNKNOWN; // Mặc định nếu không hợp lệ
-        if (genderStr != null) {
-            try {
-                gender = GenderEnum.valueOf(genderStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.err.println("Lỗi: Giới tính '" + genderStr + "' không hợp lệ. Đặt mặc định là UNKNOWN.");
-            }
-        }
+        int genderCode = rs.getInt("sex");
+        GenderEnum gender = GenderEnum.fromCode(genderCode); // Sử dụng fromCode()
 
-     // Lấy thông tin Role từ DB
-        int Role_ID = rs.getInt("Role_ID");
-        String roleName = rs.getString("roleName");
-        Role role = new Role(Role_ID, roleName); // Tạo đối tượng Role
-        
         return new Staff(
             rs.getInt("staffID"),
             rs.getString("lastName"),
@@ -161,8 +224,8 @@ public class StaffDAO implements DAOInterface<Staff> {
             rs.getString("phoneNumber"),
             rs.getString("citizenNumber"),
             rs.getString("address"),
-            role
+            new Role(rs.getInt("Role_ID"), rs.getString("roleName")),
+            rs.getInt("AccountID")
         );
     }
-
 }

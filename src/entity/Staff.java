@@ -11,13 +11,14 @@ public class Staff {
     private String citizenNumber;
     private String address;
     private Role role;
+    private int accountID; 
 
     public Staff() {
         super();
     }
 
-    public Staff(int staffID, String lastName, String firstName, GenderEnum sex, String phoneNumber, String citizenNumber,
-                 String address, Role role) {
+    public Staff(int staffID, String lastName, String firstName, GenderEnum sex, String phoneNumber, 
+                 String citizenNumber, String address, Role role, int accountID) {
         super();
         this.staffID = staffID;
         this.lastName = lastName;
@@ -27,6 +28,7 @@ public class Staff {
         this.citizenNumber = citizenNumber;
         this.address = address;
         this.role = role;
+        this.accountID = accountID; 
     }
 
     public int getStaffID() {
@@ -93,6 +95,30 @@ public class Staff {
         this.role = role;
     }
 
+    public int getAccountID() {  // Getter cho AccountID**
+        return accountID;
+    }
+
+    public void setAccountID(int accountID) {  // Setter cho AccountID**
+        this.accountID = accountID;
+    }
+
+
+    public void validate() throws IllegalArgumentException {
+        if (lastName == null || lastName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Họ không được để trống");
+        }
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên không được để trống");
+        }
+        if (phoneNumber == null || !phoneNumber.matches("^[0-9]{10}$")) {
+            throw new IllegalArgumentException("Số điện thoại phải có đúng 10 chữ số");
+        }
+        if (citizenNumber == null || !citizenNumber.matches("^[0-9]{12}$")) {
+            throw new IllegalArgumentException("Số CCCD phải có đúng 12 chữ số");
+        }
+    }
+    
     @Override
     public String toString() {
         return "Staff: ID: " + staffID +
@@ -101,6 +127,7 @@ public class Staff {
                "\n\t  Phone Number: " + phoneNumber +
                "\n\t  Citizen Number: " + citizenNumber +
                "\n\t  Address: " + address +
-               "\n\t  Role: " + role.getRoleName();
+               "\n\t  Role: " + role.getRoleName() +
+               "\n\t  AccountID: " + accountID;  // Thêm AccountID vào toString**
     }
 }
