@@ -15,7 +15,7 @@ public class StaffDAO implements DAOInterface<Staff> {
 
     @Override
     public int insert(Staff staff) {
-        String sql = "INSERT INTO Staff (lastName, firstName, sex, phoneNumber, citizenNumber, address, roleID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Staff (lastName, firstName, sex, phoneNumber, citizenNumber, address, Role_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -44,7 +44,7 @@ public class StaffDAO implements DAOInterface<Staff> {
 
     @Override
     public int update(Staff staff) {
-        String sql = "UPDATE Staff SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=?, roleID=? WHERE staffID=?";
+        String sql = "UPDATE Staff SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=?, Role_ID=? WHERE staffID=?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -80,15 +80,15 @@ public class StaffDAO implements DAOInterface<Staff> {
 
     @Override
     public List<Staff> selectAll() {
-        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.roleID, r.roleName " +
-                     "FROM Staff s JOIN Role r ON s.roleID = r.roleID";
+        String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.Role_ID, r.roleName " +
+                     "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID";
         return executeQuery(sql);
     }
 
     public Staff selectById(int staffID) {
         String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, " +
-                     "s.citizenNumber, s.address, r.roleID, r.roleName " +
-                     "FROM Staff s JOIN Role r ON s.roleID = r.roleID WHERE s.staffID = ?";
+                     "s.citizenNumber, s.address, r.Role_ID, r.roleName " +
+                     "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE s.staffID = ?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -111,8 +111,8 @@ public class StaffDAO implements DAOInterface<Staff> {
     }
 
     public List<Staff> selectByCondition(String whereClause, Object... params) {
-        String baseQuery = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.roleID, r.roleName " +
-                           "FROM Staff s JOIN Role r ON s.roleID = r.roleID WHERE " + whereClause;
+        String baseQuery = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, r.Role_ID, r.roleName " +
+                           "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID WHERE " + whereClause;
         return executeQuery(baseQuery, params);
     }
 
@@ -149,9 +149,9 @@ public class StaffDAO implements DAOInterface<Staff> {
         }
 
      // Lấy thông tin Role từ DB
-        int roleID = rs.getInt("roleID");
+        int Role_ID = rs.getInt("Role_ID");
         String roleName = rs.getString("roleName");
-        Role role = new Role(roleID, roleName); // Tạo đối tượng Role
+        Role role = new Role(Role_ID, roleName); // Tạo đối tượng Role
         
         return new Staff(
             rs.getInt("staffID"),

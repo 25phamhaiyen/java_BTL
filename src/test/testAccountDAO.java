@@ -44,7 +44,7 @@ public class testAccountDAO {
 
         // 5️⃣ Truy vấn tài khoản theo điều kiện (Role = CUSTOMER)
         System.out.println("\nDanh sách tài khoản CUSTOMER:");
-        List<Account> customerAccounts = accountDAO.selectByCondition("roleID=?", "1");
+        List<Account> customerAccounts = accountDAO.selectByCondition("Role_ID=?", "1");
         for (Account acc : customerAccounts) {
             System.out.println(acc);
         }
