@@ -20,8 +20,7 @@ public class DatabaseConnection {
     
     static {
 
-        try (FileInputStream fis = new FileInputStream("resource\\database.properties")) {
-
+        try (FileInputStream fis = new FileInputStream("resources\\database.properties")) {
             properties.load(fis);
             URL = properties.getProperty("url");
             USERNAME = properties.getProperty("username");

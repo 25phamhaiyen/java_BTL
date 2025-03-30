@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import dao.AccountDAO;
 import entity.Account;
@@ -12,8 +12,9 @@ public class testAccountDAO {
         AccountDAO accountDAO = AccountDAO.getInstance();
 
         // 1️⃣ Thêm tài khoản mới
-        Role role=new Role(4, "Manager");
+        Role role=new Role(3, "Manager");
         Account newAccount = new Account(0, "user12", "password12", "user12@gmail.com", role);
+        accountDAO.insert(newAccount);
         int insertResult = accountDAO.insert(newAccount);
         System.out.println("Insert Result: " + insertResult);
         System.out.println("Inserted Account ID: " + newAccount.getAccountID());
@@ -31,35 +32,35 @@ public class testAccountDAO {
         System.out.println("\nTài khoản tìm thấy: " + foundAccount);
 
         // 4️⃣ Cập nhật thông tin tài khoản
-        if (foundAccount != null) {
-            foundAccount.setPassword("newPassword456");
-            foundAccount.setEmail("newemail@gmail.com");
-            int updateResult = accountDAO.update(foundAccount);
-            System.out.println("\nUpdate Result: " + updateResult);
-
-            // Kiểm tra lại sau khi cập nhật
-            Account updatedAccount = accountDAO.selectById(searchID);
-            System.out.println("Tài khoản sau cập nhật: " + updatedAccount);
-        }
-
+//        if (foundAccount != null) {
+//            foundAccount.setPassword("newPassword456");
+//            foundAccount.setEmail("newemail@gmail.com");
+//            int updateResult = accountDAO.update(foundAccount);
+//            System.out.println("\nUpdate Result: " + updateResult);
+//
+//            // Kiểm tra lại sau khi cập nhật
+//            Account updatedAccount = accountDAO.selectById(searchID);
+//            System.out.println("Tài khoản sau cập nhật: " + updatedAccount);
+//        }
+         	
         // 5️⃣ Truy vấn tài khoản theo điều kiện (Role = CUSTOMER)
         System.out.println("\nDanh sách tài khoản CUSTOMER:");
-        List<Account> customerAccounts = accountDAO.selectByCondition("Role_ID=?", "1");
+        List<Account> customerAccounts = accountDAO.selectByCondition("Role_ID=?", 1);
         for (Account acc : customerAccounts) {
             System.out.println(acc);
         }
 
         // 6️⃣ Xóa tài khoản
-        if (foundAccount != null) {
-            int deleteResult = accountDAO.delete(foundAccount);
-            System.out.println("\nDelete Result: " + deleteResult);
-
-            // Kiểm tra danh sách sau khi xóa
-            System.out.println("\nDanh sách tài khoản sau khi xóa:");
-            List<Account> accountListAfterDelete = accountDAO.selectAll();
-            for (Account acc : accountListAfterDelete) {
-                System.out.println(acc);
-            }
-        }
+//        if (foundAccount != null) {
+//            int deleteResult = accountDAO.delete(foundAccount);
+//            System.out.println("\nDelete Result: " + deleteResult);
+//
+//            // Kiểm tra danh sách sau khi xóa
+//            System.out.println("\nDanh sách tài khoản sau khi xóa:");
+//            List<Account> accountListAfterDelete = accountDAO.selectAll();
+//            for (Account acc : accountListAfterDelete) {
+//                System.out.println(acc);
+//            }
+//        }
     }
 }

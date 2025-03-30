@@ -3,6 +3,7 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import entity.Account;
@@ -29,14 +30,13 @@ public class AccountDAO implements DAOInterface<Account> {
 	public int insert(Account account) {
 		String sql = "INSERT INTO account (UN_UserName, Password, Email, Role_ID) VALUES (?, ?, ?, ?)";
 
-		// Mã hóa mật khẩu trước khi lưu
-		String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt(12));
-
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 			pstmt.setString(1, account.getUserName());
-			pstmt.setString(2, hashedPassword);
+			String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+	        pstmt.setString(2, hashedPassword);
+//			pstmt.setString(2, account.getPassword());
 			pstmt.setString(3, account.getEmail());
 			pstmt.setInt(4, account.getRole().getRoleID());
 
@@ -64,9 +64,7 @@ public class AccountDAO implements DAOInterface<Account> {
 	        pstmt.setString(1, account.getUserName());
 
 	        String newPassword = account.getPassword();
-	        if (newPassword != null && !newPassword.trim().isEmpty()) {
-	            newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
-	        } else {
+	        if (newPassword == null || newPassword.trim().isEmpty()) {
 	            newPassword = getPasswordById(account.getAccountID());
 	        }
 	        pstmt.setString(2, newPassword);
@@ -112,7 +110,8 @@ public class AccountDAO implements DAOInterface<Account> {
 
 	// Kiểm tra tài khoản có tồn tại hay không
 	public boolean isAccountExist(String username) {
-		String sql = "SELECT COUNT(*) FROM Account WHERE userName = ?";
+		String sql = "SELECT COUNT(*) FROM account WHERE UN_UserName = ?";
+
 
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setString(1, username);
