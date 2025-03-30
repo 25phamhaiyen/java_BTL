@@ -9,55 +9,70 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseConnection {
-    private static final Properties properties = new Properties();
+
+
+	private static final Properties properties = new Properties();
+
     private static String URL;
     private static String USERNAME;
     private static String PASSWORD;
     private static String DRIVER;
     
     static {
-        try (FileInputStream fis = new FileInputStream("resource/database.properties")) {
+
+        try (FileInputStream fis = new FileInputStream("resource\\database.properties")) {
+
             properties.load(fis);
             URL = properties.getProperty("url");
             USERNAME = properties.getProperty("username");
             PASSWORD = properties.getProperty("password");
             DRIVER = properties.getProperty("driver");
-            Class.forName(DRIVER);
-            System.out.println("Database driver loaded successfully.");
+
         } catch (IOException e) {
-            System.err.println("Error reading database configuration file: " + e.getMessage());
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.err.println("Error: MySQL JDBC Driver not found!");
+            System.err.println("Lỗi khi đọc file cấu hình database: " + e.getMessage());
+
             e.printStackTrace();
         }
     }
 
-    // Get database connection
+
+    // Kết nối đến database
     public static Connection getConnection() {
         Connection conn = null;
         try {
+            Class.forName(DRIVER);
+            // Tạo kết nối
             conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connected to database successfully!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Lỗi: Không tìm thấy MySQL JDBC Driver!");
+            e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("Database connection error: " + e.getMessage());
+            System.err.println("Lỗi kết nối DB: " + e.getMessage());
+
         }
         return conn;
     }
 
-    // Close connection
+
+    // Đóng kết nối
+
     public static void closeConnection(Connection conn) {
         if (conn != null) {
             try {
                 conn.close();
-                System.out.println("Connection closed successfully.");
+
+
+    // Print database info
+
+                System.out.println("Đã đóng kết nối thành công.");
             } catch (SQLException e) {
-                System.err.println("Error closing connection: " + e.getMessage());
+                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
             }
         }
     }
 
-    // Print database info
+    // In thông tin database
+
     public static void printInfo(Connection conn) {
         if (conn != null) {
             try {
@@ -65,8 +80,9 @@ public class DatabaseConnection {
                 System.out.println("Database: " + metaData.getDatabaseProductName());
                 System.out.println("Version: " + metaData.getDatabaseProductVersion());
             } catch (SQLException e) {
-                System.err.println("Error getting database info: " + e.getMessage());
+
+                System.err.println("Lỗi khi lấy thông tin DB: " + e.getMessage());
             }
         }
     }
-}
+
