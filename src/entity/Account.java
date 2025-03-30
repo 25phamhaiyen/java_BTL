@@ -1,6 +1,5 @@
 package entity;
 
-import org.mindrot.jbcrypt.BCrypt;
 
 public class Account {
     private int accountID;
@@ -43,13 +42,10 @@ public class Account {
 
     // Mã hóa mật khẩu bằng bcrypt
     public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+//        this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
+    	this.password = password;
     }
 
-    // Kiểm tra mật khẩu nhập vào có đúng không
-    public boolean checkPassword(String inputPassword) {
-        return BCrypt.checkpw(inputPassword, this.password);
-    }
 
     public String getEmail() {
         return email;
