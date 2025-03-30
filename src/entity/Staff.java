@@ -103,23 +103,6 @@ public class Staff {
         this.accountID = accountID;
     }
 
-
-    public void validate() throws IllegalArgumentException {
-        if (lastName == null || lastName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Họ không được để trống");
-        }
-        if (firstName == null || firstName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên không được để trống");
-        }
-        if (phoneNumber == null || !phoneNumber.matches("^[0-9]{10}$")) {
-            throw new IllegalArgumentException("Số điện thoại phải có đúng 10 chữ số");
-        }
-        if (citizenNumber == null || !citizenNumber.matches("^[0-9]{12}$")) {
-            throw new IllegalArgumentException("Số CCCD phải có đúng 12 chữ số");
-        }
-    }
-    
-    
     @Override
     public String toString() {
         return "Staff: ID: " + staffID +
