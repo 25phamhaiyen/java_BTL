@@ -14,7 +14,7 @@ public class testStaffDAO {
         AccountDAO accountDAO = AccountDAO.getInstance();
 
         // 1. Tạo tài khoản trước khi tạo nhân viên
-        System.out.println("=== TẠO TÀI KHOẢN ===");
+        System.out.println("TẠO TÀI KHOẢN");
         Role managerRole = new Role(1, "Manager");
         
         Account managerAccount = new Account();
@@ -40,7 +40,7 @@ public class testStaffDAO {
             }
 
             // 2. INSERT NHÂN VIÊN
-            System.out.println("\n=== THÊM NHÂN VIÊN ===");
+            System.out.println("\nTHÊM NHÂN VIÊN");
             String uniqueCitizenNumber = "CIT" + System.currentTimeMillis() % 1000000;
             if (uniqueCitizenNumber.length() > 12) {
                 uniqueCitizenNumber = uniqueCitizenNumber.substring(0, 12);
@@ -86,7 +86,7 @@ public class testStaffDAO {
             }
 
             // 3. DANH SÁCH NHÂN VIÊN
-            System.out.println("\n=== DANH SÁCH NHÂN VIÊN ===");
+            System.out.println("\nDANH SÁCH NHÂN VIÊN");
             List<Staff> staffList = staffDAO.selectAll();
             System.out.println("Tổng số nhân viên: " + staffList.size());
             for (Staff staff : staffList) {
@@ -95,7 +95,7 @@ public class testStaffDAO {
             
             // 4. CẬP NHẬT NHÂN VIÊN (nếu có dữ liệu)
             if (!staffList.isEmpty()) {
-                System.out.println("\n=== CẬP NHẬT NHÂN VIÊN ===");
+                System.out.println("\nCẬP NHẬT NHÂN VIÊN");
                 Staff updateStaff = staffList.get(0);
                 System.out.println("Trước khi cập nhật:");
                 System.out.println(updateStaff);
@@ -134,7 +134,7 @@ public class testStaffDAO {
                 System.out.println(foundStaff);
                 
                 // 6. TÌM NHÂN VIÊN THEO ĐIỀU KIỆN
-                System.out.println("\n=== TÌM NHÂN VIÊN THEO HỌ ===");
+                System.out.println("\nTÌM NHÂN VIÊN THEO HỌ");
                 String searchLastName = "Nguyen";
                 List<Staff> filteredStaffs = staffDAO.selectByCondition(
                     "lastName = ?", 
@@ -146,7 +146,7 @@ public class testStaffDAO {
                 }
                 
                 // 7. XÓA NHÂN VIÊN TẠM
-                System.out.println("\n=== XÓA NHÂN VIÊN TẠM ===");
+                System.out.println("\nXÓA NHÂN VIÊN TẠM");
                 // Tạo nhân viên tạm với thông tin ngẫu nhiên
                 String tempPhone = "09" + (System.currentTimeMillis() % 100000000);
                 if (tempPhone.length() > 10) {
