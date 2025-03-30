@@ -7,6 +7,7 @@ import entity.Account;
 import entity.Role;
 import entity.Staff;
 import Enum.GenderEnum;
+import backend.StaffService;
 
 public class testStaffDAO {
     public static void main(String[] args) {
@@ -53,7 +54,8 @@ public class testStaffDAO {
             );
             
             try {
-                newStaff.validate();
+            	StaffService staffService = new StaffService();
+            	staffService.validateStaff(newStaff);
                 
              
                 List<Staff> existingPhone = staffDAO.selectByCondition(
