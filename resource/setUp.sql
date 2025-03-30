@@ -24,7 +24,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP TABLE paymentstatus;
 
 -- 				Tạo bảng Trạng thái xảy ra
 CREATE TABLE `happenstatus` (
@@ -38,7 +38,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP TABLE happenstatus;
 
 
 --				Tạo bảng Vai trò
@@ -51,7 +51,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP TABLE role;
 
 
 --				Tạo bảng loại dịch vụ
@@ -65,6 +65,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
+DROP TABLE typeservice;
 
 -- 				Tạo bảng Dịch vụ
 CREATE TABLE `service` (
@@ -81,7 +82,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP TABLE service;
 
 -- 				Tạo bảng Tài khoản
 CREATE TABLE `account` (
@@ -99,6 +100,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
+DROP TABLE account;
 -- 				Tạo bảng Khách hàng
 CREATE TABLE `customer` (
 	`customer_ID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -121,7 +123,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP table customer;
 -- 				Tạo bảng Nhân viên
 CREATE TABLE `staff` (
 	`StaffID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -136,9 +138,9 @@ CREATE TABLE `staff` (
 	PRIMARY KEY (`StaffID`) USING BTREE,
 	UNIQUE INDEX `UnStaff_UN_PhoneNumber` (`phoneNumber`) USING BTREE,
 	UNIQUE INDEX `UnStaff_UN_CitizenNumber` (`CitizenNumber`) USING BTREE,
-	INDEX `FkStaff_RoleID` (`Role_ID`) USING BTREE,
+	INDEX `FkStaff_Role_ID` (`Role_ID`) USING BTREE,
 	INDEX `AccountID` (`AccountID`) USING BTREE,
-	CONSTRAINT `FkStaff_RoleID` FOREIGN KEY (`Role_ID`) REFERENCES `role` (`Role_ID`) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT `FkStaff_Role_ID` FOREIGN KEY (`Role_ID`) REFERENCES `role` (`Role_ID`) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT `FK_staff_account` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`) ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT `CkStaff_UN_CitizenNumber` CHECK ((length(`CitizenNumber`) = 12)),
 	CONSTRAINT `CkStaff_UN_PhoneNumber` CHECK ((length(`phoneNumber`) = 10))
@@ -147,7 +149,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP table staff;
 -- 				Tạo bảng Đơn hàng
 CREATE TABLE `order` (
 	`orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -169,7 +171,7 @@ CREATE TABLE `order` (
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 ;
-
+DROP table order;
 -- Tạo bảng chi tiết đơn hàng (order_detail)
 CREATE TABLE `order_detail` (
 	`OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -189,7 +191,7 @@ CREATE TABLE `order_detail` (
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 ;
-
+DROP table order_detail;
 
 -- Tạo bảng hóa đơn (invoice)
 CREATE TABLE `invoice` (
@@ -208,7 +210,7 @@ CREATE TABLE `invoice` (
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 ;
-
+DROP table invoice;
 -- 				Tạo bảng loại thú cưng
 CREATE TABLE `typepet` (
 	`TypePetID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -220,7 +222,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
-
+DROP table typepet;
 
 -- 				Tạo bảng thú cưng
 CREATE TABLE `pet` (
@@ -240,6 +242,8 @@ ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
 
+
+
 DELIMITER //
 
 CREATE TRIGGER after_order_detail_delete
@@ -254,4 +258,5 @@ END;
 //
 
 DELIMITER ;
+
 
