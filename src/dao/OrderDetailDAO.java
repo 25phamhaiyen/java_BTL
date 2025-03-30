@@ -1,9 +1,10 @@
 package dao;
 
-import database.DatabaseConnection;
 import entity.OrderDetail;
 import entity.Order;
 import entity.Service;
+import utils.DatabaseConnection;
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;

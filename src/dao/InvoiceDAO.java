@@ -7,7 +7,7 @@ import java.util.List;
 import entity.Invoice;
 import entity.Order;
 import entity.PaymentStatus;
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class InvoiceDAO implements DAOInterface<Invoice> {
 

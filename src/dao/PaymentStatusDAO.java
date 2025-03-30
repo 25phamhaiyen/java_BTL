@@ -1,8 +1,8 @@
 package dao;
 
 import entity.PaymentStatus;
+import utils.DatabaseConnection;
 import Enum.PaymentStatusEnum;
-import database.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -7,7 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import entity.Account;
 import entity.Role;
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class AccountDAO implements DAOInterface<Account> {
 

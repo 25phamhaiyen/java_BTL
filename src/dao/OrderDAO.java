@@ -1,10 +1,11 @@
 package dao;
 
-import database.DatabaseConnection;
 import entity.Order;
 import entity.Customer;
 import entity.HappenStatus;
 import entity.Staff;
+import utils.DatabaseConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

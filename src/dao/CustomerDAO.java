@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Enum.GenderEnum;
-import database.DatabaseConnection;
 import entity.Customer;
 import entity.Account;
 import utils.DBUtil;
+import utils.DatabaseConnection;
 
 public class CustomerDAO implements DAOInterface<Customer> {
 
