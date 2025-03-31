@@ -7,3 +7,8 @@
 /RoleDAO.class
 /StaffDAO.class
 /TypePetDAO.class
+/InvoiceDAO.class
+/OrderDAO.class
+/OrderDetailDAO.class
+/ServiceDAO.class
+/TypeServiceDAO.class
