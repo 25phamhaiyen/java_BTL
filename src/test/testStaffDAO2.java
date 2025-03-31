@@ -9,7 +9,7 @@ import entity.Staff;
 import Enum.GenderEnum;
 import backend.StaffService;
 
-public class testStaffDAO {
+public class testStaffDAO2 {
     public static void main(String[] args) {
         StaffDAO staffDAO = new StaffDAO();
         AccountDAO accountDAO = AccountDAO.getInstance();

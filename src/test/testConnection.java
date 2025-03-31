@@ -1,6 +1,6 @@
 package test;
 
-import database.DatabaseConnection;
+import utils.DatabaseConnection;
 
 public class testConnection {
 	public static void main(String[] args) {

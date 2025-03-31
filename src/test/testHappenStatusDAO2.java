@@ -6,7 +6,7 @@ import dao.HappenStatusDAO;
 import entity.HappenStatus;
 import Enum.StatusCode;
 
-public class testHappenStatusDAO {
+public class testHappenStatusDAO2 {
     public static void main(String[] args) {
         HappenStatusDAO happenStatusDAO = new HappenStatusDAO();
         
