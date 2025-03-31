@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import dao.OrderDAO;
 import entity.Customer;

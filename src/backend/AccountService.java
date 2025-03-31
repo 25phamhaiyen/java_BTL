@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import dao.AccountDAO;
 import entity.Account;
 import entity.Role;
-import org.mindrot.jbcrypt.BCrypt;
 import exception.AccountException;
 
 public class AccountService {
@@ -30,10 +31,7 @@ public class AccountService {
             throw new AccountException("Tên đăng nhập đã tồn tại!");
         }
 
-        // Mã hóa mật khẩu
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        Account newAccount = new Account(0, username, hashedPassword, email, role);
+        Account newAccount = new Account(0, username, password, email, role);
         return accountDAO.insert(newAccount) > 0;
     }
 
@@ -41,12 +39,25 @@ public class AccountService {
      * Đăng nhập
      */
     public Optional<Account> login(String username, String password) {
-        return Optional.ofNullable(accountDAO.getAccountByUsername(username))
-                .filter(acc -> BCrypt.checkpw(password, acc.getPassword()))
-                .or(() -> {
-                    throw new AccountException("Tên đăng nhập hoặc mật khẩu không chính xác!");
-                });
+        Account account = accountDAO.getAccountByUsername(username);
+
+        if (account == null) {
+            System.out.println("Không tìm thấy tài khoản!");
+            return Optional.empty();
+        }
+
+
+        boolean passwordMatch = BCrypt.checkpw(password, account.getPassword());
+
+        if (!passwordMatch) {
+            System.out.println("Mật khẩu không đúng!");
+            return Optional.empty();
+        }
+
+        System.out.println("Đăng nhập thành công!");
+        return Optional.of(account);
     }
+
 
     /**
      * Cập nhật thông tin tài khoản
@@ -65,8 +76,9 @@ public class AccountService {
 
         existingAccount.setUserName(newUsername);
         if (newPassword != null && !newPassword.trim().isEmpty()) {
-            existingAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            existingAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt())); // 🔹 Hash mật khẩu mới
         }
+
         existingAccount.setEmail(email);
         existingAccount.setRole(role);
 
