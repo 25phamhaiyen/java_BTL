@@ -1,18 +1,19 @@
 package tests;
 
 import java.util.List;
-import dao.StaffDAO;
-import dao.AccountDAO;
-import entity.Account;
-import entity.Role;
-import entity.Staff;
-import Enum.GenderEnum;
-import backend.StaffService;
+
+import enums.GenderEnum;
+import model.Account;
+import model.Role;
+import model.Staff;
+import repository.AccountRepository;
+import repository.StaffRepository;
+import service.StaffService;
 
 public class testStaffDAO {
     public static void main(String[] args) {
-        StaffDAO staffDAO = new StaffDAO();
-        AccountDAO accountDAO = AccountDAO.getInstance();
+        StaffRepository staffDAO = new StaffRepository();
+        AccountRepository accountDAO = AccountRepository.getInstance();
 
         // 1. Tạo tài khoản trước khi tạo nhân viên
         System.out.println("TẠO TÀI KHOẢN");

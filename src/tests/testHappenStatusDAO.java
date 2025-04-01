@@ -2,17 +2,17 @@ package tests;
 
 import java.util.List;
 
-import dao.HappenStatusDAO;
-import entity.HappenStatus;
-import Enum.StatusCode;
+import enums.StatusCode;
+import model.HappenStatus;
+import repository.HappenStatusRepository;
 
 public class testHappenStatusDAO {
     public static void main(String[] args) {
-        HappenStatusDAO happenStatusDAO = new HappenStatusDAO();
+        HappenStatusRepository happenStatusDAO = new HappenStatusRepository();
         
         // 1. Thêm mới HappenStatus với kiểm tra trùng lặp
         System.out.println("INSERT");
-        StatusCode newStatusCode = StatusCode.TEST;
+        StatusCode newStatusCode = StatusCode.COMPLETED;
         
         try {
             // Kiểm tra xem status code đã tồn tại chưa

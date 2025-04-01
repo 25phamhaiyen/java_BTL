@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DashboardController">
+    <!-- Thông báo chào mừng -->
+    <Label fx:id="lblWelcome" layoutX="20" layoutY="20" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <!-- Nút quản lý hệ thống, chỉ hiển thị cho Admin và Manager -->
+    <Button fx:id="btnAdminPanel" text="Quản lý hệ thống" layoutX="50" layoutY="80" visible="false"/>
+
+    <!-- Nút trang khách hàng, chỉ hiển thị cho Customer -->
+    <Button fx:id="btnCustomerView" text="Trang khách hàng" layoutX="50" layoutY="130" visible="false"/>
+
+    <!-- Nút trang nhân viên, chỉ hiển thị cho Employee -->
+    <Button fx:id="btnEmployeeView" text="Trang nhân viên" layoutX="50" layoutY="180" visible="false"/>
+
+    <!-- Nút đăng xuất -->
+    <Button fx:id="btnLogout" text="Đăng xuất" layoutX="50" layoutY="230"/>
+</AnchorPane>
