@@ -1,11 +1,10 @@
 package controllers;
 
-import backend.AccountService;
-import entity.Role;
 import exception.BusinessException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import utils.SceneSwitcher;
+import model.Role;
+import service.AccountService;
 
 import java.io.IOException;
 
@@ -37,6 +36,6 @@ public class RegisterController {
 
     @FXML
     private void switchToLogin() throws IOException {
-    	 SceneSwitcher.switchScene("login.fxml", "Đăng nhập");
+    	 SceneSwitcher.switchScene("login.fxml");
     }
 }
