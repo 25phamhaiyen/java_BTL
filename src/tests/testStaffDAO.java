@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import java.util.List;
 import dao.StaffDAO;
