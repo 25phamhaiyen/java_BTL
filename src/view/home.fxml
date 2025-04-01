@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.HomeController" stylesheets="@/styles/style.css">
+    
+    <!-- Nền Gradient -->
+    <AnchorPane style="-fx-background-color: linear-gradient(to bottom, #FFD700, #D2691E);" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        
+        <!-- Logo -->
+        <ImageView layoutX="200" layoutY="50" fitWidth="150" fitHeight="150" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="/images/logo.jpg" />
+            </image>
+        </ImageView>
+        
+        <!-- Tiêu đề -->
+        <Label fx:id="title" text="BestPETS - Chăm sóc thú cưng" layoutX="100" layoutY="220" styleClass="title-label"/>
+        
+        <!-- Nút chức năng -->
+        <Button fx:id="btnLogin" text="Đăng nhập" layoutX="20" layoutY="350" styleClass="login-button"/>
+        <Button fx:id="btnRegister" text="Đăng ký" layoutX="120" layoutY="350" styleClass="register-button"/>
+        <Button fx:id="btnLanguage" text="🇻🇳 | 🇺🇸" layoutX="450" layoutY="20"/>
+    </AnchorPane>
+</AnchorPane>

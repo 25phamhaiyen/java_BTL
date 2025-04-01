@@ -1,5 +1,6 @@
 INSERT INTO role (RoleName) VALUES
-('Admin'),
+('Quản lý'),
+('Quản trị viên'),
 ('Nhân viên'),
 ('Khách hàng');
 INSERT INTO account (UN_Username, Password, Email, Role_ID) VALUES

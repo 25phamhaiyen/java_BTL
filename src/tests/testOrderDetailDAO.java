@@ -1,15 +1,16 @@
 package tests;
 
-import dao.OrderDetailDAO;
-import entity.Order;
-import entity.OrderDetail;
-import entity.Service;
+import model.Order;
+import model.OrderDetail;
+import model.Service;
+import repository.OrderDetailRepository;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 public class testOrderDetailDAO {
     public static void main(String[] args) {
-        OrderDetailDAO orderDetailDAO = OrderDetailDAO.getInstance();
+        OrderDetailRepository orderDetailRepository = OrderDetailRepository.getInstance();
 
         // Tạo dữ liệu giả lập
         Order testOrder = new Order();
@@ -21,7 +22,7 @@ public class testOrderDetailDAO {
         // 1️⃣ Thêm order_detail
 
         OrderDetail newOrderDetail = new OrderDetail(0, testOrder, testService, 2, BigDecimal.valueOf(testService.getCostPrice()));
-        int insertResult = orderDetailDAO.insert(newOrderDetail);
+        int insertResult = orderDetailRepository.insert(newOrderDetail);
         if (insertResult > 0) {
             System.out.println("Thêm order_detail thành công! ID: " + newOrderDetail.getOrderDetailId());
         } else {
@@ -29,7 +30,7 @@ public class testOrderDetailDAO {
         }
 
         // 2️⃣ Lấy danh sách order_detail
-        List<OrderDetail> orderDetails = orderDetailDAO.selectAll();
+        List<OrderDetail> orderDetails = orderDetailRepository.selectAll();
         System.out.println("📌 Danh sách order_detail:");
         for (OrderDetail od : orderDetails) {
             System.out.println("🔹 ID: " + od.getOrderDetailId() + ", OrderID: " + od.getOrder().getOrderId() +
@@ -38,7 +39,7 @@ public class testOrderDetailDAO {
         }
 
         // 3️⃣ Lấy order_detail theo ID
-        OrderDetail fetchedDetail = orderDetailDAO.selectById(newOrderDetail.getOrderDetailId());
+        OrderDetail fetchedDetail = orderDetailRepository.selectById(newOrderDetail.getOrderDetailId());
         if (fetchedDetail != null) {
             System.out.println("🔍 Tìm thấy order_detail với ID " + fetchedDetail.getOrderDetailId() + ": " +
                     "Số lượng = " + fetchedDetail.getQuantity() + ", Giá = " + fetchedDetail.getUnitPrice());
@@ -51,7 +52,7 @@ public class testOrderDetailDAO {
         Service testService2 = new Service();
         testService.setServiceID(2); 
         newOrderDetail.setUnitPrice(BigDecimal.valueOf(testService2.getCostPrice()));
-        int updateResult = orderDetailDAO.update(newOrderDetail);
+        int updateResult = orderDetailRepository.update(newOrderDetail);
         if (updateResult > 0) {
             System.out.println("Cập nhật order_detail thành công!");
         } else {
@@ -59,7 +60,7 @@ public class testOrderDetailDAO {
         }
 
         // 5️⃣ Xóa order_detail
-        int deleteResult = orderDetailDAO.delete(newOrderDetail);
+        int deleteResult = orderDetailRepository.delete(newOrderDetail);
         if (deleteResult > 0) {
             System.out.println("✅ Xóa order_detail thành công!");
         } else {
