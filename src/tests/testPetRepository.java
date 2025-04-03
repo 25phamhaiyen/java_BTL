@@ -2,20 +2,20 @@ package tests;
 
 import java.util.List;
 
-import enums.GenderEnum;
 import model.Customer;
 import model.Pet;
 import model.TypePet;
+import repository.CustomerRepository;
 import repository.PetRepository;
 
 public class testPetRepository {
 	public static void main(String[] args) {
 		PetRepository petRepository = PetRepository.getInstance();
-
+		CustomerRepository customerRepository = CustomerRepository.getInstance();
+		
 		// Test thêm mới Pet
 		System.out.println("--- Test Insert ---");
-		Customer customer = new Customer(1, "Nguyen", "Tuan", "0123456789", GenderEnum.MALE, "123456789", "Hanoi",
-				null);
+		Customer customer = customerRepository.selectById(1);
 		TypePet typePet = new TypePet(1, "Dog");
 		Pet pet = new Pet(101, "Lucky", 3, customer, typePet);
 		petRepository.insert(pet);

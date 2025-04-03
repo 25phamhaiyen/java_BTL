@@ -1,5 +1,6 @@
 package tests;
 
+import java.sql.Date;
 import java.util.List;
 
 import enums.GenderEnum;
@@ -16,11 +17,16 @@ public class testCustomerRepository {
 		
 		AccountRepository accountRepository = AccountRepository.getInstance();
 		Account account = new Account();
-		account = accountRepository.getAccountByUsername("user123");
+		account = accountRepository.getAccountByUsername("employee_user");
+		// Ngày đăng ký (chắc chắn là đối tượng java.util.Date)
+		Date registrationDate = new Date(0, 0, 0);  // Lấy ngày hiện tại
+
+        // Điểm thưởng của khách hàng
+        int loyaltyPoints = 100;
         // 1️⃣ Thêm khách hàng mới (INSERT)
-        Customer newCustomer = new Customer(0, "Nguyễn", "Thiện", "0321654988", 
-                                            GenderEnum.MALE, "012345688932", 
-                                            "Hà Nội", account);
+		Customer newCustomer = new Customer(0, "Nguyễn", "Thiện", 
+                GenderEnum.MALE, "0321654988", "012345688932", 
+                "Hà Nội", "email@example.com", account, registrationDate, loyaltyPoints);
         int insertResult = customerRepository.insert(newCustomer);
         System.out.println("Insert Result: " + insertResult);
 
@@ -43,7 +49,7 @@ public class testCustomerRepository {
 
         // 4️⃣ Tìm khách hàng theo ID (SELECT BY ID)
         if (!customers.isEmpty()) {
-            Customer foundCustomer = customerRepository.selectById(customers.get(0).getCustomerID());
+            Customer foundCustomer = customerRepository.selectById(customers.get(0).getId());
             System.out.println("Khách hàng tìm thấy: " + foundCustomer);
         }
 

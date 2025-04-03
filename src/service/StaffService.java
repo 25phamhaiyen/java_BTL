@@ -22,7 +22,7 @@ public class StaffService {
             
             int result = StaffRepository.insert(staff);
             if (result > 0) {
-                LOGGER.info("Thêm nhân viên thành công: " + staff.getStaffID());
+                LOGGER.info("Thêm nhân viên thành công: " + staff.getId());
                 return true;
             }
             return false;
@@ -39,9 +39,9 @@ public class StaffService {
     public boolean updateStaff(Staff staff) {
         try {
             // Kiểm tra nhân viên có tồn tại không
-            Staff existing = StaffRepository.selectById(staff.getStaffID());
+            Staff existing = StaffRepository.selectById(staff.getId());
             if (existing == null) {
-                LOGGER.warning("Nhân viên không tồn tại: " + staff.getStaffID());
+                LOGGER.warning("Nhân viên không tồn tại: " + staff.getId());
                 return false;
             }
 
@@ -60,7 +60,7 @@ public class StaffService {
     public boolean deleteStaff(int staffId) {
         try {
             Staff staff = new Staff();
-            staff.setStaffID(staffId);
+            staff.setId(staffId);
             int result = StaffRepository.delete(staff);
             return result > 0;
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class StaffService {
         if (staff.getAddress() == null || staff.getAddress().trim().isEmpty()) {
             throw new IllegalArgumentException("Địa chỉ không được để trống");
         }
-        if (staff.getSex() == null) {
+        if (staff.getGender() == null) {
             throw new IllegalArgumentException("Giới tính không được để trống");
         }
         if (staff.getRole() == null || staff.getRole().getRoleID() <= 0) {
@@ -146,10 +146,10 @@ public class StaffService {
         }
 
         // Kiểm tra các ràng buộc từ DAO (trùng lặp)
-        if (isPhoneNumberExists(staff.getPhoneNumber(), staff.getStaffID())) {
+        if (isPhoneNumberExists(staff.getPhoneNumber(), staff.getId())) {
             throw new IllegalArgumentException("Số điện thoại đã tồn tại trong hệ thống");
         }
-        if (isCitizenNumberExists(staff.getCitizenNumber(), staff.getStaffID())) {
+        if (isCitizenNumberExists(staff.getCitizenNumber(), staff.getId())) {
             throw new IllegalArgumentException("Số CCCD đã tồn tại trong hệ thống");
         }
     }

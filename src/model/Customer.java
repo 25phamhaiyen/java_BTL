@@ -1,103 +1,63 @@
 package model;
 
+import java.util.Date;
+
 import enums.GenderEnum;
 
-public class Customer {
-    private int customerID;
-    private String lastName;
-    private String firstName;
-    private String phoneNumber;
-    private GenderEnum gender; // Dùng enum thay vì int
-    private String citizenNumber;
-    private String address;
-    private Account account; // Khóa ngoại
+public class Customer extends Person {
 
-    public Customer() {
-        super();
-    }
+	private Account account;
+	private Date registrationDate;
+	private int loyaltyPoints;
 
-    public Customer(int customerID, String lastName, String firstName, String phoneNumber, GenderEnum gender,
-                    String citizenNumber, String address, Account account) {
-        super();
-        this.customerID = customerID;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.phoneNumber = phoneNumber;
-        this.gender = gender;
-        this.citizenNumber = citizenNumber;
-        this.address = address;
-        this.account = account;
-    }
+	public Customer() {
+		super();
+	}
 
-    public int getCustomerID() {
-        return customerID;
-    }
+	public Customer(int id, String lastName, String firstName, GenderEnum gender, String phoneNumber,
+			String citizenNumber, String address, String email, Account account, Date registrationDate,
+			int loyaltyPoints) {
+		super(id, lastName, firstName, gender, phoneNumber, citizenNumber, address, email);
+		this.account = account;
+		this.registrationDate = registrationDate;
+		this.loyaltyPoints = loyaltyPoints;
+	}
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
+	public Customer(Account account, Date registrationDate, int loyaltyPoints) {
+		super();
+		this.account = account;
+		this.registrationDate = registrationDate;
+		this.loyaltyPoints = loyaltyPoints;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public Account getAccount() {
+		return account;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public int getLoyaltyPoints() {
+		return loyaltyPoints;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public void setLoyaltyPoints(int loyaltyPoints) {
+		this.loyaltyPoints = loyaltyPoints;
+	}
 
-    public GenderEnum getGender() {
-        return gender;
-    }
+	@Override
+	public String toString() {
+		return "Customer [account=" + account + ", registrationDate=" + registrationDate + ", loyaltyPoints="
+				+ loyaltyPoints + "]";
+	}
 
-    public void setGender(GenderEnum gender) {
-        this.gender = gender;
-    }
-
-    public String getCitizenNumber() {
-        return citizenNumber;
-    }
-
-    public void setCitizenNumber(String citizenNumber) {
-        this.citizenNumber = citizenNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer: ID " + customerID + "\n\tName: " + lastName + " " + firstName
-                + "\n\tPhone Number: " + phoneNumber + "\n\tGender: " + gender.getDescription()
-                + "\n\tCitizen Number: " + citizenNumber + "\n\tAddress: " + address
-                + "\n\tAccount ID: " + (account != null ? account.getAccountID() : "None");
-    }
 }

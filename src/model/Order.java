@@ -114,8 +114,8 @@ public class Order {
                ", appointmentDate=" + appointmentDate +
                ", orderType=" + orderType +
                ", total=" + total +
-               ", customer=" + (customer != null ? customer.getCustomerID() : "null") +
-               ", staff=" + (staff != null ? staff.getStaffID() : "null") +
+               ", customer=" + (customer != null ? customer.getId() : "null") +
+               ", staff=" + (staff != null ? staff.getId() : "null") +
                ", status=" + (happenStatus != null ? happenStatus.getHappenStatusID() : "null") +
                '}';
     }
