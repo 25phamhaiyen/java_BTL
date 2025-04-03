@@ -70,8 +70,8 @@ public class OrderRepository implements IRepository<Order> {
             pstmt.setTimestamp(2, order.getAppointmentDate());
             pstmt.setString(3, order.getOrderType().getDescription());
             pstmt.setDouble(4, 0.0); // Ban đầu đặt tổng tiền là 0
-            pstmt.setInt(5, order.getCustomer().getCustomerID());
-            pstmt.setObject(6, order.getStaff() != null ? order.getStaff().getStaffID() : null);
+            pstmt.setInt(5, order.getCustomer().getId());
+            pstmt.setObject(6, order.getStaff() != null ? order.getStaff().getId() : null);
             pstmt.setInt(7, order.getHappentStatus().getHappenStatusID());
 
             int affectedRows = pstmt.executeUpdate();
@@ -107,8 +107,8 @@ public class OrderRepository implements IRepository<Order> {
             pstmt.setTimestamp(1, order.getOrderDate());
             pstmt.setTimestamp(2, order.getAppointmentDate());
             pstmt.setString(3, order.getOrderType().getDescription());
-            pstmt.setInt(4, order.getCustomer().getCustomerID());
-            pstmt.setObject(5, order.getStaff() != null ? order.getStaff().getStaffID() : null);
+            pstmt.setInt(4, order.getCustomer().getId());
+            pstmt.setObject(5, order.getStaff() != null ? order.getStaff().getId(): null);
             pstmt.setInt(6, order.getHappentStatus().getHappenStatusID());
             pstmt.setInt(7, order.getOrderId());
             
@@ -224,13 +224,13 @@ public class OrderRepository implements IRepository<Order> {
         }
 
         Customer customer = new Customer();
-        customer.setCustomerID(rs.getInt("Customer_ID"));
+        customer.setId(rs.getInt("Customer_ID"));
 
         // Kiểm tra Staff NULL
         Staff staff = null;
         if (rs.getObject("StaffID") != null) {
             staff = new Staff();
-            staff.setStaffID(rs.getInt("StaffID"));
+            staff.setId(orderId);
         }
 
         // Kiểm tra HappenStatus NULL

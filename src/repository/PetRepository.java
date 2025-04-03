@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enums.GenderEnum;
+import model.Account;
 import model.Customer;
 import model.Pet;
 import model.TypePet;
@@ -35,7 +36,7 @@ public class PetRepository implements IRepository<Pet> {
 			pstmt.setInt(1, t.getPetID());
 			pstmt.setString(2, t.getPetName());
 			pstmt.setInt(3, t.getAge());
-			pstmt.setInt(4, t.getCustomer().getCustomerID());
+			pstmt.setInt(4, t.getCustomer().getId());
 			pstmt.setInt(5, t.getTypePet().getTypePetID());
 
 			ketQua = pstmt.executeUpdate();
@@ -63,7 +64,7 @@ public class PetRepository implements IRepository<Pet> {
 
 			pstmt.setString(1, t.getPetName());
 			pstmt.setInt(2, t.getAge());
-			pstmt.setInt(3, t.getCustomer().getCustomerID());
+			pstmt.setInt(3, t.getCustomer().getId());
 			pstmt.setInt(4, t.getTypePet().getTypePetID());
 			pstmt.setInt(5, t.getPetID());
 
@@ -203,12 +204,21 @@ public class PetRepository implements IRepository<Pet> {
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					// Lấy thông tin Customer
-					Customer customer = new Customer(rs.getInt("customer_ID"), rs.getString("lastName"),
-							rs.getString("firstName"), rs.getString("phoneNumber"),
-							GenderEnum.fromCode(rs.getInt("sex")), // Chuyển từ int -> Enum
-							rs.getString("citizenNumber"), rs.getString("address"), null // Bỏ qua Account để bảo mật
-					);
+					Account account = null;
+					Customer customer = new Customer(
+				            rs.getInt("customer_ID"),
+				            rs.getString("lastName"),
+				            rs.getString("firstName"),
+				            GenderEnum.fromCode(rs.getInt("sex")), // Chuyển từ int -> Enum
+				            rs.getString("phoneNumber"),
+				            rs.getString("citizenNumber"),
+				            rs.getString("address"),
+				            rs.getString("email"), // Truyền email vào
+				            account,  // Truyền account (có thể là null)
+				            rs.getDate("registrationDate"),
+				            rs.getInt("loyaltyPoints")
+				        );
+
 
 					// Lấy thông tin TypePet
 					TypePet typePet = new TypePet(rs.getInt("TypePetID"), rs.getString("TypePetName"));

@@ -16,10 +16,10 @@ public class testOrderRepository {
         OrderRepository orderRepository = OrderRepository.getInstance();
 
         Customer customer = new Customer();
-        customer.setCustomerID(1);
+        customer.setId(1);
 
         Staff staff = new Staff();
-        staff.setStaffID(2);
+        staff.setId(2);
 
         HappenStatus happenStatus = new HappenStatus();
         happenStatus.setHappenStatusID(1);
@@ -50,8 +50,8 @@ public class testOrderRepository {
             System.out.println(foundOrder != null ? " Tìm thấy đơn hàng: " + foundOrder : " Không tìm thấy đơn hàng.");
 
             // 4️ Lấy danh sách đơn hàng theo điều kiện (lọc theo customerID)
-            List<Order> filteredOrders = orderRepository.selectByCondition("Customer_ID = ?", newOrder.getCustomer().getCustomerID());
-            System.out.println(" Danh sách đơn hàng của khách hàng ID=" + newOrder.getCustomer().getCustomerID());
+            List<Order> filteredOrders = orderRepository.selectByCondition("Customer_ID = ?", newOrder.getCustomer().getId());
+            System.out.println(" Danh sách đơn hàng của khách hàng ID=" + newOrder.getCustomer().getId());
             for (Order order : filteredOrders) {
                 System.out.println(order);
             }
