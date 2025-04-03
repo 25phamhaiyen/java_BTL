@@ -1,18 +1,20 @@
-package test;
+package tests;
 
+import java.time.LocalDate;
 import java.util.List;
-import dao.StaffDAO;
-import dao.AccountDAO;
-import entity.Account;
-import entity.Role;
-import entity.Staff;
-import Enum.GenderEnum;
-import backend.StaffService;
+
+import enums.GenderEnum;
+import model.Account;
+import model.Role;
+import model.Staff;
+import repository.AccountRepository;
+import repository.StaffRepository;
+import service.StaffService;
 
 public class testStaffDAO {
     public static void main(String[] args) {
-        StaffDAO staffDAO = new StaffDAO();
-        AccountDAO accountDAO = AccountDAO.getInstance();
+        StaffRepository staffDAO = new StaffRepository();
+        AccountRepository accountDAO = AccountRepository.getInstance();
 
         // 1. Tạo tài khoản trước khi tạo nhân viên
         System.out.println("TẠO TÀI KHOẢN");
@@ -48,10 +50,16 @@ public class testStaffDAO {
             }
             
             Staff newStaff = new Staff(
-                0, "Nguyen", "Van A", GenderEnum.MALE, 
-                "0123456789", "123456789012", "Hanoi", 
-                managerRole, managerAccount.getAccountID() // Sử dụng AccountID từ tài khoản vừa tạo
-            );
+            	    0, "Nguyen", "Van A", GenderEnum.MALE, 
+            	    "0123456789", "123456789012", "Hanoi", "nguyenvana@example.com",
+            	    managerAccount, managerRole, 
+            	    LocalDate.of(2024, 4, 3),  // Ngày bắt đầu
+            	    null,                      // Ngày kết thúc (null nếu chưa nghỉ)
+            	    10000000,                  // Lương
+            	    "Ca sáng",                 // Ca làm việc
+            	    "Nhân viên chính thức"      // Chức vụ
+            	);
+
             
             try {
             	StaffService staffService = new StaffService();
@@ -74,10 +82,10 @@ public class testStaffDAO {
                 else {
                     int insertResult = staffDAO.insert(newStaff);
                     if (insertResult > 0) {
-                        System.out.println("Thêm nhân viên thành công. StaffID: " + newStaff.getStaffID());
+                        System.out.println("Thêm nhân viên thành công. StaffID: " + newStaff.getId());
                         
                 
-                        Staff addedStaff = staffDAO.selectById(newStaff.getStaffID());
+                        Staff addedStaff = staffDAO.selectById(newStaff.getId());
                         System.out.println("Thông tin chi tiết:\n" + addedStaff);
                     } else {
                         System.out.println("Thêm nhân viên không thành công");
@@ -109,7 +117,7 @@ public class testStaffDAO {
                     List<Staff> checkDup = staffDAO.selectByCondition(
                         "phoneNumber = ? AND StaffID != ?", 
                         newPhoneNumber,
-                        updateStaff.getStaffID()
+                        updateStaff.getId()
                     );
 
                     if (!checkDup.isEmpty()) {
@@ -131,8 +139,8 @@ public class testStaffDAO {
                 
                 // 5. TÌM NHÂN VIÊN THEO ID
                 System.out.println("\nTÌM NHÂN VIÊN THEO ID");
-                Staff foundStaff = staffDAO.selectById(updateStaff.getStaffID());
-                System.out.println("Nhân viên có ID " + updateStaff.getStaffID() + ":");
+                Staff foundStaff = staffDAO.selectById(updateStaff.getId());
+                System.out.println("Nhân viên có ID " + updateStaff.getId() + ":");
                 System.out.println(foundStaff);
                 
                 // 6. TÌM NHÂN VIÊN THEO ĐIỀU KIỆN
@@ -174,16 +182,22 @@ public class testStaffDAO {
                 }
                 
                 Staff tempStaff = new Staff(
-                    0, "Pham", "Van C", GenderEnum.MALE, 
-                    tempPhone, "321456789023", "Da Nang", 
-                    managerRole, tempAccount.getAccountID()
-                );
+                	    0, "Pham", "Van C", GenderEnum.MALE, 
+                	    tempPhone, "321456789023", "Da Nang", "phamvanc@example.com",
+                	    tempAccount, managerRole, 
+                	    LocalDate.of(2024, 4, 3),  // Ngày bắt đầu làm việc
+                	    null,                      // Ngày kết thúc (null nếu chưa nghỉ)
+                	    12000000,                  // Lương
+                	    "Ca chiều",                // Ca làm việc
+                	    "Nhân viên part-time"       // Chức vụ
+                	);
+
 
                 try {
                     // Thêm nhân viên tạm nếu chưa tồn tại
                     if (staffDAO.selectByCondition("phoneNumber = ?", tempStaff.getPhoneNumber()).isEmpty()) {
                         staffDAO.insert(tempStaff);
-                        System.out.println("Đã tạo nhân viên tạm với ID: " + tempStaff.getStaffID());
+                        System.out.println("Đã tạo nhân viên tạm với ID: " + tempStaff.getId());
                     }
 
                     // Thực hiện xóa
@@ -191,7 +205,7 @@ public class testStaffDAO {
                     System.out.println("Kết quả xóa: " + deleteResult + " bản ghi bị ảnh hưởng");
 
                     // Kiểm tra sau khi xóa
-                    Staff deletedStaff = staffDAO.selectById(tempStaff.getStaffID());
+                    Staff deletedStaff = staffDAO.selectById(tempStaff.getId());
                     System.out.println("Nhân viên sau khi xóa: " + 
                         (deletedStaff == null ? "Không tìm thấy (xóa thành công)" : "Vẫn tồn tại"));
                 } catch (Exception e) {
