@@ -21,8 +21,8 @@ public class StaffRepository implements IRepository<Staff> {
 
 	@Override
 	public int insert(Staff staff) {
-		String insertPersonSql = "INSERT INTO person (lastName, firstName, sex, phoneNumber, citizenNumber, address) "
-				+ "VALUES (?, ?, ?, ?, ?, ?)";
+		String insertPersonSql = "INSERT INTO person (lastName, firstName, sex, phoneNumber, citizenNumber, address, email) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		String insertStaffSql = "INSERT INTO staff (PersonID, Role_ID, AccountID, startDate, endDate, salary, workShift, position) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -37,6 +37,7 @@ public class StaffRepository implements IRepository<Staff> {
 			personStmt.setString(4, staff.getPhoneNumber());
 			personStmt.setString(5, staff.getCitizenNumber());
 			personStmt.setString(6, staff.getAddress());
+			personStmt.setString(7, staff.getEmail());
 
 			int personAffectedRows = personStmt.executeUpdate();
 
@@ -67,7 +68,7 @@ public class StaffRepository implements IRepository<Staff> {
 
 	@Override
 	public int update(Staff staff) {
-		String updatePersonSql = "UPDATE person SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=? WHERE PersonID=?";
+		String updatePersonSql = "UPDATE person SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=?, email=? WHERE PersonID=?";
 		String updateStaffSql = "UPDATE staff SET Role_ID=?, AccountID=?, startDate=?, endDate=?, salary=?, workShift=?, position=? WHERE PersonID=?";
 
 		try (Connection con = DatabaseConnection.getConnection();
@@ -81,7 +82,8 @@ public class StaffRepository implements IRepository<Staff> {
 			personStmt.setString(4, staff.getPhoneNumber());
 			personStmt.setString(5, staff.getCitizenNumber());
 			personStmt.setString(6, staff.getAddress());
-			personStmt.setInt(7, staff.getId());
+			personStmt.setString(7, staff.getEmail());
+			personStmt.setInt(8, staff.getId());
 
 			int personAffectedRows = personStmt.executeUpdate();
 
@@ -130,11 +132,13 @@ public class StaffRepository implements IRepository<Staff> {
 	}
 	@Override
 	public List<Staff> selectAll() {
-		String sql = "SELECT s.PersonID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, "
-				+ "s.AccountID, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
-				+ "FROM staff s JOIN role r ON s.Role_ID = r.Role_ID";
-
-		return executeQuery(sql);
+		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
+	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
+	               + "FROM person p "
+	               + "JOIN staff s ON p.PersonID = s.PersonID "
+	               + "JOIN role r ON s.Role_ID = r.Role_ID "
+	               + "LEFT JOIN account a ON s.AccountID = a.AccountID";
+	    return executeQuery(sql);
 	}
 
 	@Override
@@ -143,24 +147,30 @@ public class StaffRepository implements IRepository<Staff> {
 	}
 
 	public Staff selectById(int personID) {
-		String sql = "SELECT s.PersonID, s.lastName, s.firstName, s.sex, s.phoneNumber, s.citizenNumber, s.address, "
-				+ "s.AccountID, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
-				+ "FROM staff s JOIN role r ON s.Role_ID = r.Role_ID WHERE s.PersonID = ?";
-
-		List<Staff> result = executeQuery(sql, personID);
-		return result.isEmpty() ? null : result.get(0);
+		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
+	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
+	               + "FROM person p "
+	               + "JOIN staff s ON p.PersonID = s.PersonID "
+	               + "JOIN role r ON s.Role_ID = r.Role_ID "
+	               + "LEFT JOIN account a ON s.AccountID = a.AccountID"
+	               + "WHERE p.PersonID = ?";
+	    List<Staff> result = executeQuery(sql, personID);
+	    return result.isEmpty() ? null : result.get(0);
 	}
 
 	public List<Staff> selectByCondition(String whereClause, Object... params) {
-		String sql = "SELECT s.staffID, s.lastName, s.firstName, s.sex, s.phoneNumber, "
-				+ "s.citizenNumber, s.address, s.AccountID, r.Role_ID, r.roleName "
-				+ "FROM Staff s JOIN Role r ON s.Role_ID = r.Role_ID";
+		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
+	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName "
+	               + "FROM person p "
+	               + "JOIN staff s ON p.PersonID = s.PersonID "
+	               + "JOIN role r ON s.Role_ID = r.Role_ID "
+	               + "LEFT JOIN account a ON s.AccountID = a.AccountID";
 
-		if (whereClause != null && !whereClause.trim().isEmpty()) {
-			sql += " WHERE " + whereClause;
-		}
+	    if (whereClause != null && !whereClause.trim().isEmpty()) {
+	        sql += " WHERE " + whereClause;
+	    }
 
-		return executeQuery(sql, params);
+	    return executeQuery(sql, params);
 	}
 
 	private List<Staff> executeQuery(String sql, Object... params) {
@@ -181,7 +191,6 @@ public class StaffRepository implements IRepository<Staff> {
 		}
 		return list;
 	}
-
 	private Staff mapResultSetToStaff(ResultSet rs) throws SQLException {
 	    // Lấy các giá trị từ ResultSet
 	    int personID = rs.getInt("PersonID");
@@ -191,7 +200,7 @@ public class StaffRepository implements IRepository<Staff> {
 	    String phoneNumber = rs.getString("phoneNumber");
 	    String citizenNumber = rs.getString("citizenNumber");
 	    String address = rs.getString("address");
-	    String email = rs.getString("email"); 
+	    String email = rs.getString("email"); // Đảm bảo lấy được email
 	    int accountID = rs.getInt("AccountID");
 	    Role role = new Role(rs.getInt("Role_ID"), rs.getString("roleName"));
 	    
@@ -204,14 +213,13 @@ public class StaffRepository implements IRepository<Staff> {
 	    String workShift = rs.getString("workShift");
 	    String position = rs.getString("position");
 	    
+	    // Kiểm tra tài khoản
 	    Account account = null;
-	    if (rs.wasNull()) {
-	        account = null;
-	    } else {
+	    if (accountID > 0) { // Kiểm tra nếu accountID hợp lệ
 	        String userName = rs.getString("UN_Username");
 	        String accountEmail = rs.getString("Email");
 	        account = new Account(accountID, userName, null, accountEmail, null);
-	    } 
+	    }
 	    
 	    // Trả về đối tượng Staff với tất cả các tham số đã lấy từ ResultSet
 	    return new Staff(personID, lastName, firstName, gender, phoneNumber, citizenNumber, address, email, account, role, startDate, endDate, salary, workShift, position);

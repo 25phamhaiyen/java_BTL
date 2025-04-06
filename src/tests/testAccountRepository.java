@@ -12,8 +12,8 @@ public class testAccountRepository {
         AccountRepository accountRepository = AccountRepository.getInstance();
 
         // 1️⃣ Thêm tài khoản mới
-        Role role=new Role(3, "Manager");
-        Account newAccount = new Account(0, "user12", "password12", "user12@gmail.com", role);
+        Role role=new Role(2, "Admin");
+        Account newAccount = new Account(0, "admin", "password123", "admin@example.com", role);
         accountRepository.insert(newAccount);
         int insertResult = accountRepository.insert(newAccount);
         System.out.println("Insert Result: " + insertResult);
@@ -43,9 +43,9 @@ public class testAccountRepository {
 //            System.out.println("Tài khoản sau cập nhật: " + updatedAccount);
 //        }
          	
-        // 5️⃣ Truy vấn tài khoản theo điều kiện (Role = CUSTOMER)
-        System.out.println("\nDanh sách tài khoản CUSTOMER:");
-        List<Account> customerAccounts = accountRepository.selectByCondition("Role_ID=?", 1);
+        // 5️⃣ Truy vấn tài khoản theo điều kiện (Role = ADMIN)
+        System.out.println("\nDanh sách tài khoản ADMIN:");
+        List<Account> customerAccounts = accountRepository.selectByCondition("Role_ID=?", 2);
         for (Account acc : customerAccounts) {
             System.out.println(acc);
         }
