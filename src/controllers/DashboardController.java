@@ -1,8 +1,9 @@
 package controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import model.Role;
 import utils.Session;
 
@@ -13,59 +14,70 @@ public class DashboardController {
     @FXML
     private Button btnAdminPanel;
     @FXML
-    private Button btnCustomerView;
+    private Button btnEmployeePanel;
     @FXML
-    private Button btnEmployeeView;
+    private Button btnCustomerPanel;
     @FXML
     private Button btnLogout;
 
     @FXML
     public void initialize() {
-    	// Trước khi truy cập Session.getCurrentUser()
-    	System.out.println("Current User: " + Session.getCurrentUser());
-
-    	// Kiểm tra nếu currentUser là null
+        System.out.println("Current User: " + Session.getCurrentUser());
         if (Session.getCurrentUser() != null) {
-            // Lấy vai trò người dùng từ Session
             Role role = Session.getUserRole();
-            
             lblWelcome.setText("Chào mừng, " + Session.getCurrentUser().getUserName());
 
-            // Ẩn tất cả các nút trước, sau đó hiển thị theo quyền
-            btnAdminPanel.setVisible(false);
-            btnCustomerView.setVisible(false);
-            btnEmployeeView.setVisible(false);
-
-            
-            // Kiểm tra vai trò và hiển thị các nút phù hợp
-            if (role != null) {
-                switch (role.getRoleID()) {
-                    case 1: // ADMIN
-                    case 4: // Manager
-                        btnAdminPanel.setVisible(true); // Hiển thị quản lý hệ thống
-                        break;
-                    case 3: // CUSTOMER
-                        btnCustomerView.setVisible(true); // Hiển thị trang khách hàng
-                        break;
-                    case 2: // EMPLOYEE
-                        btnEmployeeView.setVisible(true); // Hiển thị trang nhân viên
-                        break;
-                    default:
-                    	System.out.println(role.getRoleName());
-                        lblWelcome.setText("Vui lòng đăng nhập!");
-                        break;
+            // Sử dụng Platform.runLater để đảm bảo giao diện được cập nhật sau khi đăng nhập thành công
+            Platform.runLater(() -> {
+                if (role != null) {
+                    switch (role.getRoleID()) {
+                        case 1: // Admin
+                        case 2: // Manager
+                            btnAdminPanel.setVisible(true); // Hiển thị nút cho Admin/Manager
+                            break;
+                        case 3: // Employee
+                            btnEmployeePanel.setVisible(true); // Hiển thị nút cho Employee
+                            break;
+                        case 4: // Customer
+                            btnCustomerPanel.setVisible(true); // Hiển thị nút cho Customer
+                            break;
+                        default:
+                            lblWelcome.setText("Vai trò không xác định, vui lòng đăng nhập lại!");
+                            break;
+                    }
                 }
-            }
+            });
         } else {
             lblWelcome.setText("Vui lòng đăng nhập!");
         }
 
-        // Xử lý sự kiện đăng xuất
+        // Sự kiện đăng xuất
         btnLogout.setOnAction(event -> handleLogout());
     }
 
+    // Chuyển đến trang Admin
+    @FXML
+    private void handleAdminPanel() {
+    	SceneSwitcher.switchScene("admin/adminDashboard.fxml");
+    }
+
+    // Chuyển đến trang Employee
+    @FXML
+    private void handleEmployeePanel() {
+    	SceneSwitcher.switchScene("login.fxml");
+    }
+
+    // Chuyển đến trang Customer
+    @FXML
+    private void handleCustomerPanel() {
+    	SceneSwitcher.switchScene("login.fxml");
+    }
+
+    // Đăng xuất
+    @FXML
     private void handleLogout() {
-        Session.logout(); // Đăng xuất người dùng
+        Session.logout();
         SceneSwitcher.switchScene("login.fxml");
     }
+
 }

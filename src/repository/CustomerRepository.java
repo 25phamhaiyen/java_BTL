@@ -208,7 +208,7 @@ public class CustomerRepository implements IRepository<Customer> {
 	@Override
 	public List<Customer> selectAll() {
 	    List<Customer> ketQua = new ArrayList<>();
-	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email FROM customer c "
+	    String sql = "SELECT p.*, a.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints FROM customer c "
 	            + "JOIN person p ON c.PersonID = p.PersonID "
 	            + "JOIN account a ON c.AccountID = a.AccountID";
 
@@ -236,7 +236,7 @@ public class CustomerRepository implements IRepository<Customer> {
 
 	public Customer selectById(int customerID) {
 	    Customer ketQua = null;
-	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email "
+	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints "
 	            + "FROM customer c "
 	            + "JOIN person p ON c.PersonID = p.PersonID "
 	            + "JOIN account a ON c.AccountID = a.AccountID "
@@ -278,7 +278,7 @@ public class CustomerRepository implements IRepository<Customer> {
 	        throw new IllegalArgumentException("Điều kiện truy vấn không hợp lệ.");
 	    }
 
-	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email FROM customer c "
+	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints FROM customer c "
 	            + "JOIN person p ON c.PersonID = p.PersonID "
 	            + "JOIN account a ON c.AccountID = a.AccountID WHERE " + condition;
 
