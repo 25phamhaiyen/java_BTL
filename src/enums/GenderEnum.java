@@ -1,10 +1,10 @@
 package enums;
 
 public enum GenderEnum {
-    MALE(1, "Nam"),
-    FEMALE(0, "Nữ"),
-    OTHER(3, "Khác"),
-    UNKNOWN(2, "Không xác định");
+    MALE(0, "Nam"),
+    FEMALE(1, "Nữ"),
+    OTHER(2, "Khác"),
+    UNKNOWN(3, "Không xác định");
 
     private final int code;
     private final String description;

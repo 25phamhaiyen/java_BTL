@@ -3,6 +3,8 @@ package controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
 public class HomeController {
@@ -34,12 +36,12 @@ public class HomeController {
 
     private void updateLanguage() {
         if (isEnglish) {
-            title.setText("Pet Care");
+            title.setText("PET CARE");
             btnLogin.setText("Login");
             btnRegister.setText("Register");
             btnLanguage.setText("EN|VN");
         } else {
-            title.setText("Chăm sóc thú cưng");
+        	title.setText("CHĂM SÓC THÚ CƯNG CỦA BẠN");
             btnLogin.setText("Đăng nhập");
             btnRegister.setText("Đăng ký");
             btnLanguage.setText("VN|GB");

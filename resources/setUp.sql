@@ -98,22 +98,25 @@ AUTO_INCREMENT=1
 
 -- 				Tạo bảng Con người
 CREATE TABLE `person` (
-    `PersonID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `lastName` VARCHAR(50) NOT NULL,
-    `firstName` VARCHAR(20) NOT NULL,
-    `phoneNumber` VARCHAR(10) NOT NULL,
-    `sex` TINYINT NOT NULL,
-    `citizenNumber` VARCHAR(12) NOT NULL,
-    `address` TEXT NOT NULL,
-    PRIMARY KEY (`PersonID`),
-    UNIQUE INDEX `Person_PhoneNumber` (`phoneNumber`),
-    UNIQUE INDEX `Person_CitizenNumber` (`citizenNumber`),
-    CONSTRAINT `CkPerson_CitizenNumber` CHECK (LENGTH(`citizenNumber`) = 12),
-    CONSTRAINT `CkPerson_phoneNumber` CHECK (LENGTH(`phoneNumber`) = 10)
-) 
+	`PersonID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`lastName` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`firstName` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`phoneNumber` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`sex` TINYINT NOT NULL,
+	`citizenNumber` VARCHAR(12) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`address` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	PRIMARY KEY (`PersonID`) USING BTREE,
+	UNIQUE INDEX `Person_PhoneNumber` (`phoneNumber`) USING BTREE,
+	UNIQUE INDEX `Person_CitizenNumber` (`citizenNumber`) USING BTREE,
+	CONSTRAINT `CkPerson_CitizenNumber` CHECK ((length(`citizenNumber`) = 12)),
+	CONSTRAINT `CkPerson_phoneNumber` CHECK ((length(`phoneNumber`) = 10))
+)
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
-AUTO_INCREMENT=1;
+AUTO_INCREMENT=1
+;
+
 
 -- 				Tạo bảng Khách hàng
 CREATE TABLE `customer` (
