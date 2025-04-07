@@ -1,9 +1,12 @@
 package model;
 
 import java.sql.Timestamp;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import model.Customer;   // Thêm dòng này
+import model.Staff;      // Thêm dòng này
+import model.HappenStatus;
 import enums.TypeOrder;
 
 public class Order {

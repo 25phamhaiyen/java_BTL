@@ -4,22 +4,20 @@ public enum TypeServiceEnum {
     VIP(1, "VIP"),
     BASIC(2, "Cơ bản");
 
+
     private final int id;
     private final String description;
-
+    
     TypeServiceEnum(int id, String description) {
         this.id = id;
         this.description = description;
-    }
-
+    }  
     public int getId() {
         return id;
     }
-
     public String getDescription() {
         return description;
     }
-
     // Tìm TypeServiceEnum theo ID
     public static TypeServiceEnum fromId(int id) {
         for (TypeServiceEnum type : values()) {

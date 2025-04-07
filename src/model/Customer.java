@@ -2,6 +2,7 @@ package model;
 
 import java.util.Date;
 
+
 import enums.GenderEnum;
 
 public class Customer extends Person {
