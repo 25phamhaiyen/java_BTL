@@ -31,7 +31,53 @@ INSERT INTO `role` (RoleName) VALUES
 ('Nhân viên'),
 ('Khách hàng');
 
+<<<<<<< HEAD
 -- Thêm loại thú cưng (không phụ thuộc bảng nào)
+=======
+INSERT INTO `account` (`UN_Username`, `Password`, `Email`, `Role_ID`) VALUES
+('admin', '$2a$10$bxB8Fa1fAwS7BZoplZQCQOyc6CQEMDixqUWZ1e6O/6QJRUVW5mYlG', 'admin@example.com', 2),
+('manager', '$2a$10$eJP9dNXOqp/xPLlyttPmcO7VnmrrZLzqqt666Z9eqnxH1torpo7lO', 'manager@example.com', 1),
+('employee', '$2a$10$bdWRUaqXS09UMFZClbom2uO7VgcJzDBqwWeLfc6t0NQr6mQ6sDzCe', 'employee@example.com', 3)
+;
+
+INSERT INTO `person` (`lastName`, `firstName`, `phoneNumber`, `sex`, `citizenNumber`, `address`, `email`) VALUES
+('Nguyen', 'Anh', '0123456789', 0, '123456789012', '123 Mai Dịch', ''),
+('Tran', 'Hoa', '0987654321', 1, '098765432109', '456 Le Duan', ''),
+('Phạm', 'Hải Yến', '0112233445', 1, '012345678912', '123 Lê Văn Việt', 'phy@gmail.com');
+
+INSERT INTO `customer` (`PersonID`, `AccountID`, `registrationDate`, `loyaltyPoints`) VALUES
+(1, 1, '2025-04-01', 100),
+(2, 3, '2025-04-02', 50);
+
+INSERT INTO `staff` (`PersonID`, `Role_ID`, `AccountID`, `startDate`, `salary`, `workShift`, `position`) VALUES
+(1, 2, 1, '2025-04-01', 10000000, 'FullDay', 'Admin'),
+(2, 3, 3, '2025-04-02', 7000000, 'FullDay', 'Cashier'),
+(3, 1, 2, '2025-04-01', 15000000, 'FullDay', 'Manager');
+
+INSERT INTO happenstatus (UN_StatusCode, StatusName) VALUES
+(1, 'PENDING'),
+(2, 'PROCESSING'),
+(3, 'COMPLETED');
+
+INSERT INTO paymentstatus (UN_StatusCode, StatusName) VALUES
+(1, 'PENDING'),
+(2, 'Paid'),
+(3, 'Failed');
+
+INSERT INTO typeservice (UN_TypeName) VALUES
+('Tắm vệ sinh'),
+('Cắt tỉa lông'),
+('Dịch vụ y tế'),
+('Huấn luyện thú cưng');
+
+INSERT INTO service (serviceName, CostPrice, TypeServiceID, MoTa) VALUES
+('Tắm rửa cơ bản', 100000, 1, 'Dịch vụ tắm rửa cơ bản cho thú cưng'),
+('Cắt tỉa lông chó nhỏ', 150000, 2, 'Cắt tỉa lông cho chó dưới 10kg'),
+('Tiêm phòng dại', 200000, 3, 'Tiêm vaccine phòng bệnh dại'),
+('Huấn luyện nghe lời', 500000, 4, 'Huấn luyện chó vâng lời chủ'),
+('Dịch vụ spa', 250000, 1, 'Tắm, massage và dưỡng lông');
+
+>>>>>>> 7825721005ffadda6888e0b4b26ca916c967d630
 INSERT INTO typepet (UN_TypeName) VALUES
 ('Chó'),
 ('Mèo'),

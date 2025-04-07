@@ -1,0 +1,65 @@
+.root {
+    -fx-background-color: #fff6dd;
+    -fx-font-family: "Poppins", sans-serif;
+}
+
+/* Menu Bar */
+.menu-bar {
+    -fx-background-color: #f39c12;
+    -fx-padding: 15px;
+}
+
+.welcome-label {
+    -fx-text-fill: #5d4037;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.logout-button {
+    -fx-background-color: white;
+    -fx-text-fill: #f39c12;
+    -fx-border-color: #f39c12;
+    -fx-border-width: 2px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.logout-button:hover {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
+/* Nút chức năng */
+.function-box {
+    -fx-padding: 30px;
+}
+/* Định dạng chung cho các nút chức năng trong dashboard */
+.menu-button {
+    -fx-font-size: 14px;
+    -fx-min-width: 240px;
+    -fx-padding: 10 20;
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.menu-button:hover {
+    -fx-background-color: #e67e22;
+}
+
+/* Nút trong các màn hình con */
+.menu-button {
+    -fx-font-size: 14px;
+    -fx-min-width: 240px;
+    -fx-padding: 10 20;
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}

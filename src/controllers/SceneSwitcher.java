@@ -20,7 +20,14 @@ public class SceneSwitcher {
         	FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/" + fxmlFile));
         	Parent root = loader.load();
         	mainStage.setTitle("BESTPETS");
-        	mainStage.getIcons().add(new Image(SceneSwitcher.class.getResourceAsStream("/images/logo.jpg")));            
+        	mainStage.getIcons().add(new Image(SceneSwitcher.class.getResourceAsStream("/images/logo.png")));            
+        	// Set kích thước tối thiểu và tối đa cho cửa sổ
+            double minWidth = 400; // Chiều rộng tối thiểu cho cửa sổ
+            double minHeight = 500; // Chiều cao tối thiểu cho cửa sổ
+
+            // Thiết lập kích thước tối thiểu và tối đa
+            mainStage.setMinWidth(minWidth);
+            mainStage.setMinHeight(minHeight);
         	mainStage.setResizable(true);
             mainStage.setScene(new Scene(root));
             mainStage.show();

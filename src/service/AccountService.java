@@ -1,9 +1,15 @@
 package service;
 
+import java.util.HashMap;
 import java.util.List;
+<<<<<<< HEAD
 
 
+=======
+import java.util.Map;
+>>>>>>> 7825721005ffadda6888e0b4b26ca916c967d630
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 //import org.mindrot.jbcrypt.BCrypt;
@@ -12,10 +18,14 @@ import exception.AccountException;
 import model.Account;
 import model.Role;
 import repository.AccountRepository;
+import utils.EmailUtil;
 
 public class AccountService {
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); // Regex kiểm tra email
+
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile("^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
     private final AccountRepository accountRepository;
 
@@ -119,8 +129,8 @@ public class AccountService {
         if (username == null || username.trim().isEmpty()) {
             throw new AccountException("Tên đăng nhập không được để trống!");
         }
-        if (password != null && !password.isEmpty() && password.length() < 6) {
-            throw new AccountException("Mật khẩu phải có ít nhất 6 ký tự!");
+        if (password == null || !PASSWORD_PATTERN.matcher(password).matches()) {
+            throw new AccountException("Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!");
         }
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
             throw new AccountException("Email không hợp lệ!");
@@ -128,4 +138,42 @@ public class AccountService {
     }
 
 
+    private final Map<String, String> verificationCodes = new HashMap<>(); // Lưu mã xác nhận tạm thời
+
+    public void forgotPassword(String email) {
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new AccountException("Email không hợp lệ!");
+        }
+
+        List<Account> accounts = accountRepository.selectByCondition("Email = ?", email);
+        if (accounts.isEmpty()) {
+            throw new AccountException("Không tìm thấy tài khoản nào với email này!");
+        }
+
+        String code = EmailUtil.sendVerificationCode(email);
+        verificationCodes.put(email, code);
+    }
+
+    public boolean verifyCode(String email, String code) {
+        return verificationCodes.containsKey(email) && verificationCodes.get(email).equals(code);
+    }
+
+    public boolean resetPassword(String email, String newPassword, String code) {
+        if (!verifyCode(email, code)) {
+            throw new AccountException("Mã xác nhận không đúng hoặc đã hết hạn!");
+        }
+
+        if (newPassword.length() < 8 || !PASSWORD_PATTERN.matcher(newPassword).matches()) {
+            throw new AccountException("Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!");
+        }
+
+        List<Account> accounts = accountRepository.selectByCondition("Email = ?", email);
+        for (Account acc : accounts) {
+            acc.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            accountRepository.update(acc);
+        }
+
+        verificationCodes.remove(email); // Xóa mã sau khi đặt lại mật khẩu
+        return true;
+    }
 }
