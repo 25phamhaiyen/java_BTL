@@ -25,8 +25,7 @@ public class DashboardController {
 		System.out.println("Current User: " + Session.getCurrentUser());
 		if (Session.getCurrentUser() != null) {
 			Role role = Session.getUserRole();
-			lblWelcome.setText("Chào mừng, " + Session.getCurrentUser().getUserName());
-
+			lblWelcome.setText("🐾 Xin chào, " + Session.getCurrentUser().getUserName());
 			// Sử dụng Platform.runLater để đảm bảo giao diện được cập nhật sau khi đăng
 			// nhập thành công
 			Platform.runLater(() -> {
