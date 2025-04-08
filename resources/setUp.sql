@@ -242,7 +242,56 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1;
 
+-- Bảng work_schedule – lịch làm việc nhân viên
+CREATE TABLE work_schedule (
+    scheduleID INT AUTO_INCREMENT PRIMARY KEY,
+    staffID INT UNSIGNED NOT NULL,
+    workDate DATE NOT NULL,
+    shift ENUM('Morning', 'Afternoon', 'Evening') NOT NULL,
+    note VARCHAR(255),
+    FOREIGN KEY (staffID) REFERENCES staff(PersonID)  
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
+-- Bảng promotion – khuyến mãi theo điểm tích lũy
+CREATE TABLE promotion (
+    promotionID INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(100) NOT NULL,
+    `description` TEXT,
+    requiredPoints INT NOT NULL,
+    discountPercent DOUBLE NOT NULL CHECK (discountPercent >= 0 AND discountPercent <= 100),
+    startDate DATE NOT NULL,
+    endDate DATE NOT NULL,
+    CONSTRAINT chk_date_range CHECK (endDate > startDate)
+);
+
+-- View dashboard_summary_by_month – tổng hợp số liệu theo tháng
+CREATE VIEW dashboard_summary_by_month AS
+SELECT 
+    DATE_FORMAT(i.CreatedAt, '%Y-%m') AS month,
+    COUNT(DISTINCT i.invoiceID) AS total_orders,
+    COUNT(DISTINCT CASE 
+        WHEN MONTH(c.registrationDate) = MONTH(i.CreatedAt) 
+             AND YEAR(c.registrationDate) = YEAR(i.CreatedAt) 
+        THEN c.PersonID
+    END) AS new_customers,
+    SUM(i.TotalAmount) AS total_revenue
+FROM invoice i
+JOIN `order` o ON i.orderID = o.orderID
+JOIN customer c ON o.Customer_ID = c.PersonID
+GROUP BY DATE_FORMAT(i.CreatedAt, '%Y-%m')
+ORDER BY month;
+
+-- áp dụng khuyến mãi vào hóa đơn
+CREATE TABLE invoice_promotion (
+    invoiceID INT UNSIGNED,
+    promotionID INT UNSIGNED,
+    discountApplied DOUBLE DEFAULT 0,
+    PRIMARY KEY (invoiceID, promotionID),
+    FOREIGN KEY (invoiceID) REFERENCES invoice(InvoiceID) ON DELETE CASCADE,
+    FOREIGN KEY (promotionID) REFERENCES promotion(promotionID) ON DELETE CASCADE
+);
 
 
 DELIMITER //
@@ -319,5 +368,83 @@ END $$
 
 DELIMITER ;
 
+-- Trigger kiểm tra appointmentDate >= CURRENT_DATE() cho đơn hẹn lịch
+DELIMITER $$
+
+CREATE TRIGGER check_appointment_date_before_insert
+BEFORE INSERT ON `order`
+FOR EACH ROW
+BEGIN
+    IF NEW.orderType = 'Appointment' AND NEW.appointmentDate < CURRENT_DATE() THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Appointment date must be today or in the future.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+-- Ràng buộc endDate > startDate trong bảng staff
+DELIMITER $$
+
+CREATE TRIGGER check_staff_date_before_insert
+BEFORE INSERT ON staff
+FOR EACH ROW
+BEGIN
+    IF NEW.endDate <= NEW.startDate THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'End date must be after start date.';
+    END IF;
+END $$
+
+CREATE TRIGGER check_staff_date_before_update
+BEFORE UPDATE ON staff
+FOR EACH ROW
+BEGIN
+    IF NEW.endDate <= NEW.startDate THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'End date must be after start date.';
+    END IF;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER after_order_detail_insert
+AFTER INSERT ON order_detail
+FOR EACH ROW
+BEGIN
+    UPDATE `order`
+    SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = NEW.OrderID)
+    WHERE OrderID = NEW.OrderID;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER after_order_detail_update
+AFTER UPDATE ON order_detail
+FOR EACH ROW
+BEGIN
+    UPDATE `order`
+    SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = NEW.OrderID)
+    WHERE OrderID = NEW.OrderID;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE TRIGGER after_order_detail_delete
+AFTER DELETE ON order_detail
+FOR EACH ROW
+BEGIN
+    UPDATE `order`
+    SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = OLD.OrderID)
+    WHERE OrderID = OLD.OrderID;
+END $$
+
+DELIMITER ;
 
 

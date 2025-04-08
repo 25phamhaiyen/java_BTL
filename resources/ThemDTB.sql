@@ -35,17 +35,15 @@ INSERT INTO paymentstatus (UN_StatusCode, StatusName) VALUES
 (3, 'Failed');
 
 INSERT INTO typeservice (UN_TypeName) VALUES
-('Tắm vệ sinh'),
-('Cắt tỉa lông'),
-('Dịch vụ y tế'),
-('Huấn luyện thú cưng');
+('VIP'),
+('Cơ bản');
 
 INSERT INTO service (serviceName, CostPrice, TypeServiceID, MoTa) VALUES
 ('Tắm rửa cơ bản', 100000, 1, 'Dịch vụ tắm rửa cơ bản cho thú cưng'),
-('Cắt tỉa lông chó nhỏ', 150000, 2, 'Cắt tỉa lông cho chó dưới 10kg'),
-('Tiêm phòng dại', 200000, 3, 'Tiêm vaccine phòng bệnh dại'),
-('Huấn luyện nghe lời', 500000, 4, 'Huấn luyện chó vâng lời chủ'),
-('Dịch vụ spa', 250000, 1, 'Tắm, massage và dưỡng lông');
+('Cắt tỉa lông chó nhỏ', 150000, 1, 'Cắt tỉa lông cho chó dưới 10kg'),
+('Tiêm phòng dại', 200000, 1, 'Tiêm vaccine phòng bệnh dại'),
+('Huấn luyện nghe lời', 500000, 2, 'Huấn luyện chó vâng lời chủ'),
+('Dịch vụ spa', 250000, 2, 'Tắm, massage và dưỡng lông');
 
 INSERT INTO typepet (UN_TypeName) VALUES
 ('Chó'),

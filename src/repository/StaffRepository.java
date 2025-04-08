@@ -152,7 +152,7 @@ public class StaffRepository implements IRepository<Staff> {
 	               + "FROM person p "
 	               + "JOIN staff s ON p.PersonID = s.PersonID "
 	               + "JOIN role r ON s.Role_ID = r.Role_ID "
-	               + "LEFT JOIN account a ON s.AccountID = a.AccountID"
+	               + "LEFT JOIN account a ON s.AccountID = a.AccountID "
 	               + "WHERE p.PersonID = ?";
 	    List<Staff> result = executeQuery(sql, personID);
 	    return result.isEmpty() ? null : result.get(0);
@@ -160,7 +160,7 @@ public class StaffRepository implements IRepository<Staff> {
 
 	public List<Staff> selectByCondition(String whereClause, Object... params) {
 		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
-	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName "
+	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
 	               + "FROM person p "
 	               + "JOIN staff s ON p.PersonID = s.PersonID "
 	               + "JOIN role r ON s.Role_ID = r.Role_ID "

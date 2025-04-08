@@ -219,6 +219,17 @@ public class AccountRepository implements IRepository<Account> {
 		}
 		return list;
 	}
-	
+	public boolean updatePassword(int accountID, String newPassword) {
+        String query = "UPDATE account SET password = ? WHERE AccountID = ?";
+        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setInt(2, accountID);
+            int rowsUpdated = stmt.executeUpdate();
 
+            return rowsUpdated > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

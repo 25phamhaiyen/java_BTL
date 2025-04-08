@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -92,6 +91,14 @@ public class AccountService {
         return accountRepository.update(existingAccount) > 0;
     }
 
+    public boolean updatePassword(int accountID, String newPassword) {
+        try {
+            return accountRepository.updatePassword(accountID, newPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     /**
      * Xóa tài khoản (Không xóa tài khoản admin mặc định)
@@ -120,7 +127,7 @@ public class AccountService {
     /**
      * Kiểm tra dữ liệu tài khoản
      */
-    private void validateAccountData(String username, String password, String email) {
+    public void validateAccountData(String username, String password, String email) {
         if (username == null || username.trim().isEmpty()) {
             throw new AccountException("Tên đăng nhập không được để trống!");
         }
@@ -131,6 +138,31 @@ public class AccountService {
             throw new AccountException("Email không hợp lệ!");
         }
     }
+    
+    public void validateUsernameAndEmail(String username, String email, int excludeAccountID) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên đăng nhập không được để trống!");
+        }
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Email không hợp lệ!");
+        }
+
+        boolean usernameExists = accountRepository.selectByCondition(
+            "UN_UserName = ? AND AccountID != ?", username, excludeAccountID
+        ).size() > 0;
+        if (usernameExists) {
+            throw new IllegalArgumentException("Tên đăng nhập đã tồn tại!");
+        }
+
+        // Kiểm tra trùng email
+        boolean emailExists = accountRepository.selectByCondition(
+            "Email = ? AND AccountID != ?", email, excludeAccountID
+        ).size() > 0;
+        if (emailExists) {
+            throw new IllegalArgumentException("Email đã được sử dụng!");
+        }
+    }
+
 
 
     private final Map<String, String> verificationCodes = new HashMap<>(); // Lưu mã xác nhận tạm thời

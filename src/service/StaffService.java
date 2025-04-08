@@ -98,11 +98,12 @@ public class StaffService {
             return List.of();
         }
     }
+    
 
     // 7. Các phương thức tiện ích khác
     public boolean isPhoneNumberExists(String phoneNumber, Integer excludeStaffId) {
         try {
-            return StaffRepository.selectByCondition("phoneNumber = ? AND staffID != ?", phoneNumber, excludeStaffId != null ? excludeStaffId : 0)
+            return StaffRepository.selectByCondition("p.phoneNumber = ? AND p.PersonID != ?", phoneNumber, excludeStaffId != null ? excludeStaffId : 0)
                          .size() > 0;
         } catch (Exception e) {
             LOGGER.severe("Lỗi khi kiểm tra số điện thoại: " + e.getMessage());
@@ -112,7 +113,7 @@ public class StaffService {
 
     public boolean isCitizenNumberExists(String citizenNumber, Integer excludeStaffId) {
         try {
-            return StaffRepository.selectByCondition("citizenNumber = ? AND staffID != ?", citizenNumber, excludeStaffId != null ? excludeStaffId : 0)
+            return StaffRepository.selectByCondition("p.citizenNumber = ? AND .PersonID != ?", citizenNumber, excludeStaffId != null ? excludeStaffId : 0)
                          .size() > 0;
         } catch (Exception e) {
             LOGGER.severe("Lỗi khi kiểm tra số CCCD: " + e.getMessage());
@@ -121,7 +122,7 @@ public class StaffService {
     }
 
     // 8. Validation từ Entity và DAO
-    public void validateStaff(Staff staff) {
+    public void validatePerson(Staff staff) {
         // Kiểm tra các ràng buộc từ Entity
         if (staff.getLastName() == null || staff.getLastName().trim().isEmpty()) {
             throw new IllegalArgumentException("Họ không được để trống");
@@ -152,5 +153,15 @@ public class StaffService {
         if (isCitizenNumberExists(staff.getCitizenNumber(), staff.getId())) {
             throw new IllegalArgumentException("Số CCCD đã tồn tại trong hệ thống");
         }
+    }
+    
+    public Staff getStaffByAccountID(int accountID) {
+        String whereClause = "s.AccountID = ?"; 
+
+        // Trả về danh sách nhân viên từ repository
+        List<Staff> staffList = StaffRepository.selectByCondition(whereClause, accountID);
+
+        // Trả về nhân viên đầu tiên nếu có, hoặc null nếu không có kết quả
+        return staffList.isEmpty() ? null : staffList.get(0);
     }
 }

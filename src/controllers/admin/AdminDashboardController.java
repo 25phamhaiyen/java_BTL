@@ -12,6 +12,7 @@ public class AdminDashboardController {
     @FXML private Button btnManageStaff;
     @FXML private Button btnManageCustomers;
     @FXML private Button btnManageServices;
+    @FXML private Button btnManageAccount;
     @FXML private VBox mainContent;
 
     @FXML
@@ -19,7 +20,8 @@ public class AdminDashboardController {
         // Thêm sự kiện cho các nút
         btnManageStaff.setOnAction(e -> loadContent("admin/ManageStaff.fxml"));
         btnManageCustomers.setOnAction(e -> loadContent("admin/ManageCustomer.fxml"));
-//        btnManageServices.setOnAction(e -> loadContent("service/ManageServices.fxml"));
+        btnManageServices.setOnAction(e -> loadContent("admin/ManageService.fxml"));
+        btnManageAccount.setOnAction(e -> loadContent("admin/ManageAccount.fxml"));
     }
 
     // Phương thức load nội dung vào mainContent
