@@ -14,7 +14,14 @@ public class Invoice {
     // Constructor không tham số
     public Invoice() {}
 
-    // Constructor đầy đủ
+    
+    public Invoice(int invoiceId) {
+		super();
+		this.invoiceId = invoiceId;
+	}
+
+
+	// Constructor đầy đủ
     public Invoice(int invoiceId, Order order, BigDecimal totalAmount, Timestamp createdAt, PaymentStatus paymentStatus) {
         this.invoiceId = invoiceId;
         this.order = order;

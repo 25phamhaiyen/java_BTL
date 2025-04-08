@@ -14,8 +14,6 @@ public class Staff extends Person {
     private double salary;
     private String workShift;
     private String position;
-    private int PersonID;
-    private String fullName;
 
     public Staff() {
         super();
@@ -35,7 +33,7 @@ public class Staff extends Person {
 
 	public Staff(int id, String lastName, String firstName, GenderEnum gender, String phoneNumber,
 			String citizenNumber, String address, String email,Account account, Role role, LocalDate startDate, LocalDate endDate, double salary, String workShift,
-			String position, int PersonID, String fullName) {
+			String position) {
 		super(id, lastName, firstName, gender, phoneNumber, citizenNumber, address, email);
 		this.account = account;
 		this.role = role;
@@ -43,19 +41,9 @@ public class Staff extends Person {
 		this.endDate = endDate;
 		this.salary = salary;
 		this.workShift = workShift;
-//		this.PersonID = PersonID;
-//		this.fullName = fullName;
-//		this.position = position;
+		this.position = position;
 	}
 
-	public Staff(int personID, String fullName, String position) {
-	    super(personID, "", "", null, null, null, null, null); // Gọi constructor cha
-	    this.position = position;
-	    // Tách fullName thành firstName và lastName
-	    String[] names = fullName.split(" ", 2);
-	    if (names.length > 0) this.setFirstName(names[0]);
-	    if (names.length > 1) this.setLastName(names[1]);
-	}
 
 	public Role getRole() {
 		return role;
@@ -107,30 +95,10 @@ public class Staff extends Person {
 
 
 
-	public int getPersonID() {
-		return PersonID;
-	}
-
-
-	public void setPersonID(int personID) {
-		PersonID = personID;
-	}
-
-
-	public String getFullName() {
-		return fullName;
-	}
-
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Staff [account=" + account + ", role=" + role + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", salary=" + salary + ", workShift=" + workShift + ", PersonID =" + PersonID + ",fullName = " +fullName +", position=" + position + "]";
+				+ ", salary=" + salary + ", workShift=" + workShift + ", position=" + position + "]";
 	}
 
 

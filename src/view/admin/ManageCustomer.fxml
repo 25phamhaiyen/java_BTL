@@ -1,106 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-	fx:controller="controllers.admin.CustomerController"
-	stylesheets="@/styles/style.css">
-
-	<VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-		AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-
-		<Label text="Quản Lý Khách hàng" styleClass="label" /> <!-- Thêm styleClass -->
-
-		<!-- Các trường nhập liệu -->
-		<GridPane hgap="10" vgap="10">
-			<Label text="Họ:" GridPane.rowIndex="0"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtLastName" promptText="Nhập họ"
-				styleClass="text-field" GridPane.rowIndex="0"
-				GridPane.columnIndex="1" />
-
-			<Label text="Tên:" GridPane.rowIndex="1"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtFirstName" promptText="Nhập tên"
-				styleClass="text-field" GridPane.rowIndex="1"
-				GridPane.columnIndex="1" />
-
-			<Label text="Giới tính:" GridPane.rowIndex="2"
-				GridPane.columnIndex="0" />
-			<ComboBox fx:id="cmbGender" styleClass="combo-box"
-				GridPane.rowIndex="2" GridPane.columnIndex="1" />
-
-			<Label text="Số điện thoại:" GridPane.rowIndex="3"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtPhone" promptText="Nhập số điện thoại"
-				styleClass="text-field" GridPane.rowIndex="3"
-				GridPane.columnIndex="1" />
-
-			<Label text="Số căn cước:" GridPane.rowIndex="4"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtCitizenNumber"
-				promptText="Nhập số căn cước" styleClass="text-field"
-				GridPane.rowIndex="4" GridPane.columnIndex="1" />
-
-			<Label text="Địa chỉ:" GridPane.rowIndex="5"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtAddress" promptText="Nhập địa chỉ"
-				styleClass="text-field" GridPane.rowIndex="5"
-				GridPane.columnIndex="1" />
-
-			<Label text="Email:" GridPane.rowIndex="6"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtEmail" promptText="Nhập email"
-				styleClass="text-field" GridPane.rowIndex="6"
-				GridPane.columnIndex="1" />
-			<Label text="Ngày đăng ký:" GridPane.rowIndex="7"
-				GridPane.columnIndex="0" />
-			<DatePicker fx:id="dpRegistrationDate"
-				promptText="Chọn ngày đăng ký" styleClass="date-picker"
-				GridPane.rowIndex="7" GridPane.columnIndex="1" />
-
-			<Label text="Điểm tích lũy:" GridPane.rowIndex="8"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtLoyaltyPoints"
-				promptText="Nhập điểm tích lũy" styleClass="text-field"
-				GridPane.rowIndex="8" GridPane.columnIndex="1" />
+<?import javafx.scene.control.Alert?>
+<?import javafx.scene.control.Alert.AlertType?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.DatePicker?>
 
 
-		</GridPane>
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.admin.CustomerController"
+      stylesheets="@/styles/service.css"
+      spacing="10" >
 
-		<!-- Các nút thao tác -->
-		<HBox spacing="10">
-			<Button text="Thêm Khách Hàng" onAction="#handleAddCustomer"
-				styleClass="button" />
-			<Button text="Sửa Khách hàng" onAction="#handleEditCustomer"
-				styleClass="button" />
-			<Button text="Xóa Khách Hàng" onAction="#handleDeleteCustomer"
-				styleClass="button" />
-		</HBox>
+    <!-- Tìm kiếm khách hàng -->
+    <HBox spacing="10">
+        <TextField fx:id="searchTextField" promptText="Nhập số điện thoại khách hàng..." />
+        <Button text="Tìm kiếm" onAction="#handleSearchCustomer" />
+    </HBox>
 
-		<!-- Bảng hiển thị danh sách khách hàng -->
-		<TableView fx:id="customerTable" prefHeight="200"
-			styleClass="table-view">
-			<columns>
-				<TableColumn fx:id="lastNameColumn" text="Họ"
-					prefWidth="100" />
-				<TableColumn fx:id="firstNameColumn" text="Tên"
-					prefWidth="100" />
-				<TableColumn fx:id="genderColumn" text="Giới tính"
-					prefWidth="100" />
-				<TableColumn fx:id="phoneColumn" text="Số điện thoại"
-					prefWidth="100" />
-				<TableColumn fx:id="emailColumn" text="Email"
-					prefWidth="100" />
-				<TableColumn fx:id="registrationDateColumn"
-					text="Ngày đăng ký" prefWidth="150" />
-				<TableColumn fx:id="loyaltyPointsColumn"
-					text="Điểm tích lũy" prefWidth="100" />
+    <!-- Bảng hiển thị khách hàng -->
+    <TableView fx:id="customerTable" prefHeight="500" prefWidth="900">
+        <columns>
+            <TableColumn fx:id="lastNameColumn" text="Họ" prefWidth="120"/>
+            <TableColumn fx:id="firstNameColumn" text="Tên" prefWidth="120"/>
+            <TableColumn fx:id="genderColumn" text="Giới tính" prefWidth="80"/>
+            <TableColumn fx:id="phoneColumn" text="SĐT" prefWidth="130"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
+            <TableColumn fx:id="registrationDateColumn" text="Ngày ĐK" prefWidth="120"/>
+            <TableColumn fx:id="loyaltyPointsColumn" text="Điểm TL" prefWidth="80"/>
+        </columns>
+    </TableView>
 
-			</columns>
-		</TableView>
+    <!-- Các nút thao tác -->
+    <HBox spacing="10">
+        <Button text="Thêm khách hàng" onAction="#handleAddCustomer" />
+        <Button text="Sửa khách hàng" onAction="#handleEditCustomer" />
+        <Button text="Xóa khách hàng" onAction="#handleDeleteCustomer" />
+        <Button text="Tải lại" onAction="#loadCustomerData" />
+    </HBox>
 
-	</VBox>
-</AnchorPane>
+    <!-- Form nhập liệu (ẩn ban đầu) -->
+    <VBox fx:id="formBox" spacing="10" visible="false" managed="false">
+        <HBox spacing="10">
+            <TextField fx:id="txtLastName" promptText="Họ"/>
+            <TextField fx:id="txtFirstName" promptText="Tên"/>
+            <ComboBox fx:id="cmbGender" promptText="Giới tính"/>
+        </HBox>
+        <HBox spacing="10">
+            <TextField fx:id="txtPhone" promptText="Số điện thoại"/>
+            <TextField fx:id="txtCitizenNumber" promptText="CMND/CCCD"/>
+        </HBox>
+        <TextField fx:id="txtAddress" promptText="Địa chỉ"/>
+        <TextField fx:id="txtEmail" promptText="Email"/>
+        <HBox spacing="10">
+            <DatePicker fx:id="dpRegistrationDate" promptText="Ngày đăng ký"/>
+            <TextField fx:id="txtLoyaltyPoints" promptText="Điểm tích lũy"/>
+        </HBox>
+        <Button fx:id="saveButton" text="Lưu" onAction="#handleSaveCustomer"/>
+    </VBox>
+
+</VBox>

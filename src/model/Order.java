@@ -21,6 +21,10 @@ public class Order {
     private HappenStatus happenStatus;
     
     public Order() {}
+    public Order(int orderID) {
+        this.orderId = orderID;
+    }
+
 
     public Order(int orderId, Timestamp orderDate, Timestamp appointmentDate, TypeOrder orderType, double total, 
                  Customer customer, Staff staff, HappenStatus happenStatus) {

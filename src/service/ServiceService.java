@@ -1,36 +1,89 @@
-// src/frontend1/service/ServiceService.java
 package service;
 
 import model.Service;
-import utils.DatabaseConnection;
-import enums.TypeServiceEnum;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import repository.ServiceRepository;
+
 import java.util.List;
 
 public class ServiceService {
-    public List<Service> getAllServices() { // <-- Phải có "public" và đúng tên
-        List<Service> services = new ArrayList<>();
-        String sql = "SELECT * FROM service";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                Service service = new Service(
-                    rs.getInt("serviceID"),
-                    rs.getString("serviceName"),
-                    rs.getDouble("CostPrice"),
-                    TypeServiceEnum.fromId(rs.getInt("TypeServiceID")),
-                    rs.getString("description")
-                );
-                services.add(service);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+    private ServiceRepository serviceRepository;
+
+    public ServiceService() {
+        this.serviceRepository = ServiceRepository.getInstance();
+    }
+
+    // Thêm dịch vụ mới (kiểm tra trùng lặp và tính hợp lệ)
+    public boolean addService(Service service) {
+        if (isServiceValid(service) && !isServiceExists(service.getServiceName())) {
+            return serviceRepository.insert(service) > 0;
         }
-        return services;
+        return false;
+    }
+
+    // Cập nhật thông tin dịch vụ (kiểm tra dịch vụ có tồn tại không)
+    public boolean updateService(Service service) {
+        if (isServiceExistsById(service.getServiceID())) {
+            if (isServiceValid(service)) {
+                return serviceRepository.update(service) > 0;
+            }
+        }
+        return false;
+    }
+
+    // Xóa dịch vụ (kiểm tra dịch vụ có tồn tại không)
+    public boolean deleteService(Service service) {
+        if (isServiceExistsById(service.getServiceID())) {
+            return serviceRepository.delete(service) > 0;
+        }
+        return false;
+    }
+
+    // Lấy tất cả dịch vụ
+    public List<Service> getAllServices() {
+        return serviceRepository.selectAll();
+    }
+
+    // Lấy dịch vụ theo ID
+    public Service getServiceById(int serviceID) {
+        return serviceRepository.selectById(serviceID);
+    }
+
+    // Lấy dịch vụ theo điều kiện (ví dụ: lọc theo tên dịch vụ, loại dịch vụ...)
+    public List<Service> getServicesByCondition(String condition, Object... params) {
+        return serviceRepository.selectByCondition(condition, params);
+    }
+
+    // Tìm kiếm dịch vụ theo tên
+    public List<Service> searchServicesByName(String serviceName) {
+        String condition = "serviceName LIKE ?";
+        String searchPattern = "%" + serviceName + "%"; // Tìm kiếm theo mẫu tên
+        return serviceRepository.selectByCondition(condition, searchPattern);
+    }
+
+    // Kiểm tra tính hợp lệ của dịch vụ (tên dịch vụ không được rỗng, giá trị hợp lệ)
+    private boolean isServiceValid(Service service) {
+        if (service.getServiceName() == null || service.getServiceName().trim().isEmpty()) {
+            System.out.println("Tên dịch vụ không được rỗng.");
+            return false;
+        }
+        if (service.getCostPrice() <= 0) {
+            System.out.println("Giá dịch vụ phải lớn hơn 0.");
+            return false;
+        }
+        return true;
+    }
+
+    // Kiểm tra xem dịch vụ đã tồn tại hay chưa (theo tên)
+    private boolean isServiceExists(String serviceName) {
+        List<Service> services = serviceRepository.selectByCondition("serviceName = ?", serviceName);
+        return !services.isEmpty();
+    }
+
+    // Kiểm tra xem dịch vụ đã tồn tại theo ID hay chưa
+    private boolean isServiceExistsById(int serviceID) {
+        Service service = serviceRepository.selectById(serviceID);
+        return service != null;
     }
 }
+
