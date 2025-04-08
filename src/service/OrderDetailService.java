@@ -29,7 +29,7 @@ public class OrderDetailService {
 		int rowsAffected = orderDetailRepository.insert(detail);
 		if (rowsAffected > 0) {
 			System.out.println("Thêm dịch vụ vào lịch hẹn thành công.");
-			orderService.updateOrderTotal(detail.getOrderId()); // ✅ Cập nhật tổng tiền
+			orderService.updateOrderTotal(detail.getOrder().getOrderId()); // ✅ Cập nhật tổng tiền
 		}
 	}
 
