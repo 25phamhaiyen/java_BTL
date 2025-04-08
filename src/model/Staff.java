@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
+
 import enums.GenderEnum;
 
 public class Staff extends Person {
@@ -42,7 +43,6 @@ public class Staff extends Person {
 		this.workShift = workShift;
 		this.position = position;
 	}
-
 
 
 	public Role getRole() {
@@ -100,11 +100,6 @@ public class Staff extends Person {
 		return "Staff [account=" + account + ", role=" + role + ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", salary=" + salary + ", workShift=" + workShift + ", position=" + position + "]";
 	}
-
-
-
-
-
 
 
 }

@@ -34,7 +34,7 @@ public class CustomerDashboardController {
 		// Hiển thị thông tin chào mừng khách hàng khi đăng nhập
 		Account currentUser = Session.getCurrentUser();
 		if (currentUser != null) {
-			lblWelcome.setText("Chào mừng, " + currentUser.getUserName());
+			lblWelcome.setText("🐾 Xin chào, " + currentUser.getUserName());
 		} else {
 			lblWelcome.setText("Vui lòng đăng nhập!");
 		}

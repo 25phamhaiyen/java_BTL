@@ -117,7 +117,6 @@ ENGINE=InnoDB
 AUTO_INCREMENT=1
 ;
 
-
 -- 				Tạo bảng Khách hàng
 CREATE TABLE `customer` (
     `PersonID` INT UNSIGNED NOT NULL,
@@ -172,7 +171,7 @@ CREATE TABLE `order` (
 )
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB;
-
+ALTER TABLE `order` ADD COLUMN IF NOT EXISTS `Note` TEXT NULL;
 
 -- Tạo bảng chi tiết đơn hàng (order_detail)
 CREATE TABLE `order_detail` (
@@ -195,23 +194,22 @@ ENGINE=InnoDB
 ;
 
 -- Tạo bảng hóa đơn (invoice)
-CREATE TABLE `invoice` (
-	`InvoiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`OrderID` INT UNSIGNED NOT NULL,
-	`TotalAmount` DOUBLE NOT NULL DEFAULT '0',
-	`CreatedAt` TIMESTAMP NULL DEFAULT (CURRENT_TIMESTAMP),
-	`PaymentStatusID` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`InvoiceID`) USING BTREE,
-	UNIQUE INDEX `UnInvoice_OrderID` (`OrderID`) USING BTREE,
-	INDEX `FkInvoice_OrderID` (`OrderID`) USING BTREE,
-	INDEX `PaymentStatusID` (`PaymentStatusID`) USING BTREE,
-	CONSTRAINT `FkInvoice_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
-	CONSTRAINT `FK_invoice_paymentstatus` FOREIGN KEY (`PaymentStatusID`) REFERENCES `paymentstatus` (`PaymentStatusID`) ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-;
-
+-- 1. Đảm bảo bảng invoice có cột PaymentMethod
+CREATE TABLE IF NOT EXISTS `invoice` (
+    `InvoiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `OrderID` INT UNSIGNED NOT NULL,
+    `Total` DOUBLE NOT NULL DEFAULT '0',
+    `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `PaymentStatusID` INT UNSIGNED NOT NULL,
+    `PaymentMethod` VARCHAR(50) NULL,
+    PRIMARY KEY (`InvoiceID`),
+    UNIQUE INDEX `UnInvoice_OrderID` (`OrderID`),
+    INDEX `FkInvoice_OrderID` (`OrderID`),
+    INDEX `PaymentStatusID` (`PaymentStatusID`),
+    CONSTRAINT `FkInvoice_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT `FK_invoice_paymentstatus` FOREIGN KEY (`PaymentStatusID`) REFERENCES `paymentstatus` (`PaymentStatusID`) ON UPDATE NO ACTION ON DELETE NO ACTION
+) COLLATE='utf8mb4_unicode_ci' ENGINE=InnoDB;
+drop table invoice;
 -- 				Tạo bảng loại thú cưng
 CREATE TABLE `typepet` (
 	`TypePetID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -242,6 +240,7 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1;
 
+
 -- Bảng work_schedule – lịch làm việc nhân viên
 CREATE TABLE work_schedule (
     scheduleID INT AUTO_INCREMENT PRIMARY KEY,
@@ -252,7 +251,12 @@ CREATE TABLE work_schedule (
     FOREIGN KEY (staffID) REFERENCES staff(PersonID)  
         ON DELETE CASCADE
         ON UPDATE CASCADE
-);
+
+CREATE TABLE IF NOT EXISTS available_times (
+    TimeID INT AUTO_INCREMENT PRIMARY KEY,
+    TimeSlot TIME NOT NULL,
+    UNIQUE KEY (TimeSlot)
+
 
 -- Bảng promotion – khuyến mãi theo điểm tích lũy
 CREATE TABLE promotion (
@@ -318,7 +322,7 @@ BEGIN
     DECLARE total_spent DOUBLE;
 
     -- Tính tổng tiền chi tiêu của khách hàng từ hóa đơn
-    SET total_spent = NEW.TotalAmount;
+    SET total_spent = NEW.Total;
 
     -- Cập nhật điểm tích lũy cho khách hàng
     UPDATE `customer`
@@ -338,8 +342,8 @@ BEGIN
     DECLARE new_total_spent DOUBLE;
 
     -- Lấy tổng tiền chi tiêu cũ và mới
-    SET old_total_spent = OLD.TotalAmount;
-    SET new_total_spent = NEW.TotalAmount;
+    SET old_total_spent = OLD.Total;
+    SET new_total_spent = NEW.Total;
 
     -- Cập nhật điểm tích lũy cho khách hàng
     UPDATE `customer`
@@ -358,7 +362,7 @@ BEGIN
     DECLARE total_spent DOUBLE;
 
     -- Lấy tổng tiền chi tiêu của hóa đơn đã xóa
-    SET total_spent = OLD.TotalAmount;
+    SET total_spent = OLD.Total;
 
     -- Cập nhật điểm tích lũy cho khách hàng
     UPDATE `customer`

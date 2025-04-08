@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-j-9.2.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX24">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/slf4j-simple-2.0.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/slf4j-api-2.0.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/pdftest-7.1.16.jar"/>
@@ -21,5 +20,6 @@
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/javax.activation-api-1.2.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/jakarta.mail-1.6.7.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/mysql-connector-j-9.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

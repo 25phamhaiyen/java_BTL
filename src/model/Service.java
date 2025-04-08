@@ -53,6 +53,7 @@ public class Service {
     public TypeServiceEnum getTypeService() {
         return typeService;
     }
+   
 
     public void setTypeService(TypeServiceEnum typeService) {
         this.typeService = typeService;
@@ -65,7 +66,9 @@ public class Service {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    public int getTypeServiceID() {
+        return typeService.getId();
+    }
     @Override
     public String toString() {
         return "Service: ID: " + serviceID +
