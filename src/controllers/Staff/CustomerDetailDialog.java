@@ -1,4 +1,4 @@
-package view.Staff;
+package controllers.Staff;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -350,16 +350,14 @@ public class CustomerDetailDialog extends Stage {
             showAlert("Lỗi", "Không thể tải thông tin khách hàng: " + ex.getMessage());
         }
     }
-    
     private void loadPetData() {
         ObservableList<PetData> petList = FXCollections.observableArrayList();
-        String sql = "SELECT DISTINCT p.PetID, p.PetName, tp.UN_TypeName as UN_TypeName, " +
+        String sql = "SELECT p.PetID, p.PetName, tp.UN_TypeName as UN_TypeName, " +
                      "COALESCE(p.Breed, 'N/A') as Breed, p.age, " +
                      "COALESCE(p.Color, 'N/A') as Color " +
                      "FROM pet p " +
                      "JOIN typepet tp ON p.TypePetID = tp.TypePetID " +
-                     "WHERE p.Customer_ID = ? " +
-                     "GROUP BY p.PetName, p.TypePetID, p.Breed, p.age, p.Color"; // Modify grouping to prevent duplicates
+                     "WHERE p.Customer_ID = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -368,36 +366,15 @@ public class CustomerDetailDialog extends Stage {
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                // Create a unique identifier for the pet
-                String uniqueId = rs.getString("PetID");
-                String petName = rs.getString("PetName");
-                String petType = rs.getString("UN_TypeName");
-                String breed = rs.getString("Breed");
-                int age = rs.getInt("age");
-                String color = rs.getString("Color");
-
                 PetData pet = new PetData(
-                    uniqueId,
-                    petName,
-                    petType,
-                    breed,
-                    age + " tuổi",
-                    color
+                    rs.getString("PetID"),
+                    rs.getString("PetName"),
+                    rs.getString("UN_TypeName"),
+                    rs.getString("Breed"),
+                    rs.getInt("age") + " tuổi",
+                    rs.getString("Color")
                 );
-                
-                // Check if this exact pet is already in the list
-                boolean isDuplicate = petList.stream()
-                    .anyMatch(existingPet -> 
-                        existingPet.getName().equals(petName) && 
-                        existingPet.getType().equals(petType) && 
-                        existingPet.getBreed().equals(breed) && 
-                        existingPet.getAge().equals(age + " tuổi") && 
-                        existingPet.getColor().equals(color)
-                    );
-                
-                if (!isDuplicate) {
-                    petList.add(pet);
-                }
+                petList.add(pet);
             }
             
             petTable.setItems(petList);

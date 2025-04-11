@@ -3,7 +3,7 @@ package enums;
 public enum TypeServiceEnum {
 	VIP(1, "VIP"), BASIC(2, "Cơ bản");
 
-<<<<<<< HEAD
+
 
     private final int id;
     private final String description;
@@ -27,7 +27,7 @@ public enum TypeServiceEnum {
         }
         throw new IllegalArgumentException("Không tìm thấy loại dịch vụ với ID: " + id);
     }
-=======
+
 	private final int id;
 	private final String description;
 
@@ -64,5 +64,5 @@ public enum TypeServiceEnum {
 		throw new IllegalArgumentException("Không tìm thấy loại dịch vụ với ID: " + id);
 	}
 
->>>>>>> 7825721005ffadda6888e0b4b26ca916c967d630
+
 }

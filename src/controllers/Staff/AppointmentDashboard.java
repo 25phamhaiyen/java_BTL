@@ -1,7 +1,8 @@
 
-package view.Staff;
+package controllers.Staff;
 
 import javafx.application.Platform;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -142,6 +143,34 @@ public class AppointmentDashboard {
             }
         });
     }
+
+    private boolean updateAppointmentStatus(String appointmentId, String statusName) {
+        String sql = "UPDATE `order` o " +
+                     "JOIN happenstatus hs ON hs.StatusName = ? " +
+                     "SET o.HappenStatusID = hs.HappenStatusID " +
+                     "WHERE o.orderID = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, statusName);
+            pstmt.setInt(2, Integer.parseInt(appointmentId));
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                // Đảm bảo tải lại dữ liệu sau khi cập nhật trạng thái
+                Platform.runLater(() -> loadAppointments(datePicker.getValue()));
+                return true;
+            } else {
+                showAlert("Lỗi", "Không thể cập nhật trạng thái lịch hẹn");
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Lỗi khi cập nhật trạng thái lịch hẹn: " + ex.getMessage());
+            showAlert("Lỗi", "Không thể cập nhật trạng thái lịch hẹn: " + ex.getMessage());
+            return false;
+        }
+    }
     private TableView<Appointment> createAppointmentTable() {
         TableView<Appointment> table = new TableView<>();
         table.getStyleClass().add("table-view");
@@ -231,13 +260,13 @@ public class AppointmentDashboard {
                      "JOIN order_detail od ON o.orderID = od.OrderID " +
                      "JOIN service s ON od.ServiceID = s.serviceID " +
                      "JOIN happenstatus hs ON o.HappenStatusID = hs.HappenStatusID " +
-                     "WHERE DATE(o.appointmentDate) = ? AND o.orderType = 'Appointment' " + // Thay CURDATE() bằng tham số ?
+                     "WHERE DATE(o.appointmentDate) = ? AND o.orderType = 'Appointment' " +
                      "GROUP BY o.orderID";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setDate(1, Date.valueOf(date)); // Sử dụng tham số date
+            pstmt.setDate(1, Date.valueOf(date));
             ResultSet rs = pstmt.executeQuery();
             
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
@@ -294,7 +323,6 @@ public class AppointmentDashboard {
             showAlert("Lỗi", "Không thể tải lịch hẹn: " + ex.getMessage());
         }
     }
-    
     private void filterAppointments(String statusFilter) {
         if (statusFilter.equals("Tất cả")) {
             // Không cần lọc, lấy tất cả từ bảng
@@ -420,11 +448,16 @@ public class AppointmentDashboard {
                     }
                     
                     conn.commit();
-                    
-                    // Tải lại dữ liệu sau khi cập nhật
-                    loadAppointments(datePicker.getValue());
-                    
                     showAlert("Thành công", "Đã cập nhật lịch hẹn thành công!");
+                    
+                    // Sử dụng Platform.runLater để đảm bảo UI được cập nhật sau khi dialog đóng
+                    Platform.runLater(() -> {
+                        // Lưu giá trị DatePicker hiện tại
+                        LocalDate currentDate = datePicker.getValue();
+                        // Tải lại dữ liệu với ngày đã chọn
+                        loadAppointments(currentDate);
+                    });
+                    
                     return ButtonType.OK;
                 } catch (SQLException ex) {
                     System.err.println("Lỗi khi cập nhật lịch hẹn: " + ex.getMessage());
@@ -437,35 +470,8 @@ public class AppointmentDashboard {
         
         dialog.showAndWait();
     }
-
     // Cập nhật phương thức updateAppointmentStatus để nó luôn tải lại dữ liệu
-    private boolean updateAppointmentStatus(String appointmentId, String statusName) {
-        String sql = "UPDATE `order` o " +
-                     "JOIN happenstatus hs ON hs.StatusName = ? " +
-                     "SET o.HappenStatusID = hs.HappenStatusID " +
-                     "WHERE o.orderID = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, statusName);
-            pstmt.setInt(2, Integer.parseInt(appointmentId));
-            int rowsAffected = pstmt.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                // Tải lại dữ liệu ngay sau khi cập nhật trạng thái
-                loadAppointments(datePicker.getValue());
-                return true;
-            } else {
-                showAlert("Lỗi", "Không thể cập nhật trạng thái lịch hẹn");
-                return false;
-            }
-        } catch (SQLException ex) {
-            System.err.println("Lỗi khi cập nhật trạng thái lịch hẹn: " + ex.getMessage());
-            showAlert("Lỗi", "Không thể cập nhật trạng thái lịch hẹn: " + ex.getMessage());
-            return false;
-        }
-    }
+  
     private String getCashierInfo() {
         String sql = "SELECT p.lastName, p.firstName, s.PersonID " +
                      "FROM staff s " +
@@ -502,8 +508,8 @@ public class AppointmentDashboard {
     }
     private void refreshAppointments() {
         // Tìm ComboBox trong các thành phần con của leftPanel
-        checkAndResetDisplay();
         ComboBox<String> statusFilter = null;
+        
         // Tìm ComboBox loại trạng thái trong leftPanel
         // Thường nó nằm ở vị trí index 5, nhưng tốt hơn là tìm kiếm theo loại
         for (int i = 0; i < leftPanel.getChildren().size(); i++) {
@@ -512,6 +518,7 @@ public class AppointmentDashboard {
                 break;
             }
         }
+        
         // Nếu không tìm thấy ComboBox, có thể sử dụng chỉ số cố định (nếu biết chắc vị trí)
         if (statusFilter == null && leftPanel.getChildren().size() > 5) {
             try {

@@ -1,6 +1,7 @@
-package view.Staff;
+package controllers.Staff;
 
 import javafx.geometry.Insets;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
