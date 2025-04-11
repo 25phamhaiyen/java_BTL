@@ -2,11 +2,15 @@ package service;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import model.Staff;
 import repository.StaffRepository;
 
 public class StaffService {
+	private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); // Regex kiểm tra email
+
     private final StaffRepository StaffRepository;
     private static final Logger LOGGER = Logger.getLogger(StaffService.class.getName());
 
@@ -103,7 +107,7 @@ public class StaffService {
     // 7. Các phương thức tiện ích khác
     public boolean isPhoneNumberExists(String phoneNumber, Integer excludeStaffId) {
         try {
-            return StaffRepository.selectByCondition("p.phoneNumber = ? AND p.PersonID != ?", phoneNumber, excludeStaffId != null ? excludeStaffId : 0)
+            return StaffRepository.selectByCondition("p.phone = ? AND p.person_id != ?", phoneNumber, excludeStaffId != null ? excludeStaffId : 0)
                          .size() > 0;
         } catch (Exception e) {
             LOGGER.severe("Lỗi khi kiểm tra số điện thoại: " + e.getMessage());
@@ -111,30 +115,15 @@ public class StaffService {
         }
     }
 
-    public boolean isCitizenNumberExists(String citizenNumber, Integer excludeStaffId) {
-        try {
-            return StaffRepository.selectByCondition("p.citizenNumber = ? AND .PersonID != ?", citizenNumber, excludeStaffId != null ? excludeStaffId : 0)
-                         .size() > 0;
-        } catch (Exception e) {
-            LOGGER.severe("Lỗi khi kiểm tra số CCCD: " + e.getMessage());
-            return false;
-        }
-    }
-
     // 8. Validation từ Entity và DAO
     public void validatePerson(Staff staff) {
         // Kiểm tra các ràng buộc từ Entity
-        if (staff.getLastName() == null || staff.getLastName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Họ không được để trống");
-        }
-        if (staff.getFirstName() == null || staff.getFirstName().trim().isEmpty()) {
+        
+        if (staff.getFullName() == null || staff.getFullName().trim().isEmpty()) {
             throw new IllegalArgumentException("Tên không được để trống");
         }
-        if (staff.getPhoneNumber() == null || !staff.getPhoneNumber().matches("^[0-9]{10}$")) {
+        if (staff.getPhone() == null || !staff.getPhone().matches("^[0-9]{10}$")) {
             throw new IllegalArgumentException("Số điện thoại phải có đúng 10 chữ số");
-        }
-        if (staff.getCitizenNumber() == null || !staff.getCitizenNumber().matches("^[0-9]{12}$")) {
-            throw new IllegalArgumentException("Số CCCD phải có đúng 12 chữ số");
         }
         if (staff.getAddress() == null || staff.getAddress().trim().isEmpty()) {
             throw new IllegalArgumentException("Địa chỉ không được để trống");
@@ -145,18 +134,18 @@ public class StaffService {
         if (staff.getRole() == null || staff.getRole().getRoleID() <= 0) {
             throw new IllegalArgumentException("Vai trò không hợp lệ");
         }
+        if (staff.getEmail() == null || !EMAIL_PATTERN.matcher(staff.getEmail()).matches()) {
+            throw new IllegalArgumentException("Email không hợp lệ!");
+        }
 
         // Kiểm tra các ràng buộc từ DAO (trùng lặp)
-        if (isPhoneNumberExists(staff.getPhoneNumber(), staff.getId())) {
+        if (isPhoneNumberExists(staff.getPhone(), staff.getId())) {
             throw new IllegalArgumentException("Số điện thoại đã tồn tại trong hệ thống");
-        }
-        if (isCitizenNumberExists(staff.getCitizenNumber(), staff.getId())) {
-            throw new IllegalArgumentException("Số CCCD đã tồn tại trong hệ thống");
         }
     }
     
     public Staff getStaffByAccountID(int accountID) {
-        String whereClause = "s.AccountID = ?"; 
+        String whereClause = "s.account_id = ?"; 
 
         // Trả về danh sách nhân viên từ repository
         List<Staff> staffList = StaffRepository.selectByCondition(whereClause, accountID);

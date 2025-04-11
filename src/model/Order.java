@@ -2,130 +2,92 @@ package model;
 
 import java.sql.Timestamp;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import model.Customer;   // Thêm dòng này
-import model.Staff;      // Thêm dòng này
-import model.HappenStatus;
-import enums.TypeOrder;
+import enums.StatusEnum;
 
 public class Order {
-    private int orderId;
-    private Timestamp orderDate;
-    private Timestamp appointmentDate;
-    private TypeOrder orderType;
-    private double total;
-    
+	private int orderId;
     private Customer customer;
     private Staff staff;
-    private HappenStatus happenStatus;
+    private Timestamp orderDate;
+    private Promotion voucher;
+    private double totalAmount;
+    private StatusEnum status;
     
     public Order() {}
-    public Order(int orderID) {
-        this.orderId = orderID;
-    }
 
+	public Order(int orderId, Customer customer, Staff staff, Timestamp orderDate, Promotion voucher,
+			double totalAmount, StatusEnum status) {
+		super();
+		this.orderId = orderId;
+		this.customer = customer;
+		this.staff = staff;
+		this.orderDate = orderDate;
+		this.voucher = voucher;
+		this.totalAmount = totalAmount;
+		this.status = status;
+	}
 
-    public Order(int orderId, Timestamp orderDate, Timestamp appointmentDate, TypeOrder orderType, double total, 
-                 Customer customer, Staff staff, HappenStatus happenStatus) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.appointmentDate = appointmentDate;
-        this.orderType = orderType;
-        this.total = total;
-        this.customer = customer;
-        this.staff = staff;
-        this.happenStatus = happenStatus;
-    }
+	public int getOrderId() {
+		return orderId;
+	}
 
-    // Getter & Setter
-    public int getOrderId() {
-        return orderId;
-    }
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
+	public Customer getCustomer() {
+		return customer;
+	}
 
-    public Timestamp getOrderDate() {
-        return orderDate;
-    }
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
-    public void setOrderDate(Timestamp orderDate) {
-        this.orderDate = orderDate;
-    }
+	public Staff getStaff() {
+		return staff;
+	}
 
-    public Timestamp getAppointmentDate() {
-        return appointmentDate;
-    }
+	public void setStaff(Staff staff) {
+		this.staff = staff;
+	}
 
-    public void setAppointmentDate(Timestamp appointmentDate) {
-        this.appointmentDate = appointmentDate;
-    }
+	public Timestamp getOrderDate() {
+		return orderDate;
+	}
 
-    public TypeOrder getOrderType() {
-        return orderType;
-    }
+	public void setOrderDate(Timestamp orderDate) {
+		this.orderDate = orderDate;
+	}
 
-    public void setOrderType(TypeOrder orderType) {
-        this.orderType = orderType;
-    }
+	public Promotion getVoucher() {
+		return voucher;
+	}
 
-    public double getTotal() {
-        return total;
-    }
+	public void setVoucher(Promotion voucher) {
+		this.voucher = voucher;
+	}
 
-    public void setTotal(double total) {
-        this.total = total;
-    }
+	public double getTotalAmount() {
+		return totalAmount;
+	}
 
-    public Customer getCustomer() {
-        return customer;
-    }
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+	public StatusEnum getStatus() {
+		return status;
+	}
 
-    public Staff getStaff() {
-        return staff;
-    }
+	public void setStatus(StatusEnum status) {
+		this.status = status;
+	}
 
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-
-    public HappenStatus getHappentStatus() {
-        return happenStatus;
-    }
-
-    public void setHappenStatus(HappenStatus happenStatus) {
-        this.happenStatus = happenStatus;
-    }
-
-    // Format ngày tháng
-    public String getFormattedOrderDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date(orderDate.getTime()));
-    }
-
-    public String getFormattedAppointmentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date(appointmentDate.getTime()));
-    }
-    @Override
-    public String toString() {
-        return "Order{" +
-               "orderId=" + orderId +
-               ", orderDate=" + orderDate +
-               ", appointmentDate=" + appointmentDate +
-               ", orderType=" + orderType +
-               ", total=" + total +
-               ", customer=" + (customer != null ? customer.getId() : "null") +
-               ", staff=" + (staff != null ? staff.getId() : "null") +
-               ", status=" + (happenStatus != null ? happenStatus.getHappenStatusID() : "null") +
-               '}';
-    }
-
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", customer=" + customer + ", staff=" + staff + ", orderDate=" + orderDate
+				+ ", voucher=" + voucher + ", totalAmount=" + totalAmount + ", status=" + status + "]";
+	}
+    
     
 }

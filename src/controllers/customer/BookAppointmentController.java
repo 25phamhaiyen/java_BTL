@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import controllers.SceneSwitcher;
-import enums.StatusCode;
+import enums.StatusEnum;
 import enums.TypeOrder;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -115,7 +115,7 @@ public class BookAppointmentController {
 		appointmentOrder.setAppointmentDate(appointmentTimestamp);
 		appointmentOrder.setOrderType(TypeOrder.APPOINTMENT);
 		appointmentOrder.setCustomer(currentCustomer); // Giờ đúng kiểu
-		HappenStatus status = HappenStatusRepository.getInstance().findByStatusCode(StatusCode.PENDING);
+		HappenStatus status = HappenStatusRepository.getInstance().findByStatusCode(StatusEnum.PENDING);
 		appointmentOrder.setHappenStatus(status);
 
 		int result = OrderRepository.getInstance().insert(appointmentOrder);

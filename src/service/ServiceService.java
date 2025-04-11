@@ -15,7 +15,7 @@ public class ServiceService {
 
     // Thêm dịch vụ mới (kiểm tra trùng lặp và tính hợp lệ)
     public boolean addService(Service service) {
-        if (isServiceValid(service) && !isServiceExists(service.getServiceName())) {
+        if (isServiceValid(service) && !isServiceExists(service.getName())) {
             return serviceRepository.insert(service) > 0;
         }
         return false;
@@ -23,7 +23,7 @@ public class ServiceService {
 
     // Cập nhật thông tin dịch vụ (kiểm tra dịch vụ có tồn tại không)
     public boolean updateService(Service service) {
-        if (isServiceExistsById(service.getServiceID())) {
+        if (isServiceExistsById(service.getServiceId())) {
             if (isServiceValid(service)) {
                 return serviceRepository.update(service) > 0;
             }
@@ -33,7 +33,7 @@ public class ServiceService {
 
     // Xóa dịch vụ (kiểm tra dịch vụ có tồn tại không)
     public boolean deleteService(Service service) {
-        if (isServiceExistsById(service.getServiceID())) {
+        if (isServiceExistsById(service.getServiceId())) {
             return serviceRepository.delete(service) > 0;
         }
         return false;
@@ -63,11 +63,11 @@ public class ServiceService {
 
     // Kiểm tra tính hợp lệ của dịch vụ (tên dịch vụ không được rỗng, giá trị hợp lệ)
     private boolean isServiceValid(Service service) {
-        if (service.getServiceName() == null || service.getServiceName().trim().isEmpty()) {
+        if (service.getName() == null || service.getName().trim().isEmpty()) {
             System.out.println("Tên dịch vụ không được rỗng.");
             return false;
         }
-        if (service.getCostPrice() <= 0) {
+        if (service.getPrice() <= 0) {
             System.out.println("Giá dịch vụ phải lớn hơn 0.");
             return false;
         }

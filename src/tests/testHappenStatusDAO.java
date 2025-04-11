@@ -3,7 +3,7 @@ package tests;
 import java.util.List;
 
 
-import enums.StatusCode;
+import enums.StatusEnum;
 import model.HappenStatus;
 import repository.HappenStatusRepository;
 
@@ -13,7 +13,7 @@ public class testHappenStatusDAO {
         
         // 1. Thêm mới HappenStatus với kiểm tra trùng lặp
         System.out.println("INSERT");
-        StatusCode newStatusCode = StatusCode.COMPLETED;
+        StatusEnum newStatusCode = StatusEnum.COMPLETED;
         
         try {
             // Kiểm tra xem status code đã tồn tại chưa
@@ -57,7 +57,7 @@ public class testHappenStatusDAO {
             System.out.println("Before update:");
             System.out.println(updateStatus);
             
-            StatusCode newCode = StatusCode.COMPLETED;
+            StatusEnum newCode = StatusEnum.COMPLETED;
             
             try {
                 // Kiểm tra xem status code mới đã tồn tại chưa (trừ bản ghi hiện tại)
@@ -99,7 +99,7 @@ public class testHappenStatusDAO {
 
         // 5. Tìm HappenStatus theo điều kiện
         System.out.println("SELECT BY CONDITION");
-        StatusCode searchCode = StatusCode.COMPLETED;
+        StatusEnum searchCode = StatusEnum.COMPLETED;
         List<HappenStatus> filteredStatuses = happenStatusDAO.selectByCondition(
             "UN_StatusCode = ?", 
             searchCode.ordinal()
@@ -112,7 +112,7 @@ public class testHappenStatusDAO {
 
         // 6. Xóa HappenStatus với kiểm tra trước khi tạo bản ghi tạm
         System.out.println("DELETE");
-        StatusCode tempCode = StatusCode.PENDING;
+        StatusEnum tempCode = StatusEnum.PENDING;
         
         try {
             // Kiểm tra xem status code tạm đã tồn tại chưa

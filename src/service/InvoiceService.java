@@ -76,23 +76,18 @@ public class InvoiceService {
 			document.add(title);
 
 			// Thông tin nhân viên (có thể lấy từ Order hoặc thông tin hệ thống)
-			Paragraph staffInfo = new Paragraph("Nhân viên: " + order.getStaff().getFirstName()).setFont(vietnameseFont)
+			Paragraph staffInfo = new Paragraph("Nhân viên: " + order.getStaff().getFullName()).setFont(vietnameseFont)
 					.setTextAlignment(TextAlignment.LEFT).setFontSize(12);
 			document.add(staffInfo);
 
 			// Thông tin người mua
-			Paragraph buyerInfo = new Paragraph("KHÁCH HÀNG: " + order.getCustomer().getFirstName() + "\n"
-					+ "Số điện thoại: " + order.getCustomer().getPhoneNumber() + "\n").setFont(vietnameseFont)
+			Paragraph buyerInfo = new Paragraph("KHÁCH HÀNG: " + order.getCustomer().getFullName() + "\n"
+					+ "Số điện thoại: " + order.getCustomer().getPhone() + "\n").setFont(vietnameseFont)
 					.setTextAlignment(TextAlignment.LEFT).setFontSize(12);
 			document.add(buyerInfo);
 
 			// Thông tin hóa đơn
 			document.add(new Paragraph("Mã hóa đơn: " + invoice.getInvoiceId()).setFont(vietnameseFont));
-			document.add(new Paragraph("Ngày xuất hóa đơn: " + order.getOrderDate()).setFont(vietnameseFont));
-			document.add(new Paragraph(
-					"Ngày hẹn: " + (order.getAppointmentDate() != null ? order.getAppointmentDate() : "N/A"))
-					.setFont(vietnameseFont));
-			document.add(new Paragraph("Trạng thái thanh toán: " + invoice.getPaymentStatus()).setFont(vietnameseFont));
 
 			// Tạo bảng chi tiết đơn hàng
 			Table table = new Table(5); // 5 cột: Mã dịch vụ, Tên dịch vụ, Số lượng, Đơn giá, Thành tiền
@@ -116,18 +111,16 @@ public class InvoiceService {
 			// Thêm chi tiết vào bảng
 			for (OrderDetail detail : orderDetails) {
 				table.addCell(new Cell().add(
-						new Paragraph(String.valueOf(detail.getService().getServiceID())).setFont(vietnameseFont)));
-				table.addCell(new Cell().add(new Paragraph(detail.getService().getServiceName())));
+						new Paragraph(String.valueOf(detail.getService().getServiceId())).setFont(vietnameseFont)));
+				table.addCell(new Cell().add(new Paragraph(detail.getService().getName())));
 				table.addCell(new Cell().add(new Paragraph(String.valueOf(detail.getQuantity()))));
-				table.addCell(new Cell().add(new Paragraph(detail.getUnitPrice().toString())));
-				table.addCell(new Cell().add(new Paragraph(detail.getTotalPrice().toString())));
+				table.addCell(new Cell().add(new Paragraph(detail.getPrice().toString())));
 			}
 
 			document.add(table);
 
 			// Thông tin thanh toán
-			Paragraph paymentInfo = new Paragraph("Tổng số tiền: " + invoice.getTotalAmount() + " VNĐ\n"
-					+ "Phương thức thanh toán: Tiền mặt\n" + "Ngày thanh toán: " + order.getAppointmentDate() + "\n")
+			Paragraph paymentInfo = new Paragraph("Tổng số tiền: " + invoice.getTotal() + " VNĐ\n")
 					.setFont(vietnameseFont).setTextAlignment(TextAlignment.LEFT).setFontSize(12);
 			document.add(paymentInfo);
 

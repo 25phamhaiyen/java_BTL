@@ -1,64 +1,45 @@
 package model;
 
-import java.util.Date;
 
+import java.sql.Timestamp;
 
 import enums.GenderEnum;
 
 public class Customer extends Person {
-
-	private Account account;
-	private Date registrationDate;
-	private int loyaltyPoints;
+	private int point;
+	private Timestamp created_at;
 
 	public Customer() {
 		super();
 	}
 
-	public Customer(int id, String lastName, String firstName, GenderEnum gender, String phoneNumber,
-			String citizenNumber, String address, String email, Account account, Date registrationDate,
-			int loyaltyPoints) {
-		super(id, lastName, firstName, gender, phoneNumber, citizenNumber, address, email);
-		this.account = account;
-		this.registrationDate = registrationDate;
-		this.loyaltyPoints = loyaltyPoints;
+	public Customer(int id, String fullName, GenderEnum gender, String phone, String address, String email, int point, Timestamp created_at) {
+		super(id, fullName, gender, phone, address, email);
+		this.point = point;
+		this.created_at = created_at;
 	}
 
-	public Customer(Account account, Date registrationDate, int loyaltyPoints) {
-		super();
-		this.account = account;
-		this.registrationDate = registrationDate;
-		this.loyaltyPoints = loyaltyPoints;
+
+	public int getPoint() {
+		return point;
 	}
 
-	public Account getAccount() {
-		return account;
+	public void setPoint(int point) {
+		this.point = point;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public Timestamp getCreated_at() {
+		return created_at;
 	}
 
-	public Date getRegistrationDate() {
-		return registrationDate;
-	}
-
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
-	}
-
-	public int getLoyaltyPoints() {
-		return loyaltyPoints;
-	}
-
-	public void setLoyaltyPoints(int loyaltyPoints) {
-		this.loyaltyPoints = loyaltyPoints;
+	public void setCreated_at(Timestamp created_at) {
+		this.created_at = created_at;
 	}
 
 	@Override
 	public String toString() {
-		return "Customer [account=" + account + ", registrationDate=" + registrationDate + ", loyaltyPoints="
-				+ loyaltyPoints + "]";
+		return "Customer [point=" + point + ", created_at=" + created_at + "]";
 	}
+	
 
 }

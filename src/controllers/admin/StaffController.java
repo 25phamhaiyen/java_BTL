@@ -15,8 +15,7 @@ import java.time.LocalDate;
 
 public class StaffController {
 
-    @FXML private TextField txtLastName;
-    @FXML private TextField txtFirstName;
+    @FXML private TextField txtFullName;
     @FXML private ComboBox<String> cmbGender;
     @FXML private TextField txtPhone;
     @FXML private TextField txtCitizenNumber;
@@ -30,8 +29,7 @@ public class StaffController {
     @FXML private TextField txtPosition;
     
     @FXML private TableView<Staff> staffTable;
-    @FXML private TableColumn<Staff, String> lastNameColumn;
-    @FXML private TableColumn<Staff, String> firstNameColumn;
+    @FXML private TableColumn<Staff, String> fullNameColumn;
     @FXML private TableColumn<Staff, String> genderColumn;
     @FXML private TableColumn<Staff, String> phoneColumn;
     @FXML private TableColumn<Staff, String> emailColumn;
@@ -53,18 +51,15 @@ public class StaffController {
         loadStaffData();
 
         // Bind các cột với thuộc tính tương ứng trong Staff
-        lastNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLastName()));
-        firstNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFirstName()));
+        fullNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFullName()));
         genderColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGender().toString()));
-        phoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhoneNumber()));
+        phoneColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPhone()));
         emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         roleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole().getRoleName()));
         
         // Sử dụng SimpleObjectProperty cho các cột kiểu LocalDate
         startDateColumn.setCellValueFactory(cellData -> 
-            new SimpleObjectProperty<>(cellData.getValue().getStartDate()));
-        endDateColumn.setCellValueFactory(cellData -> 
-            new SimpleObjectProperty<>(cellData.getValue().getEndDate()));
+            new SimpleObjectProperty<>(cellData.getValue().getHire_date()));
 
         salaryColumn.setCellValueFactory(cellData -> 
         new SimpleObjectProperty<>(cellData.getValue().getSalary()));        
@@ -79,7 +74,7 @@ public class StaffController {
     @FXML
     private void handleAddStaff() {
         // Kiểm tra đầu vào
-        if (txtLastName.getText().isEmpty() || txtFirstName.getText().isEmpty()) {
+        if ( txtFullName.getText().isEmpty()) {
             showAlert("Error", "First Name and Last Name are required.");
             return;
         }
@@ -108,8 +103,7 @@ public class StaffController {
         }
 
         // Lấy dữ liệu từ các trường nhập liệu
-        String lastName = txtLastName.getText();
-        String firstName = txtFirstName.getText();
+        String fullName = txtFullName.getText();
         GenderEnum gender = "Male".equalsIgnoreCase(cmbGender.getValue()) ? GenderEnum.MALE
                           : "Female".equalsIgnoreCase(cmbGender.getValue()) ? GenderEnum.FEMALE
                           : GenderEnum.OTHER;
@@ -128,11 +122,9 @@ public class StaffController {
         // Tạo đối tượng Staff mới
         Staff newStaff = new Staff(
             0,
-            lastName,
-            firstName,
+            fullName,
             gender,
             phone,
-            citizenNumber,
             address,
             email,
             account,
@@ -157,7 +149,7 @@ public class StaffController {
         Staff selectedStaff = staffTable.getSelectionModel().getSelectedItem();
         if (selectedStaff != null) {
             // Xử lý sửa thông tin nhân viên
-            System.out.println("Editing staff: " + selectedStaff.getLastName());
+            System.out.println("Editing staff: " + selectedStaff.getFullName());
             // Chuyển đến màn hình sửa (nếu có)
         } else {
             showAlert("Error", "No staff selected for editing.");

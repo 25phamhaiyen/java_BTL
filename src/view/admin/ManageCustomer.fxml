@@ -28,8 +28,7 @@
     <!-- Bảng hiển thị khách hàng -->
     <TableView fx:id="customerTable" prefHeight="500" prefWidth="900">
         <columns>
-            <TableColumn fx:id="lastNameColumn" text="Họ" prefWidth="120"/>
-            <TableColumn fx:id="firstNameColumn" text="Tên" prefWidth="120"/>
+            <TableColumn fx:id="fullNameColumn" text="Họ" prefWidth="120"/>
             <TableColumn fx:id="genderColumn" text="Giới tính" prefWidth="80"/>
             <TableColumn fx:id="phoneColumn" text="SĐT" prefWidth="130"/>
             <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
@@ -49,13 +48,11 @@
     <!-- Form nhập liệu (ẩn ban đầu) -->
     <VBox fx:id="formBox" spacing="10" visible="false" managed="false">
         <HBox spacing="10">
-            <TextField fx:id="txtLastName" promptText="Họ"/>
-            <TextField fx:id="txtFirstName" promptText="Tên"/>
+            <TextField fx:id="txtFullName" promptText="Họ"/>
             <ComboBox fx:id="cmbGender" promptText="Giới tính"/>
         </HBox>
         <HBox spacing="10">
             <TextField fx:id="txtPhone" promptText="Số điện thoại"/>
-            <TextField fx:id="txtCitizenNumber" promptText="CMND/CCCD"/>
         </HBox>
         <TextField fx:id="txtAddress" promptText="Địa chỉ"/>
         <TextField fx:id="txtEmail" promptText="Email"/>

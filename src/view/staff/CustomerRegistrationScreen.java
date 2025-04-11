@@ -1,4 +1,4 @@
-package view.Staff;
+package view.staff;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

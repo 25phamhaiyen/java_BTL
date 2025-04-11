@@ -1,6 +1,5 @@
 package controllers.admin;
 
-import enums.TypeServiceEnum;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -55,24 +54,19 @@ public class ServiceController {
 	public void initialize() {
 		
 		serviceIdColumn.setCellValueFactory(
-				cellData -> new SimpleIntegerProperty(cellData.getValue().getServiceID()).asObject());
+				cellData -> new SimpleIntegerProperty(cellData.getValue().getServiceId()).asObject());
 
 		serviceNameColumn
-				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiceName()));
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
 
 		costPriceColumn.setCellValueFactory(
-				cellData -> new SimpleDoubleProperty(cellData.getValue().getCostPrice()).asObject());
+				cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
 
 		typeServiceColumn.setCellValueFactory(
-				cellData -> new SimpleStringProperty(cellData.getValue().getTypeService().getDescription()));
+				cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 
 		descriptionColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-
-		// Load loại dịch vụ từ enum
-		ObservableList<String> typeOptions = FXCollections.observableArrayList(TypeServiceEnum.VIP.getDescription(),
-				TypeServiceEnum.BASIC.getDescription());
-		typeServiceComboBox.setItems(typeOptions);
 		
 		loadServiceData();
 
@@ -118,9 +112,8 @@ public class ServiceController {
 			return;
 		}
 
-		serviceNameField.setText(selectedService.getServiceName());
-		costPriceField.setText(String.valueOf(selectedService.getCostPrice()));
-		typeServiceComboBox.setValue(selectedService.getTypeService().getDescription());
+		serviceNameField.setText(selectedService.getName());
+		costPriceField.setText(String.valueOf(selectedService.getPrice()));
 		descriptionField.setText(selectedService.getDescription());
 
 		isEditMode = true;
@@ -141,7 +134,7 @@ public class ServiceController {
 	    Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
 	    confirmationAlert.setTitle("Xác nhận xóa");
 	    confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xóa dịch vụ này?");
-	    confirmationAlert.setContentText("Tên dịch vụ: " + selectedService.getServiceName());
+	    confirmationAlert.setContentText("Tên dịch vụ: " + selectedService.getName());
 
 	    ButtonType buttonYes = new ButtonType("OK", ButtonBar.ButtonData.YES);
 	    ButtonType buttonNo = new ButtonType("Hủy", ButtonBar.ButtonData.NO);
@@ -183,16 +176,9 @@ public class ServiceController {
 			return;
 		}
 
-		TypeServiceEnum typeEnum = TypeServiceEnum.valueOf(selectedTypeDesc);
-		if (typeEnum == null) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Loại dịch vụ không hợp lệ.");
-			return;
-		}
-
 		if (isEditMode && serviceBeingEdited != null) {
-			serviceBeingEdited.setServiceName(name);
-			serviceBeingEdited.setCostPrice(cost);
-			serviceBeingEdited.setTypeService(typeEnum);
+			serviceBeingEdited.setName(name);
+			serviceBeingEdited.setPrice(cost);
 			serviceBeingEdited.setDescription(description);
 
 			if (serviceService.updateService(serviceBeingEdited)) {
@@ -202,7 +188,7 @@ public class ServiceController {
 				showAlert(Alert.AlertType.ERROR, "Thất bại", "Không thể cập nhật dịch vụ.");
 			}
 		} else {
-			Service newService = new Service(0, name, cost, typeEnum, description);
+			Service newService = new Service(0, name, cost description);
 			if (serviceService.addService(newService)) {
 				serviceList.add(newService);
 				serviceTable.getItems().setAll(serviceList);

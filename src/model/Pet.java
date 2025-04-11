@@ -1,68 +1,103 @@
 package model;
 
+import java.time.LocalDate;
+
+import enums.GenderEnum;
+
 public class Pet {
-    private int petID;
-    private String petName;
-    private int age;
-    private Customer customer;
-    private TypePet typePet; // Thay vì chỉ lưu ID
+	private int petId;
+    private String name;
+    private PetType petType; 
+    private GenderEnum gender;
+    private LocalDate dob;
+    private double weight;
+    private String note;
+    private Customer owner;
 
     public Pet() {}
 
-    public Pet(int petID, String petName, int age, Customer customer, TypePet typePet) {
-        this.petID = petID;
-        this.petName = petName;
-        this.age = age;
-        this.customer = customer;
-        this.typePet = typePet;
-    }
+	public Pet(int petId, String name, PetType petType, GenderEnum gender, LocalDate dob, double weight, String note,
+			Customer owner) {
+		super();
+		this.petId = petId;
+		this.name = name;
+		this.petType = petType;
+		this.gender = gender;
+		this.dob = dob;
+		this.weight = weight;
+		this.note = note;
+		this.owner = owner;
+	}
 
-    public int getPetID() {
-        return petID;
-    }
+	public int getPetId() {
+		return petId;
+	}
 
-    public void setPetID(int petID) {
-        this.petID = petID;
-    }
+	public void setPetId(int petId) {
+		this.petId = petId;
+	}
 
-    public String getPetName() {
-        return petName;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setPetName(String petName) {
-        this.petName = petName;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public PetType getTypePet() {
+		return petType;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public void setTypePet(PetType petType) {
+		this.petType = petType;
+	}
 
-    public Customer getCustomer() {
-        return customer;
-    }
+	public GenderEnum getGender() {
+		return gender;
+	}
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+	public void setGender(GenderEnum gender) {
+		this.gender = gender;
+	}
 
-    public TypePet getTypePet() {
-        return typePet;
-    }
+	public LocalDate getDob() {
+		return dob;
+	}
 
-    public void setTypePet(TypePet typePet) {
-        this.typePet = typePet;
-    }
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
 
-    @Override
-    public String toString() {
-        return "Pet: ID: " + petID + 
-               "\n\tName: " + petName + 
-               "\n\tAge: " + age + 
-               "\n\tCustomer: " + (customer != null ? customer.getLastName() + " " + customer.getFirstName() : "None") +
-               "\n\tType: " + (typePet != null ? typePet.getTypeName() : "Unknown");
-    }
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public Customer getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Customer owner) {
+		this.owner = owner;
+	}
+
+	@Override
+	public String toString() {
+		return "Pet [petId=" + petId + ", name=" + name + ", typePet=" + petType + ", gender=" + gender + ", dob=" + dob
+				+ ", weight=" + weight + ", note=" + note + ", owner=" + owner + "]";
+	}
+
+    
 }

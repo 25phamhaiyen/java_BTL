@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import enums.TypeOrder;
+import enums.StatusEnum;
 import model.Customer;
-import model.HappenStatus;
 import model.Order;
+import model.Promotion;
 import model.Staff;
 
 public class OrderRepository implements IRepository<Order> {
@@ -17,25 +17,9 @@ public class OrderRepository implements IRepository<Order> {
     public static OrderRepository getInstance() {
         return new OrderRepository();
     }
-    
-    public double calculateTotal(int orderId) {
-        String sql = "SELECT SUM(TotalPrice) FROM order_detail WHERE OrderID = ?";
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, orderId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getDouble(1); // Lấy tổng tiền từ SQL
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi tính tổng tiền: " + e.getMessage());
-        }
-        return 0.0; // Nếu có lỗi, trả về 0
-    }
 
     public void updateTotal(int orderId, double total) {
-        String sql = "UPDATE `order` SET Total = ? WHERE orderID = ?";
+        String sql = "UPDATE `order` SET total_amount = ? WHERE order_id = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setDouble(1, total);
@@ -45,83 +29,94 @@ public class OrderRepository implements IRepository<Order> {
             System.err.println("Lỗi khi cập nhật tổng tiền: " + e.getMessage());
         }
     }
-
     public void updateTotalPrice(int orderId) {
-        String sql = "UPDATE `order` SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = ?) WHERE orderID = ?";
-        
+        String sql = "SELECT SUM(price * quantity) FROM order_detail WHERE order_id = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
             pstmt.setInt(1, orderId);
-            pstmt.setInt(2, orderId);
-            pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    double total = rs.getDouble(1);
+                    updateTotal(orderId, total);
+                }
+            }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi cập nhật tổng tiền đơn hàng: " + e.getMessage());
+            System.err.println("Lỗi khi cập nhật tổng tiền: " + e.getMessage());
         }
     }
 
+
     public int insert(Order order) {
-        String sql = "INSERT INTO `order` (orderDate, appointmentDate, orderType, Total, Customer_ID, StaffID, HappenStatusID) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+        String sql = "INSERT INTO `order` (customer_id, staff_id, order_date, voucher_code, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)";
+
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
-            pstmt.setTimestamp(1, order.getOrderDate());
-            pstmt.setTimestamp(2, order.getAppointmentDate());
-            pstmt.setString(3, order.getOrderType().getDescription());
-            pstmt.setDouble(4, 0.0); // Ban đầu đặt tổng tiền là 0
-            pstmt.setInt(5, order.getCustomer().getId());
-            pstmt.setObject(6, order.getStaff() != null ? order.getStaff().getId() : null);
-            pstmt.setInt(7, order.getHappentStatus().getHappenStatusID());
+
+            pstmt.setInt(1, order.getCustomer().getId());
+            if (order.getStaff() != null)
+                pstmt.setInt(2, order.getStaff().getId());
+            else
+                pstmt.setNull(2, Types.INTEGER);
+
+            pstmt.setTimestamp(3, order.getOrderDate());
+            if (order.getVoucher() != null)
+                pstmt.setString(4, order.getVoucher().getDescription());
+            else
+                pstmt.setNull(4, Types.VARCHAR);
+            pstmt.setDouble(5, 0.0); // total_amount ban đầu
+            pstmt.setString(6, order.getStatus().name());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        int orderId = rs.getInt(1);
-                        order.setOrderId(orderId);
-                        
-                        System.out.println("✅ Thêm đơn hàng thành công! OrderID = " + orderId);
-                        
-                        // Quan trọng: Cập nhật tổng tiền sau khi thêm OrderDetail
-                        updateTotalPrice(orderId);
+                        int id = rs.getInt(1);
+                        order.setOrderId(id);
+                        return id;
                     }
                 }
             }
-            return affectedRows;
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi thêm đơn hàng: " + e.getMessage());
-            return 0;
+            System.err.println("Lỗi khi thêm order: " + e.getMessage());
         }
+        return 0;
     }
+
 
 
 
     @Override
     public int update(Order order) {
-        String sql = "UPDATE `order` SET orderDate=?, appointmentDate=?, orderType=?, Customer_ID=?, StaffID=?, HappenStatusID=? WHERE orderID=?";
+        String sql = "UPDATE `order` SET customer_id=?, staff_id=?, order_date=?, voucher_code=?, total_amount=?, status=? WHERE order_id=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
             
-            pstmt.setTimestamp(1, order.getOrderDate());
-            pstmt.setTimestamp(2, order.getAppointmentDate());
-            pstmt.setString(3, order.getOrderType().getDescription());
-            pstmt.setInt(4, order.getCustomer().getId());
-            pstmt.setObject(5, order.getStaff() != null ? order.getStaff().getId(): null);
-            pstmt.setInt(6, order.getHappentStatus().getHappenStatusID());
-            pstmt.setInt(7, order.getOrderId());
+			 pstmt.setInt(1, order.getCustomer().getId());
+			 if (order.getStaff() != null)
+			     pstmt.setInt(2, order.getStaff().getId());
+			 else
+			     pstmt.setNull(2, Types.INTEGER);
+			
+			 pstmt.setTimestamp(3, order.getOrderDate());
+			 if (order.getVoucher() != null)
+				    pstmt.setString(4, order.getVoucher().getDescription());
+				else
+				    pstmt.setNull(4, Types.VARCHAR);
+			 pstmt.setDouble(5, 0.0); // total_amount ban đầu
+			 pstmt.setString(6, order.getStatus().name());
+             pstmt.setInt(7, order.getOrderId());
             
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("✅ Cập nhật đơn hàng thành công! OrderID = " + order.getOrderId());
+                System.out.println(" Cập nhật đơn hàng thành công! OrderID = " + order.getOrderId());
                 
                 // Cập nhật lại tổng tiền của đơn hàng sau khi update
                 updateTotalPrice(order.getOrderId());
             }
             return affectedRows;
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi cập nhật đơn hàng: " + e.getMessage());
+            System.err.println(" Lỗi khi cập nhật đơn hàng: " + e.getMessage());
             return 0;
         }
     }
@@ -129,7 +124,7 @@ public class OrderRepository implements IRepository<Order> {
 
     @Override
     public int delete(Order order) {
-        String sql = "DELETE FROM `order` WHERE orderID=?";
+    	String sql = "DELETE FROM `order` WHERE order_id=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -166,7 +161,7 @@ public class OrderRepository implements IRepository<Order> {
     }
     
     public Order selectById(int orderId) {
-        String sql = "SELECT * FROM `order` WHERE orderID = ?";
+        String sql = "SELECT * FROM `order` WHERE order_id = ?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -207,41 +202,31 @@ public class OrderRepository implements IRepository<Order> {
     }
 
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
-        int orderId = rs.getInt("orderID");
-        Timestamp orderDate = rs.getTimestamp("orderDate");
-        Timestamp appointmentDate = rs.getTimestamp("appointmentDate");
-        double total = rs.getDouble("Total");
-
-        // Kiểm tra TypeOrder NULL
-        TypeOrder orderType = null;
-        String orderTypeStr = rs.getString("orderType");
-        if (orderTypeStr != null) {
-            try {
-                orderType = TypeOrder.valueOf(orderTypeStr.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.err.println("Lỗi: orderType không hợp lệ trong DB: " + orderTypeStr);
-            }
-        }
+        int orderId = rs.getInt("order_id");
+        Timestamp orderDate = rs.getTimestamp("order_date");
+        double total = rs.getDouble("total_amount");
+        
 
         Customer customer = new Customer();
-        customer.setId(rs.getInt("Customer_ID"));
+        customer.setId(rs.getInt("customer_id"));
 
-        // Kiểm tra Staff NULL
         Staff staff = null;
-        if (rs.getObject("StaffID") != null) {
+        if (rs.getObject("staff_id") != null) {
             staff = new Staff();
-            staff.setId(orderId);
+            staff.setId(rs.getInt("staff_id"));
         }
+        
+        String voucherCode = rs.getString("voucher_code");
+        Promotion voucher = new Promotion();
+        voucher.setDescription(voucherCode); 
 
-        // Kiểm tra HappenStatus NULL
-        HappenStatus happenStatus = null;
-        if (rs.getObject("HappenStatusID") != null) {
-            happenStatus = new HappenStatus();
-            happenStatus.setHappenStatusID(rs.getInt("HappenStatusID"));
-        }
 
-        return new Order(orderId, orderDate, appointmentDate, orderType, total, customer, staff, happenStatus);
+        String statusStr = rs.getString("status");
+        StatusEnum status = StatusEnum.valueOf(statusStr);
+
+        return new Order(orderId, customer, staff, orderDate, voucher, total, status);
     }
+
 
 
 

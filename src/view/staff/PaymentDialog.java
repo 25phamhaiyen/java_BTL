@@ -1,4 +1,4 @@
-package view.Staff;
+package view.staff;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

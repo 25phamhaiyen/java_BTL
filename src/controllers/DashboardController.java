@@ -16,8 +16,6 @@ public class DashboardController {
 	@FXML
 	private Button btnEmployeePanel;
 	@FXML
-	private Button btnCustomerPanel;
-	@FXML
 	private Button btnLogout;
 
 	@FXML
@@ -31,15 +29,11 @@ public class DashboardController {
 			Platform.runLater(() -> {
 				if (role != null) {
 					switch (role.getRoleID()) {
-					case 1: // Admin
-					case 2: // Manager
+					case 1: // admin
 						btnAdminPanel.setVisible(true); // Hiển thị nút cho Admin/Manager
 						break;
-					case 3: // Employee
+					case 2: // Employee
 						btnEmployeePanel.setVisible(true); // Hiển thị nút cho Employee
-						break;
-					case 4: // Customer
-						btnCustomerPanel.setVisible(true); // Hiển thị nút cho Customer
 						break;
 					default:
 						lblWelcome.setText("Vai trò không xác định, vui lòng đăng nhập lại!");
@@ -64,13 +58,7 @@ public class DashboardController {
 	// Chuyển đến trang Employee
 	@FXML
 	private void handleEmployeePanel() {
-		SceneSwitcher.switchScene("employee/employeeDashboard.fxml");
-	}
-
-	// Chuyển đến trang Customer
-	@FXML
-	private void handleCustomerPanel() {
-		SceneSwitcher.switchScene("customer/customerDashboard.fxml");
+		SceneSwitcher.switchScene("staff/Staff.fxml");
 	}
 
 	// Đăng xuất

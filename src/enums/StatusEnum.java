@@ -1,16 +1,16 @@
 package enums;
 
-public enum StatusCode {
-    PENDING(0), PROCESSING(1), COMPLETED(2);
+public enum StatusEnum {
+    PENDING(0), COMPLETED(1), CANCELLED(2), CONFIRMED(3), FAILED(4), PAID(5);
 
     private final int code;
 
-    StatusCode(int code) { this.code = code; }
+    StatusEnum(int code) { this.code = code; }
 
     public int getCode() { return code; }
 
-    public static StatusCode fromCode(int code) {
-        for (StatusCode status : StatusCode.values()) {
+    public static StatusEnum fromCode(int code) {
+        for (StatusEnum status : StatusEnum.values()) {
             if (status.getCode() == code) {
                 return status;
             }

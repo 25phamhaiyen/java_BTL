@@ -2,94 +2,83 @@ package model;
 
 import java.math.BigDecimal;
 
-public class OrderDetail {
+public class OrderDetail { 
     private int orderDetailId;
-    private Order order;   // Liên kết với Order
-    private Service service; // Liên kết với Service
+    private Order order;
+    private Service service;
     private int quantity;
-    private BigDecimal unitPrice;
-    private BigDecimal totalPrice; // Tính tổng tiền
-    
+    private BigDecimal price;
+
+
     // Constructor không tham số
     public OrderDetail() {}
 
-    // Constructor đầy đủ
-    public OrderDetail(int orderDetailId, Order order, Service service, int quantity, BigDecimal unitPrice) {
-        this.orderDetailId = orderDetailId;
-        this.order = order;
-        this.service = service;
-        this.quantity = quantity;
-        if (unitPrice == null) {
-            throw new IllegalArgumentException("unitPrice không thể là null");
-        }
-        this.unitPrice = unitPrice;
-        this.totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity)); // Tính tổng tiền
-    }
 
-    // Getter & Setter
-    public int getOrderDetailId() {
-        return orderDetailId;
-    }
+	public OrderDetail(int orderDetailId, Order order, Service service, int quantity, BigDecimal price) {
+		super();
+		this.orderDetailId = orderDetailId;
+		this.order = order;
+		this.service = service;
+		this.quantity = quantity;
+		this.price = price;
+	}
 
-    public void setOrderDetailId(int orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
 
-    public Order getOrder() {
-        return order;
-    }
+	public int getOrderDetailId() {
+		return orderDetailId;
+	}
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 
-    public Service getService() {
-        return service;
-    }
+	public void setOrderDetailId(int orderDetailId) {
+		this.orderDetailId = orderDetailId;
+	}
 
-    public void setService(Service service) {
-        this.service = service;
-    }
 
-    public int getQuantity() {
-        return quantity;
-    }
+	public Order getOrder() {
+		return order;
+	}
 
-    public void setQuantity(int quantity) {
-        if (quantity > 0) {
-            this.quantity = quantity;
-            this.totalPrice = this.unitPrice.multiply(BigDecimal.valueOf(quantity)); // Cập nhật tổng tiền
-        } else {
-            throw new IllegalArgumentException("Quantity must be greater than 0");
-        }
-    }
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
-    public void setUnitPrice(BigDecimal unitPrice) {
-        if (unitPrice.compareTo(BigDecimal.ZERO) >= 0) {
-            this.unitPrice = unitPrice;
-            this.totalPrice = this.unitPrice.multiply(BigDecimal.valueOf(this.quantity)); // Cập nhật tổng tiền
-        } else {
-            throw new IllegalArgumentException("Unit price must be non-negative");
-        }
-    }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
+	public Service getService() {
+		return service;
+	}
 
-    @Override
-    public String toString() {
-        return "OrderDetail{" +
-                "orderDetailId=" + orderDetailId +
-                ", order=" + order.getOrderId() +
-                ", service=" + service.getServiceID() +
-                ", quantity=" + quantity +
-                ", unitPrice=" + unitPrice +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
+
+	public void setService(Service service) {
+		this.service = service;
+	}
+
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+
+	@Override
+	public String toString() {
+		return "OrderDetail [orderDetailId=" + orderDetailId + ", order=" + order + ", service=" + service
+				+ ", quantity=" + quantity + ", price=" + price + "]";
+	}
+
+    
 }

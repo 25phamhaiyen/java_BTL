@@ -37,10 +37,10 @@ public class AccountController {
     }
 
     private void loadAccountInfo() {
-        fullNameField.setText(currentStaff.getLastName() + " " + currentStaff.getFirstName());
+        fullNameField.setText(currentStaff.getFullName());
         usernameField.setText(currentAccount.getUserName());
-        emailField.setText(currentAccount.getEmail());
-        phoneField.setText(currentStaff.getPhoneNumber());
+        emailField.setText(currentStaff.getEmail());
+        phoneField.setText(currentStaff.getPhone());
         roleField.setText(currentAccount.getRole().getRoleName());
         
         // Không cho chỉnh sửa các trường này
@@ -61,17 +61,13 @@ public class AccountController {
     @FXML private void handleSave() {
         if (currentAccount != null) {
             String username = usernameField.getText().trim();
-            String email = emailField.getText().trim();
 
             try {
-                // Kiểm tra username và email
-                accountService.validateUsernameAndEmail(username, email, currentAccount.getAccountID());
-
+              
                 // Cập nhật thông tin tài khoản
                 currentAccount.setUserName(username);
-                currentAccount.setEmail(email);
 
-                boolean updatedAccount = accountService.updateAccount(currentAccount.getAccountID(), username, null, email, currentAccount.getRole());
+                boolean updatedAccount = accountService.updateAccount(currentAccount.getAccountID(), username, null, currentAccount.getRole());
 
                 if (updatedAccount) {
                     showInfo("Cập nhật thông tin thành công!");
