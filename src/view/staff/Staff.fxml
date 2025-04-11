@@ -6,15 +6,13 @@
 <?import javafx.scene.text.Font?>
 
 <TabPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-         fx:controller="controller.StaffDashboardController">
-    
-    <stylesheets>
-        <URL value="@styles.css" />
-    </stylesheets>
+         fx:controller="controllers.StaffDashboardController"
+         stylesheets="@/styles/style.css">
+
     
     <Tab text="Lịch hẹn">
         <content>
-            <VBox spacing="10" padding="10">
+            <VBox spacing="10" >
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <DatePicker fx:id="appointmentDatePicker"/>
                     <Button text="Xem lịch" onAction="#handleViewAppointments"/>
@@ -38,7 +36,7 @@
     
     <Tab text="Hóa đơn">
         <content>
-            <VBox spacing="10" padding="10">
+            <VBox spacing="10" >
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <TextField fx:id="invoiceSearchField" promptText="Tìm theo mã HD/tên KH..."/>
                     <Button text="Tìm kiếm" onAction="#handleSearchInvoices"/>
@@ -61,7 +59,7 @@
     
     <Tab text="Thông tin cá nhân">
         <content>
-            <VBox spacing="15" padding="20" alignment="TOP_CENTER">
+            <VBox spacing="15" alignment="TOP_CENTER">
                 <HBox spacing="20" alignment="CENTER_LEFT">
                     <ImageView fitWidth="100" fitHeight="100" preserveRatio="true">
                         <image>

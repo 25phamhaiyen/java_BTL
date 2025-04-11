@@ -10,6 +10,7 @@ import model.Customer;
 import service.CustomerService;
 import enums.GenderEnum;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,8 +18,7 @@ public class CustomerController {
 
     @FXML private TextField searchTextField;
     @FXML private TableView<Customer> customerTable;
-    @FXML private TableColumn<Customer, String> firstNameColumn;
-    @FXML private TableColumn<Customer, String> lastNameColumn;
+    @FXML private TableColumn<Customer, String> fullNameColumn;
     @FXML private TableColumn<Customer, String> genderColumn;
     @FXML private TableColumn<Customer, String> phoneColumn;
     @FXML private TableColumn<Customer, String> emailColumn;
@@ -26,11 +26,9 @@ public class CustomerController {
     @FXML private TableColumn<Customer, String> loyaltyPointsColumn;
 
     @FXML private VBox formBox;
-    @FXML private TextField txtLastName;
-    @FXML private TextField txtFirstName;
+    @FXML private TextField txtFullName;
     @FXML private ComboBox<String> cmbGender;
     @FXML private TextField txtPhone;
-    @FXML private TextField txtCitizenNumber;
     @FXML private TextField txtAddress;
     @FXML private TextField txtEmail;
     @FXML private DatePicker dpRegistrationDate;
@@ -49,16 +47,15 @@ public class CustomerController {
     }
 
     private void setupTable() {
-        firstNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFirstName()));
-        lastNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLastName()));
+        fullNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFullName()));
         genderColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGender().toString()));
-        phoneColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPhoneNumber()));
+        phoneColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPhone()));
         emailColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEmail()));
         registrationDateColumn.setCellValueFactory(cell -> {
-            Date date = cell.getValue().getRegistrationDate();
+            Date date = cell.getValue().getCreated_at();
             return new SimpleStringProperty(date != null ? new SimpleDateFormat("yyyy-MM-dd").format(date) : "");
         });
-        loyaltyPointsColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getLoyaltyPoints())));
+        loyaltyPointsColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getPoint())));
 
         customerTable.setItems(customerList);
         customerTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -126,32 +123,30 @@ public class CustomerController {
     @FXML
     private void handleSaveCustomer() {
         try {
-            String firstName = txtFirstName.getText();
-            String lastName = txtLastName.getText();
+            String fullName = txtFullName.getText();
             String phone = txtPhone.getText();
             String email = txtEmail.getText();
             String genderStr = cmbGender.getValue();
-            String citizenNumber = txtCitizenNumber.getText();
             String address = txtAddress.getText();
             int loyaltyPoints = Integer.parseInt(txtLoyaltyPoints.getText());
-            Date regDate = dpRegistrationDate.getValue() != null ? java.sql.Date.valueOf(dpRegistrationDate.getValue()) : null;
+            Timestamp regDate = dpRegistrationDate.getValue() != null
+            	    ? Timestamp.valueOf(dpRegistrationDate.getValue().atStartOfDay())
+            	    : null;
 
             GenderEnum gender = GenderEnum.valueOf(genderStr.toUpperCase());
 
             if (selectedCustomer == null) {
-                Customer newCustomer = new Customer(0, lastName, firstName, gender, phone, citizenNumber, address, email, null, regDate, loyaltyPoints);
+                Customer newCustomer = new Customer(0, fullName, gender, phone, address, email, loyaltyPoints, regDate);
                 customerService.addCustomer(newCustomer);
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm khách hàng thành công.");
             } else {
-                selectedCustomer.setFirstName(firstName);
-                selectedCustomer.setLastName(lastName);
-                selectedCustomer.setPhoneNumber(phone);
+                selectedCustomer.setFullName(fullName);
+                selectedCustomer.setPhone(phone);
                 selectedCustomer.setEmail(email);
                 selectedCustomer.setGender(gender);
-                selectedCustomer.setCitizenNumber(citizenNumber);
                 selectedCustomer.setAddress(address);
-                selectedCustomer.setLoyaltyPoints(loyaltyPoints);
-                selectedCustomer.setRegistrationDate(regDate);
+                selectedCustomer.setPoint(loyaltyPoints);
+                selectedCustomer.setCreated_at(regDate);
 
                 customerService.updateCustomer(selectedCustomer);
                 showAlert(Alert.AlertType.INFORMATION, "Thành công", "Cập nhật khách hàng thành công.");
@@ -167,12 +162,10 @@ public class CustomerController {
     }
 
     private void clearForm() {
-        txtLastName.clear();
-        txtFirstName.clear();
+        txtFullName.clear();
         txtPhone.clear();
         txtEmail.clear();
         cmbGender.setValue(null);
-        txtCitizenNumber.clear();
         txtAddress.clear();
         txtLoyaltyPoints.clear();
         dpRegistrationDate.setValue(null);
@@ -180,16 +173,14 @@ public class CustomerController {
 
     private void showCustomerInForm(Customer customer) {
         selectedCustomer = customer;
-        txtFirstName.setText(customer.getFirstName());
-        txtLastName.setText(customer.getLastName());
-        txtPhone.setText(customer.getPhoneNumber());
+        txtFullName.setText(customer.getFullName());
+        txtPhone.setText(customer.getPhone());
         txtEmail.setText(customer.getEmail());
         cmbGender.setValue(customer.getGender().toString());
-        txtCitizenNumber.setText(customer.getCitizenNumber());
         txtAddress.setText(customer.getAddress());
-        txtLoyaltyPoints.setText(String.valueOf(customer.getLoyaltyPoints()));
-        if (customer.getRegistrationDate() != null) {
-            dpRegistrationDate.setValue(new java.sql.Date(customer.getRegistrationDate().getTime()).toLocalDate());
+        txtLoyaltyPoints.setText(String.valueOf(customer.getPoint()));
+        if (customer.getCreated_at() != null) {
+            dpRegistrationDate.setValue(new java.sql.Date(customer.getCreated_at().getTime()).toLocalDate());
         } else {
             dpRegistrationDate.setValue(null);
         }

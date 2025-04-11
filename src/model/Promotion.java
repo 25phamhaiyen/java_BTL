@@ -1,82 +1,80 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Promotion {
-    private int promotionID;
-    private String name;
+	private int promotionId;
+    private String code;
     private String description;
-    private int requiredPoints;
-    private double discountPercent;
-    private Date startDate;
-    private Date endDate;
+    private int discountPercent;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean active;
     
     
-
-    public Promotion(int promotionID, String name, String description, int requiredPoints, double discountPercent, Date startDate, Date endDate) {
-        this.promotionID = promotionID;
-        this.name = name;
-        this.description = description;
-        this.requiredPoints = requiredPoints;
-        this.discountPercent = discountPercent;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    // Getters and Setters
-    public int getPromotionID() {
-        return promotionID;
-    }
-
-    public void setPromotionID(int promotionID) {
-        this.promotionID = promotionID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getRequiredPoints() {
-        return requiredPoints;
-    }
-
-    public void setRequiredPoints(int requiredPoints) {
-        this.requiredPoints = requiredPoints;
-    }
-
-    public double getDiscountPercent() {
-        return discountPercent;
-    }
-
-    public void setDiscountPercent(double discountPercent) {
-        this.discountPercent = discountPercent;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+	public Promotion() {
+		super();
+	}
+	public Promotion(int promotionId, String code, String description, int discountPercent, LocalDate startDate,
+			LocalDate endDate, boolean active) {
+		super();
+		this.promotionId = promotionId;
+		this.code = code;
+		this.description = description;
+		this.discountPercent = discountPercent;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.active = active;
+	}
+	public int getPromotionId() {
+		return promotionId;
+	}
+	public void setPromotionId(int promotionId) {
+		this.promotionId = promotionId;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public int getDiscountPercent() {
+		return discountPercent;
+	}
+	public void setDiscountPercent(int discountPercent) {
+		this.discountPercent = discountPercent;
+	}
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	@Override
+	public String toString() {
+		return "Promotion [promotionId=" + promotionId + ", code=" + code + ", description=" + description
+				+ ", discountPercent=" + discountPercent + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", active=" + active + "]";
+	}
+    
+    
+    
 }

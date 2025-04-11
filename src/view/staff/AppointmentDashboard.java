@@ -1,5 +1,5 @@
 
-package view.Staff;
+package view.staff;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

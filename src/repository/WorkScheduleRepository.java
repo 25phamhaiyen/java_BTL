@@ -1,12 +1,16 @@
 package repository;
 
 
+import model.Staff;
 import model.WorkSchedule;
 import utils.DatabaseConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import enums.Shift;
 
 public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
@@ -25,14 +29,14 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
     @Override
     public int insert(WorkSchedule workSchedule) {
-        String sql = "INSERT INTO work_schedule (staffID, workDate, shift, note) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO work_schedule (staff_id, work_date, shift, note) VALUES (?, ?, ?, ?)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setInt(1, workSchedule.getStaffID());
-            pstmt.setDate(2, new java.sql.Date(workSchedule.getWorkDate().getTime()));
-            pstmt.setString(3, workSchedule.getShift());
+            pstmt.setInt(1, workSchedule.getStaff().getId());
+            pstmt.setDate(2, java.sql.Date.valueOf(workSchedule.getWorkDate()));
+            pstmt.setString(3, workSchedule.getShift().name());
             pstmt.setString(4, workSchedule.getNote());
 
             int affectedRows = pstmt.executeUpdate();
@@ -52,14 +56,14 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
     @Override
     public int update(WorkSchedule workSchedule) {
-        String sql = "UPDATE work_schedule SET staffID=?, workDate=?, shift=?, note=? WHERE scheduleID=?";
+        String sql = "UPDATE work_schedule SET staff_id=?, work_date=?, shift=?, note=? WHERE schedule_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, workSchedule.getStaffID());
-            pstmt.setDate(2, new java.sql.Date(workSchedule.getWorkDate().getTime()));
-            pstmt.setString(3, workSchedule.getShift());
+        	pstmt.setInt(1, workSchedule.getStaff().getId());
+            pstmt.setDate(2, java.sql.Date.valueOf(workSchedule.getWorkDate()));
+            pstmt.setString(3, workSchedule.getShift().name());
             pstmt.setString(4, workSchedule.getNote());
             pstmt.setInt(5, workSchedule.getScheduleID());
 
@@ -72,7 +76,7 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
     @Override
     public int delete(WorkSchedule workSchedule) {
-        String sql = "DELETE FROM work_schedule WHERE scheduleID=?";
+        String sql = "DELETE FROM work_schedule WHERE schedule_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -109,7 +113,7 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
     }
 
     public WorkSchedule selectById(int scheduleID) {
-        String sql = "SELECT * FROM work_schedule WHERE scheduleID=?";
+        String sql = "SELECT * FROM work_schedule WHERE schedule_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -129,7 +133,7 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
     @Override
     public List<WorkSchedule> selectByCondition(String whereClause, Object... params) {
         List<WorkSchedule> list = new ArrayList<>();
-        String baseQuery = "SELECT * FROM work_schedule WHERE " + whereClause;  // Thay đổi "work_schedule" thành tên bảng thực tế của bạn.
+        String baseQuery = "SELECT * FROM work_schedule WHERE " + whereClause;  
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(baseQuery)) {
@@ -141,7 +145,7 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    list.add(mapResultSetToWorkSchedule(rs)); // Triển khai phương thức này để ánh xạ kết quả thành đối tượng WorkSchedule
+                    list.add(mapResultSetToWorkSchedule(rs)); 
                 }
             }
         } catch (SQLException e) {
@@ -153,13 +157,15 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
 
     private WorkSchedule mapResultSetToWorkSchedule(ResultSet rs) throws SQLException {
-        int scheduleID = rs.getInt("scheduleID");
-        int staffID = rs.getInt("staffID");
-        Date workDate = rs.getDate("workDate");
-        String shift = rs.getString("shift");
+        int scheduleID = rs.getInt("schedule_id");
+        int staffID = rs.getInt("staff_id");
+        LocalDate workDate = rs.getDate("work_date").toLocalDate();
+        Shift shift = Shift.valueOf(rs.getString("shift")); 
         String note = rs.getString("note");
 
-        return new WorkSchedule(scheduleID, staffID, workDate, shift, note);
+        Staff staff = StaffRepository.getInstance().selectById(staffID); 
+
+        return new WorkSchedule(scheduleID, staff, workDate, shift, note);
     }
 
 }

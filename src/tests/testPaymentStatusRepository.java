@@ -2,7 +2,7 @@ package tests;
 
 import java.util.List;
 
-import enums.PaymentStatusEnum;
+import enums.PaymentMethodEnum;
 import model.PaymentStatus;
 import repository.PaymentStatusRepository;
 
@@ -12,7 +12,7 @@ public class testPaymentStatusRepository {
 
 		// **INSERT TEST**
 		System.out.println("▶ Thêm PaymentStatus...");
-		PaymentStatus newStatus = new PaymentStatus(0, PaymentStatusEnum.PENDING);
+		PaymentStatus newStatus = new PaymentStatus(0, PaymentMethodEnum.PENDING);
 		int insertResult = repository.insert(newStatus);
 		System.out.println("Insert Result: " + (insertResult > 0 ? "Thành công" : "Thất bại"));
 
@@ -34,7 +34,7 @@ public class testPaymentStatusRepository {
 		// **UPDATE TEST**
 		if (newStatus.getPaymentStatusID() != 0) {
 			System.out.println("\n▶ Cập nhật PaymentStatus...");
-			newStatus.setStatus(PaymentStatusEnum.PENDING);
+			newStatus.setStatus(PaymentMethodEnum.PENDING);
 			int updateResult = repository.update(newStatus);
 			System.out.println("Update Result: " + (updateResult > 0 ? "Thành công" : "Thất bại"));
 		}

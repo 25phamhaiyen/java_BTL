@@ -17,16 +17,12 @@
 
 		<!-- Các trường nhập liệu -->
 		<GridPane hgap="10" vgap="10">
-			<Label text="Họ:" GridPane.rowIndex="0"
+			<Label text="Họ tên:" GridPane.rowIndex="0"
 				GridPane.columnIndex="0" />
-			<TextField fx:id="txtLastName" promptText="Nhập họ"
+			<TextField fx:id="txtFullName" promptText="Nhập họ tên"
 				styleClass="text-field" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
-			<Label text="Tên:" GridPane.rowIndex="1"
-				GridPane.columnIndex="0" />
-			<TextField fx:id="txtFirstName" promptText="Nhập tên"
-				styleClass="text-field" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-
+			
 			<Label text="Giới tính:" GridPane.rowIndex="2"
 				GridPane.columnIndex="0" />
 			<ComboBox fx:id="cmbGender" styleClass="combo-box" GridPane.rowIndex="2"
@@ -94,9 +90,7 @@
 		<!-- Bảng hiển thị danh sách nhân viên -->
 		<TableView fx:id="staffTable" prefHeight="200" styleClass="table-view">
 			<columns>
-				<TableColumn fx:id="lastNameColumn" text="Họ"
-					prefWidth="100" />
-				<TableColumn fx:id="firstNameColumn" text="Tên"
+				<TableColumn fx:id="fullNameColumn" text="Họ tên"
 					prefWidth="100" />
 				<TableColumn fx:id="genderColumn" text="Giới tính"
 					prefWidth="100" />

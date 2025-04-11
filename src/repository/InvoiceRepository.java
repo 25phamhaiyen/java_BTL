@@ -4,29 +4,38 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import enums.PaymentStatusEnum;
+import enums.PaymentMethodEnum;
+import enums.StatusEnum;
 import model.Invoice;
 import model.Order;
-import model.PaymentStatus;
+import model.Staff;
 import utils.DatabaseConnection;
 
 public class InvoiceRepository implements IRepository<Invoice> {
 
-    public static InvoiceRepository getInstance() {
-        return new InvoiceRepository();
-    }
+	private static InvoiceRepository instance;
+
+	public static InvoiceRepository getInstance() {
+	    if (instance == null) {
+	        instance = new InvoiceRepository();
+	    }
+	    return instance;
+	}
+
 
     @Override
     public int insert(Invoice invoice) {
-        String sql = "INSERT INTO invoice (OrderID, TotalAmount, CreatedAt, PaymentStatusID) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO invoice (order_id, payment_date, total, status, payment_method, staff_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setInt(1, invoice.getOrder().getOrderId());
-            pstmt.setBigDecimal(2, invoice.getTotalAmount());
-            pstmt.setTimestamp(3, invoice.getCreatedAt());
-            pstmt.setInt(4, invoice.getPaymentStatus().getPaymentStatusID());
+            pstmt.setTimestamp(2, invoice.getPaymentDate());
+            pstmt.setBigDecimal(3, invoice.getTotal());
+            pstmt.setString(4, invoice.getStatus().name());
+            pstmt.setString(5, invoice.getPaymentMethod().name());
+            pstmt.setInt(6, invoice.getStaff().getId());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -45,16 +54,19 @@ public class InvoiceRepository implements IRepository<Invoice> {
 
     @Override
     public int update(Invoice invoice) {
-        String sql = "UPDATE invoice SET OrderID=?, TotalAmount=?, CreatedAt=?, PaymentStatusID=? WHERE InvoiceID=?";
+        String sql = "UPDATE invoice SET order_id=?, payment_date=?, total=?, status=?, payment_method=?, staff_id=? WHERE invoice_id=?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, invoice.getOrder().getOrderId());
-            pstmt.setBigDecimal(2, invoice.getTotalAmount());
-            pstmt.setTimestamp(3, invoice.getCreatedAt());
-            pstmt.setInt(4, invoice.getPaymentStatus().getPaymentStatusID());
-            pstmt.setInt(5, invoice.getInvoiceId());
+        	pstmt.setInt(1, invoice.getOrder().getOrderId());
+            pstmt.setTimestamp(2, invoice.getPaymentDate());
+            pstmt.setBigDecimal(3, invoice.getTotal());
+            pstmt.setString(4, invoice.getStatus().name());
+            pstmt.setString(5, invoice.getPaymentMethod().name());
+            pstmt.setInt(6, invoice.getStaff().getId());
+            pstmt.setInt(7, invoice.getInvoiceId());
 
+            
             return pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật hóa đơn: " + e.getMessage());
@@ -64,7 +76,7 @@ public class InvoiceRepository implements IRepository<Invoice> {
 
     @Override
     public int delete(Invoice invoice) {
-        String sql = "DELETE FROM invoice WHERE InvoiceID=?";
+        String sql = "DELETE FROM invoice WHERE invoice_id=?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -79,7 +91,7 @@ public class InvoiceRepository implements IRepository<Invoice> {
     @Override
     public List<Invoice> selectAll() {
         List<Invoice> list = new ArrayList<>();
-        String sql = "SELECT InvoiceID, OrderID, TotalAmount, CreatedAt, PaymentStatusID FROM invoice";
+        String sql = "SELECT * FROM invoice";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
@@ -95,7 +107,7 @@ public class InvoiceRepository implements IRepository<Invoice> {
     }
 
     public Invoice selectById(int invoiceId) {
-        String sql = "SELECT InvoiceID, OrderID, TotalAmount, CreatedAt, PaymentStatusID FROM invoice WHERE InvoiceID = ?";
+        String sql = "SELECT * FROM invoice WHERE invoice_id = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -119,7 +131,7 @@ public class InvoiceRepository implements IRepository<Invoice> {
     @Override
     public List<Invoice> selectByCondition(String whereClause, Object... params) {
         List<Invoice> list = new ArrayList<>();
-        String sql = "SELECT InvoiceID, OrderID, TotalAmount, CreatedAt, PaymentStatusID FROM invoice WHERE " + whereClause;
+        String sql = "SELECT * FROM invoice WHERE " + whereClause;
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -141,26 +153,20 @@ public class InvoiceRepository implements IRepository<Invoice> {
 
     private Invoice mapResultSetToInvoice(ResultSet rs) throws SQLException {
         Order order = new Order();
-        order.setOrderId(rs.getInt("OrderID"));
-        
-        PaymentStatus paymentStatus = null;
-        int paymentStatusId = rs.getInt("PaymentStatusID");
-        if (!rs.wasNull()) {  
-            paymentStatus = new PaymentStatus();
-            paymentStatus.setPaymentStatusID(paymentStatusId);
-            
-            paymentStatus.setStatus(PaymentStatusEnum.fromCode(paymentStatusId));  
-        } else {
-            System.err.println("Lưu ý: PaymentStatusID NULL cho InvoiceID = " + rs.getInt("InvoiceID"));
-        }
-        
+        order.setOrderId(rs.getInt("order_id"));
+
+        Staff staff = new Staff();
+        staff.setId(rs.getInt("staff_id"));
+
         return new Invoice(
-                rs.getInt("InvoiceID"),
-                order,
-                rs.getBigDecimal("TotalAmount"),
-                rs.getTimestamp("CreatedAt"),
-                paymentStatus
-                
+            rs.getInt("invoice_id"),
+            order,
+            rs.getTimestamp("payment_date"),
+            rs.getBigDecimal("total"),
+            PaymentMethodEnum.valueOf(rs.getString("payment_method")),
+            StatusEnum.valueOf(rs.getString("status")),
+            staff
         );
     }
+
 }

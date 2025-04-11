@@ -25,8 +25,6 @@
         <Label fx:id="messageLabel" styleClass="error-label"/>
         
         <Button text="Đăng nhập" onAction="#handleLogin" styleClass="login-button"/>
-        <Button text="Chưa có tài khoản? Đăng ký ngay" onAction="#switchToRegister" styleClass="move-button"/>
-        <Button fx:id="forgotPasswordButton" text="Quên mật khẩu?" onAction="#handleForgotPassword" styleClass="move-button"/>
     </VBox>
 </AnchorPane>
 

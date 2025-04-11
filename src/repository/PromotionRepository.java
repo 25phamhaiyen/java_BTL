@@ -4,7 +4,6 @@ import model.Promotion;
 import utils.DatabaseConnection;
 
 import java.sql.*;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,23 +24,23 @@ public class PromotionRepository implements IRepository<Promotion> {
 
     @Override
     public int insert(Promotion promotion) {
-        String sql = "INSERT INTO promotion (name, description, requiredPoints, discountPercent, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO promotion (code, description, discount_percent, start_date, end_date, active) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setString(1, promotion.getName());
+            pstmt.setString(1, promotion.getCode());
             pstmt.setString(2, promotion.getDescription());
-            pstmt.setInt(3, promotion.getRequiredPoints());
-            pstmt.setDouble(4, promotion.getDiscountPercent());
-            pstmt.setDate(5, new java.sql.Date(promotion.getStartDate().getTime()));
-            pstmt.setDate(6, new java.sql.Date(promotion.getEndDate().getTime()));
+            pstmt.setInt(3, promotion.getDiscountPercent());
+            pstmt.setDate(4, java.sql.Date.valueOf(promotion.getStartDate()));
+            pstmt.setDate(5, java.sql.Date.valueOf(promotion.getEndDate()));
+            pstmt.setBoolean(6, promotion.isActive());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
-                        promotion.setPromotionID(rs.getInt(1));
+                        promotion.setPromotionId(rs.getInt(1));
                     }
                 }
             }
@@ -54,17 +53,18 @@ public class PromotionRepository implements IRepository<Promotion> {
 
     @Override
     public int update(Promotion promotion) {
-        String sql = "UPDATE promotion SET name=?, description=?, requiredPoints=?, discountPercent=?, startDate=?, endDate=? WHERE promotionID=?";
+        String sql = "UPDATE promotion SET code=?, description=?, discount_percent=?, start_date=?, end_date=?, active=? WHERE promotion_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setString(1, promotion.getName());
+        	pstmt.setString(1, promotion.getCode());
             pstmt.setString(2, promotion.getDescription());
-            pstmt.setInt(3, promotion.getRequiredPoints());
-            pstmt.setDouble(4, promotion.getDiscountPercent());
-            pstmt.setDate(5, new java.sql.Date(promotion.getStartDate().getTime()));
-            pstmt.setDate(6, new java.sql.Date(promotion.getEndDate().getTime()));
+            pstmt.setInt(3, promotion.getDiscountPercent());
+            pstmt.setDate(4, java.sql.Date.valueOf(promotion.getStartDate()));
+            pstmt.setDate(5, java.sql.Date.valueOf(promotion.getEndDate()));
+            pstmt.setBoolean(6, promotion.isActive());
+            pstmt.setInt(7, promotion.getPromotionId());
 
             return pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -75,12 +75,12 @@ public class PromotionRepository implements IRepository<Promotion> {
 
     @Override
     public int delete(Promotion promotion) {
-        String sql = "DELETE FROM promotion WHERE promotionID=?";
+        String sql = "DELETE FROM promotion WHERE promotion_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, promotion.getPromotionID());
+            pstmt.setInt(1, promotion.getPromotionId());
             return pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
@@ -108,11 +108,11 @@ public class PromotionRepository implements IRepository<Promotion> {
 
     @Override
     public Promotion selectById(Promotion promotion) {
-        return selectById(promotion.getPromotionID());
+        return selectById(promotion.getPromotionId());
     }
 
     public Promotion selectById(int promotionID) {
-        String sql = "SELECT * FROM promotion WHERE promotionID=?";
+        String sql = "SELECT * FROM promotion WHERE promotion_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -131,13 +131,13 @@ public class PromotionRepository implements IRepository<Promotion> {
 
     private Promotion mapResultSetToPromotion(ResultSet rs) throws SQLException {
         return new Promotion(
-            rs.getInt("promotionID"),
-            rs.getString("name"),
+            rs.getInt("promotion_id"),
+            rs.getString("code"),
             rs.getString("description"),
-            rs.getInt("requiredPoints"),
-            rs.getDouble("discountPercent"),
-            rs.getDate("startDate"), 
-            rs.getDate("endDate")
+            rs.getInt("discount_percent"),
+            rs.getDate("start_date").toLocalDate(), 
+            rs.getDate("end_date").toLocalDate(),
+            rs.getBoolean("active")
         );
     }
 

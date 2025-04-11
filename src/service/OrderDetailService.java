@@ -37,7 +37,7 @@ public class OrderDetailService {
 		int rowsAffected = orderDetailRepository.update(detail);
 		if (rowsAffected > 0) {
 			System.out.println("Cập nhật dịch vụ trong lịch hẹn thành công.");
-			orderService.updateOrderTotal(detail.getOrderId()); // ✅
+			orderService.updateOrderTotal(detail.getOrder().getOrderId()); // ✅
 		}
 	}
 
@@ -45,7 +45,7 @@ public class OrderDetailService {
 		int rowsAffected = orderDetailRepository.delete(detail);
 		if (rowsAffected > 0) {
 			System.out.println("Xóa dịch vụ khỏi lịch hẹn thành công.");
-			orderService.updateOrderTotal(detail.getOrderId()); // ✅
+			orderService.updateOrderTotal(detail.getOrder().getOrderId()); // ✅
 		}
 	}
 }

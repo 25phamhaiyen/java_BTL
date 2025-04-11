@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.Customer;
 import model.Pet;
-import model.TypePet;
+import model.PetType;
 import repository.CustomerRepository;
 import repository.PetRepository;
 
@@ -16,8 +16,8 @@ public class testPetRepository {
 		// Test thêm mới Pet
 		System.out.println("--- Test Insert ---");
 		Customer customer = customerRepository.selectById(1);
-		TypePet typePet = new TypePet(1, "Dog");
-		Pet pet = new Pet(101, "Lucky", 3, customer, typePet);
+		PetType petType = new PetType(1, "Dog");
+		Pet pet = new Pet(101, "Lucky", 3, customer, petType);
 		petRepository.insert(pet);
 
 		// Test cập nhật Pet

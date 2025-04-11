@@ -24,23 +24,23 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
 
 
 	public int insert(OrderDetail orderDetail) {
-	    String sql = "INSERT INTO order_detail (OrderID, ServiceID, Quantity, UnitPrice) VALUES (?, ?, ?, ?)";
+	    String sql = "INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES (?, ?, ?, ?)";
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 	        //  Lấy giá từ bảng service
 	        ServiceRepository serviceRepository = ServiceRepository.getInstance();
-	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceID());
+	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceId());
 	        if (service == null) {
 	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
 	            return 0;
 	        }
-	        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
+	        BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
 
 
 	        pstmt.setInt(1, orderDetail.getOrder().getOrderId());
-	        pstmt.setInt(2, orderDetail.getService().getServiceID());
+	        pstmt.setInt(2, orderDetail.getService().getServiceId());
 	        pstmt.setInt(3, orderDetail.getQuantity());
 	        pstmt.setBigDecimal(4, unitPrice);
 
@@ -55,7 +55,7 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
 	        }
 	        return affectedRows;
 	    } catch (SQLException e) {
-	        System.err.println("❌ Lỗi khi thêm chi tiết đơn hàng: " + e.getMessage());
+	        System.err.println("Lỗi khi thêm chi tiết đơn hàng: " + e.getMessage());
 	        return 0;
 	    }
 	}
@@ -63,20 +63,20 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
 
     @Override
     public int update(OrderDetail orderDetail) {
-        String sql = "UPDATE order_detail SET ServiceID=?, Quantity=?, UnitPrice=? WHERE OrderDetailID=?";
+        String sql = "UPDATE order_detail SET service_id=?, quantity=?, price=? WHERE order_detail_id=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
         //  Lấy giá từ bảng service
 	        ServiceRepository serviceRepository = ServiceRepository.getInstance();
-	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceID());
+	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceId());
 	        if (service == null) {
 	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
 	            return 0;
 	        }
-	        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
+	        BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
 
-	        pstmt.setInt(1, orderDetail.getService().getServiceID());
+	        pstmt.setInt(1, orderDetail.getService().getServiceId());
             pstmt.setInt(2, orderDetail.getQuantity());
             pstmt.setBigDecimal(3, unitPrice);
             pstmt.setInt(4, orderDetail.getOrderDetailId());
@@ -96,7 +96,7 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
 
     @Override
     public int delete(OrderDetail orderDetail) {
-        String sql = "DELETE FROM order_detail WHERE OrderDetailID=?";
+        String sql = "DELETE FROM order_detail WHERE order_detail_id=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -141,7 +141,7 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
     }
     
     public OrderDetail selectById(int orderDetailId) {
-        String sql = "SELECT * FROM order_detail WHERE OrderDetailID = ?";
+        String sql = "SELECT * FROM order_detail WHERE order_detail_id = ?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -182,16 +182,16 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
     }
 
     private OrderDetail mapResultSetToOrderDetail(ResultSet rs) throws SQLException {
-        int orderDetailId = rs.getInt("OrderDetailID");
-        int orderId = rs.getInt("OrderID");
-        int serviceId = rs.getInt("ServiceID");
-        int quantity = rs.getInt("Quantity");
+        int orderDetailId = rs.getInt("order_detail_id");
+        int orderId = rs.getInt("order_id");
+        int serviceId = rs.getInt("service_id");
+        int quantity = rs.getInt("quantity");
         //  Lấy costPrice từ Service
         Service service = ServiceRepository.getInstance().selectById(serviceId);
         if (service == null) {
             throw new SQLException("Không tìm thấy service với ID: " + serviceId);
         }
-        BigDecimal unitPrice = BigDecimal.valueOf(service.getCostPrice());
+        BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
         
         Order order = new Order();
         order.setOrderId(orderId);

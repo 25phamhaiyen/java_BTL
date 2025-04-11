@@ -28,7 +28,7 @@ public class AccountRepository implements IRepository<Account> {
 
 	@Override
 	public int insert(Account account) {
-		String sql = "INSERT INTO account (UN_UserName, Password, Email, Role_ID) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO account (username, `password`, role_id) VALUES (?, ?, ?)";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -36,9 +36,7 @@ public class AccountRepository implements IRepository<Account> {
 			pstmt.setString(1, account.getUserName());
 			String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
 	        pstmt.setString(2, hashedPassword);
-//			pstmt.setString(2, account.getPassword());
-			pstmt.setString(3, account.getEmail());
-			pstmt.setInt(4, account.getRole().getRoleID());
+			pstmt.setInt(3, account.getRole().getRoleID());
 
 			int affectedRows = pstmt.executeUpdate();
 			if (affectedRows > 0) {
@@ -57,7 +55,7 @@ public class AccountRepository implements IRepository<Account> {
 	
 	@Override
 	public int update(Account account) {
-	    String sql = "UPDATE account SET UN_UserName=?, Password=?, Email=?, Role_ID=? WHERE AccountID=?";
+	    String sql = "UPDATE account SET username=?, password=?, role_id=? WHERE account_id=?";
 	    try (Connection con = DatabaseConnection.getConnection(); 
 	         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -68,10 +66,8 @@ public class AccountRepository implements IRepository<Account> {
 	            newPassword = getPasswordById(account.getAccountID());
 	        }
 	        pstmt.setString(2, newPassword);
-
-	        pstmt.setString(3, account.getEmail());
-	        pstmt.setInt(4, account.getRole().getRoleID());
-	        pstmt.setInt(5, account.getAccountID());
+	        pstmt.setInt(3, account.getRole().getRoleID());
+	        pstmt.setInt(4, account.getAccountID());
 
 	        return pstmt.executeUpdate();
 	    } catch (SQLException e) {
@@ -83,12 +79,12 @@ public class AccountRepository implements IRepository<Account> {
 
 	// Hàm lấy mật khẩu cũ từ DB nếu không cập nhật mật khẩu mới
 	private String getPasswordById(int accountID) throws SQLException {
-		String sql = "SELECT Password FROM account WHERE AccountID = ?";
+		String sql = "SELECT password FROM account WHERE account_id = ?";
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, accountID);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					return rs.getString("Password");
+					return rs.getString("password");
 				}
 			}
 		}
@@ -97,7 +93,7 @@ public class AccountRepository implements IRepository<Account> {
 
 	@Override
 	public int delete(Account account) {
-		String sql = "DELETE FROM account WHERE AccountID=?";
+		String sql = "DELETE FROM account WHERE account_id=?";
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
 			pstmt.setInt(1, account.getAccountID());
@@ -110,7 +106,9 @@ public class AccountRepository implements IRepository<Account> {
 
 	// Kiểm tra tài khoản có tồn tại hay không
 	public boolean isAccountExist(String username) {
-		String sql = "SELECT COUNT(*) FROM account WHERE UN_UserName = ?";
+		String sql = "SELECT COUNT(*) "
+				+ "FROM account "
+				+ "WHERE username = ?";
 
 
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -130,8 +128,10 @@ public class AccountRepository implements IRepository<Account> {
 	@Override
 	public List<Account> selectAll() {
 		List<Account> list = new ArrayList<>();
-		String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
-				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID";
+		String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+				+ "FROM account a "
+				+ "JOIN role r "
+				+ "ON a.role_id = r.role_id";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql);
@@ -147,8 +147,10 @@ public class AccountRepository implements IRepository<Account> {
 	}
 
 	public Account selectById(int accountID) {
-		String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
-				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a.AccountID = ?";
+		String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+				+ "FROM account a "
+				+ "JOIN role r "
+				+ "ON a.role_id = r.role_id WHERE a.account_id = ?";
 
 		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -170,8 +172,10 @@ public class AccountRepository implements IRepository<Account> {
 	}
 
 	public Account getAccountByUsername(String username) {
-	    String sql = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
-	               + "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a.UN_UserName = ?";
+	    String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+	               + "FROM account a "
+	               + "JOIN role r "
+	               + "ON a.role_id = r.role_id WHERE a.username = ?";
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -190,17 +194,19 @@ public class AccountRepository implements IRepository<Account> {
 
 
 	private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
-		String roleName = rs.getString("RoleName").toUpperCase();
-		Role role = new Role(rs.getInt("Role_ID"), roleName);
+		String roleName = rs.getString("role_name").toUpperCase();
+		Role role = new Role(rs.getInt("role_id"), roleName);
 
-		return new Account(rs.getInt("AccountID"), rs.getString("UN_UserName"), rs.getString("Password"),
-				rs.getString("Email"), role);
+		return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"), role);
 	}
 
 	public List<Account> selectByCondition(String whereClause, Object... params) {
 		List<Account> list = new ArrayList<>();
-		String baseQuery = "SELECT a.AccountID, a.UN_UserName, a.Password, a.Email, r.Role_ID, r.RoleName "
-				+ "FROM account a JOIN role r ON a.Role_ID = r.Role_ID WHERE a." +  whereClause;
+		String baseQuery = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+				+ "FROM account a "
+				+ "JOIN role r "
+				+ "ON a.role_id = r.role_id "
+				+ "WHERE a." +  whereClause;
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(baseQuery)) {
@@ -220,7 +226,7 @@ public class AccountRepository implements IRepository<Account> {
 		return list;
 	}
 	public boolean updatePassword(int accountID, String newPassword) {
-        String query = "UPDATE account SET password = ? WHERE AccountID = ?";
+        String query = "UPDATE account SET password = ? WHERE account_id = ?";
         try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(query)) {
             stmt.setString(1, newPassword);
             stmt.setInt(2, accountID);

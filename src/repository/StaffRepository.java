@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,25 +19,36 @@ import utils.DatabaseConnection;
 public class StaffRepository implements IRepository<Staff> {
 	private static final Logger LOGGER = Logger.getLogger(StaffRepository.class.getName());
 
+	private static StaffRepository instance;
+
+    public static StaffRepository getInstance() {
+        if (instance == null) {
+            synchronized (StaffRepository.class) {
+                if (instance == null) {
+                    instance = new StaffRepository();
+                }
+            }
+        }
+        return instance;
+    }
+    
 	@Override
 	public int insert(Staff staff) {
-		String insertPersonSql = "INSERT INTO person (lastName, firstName, sex, phoneNumber, citizenNumber, address, email) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
-		String insertStaffSql = "INSERT INTO staff (PersonID, Role_ID, AccountID, startDate, endDate, salary, workShift, position) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		String insertPersonSql = "INSERT INTO person (full_name, gender, phone, address, email) "
+				+ "VALUES (?, ?, ?, ?, ?)";
+		String insertStaffSql = "INSERT INTO staff (staff_id, dob, salary, hire_date, account_id, role_id) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement personStmt = con.prepareStatement(insertPersonSql, Statement.RETURN_GENERATED_KEYS);
 				PreparedStatement staffStmt = con.prepareStatement(insertStaffSql)) {
 
 			// Insert vào bảng person
-			personStmt.setString(1, staff.getLastName());
-			personStmt.setString(2, staff.getFirstName());
-			personStmt.setInt(3, staff.getGender().getCode());
-			personStmt.setString(4, staff.getPhoneNumber());
-			personStmt.setString(5, staff.getCitizenNumber());
-			personStmt.setString(6, staff.getAddress());
-			personStmt.setString(7, staff.getEmail());
+			personStmt.setString(1, staff.getFullName());
+			personStmt.setString(2, staff.getGender().getDescription());
+			personStmt.setString(3, staff.getPhone());
+			personStmt.setString(4, staff.getAddress());
+			personStmt.setString(5, staff.getEmail());
 
 			int personAffectedRows = personStmt.executeUpdate();
 
@@ -48,13 +59,11 @@ public class StaffRepository implements IRepository<Staff> {
 
 						// Insert vào bảng staff
 						staffStmt.setInt(1, personID);
-						staffStmt.setInt(2, staff.getRole().getRoleID());
-						staffStmt.setInt(3, staff.getAccount().getAccountID());
-						staffStmt.setDate(4, staff.getStartDate() != null ? java.sql.Date.valueOf(staff.getStartDate()) : null);
-	                    staffStmt.setDate(5, staff.getEndDate() != null ? java.sql.Date.valueOf(staff.getEndDate()) : null);
-						staffStmt.setDouble(6, staff.getSalary());
-						staffStmt.setString(7, staff.getWorkShift());
-						staffStmt.setString(8, staff.getPosition());
+						staffStmt.setDate(1, new java.sql.Date(staff.getDob().getTime()));
+						staffStmt.setDouble(3, staff.getSalary());
+						staffStmt.setDate(1, new java.sql.Date(staff.getHire_date().getTime()));
+						staffStmt.setInt(5, staff.getAccount().getAccountID());
+						staffStmt.setInt(6, staff.getRole().getRoleID());
 
 						return staffStmt.executeUpdate();
 					}
@@ -68,36 +77,31 @@ public class StaffRepository implements IRepository<Staff> {
 
 	@Override
 	public int update(Staff staff) {
-		String updatePersonSql = "UPDATE person SET lastName=?, firstName=?, sex=?, phoneNumber=?, citizenNumber=?, address=?, email=? WHERE PersonID=?";
-		String updateStaffSql = "UPDATE staff SET Role_ID=?, AccountID=?, startDate=?, endDate=?, salary=?, workShift=?, position=? WHERE PersonID=?";
+		String updatePersonSql = "UPDATE person SET full_name=?, gender=?, phone=?, address=?, email=? WHERE person_id=?";
+		String updateStaffSql = "UPDATE staff SET dob=?, salary=?, hire_date=?, account_id=?, role_id=? WHERE staff_id=?";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement personStmt = con.prepareStatement(updatePersonSql);
 				PreparedStatement staffStmt = con.prepareStatement(updateStaffSql)) {
 
 			// Cập nhật thông tin trong bảng person
-			personStmt.setString(1, staff.getLastName());
-			personStmt.setString(2, staff.getFirstName());
-			personStmt.setInt(3, staff.getGender().getCode());
-			personStmt.setString(4, staff.getPhoneNumber());
-			personStmt.setString(5, staff.getCitizenNumber());
-			personStmt.setString(6, staff.getAddress());
-			personStmt.setString(7, staff.getEmail());
-			personStmt.setInt(8, staff.getId());
+			personStmt.setString(1, staff.getFullName());
+			personStmt.setString(2, staff.getGender().getDescription());
+			personStmt.setString(3, staff.getPhone());
+			personStmt.setString(4, staff.getAddress());
+			personStmt.setString(5, staff.getEmail());
+			personStmt.setInt(6, staff.getId());
 
 			int personAffectedRows = personStmt.executeUpdate();
 
 			// Nếu cập nhật bảng person thành công, tiếp tục cập nhật bảng staff
 			if (personAffectedRows > 0) {
-				staffStmt.setInt(1, staff.getRole().getRoleID());
-				staffStmt.setInt(2, staff.getAccount().getAccountID());
-				staffStmt.setDate(4, staff.getStartDate() != null ? java.sql.Date.valueOf(staff.getStartDate()) : null);
-                staffStmt.setDate(5, staff.getEndDate() != null ? java.sql.Date.valueOf(staff.getEndDate()) : null);
-
-				staffStmt.setDouble(5, staff.getSalary());
-				staffStmt.setString(6, staff.getWorkShift());
-				staffStmt.setString(7, staff.getPosition());
-				staffStmt.setInt(8, staff.getId());
+				staffStmt.setDate(1, new java.sql.Date(staff.getDob().getTime()));
+				staffStmt.setDouble(2, staff.getSalary());
+				staffStmt.setDate(1, new java.sql.Date(staff.getHire_date().getTime()));
+				staffStmt.setInt(4, staff.getAccount().getAccountID());
+                staffStmt.setInt(5, staff.getRole().getRoleID());
+				staffStmt.setInt(6, staff.getId());
 
 				return staffStmt.executeUpdate(); 
 			}
@@ -109,8 +113,8 @@ public class StaffRepository implements IRepository<Staff> {
 
 	@Override
     public int delete(Staff staff) {
-        String deleteStaffSql = "DELETE FROM staff WHERE PersonID=?";
-        String deletePersonSql = "DELETE FROM person WHERE PersonID=?";
+        String deleteStaffSql = "DELETE FROM staff WHERE staff_id=?";
+        String deletePersonSql = "DELETE FROM person WHERE person_id=?";
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement staffStmt = con.prepareStatement(deleteStaffSql);
@@ -132,12 +136,12 @@ public class StaffRepository implements IRepository<Staff> {
 	}
 	@Override
 	public List<Staff> selectAll() {
-		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
-	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
+		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
+	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
 	               + "FROM person p "
-	               + "JOIN staff s ON p.PersonID = s.PersonID "
-	               + "JOIN role r ON s.Role_ID = r.Role_ID "
-	               + "LEFT JOIN account a ON s.AccountID = a.AccountID";
+	               + "JOIN staff s ON p.person_id = s.staff_id "
+	               + "JOIN role r ON s.role_id = r.role_id "
+	               + "LEFT JOIN account a ON s.account_id = a.account_id";
 	    return executeQuery(sql);
 	}
 
@@ -147,24 +151,24 @@ public class StaffRepository implements IRepository<Staff> {
 	}
 
 	public Staff selectById(int personID) {
-		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
-	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
+		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
+	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
 	               + "FROM person p "
-	               + "JOIN staff s ON p.PersonID = s.PersonID "
-	               + "JOIN role r ON s.Role_ID = r.Role_ID "
-	               + "LEFT JOIN account a ON s.AccountID = a.AccountID "
-	               + "WHERE p.PersonID = ?";
+	               + "JOIN staff s ON p.person_id = s.staff_id "
+	               + "JOIN role r ON s.role_id = r.role_id "
+	               + "LEFT JOIN account a ON s.account_id = a.account_id "
+	               + "WHERE p.person_id = ?";
 	    List<Staff> result = executeQuery(sql, personID);
 	    return result.isEmpty() ? null : result.get(0);
 	}
 
 	public List<Staff> selectByCondition(String whereClause, Object... params) {
-		String sql = "SELECT p.PersonID, p.lastName, p.firstName, p.sex, p.phoneNumber, p.citizenNumber, p.address, p.email, "
-	               + "a.AccountID, a.UN_UserName, r.Role_ID, r.roleName, s.startDate, s.endDate, s.salary, s.workShift, s.position "
+		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
+	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
 	               + "FROM person p "
-	               + "JOIN staff s ON p.PersonID = s.PersonID "
-	               + "JOIN role r ON s.Role_ID = r.Role_ID "
-	               + "LEFT JOIN account a ON s.AccountID = a.AccountID";
+	               + "JOIN staff s ON p.person_id = s.staff_id "
+	               + "JOIN role r ON s.role_id = r.role_id "
+	               + "LEFT JOIN account a ON s.account_id = a.account_id";
 
 	    if (whereClause != null && !whereClause.trim().isEmpty()) {
 	        sql += " WHERE " + whereClause;
@@ -193,36 +197,31 @@ public class StaffRepository implements IRepository<Staff> {
 	}
 	private Staff mapResultSetToStaff(ResultSet rs) throws SQLException {
 	    // Lấy các giá trị từ ResultSet
-	    int personID = rs.getInt("PersonID");
-	    String lastName = rs.getString("lastName");
-	    String firstName = rs.getString("firstName");
-	    GenderEnum gender = GenderEnum.fromCode(rs.getInt("sex"));
-	    String phoneNumber = rs.getString("phoneNumber");
-	    String citizenNumber = rs.getString("citizenNumber");
+	    int personID = rs.getInt("person_id");
+	    String fullName = rs.getString("full_name");
+	    GenderEnum gender = GenderEnum.fromCode(rs.getInt("gender"));
+	    String phoneNumber = rs.getString("phone");
 	    String address = rs.getString("address");
 	    String email = rs.getString("email"); // Đảm bảo lấy được email
-	    int accountID = rs.getInt("AccountID");
-	    Role role = new Role(rs.getInt("Role_ID"), rs.getString("roleName"));
+	    int accountID = rs.getInt("account_id");
+	    Role role = new Role(rs.getInt("role_id"), rs.getString("role_name"));
 	    
-	    // Chuyển đổi các ngày từ java.sql.Date thành LocalDate
-	    LocalDate startDate = rs.getDate("startDate") != null ? rs.getDate("startDate").toLocalDate() : null;
-	    LocalDate endDate = rs.getDate("endDate") != null ? rs.getDate("endDate").toLocalDate() : null;
-	    
+	    Date dob = rs.getDate("dob");
+
 	    // Lấy các giá trị khác
 	    double salary = rs.getDouble("salary");
-	    String workShift = rs.getString("workShift");
-	    String position = rs.getString("position");
+	    Date hire_date = rs.getDate("hire_date");
+	    
 	    
 	    // Kiểm tra tài khoản
 	    Account account = null;
 	    if (accountID > 0) { // Kiểm tra nếu accountID hợp lệ
-	        String userName = rs.getString("UN_Username");
-	        String accountEmail = rs.getString("Email");
-	        account = new Account(accountID, userName, null, accountEmail, null);
+	        String userName = rs.getString("username");
+	        account = new Account(accountID, userName, null, role);
 	    }
 	    
 	    // Trả về đối tượng Staff với tất cả các tham số đã lấy từ ResultSet
-	    return new Staff(personID, lastName, firstName, gender, phoneNumber, citizenNumber, address, email, account, role, startDate, endDate, salary, workShift, position);
+	    return new Staff(personID, fullName, gender, phoneNumber, address, email, dob, salary, hire_date, account, role);
 	}
 
 

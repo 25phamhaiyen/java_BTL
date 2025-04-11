@@ -3,6 +3,7 @@ package service;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import exception.BusinessException;
 import model.Customer;
@@ -10,6 +11,10 @@ import repository.CustomerRepository;
 import utils.DatabaseConnection;
 
 public class CustomerService {
+	
+	private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); // Regex kiểm tra email
+
 	private final CustomerRepository customerRepository;
 
 	public CustomerService() {
@@ -30,18 +35,18 @@ public class CustomerService {
 		if (customer == null) {
 			throw new BusinessException("Khách hàng không được null.");
 		}
-		if (customer.getFirstName() == null || customer.getFirstName().trim().isEmpty()) {
+		if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
 			throw new BusinessException("Tên khách hàng không được để trống.");
 		}
-		if (!customer.getPhoneNumber().matches("\\d{10}")) {
+		if (!customer.getPhone().matches("\\d{10}")) {
 			throw new BusinessException("Số điện thoại phải gồm 10 chữ số.");
-		}
-		if (customer.getCitizenNumber() == null || !customer.getCitizenNumber().matches("\\d{12}")) {
-			throw new BusinessException("CMND/CCCD phải gồm 12 chữ số.");
 		}
 		if (customer.getAddress() == null || customer.getAddress().trim().isEmpty()) {
 			throw new BusinessException("Địa chỉ không được để trống.");
 		}
+		if (customer.getEmail() == null || !EMAIL_PATTERN.matcher(customer.getEmail()).matches()) {
+            throw new BusinessException("Email không hợp lệ!");
+        }
 	}
 
 	// Thêm khách hàng mới
@@ -91,7 +96,7 @@ public class CustomerService {
 
 	// Tìm khách hàng theo số điện thoại
 	public Customer findCustomerByPhoneNumber(String phoneNumber) {
-		List<Customer> customers = customerRepository.selectByCondition("phoneNumber = ?", phoneNumber);
+		List<Customer> customers = customerRepository.selectByCondition("phone = ?", phoneNumber);
 		if (customers.isEmpty()) {
 			throw new BusinessException("Không tìm thấy khách hàng với số điện thoại: " + phoneNumber);
 		}

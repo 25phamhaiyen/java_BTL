@@ -4,31 +4,36 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.TypePet;
+import model.Permission;
 import utils.DatabaseConnection;
 
-public class TypePetRepository implements IRepository<TypePet> {
+public class PermissionRepository implements IRepository<Permission> {
 
-    public static TypePetRepository getInstance() {
-        return new TypePetRepository();
-    }
+	private static PermissionRepository instance;
+
+	public static PermissionRepository getInstance() {
+	    if (instance == null) {
+	        synchronized (PermissionRepository.class) {
+	            if (instance == null) {
+	                instance = new PermissionRepository();
+	            }
+	        }
+	    }
+	    return instance;
+	}
+
 
     @Override
-    public int insert(TypePet t) {
+    public int insert(Permission t) {
         int result = 0;
-        String sql = "INSERT INTO typepet (UN_TypeName) VALUES (?)";
+        String sql = "INSERT INTO permission (permission_code, description) VALUES (?, ?)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setString(1, t.getTypeName());
+            pstmt.setString(1, t.getPermissionCode());
+            pstmt.setString(2, t.getDescription());
             result = pstmt.executeUpdate();
-
-            // Lấy ID tự động tăng
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                t.setTypePetID(rs.getInt(1));
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,15 +42,16 @@ public class TypePetRepository implements IRepository<TypePet> {
     }
 
     @Override
-    public int update(TypePet t) {
+    public int update(Permission t) {
         int result = 0;
-        String sql = "UPDATE typepet SET UN_TypeName = ? WHERE TypePetID = ?";
+        String sql = "UPDATE permission SET permission_code = ?, description = ? WHERE permission_code = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setString(1, t.getTypeName());
-            pstmt.setInt(2, t.getTypePetID());
+            pstmt.setString(1, t.getPermissionCode());
+            pstmt.setString(2, t.getDescription());
+            pstmt.setString(3, t.getPermissionCode());
 
             result = pstmt.executeUpdate();
 
@@ -56,14 +62,14 @@ public class TypePetRepository implements IRepository<TypePet> {
     }
 
     @Override
-    public int delete(TypePet t) {
+    public int delete(Permission t) {
         int result = 0;
-        String sql = "DELETE FROM typepet WHERE TypePetID = ?";
+        String sql = "DELETE FROM permission WHERE permission_code = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, t.getTypePetID());
+            pstmt.setString(1, t.getPermissionCode());
             result = pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -73,16 +79,16 @@ public class TypePetRepository implements IRepository<TypePet> {
     }
 
     @Override
-    public List<TypePet> selectAll() {
-        List<TypePet> list = new ArrayList<>();
-        String sql = "SELECT * FROM typepet";
+    public List<Permission> selectAll() {
+        List<Permission> list = new ArrayList<>();
+        String sql = "SELECT * FROM permission";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                list.add(new TypePet(rs.getInt("TypePetID"), rs.getString("UN_TypeName")));
+                list.add(new Permission(rs.getString("permission_code"), rs.getString("description")));
             }
 
         } catch (SQLException e) {
@@ -91,37 +97,37 @@ public class TypePetRepository implements IRepository<TypePet> {
         return list;
     }
 
-    public TypePet selectById(int typePetID) {
-        TypePet typePet = null;
-        String sql = "SELECT * FROM typepet WHERE TypePetID = ?";
+    public Permission selectById(String permission_code) {
+    	Permission per = null;
+        String sql = "SELECT * FROM permission WHERE permission_code = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            pstmt.setInt(1, typePetID);
+            pstmt.setString(1, permission_code);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                typePet = new TypePet(rs.getInt("TypePetID"), rs.getString("UN_TypeName"));
+            	per = new Permission(rs.getString("permission_code"), rs.getString("description"));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return typePet;
+        return per;
     }
     
     @Override
-    public TypePet selectById(TypePet t) {
-    	return selectById(t.getTypePetID()); // Gọi lại phương thức nhận int
+    public Permission selectById(Permission t) {
+    	return selectById(t.getPermissionCode()); // Gọi lại phương thức nhận int
     }
 
     @Override
-    public List<TypePet> selectByCondition(String condition, Object... params) {
-        List<TypePet> list = new ArrayList<>();
+    public List<Permission> selectByCondition(String condition, Object... params) {
+        List<Permission> list = new ArrayList<>();
         
         // Tránh nối chuỗi trực tiếp, sử dụng tham số hóa
-        String sql = "SELECT * FROM TypePet WHERE " + condition;
+        String sql = "SELECT * FROM permission WHERE " + condition;
         
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -133,14 +139,11 @@ public class TypePetRepository implements IRepository<TypePet> {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new TypePet(
-                        rs.getInt("TypePetID"),
-                        rs.getString("TypePetName")
-                    ));
+                    list.add(new Permission(rs.getString("permission_code"), rs.getString("description")));
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi truy vấn TypePet: " + e.getMessage());
+            System.err.println("Lỗi khi truy vấn permission: " + e.getMessage());
         }
         
         return list;
