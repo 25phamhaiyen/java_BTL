@@ -4,37 +4,31 @@ import enums.GenderEnum;
 
 public class Person {
     protected int id;
-    protected String lastName;
-    protected String firstName;
+    protected String fullName;
     protected GenderEnum gender;
-    protected String phoneNumber;
-    protected String citizenNumber;
+    protected String phone;
     protected String address;
     protected String email; 
-    
 
 	public Person() {}
 
     
+	public Person(int id, String fullName, GenderEnum gender, String phone, String address, String email) {
+		super();
+		this.id = id;
+		this.fullName = fullName;
+		this.gender = gender;
+		this.phone = phone;
+		this.address = address;
+		this.email = email;
+	}
+
 
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Person(int id, String lastName, String firstName, GenderEnum gender, String phoneNumber,
-			String citizenNumber, String address, String email) {
-		super();
-		this.id = id;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.gender = gender;
-		this.phoneNumber = phoneNumber;
-		this.citizenNumber = citizenNumber;
-		this.address = address;
 		this.email = email;
 	}
 
@@ -46,22 +40,6 @@ public class Person {
 		this.id = id;
 	}
 
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public GenderEnum getGender() {
 		return gender;
 	}
@@ -70,21 +48,6 @@ public class Person {
 		this.gender = gender;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getCitizenNumber() {
-		return citizenNumber;
-	}
-
-	public void setCitizenNumber(String citizenNumber) {
-		this.citizenNumber = citizenNumber;
-	}
 
 	public String getAddress() {
 		return address;
@@ -94,12 +57,38 @@ public class Person {
 		this.address = address;
 	}
 
+
+
+	public String getFullName() {
+		return fullName;
+	}
+
+
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+
+
+	public String getPhone() {
+		return phone;
+	}
+
+
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", lastName=" + lastName + ", firstName=" + firstName + ", gender=" + gender
-				+ ", phoneNumber=" + phoneNumber + ", citizenNumber=" + citizenNumber + ", address=" + address
-				+  "]";
+		return "Person [id=" + id + ", fullName=" + fullName + ", gender=" + gender + ", phone=" + phone + ", address="
+				+ address + ", email=" + email + "]";
 	}
+
 
     
 }

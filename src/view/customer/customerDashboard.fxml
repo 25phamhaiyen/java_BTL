@@ -15,7 +15,8 @@
         <Insets top="0" right="20" bottom="0" left="0"/>
     </padding>
     <Label fx:id="lblWelcome" text="Chào mừng, [Tên người dùng]" styleClass="welcome-label"/>
-    <Button fx:id="btnLogout" text="Đăng xuất" styleClass="logout-button"/>
+    <Button fx:id="btnLogout" text="Đăng xuất" styleClass="logout-button" onAction="#handleLogout"/>
+
 </HBox>
 
 </top>

@@ -6,7 +6,6 @@ import java.util.List;
 
 import enums.GenderEnum;
 import exception.BusinessException;
-import model.Account;
 import model.Customer;
 import utils.DBUtil;
 import utils.DatabaseConnection;
@@ -20,11 +19,9 @@ public class CustomerRepository implements IRepository<Customer> {
 	@Override
 	public int insert(Customer t) {
 	    int ketQua = 0;
-	    String personSql = "INSERT INTO person (lastName, firstName, phoneNumber, sex, citizenNumber, address, email) "
-	                       + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-	    String customerSql = "INSERT INTO customer (PersonID, AccountID, registrationDate, loyaltyPoints) "
-	                         + "VALUES (?, ?, ?, ?)";
+	    String insertPersonSql = "INSERT INTO person (full_name, gender, phone, address, email) VALUES (?, ?, ?, ?, ?)";
+	    String customerSql = "INSERT INTO customer (customer_id, point) VALUES (?, ?)";
 
 	    Connection con = null;
 	    PreparedStatement personPstmt = null;
@@ -33,57 +30,61 @@ public class CustomerRepository implements IRepository<Customer> {
 
 	    try {
 	        con = DatabaseConnection.getConnection();
-	        
-	        // 1. Thêm thông tin vào bảng person
-	        personPstmt = con.prepareStatement(personSql, Statement.RETURN_GENERATED_KEYS);
-	        personPstmt.setString(1, t.getLastName());
-	        personPstmt.setString(2, t.getFirstName());
-	        personPstmt.setString(3, t.getPhoneNumber());
-	        personPstmt.setInt(4, t.getGender().getCode());
-	        personPstmt.setString(5, t.getCitizenNumber());
-	        personPstmt.setString(6, t.getAddress());
-	        personPstmt.setString(7, t.getEmail());
+	        con.setAutoCommit(false); // Bắt đầu transaction
+
+	        // 1. Thêm vào bảng person
+	        personPstmt = con.prepareStatement(insertPersonSql, Statement.RETURN_GENERATED_KEYS);
+	        personPstmt.setString(1, t.getFullName());
+	        personPstmt.setString(2, t.getGender().getDescription());
+	        personPstmt.setString(3, t.getPhone());
+	        personPstmt.setString(4, t.getAddress());
+	        personPstmt.setString(5, t.getEmail());
 
 	        int personRowsAffected = personPstmt.executeUpdate();
 	        if (personRowsAffected > 0) {
 	            personRs = personPstmt.getGeneratedKeys();
 	            if (personRs.next()) {
-	                // Lấy PersonID vừa tạo
 	                int personID = personRs.getInt(1);
 
-	                // 2. Thêm thông tin vào bảng customer với PersonID
+	                // 2. Thêm vào bảng customer
 	                customerPstmt = con.prepareStatement(customerSql);
-	                customerPstmt.setInt(1, personID); // Gắn PersonID
-	                customerPstmt.setInt(2, t.getAccount().getAccountID());
-	                customerPstmt.setDate(3, new java.sql.Date(t.getRegistrationDate().getTime()));
-	                customerPstmt.setInt(4, t.getLoyaltyPoints());
+	                customerPstmt.setInt(1, personID);
+	                customerPstmt.setInt(2, t.getPoint());
 
 	                ketQua = customerPstmt.executeUpdate();
 
-	                // Nếu INSERT thành công vào customer, cập nhật lại customer ID cho đối tượng t
 	                if (ketQua > 0) {
-	                    t.setId(personID); // Cập nhật ID của customer vào đối tượng
+	                    t.setId(personID);
 	                }
 
+	                con.commit(); // Commit toàn bộ
 	                System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
 	            }
 	        }
 
 	    } catch (SQLException e) {
+	        try {
+	            if (con != null) con.rollback(); // Rollback nếu lỗi
+	        } catch (SQLException rollbackEx) {
+	            rollbackEx.printStackTrace();
+	        }
 	        throw new BusinessException("Lỗi khi thêm khách hàng: " + e.getMessage());
+
 	    } finally {
-	        DBUtil.closeResources(con, personPstmt, personRs);
 	        DBUtil.closeResources(null, customerPstmt, null);
+	        DBUtil.closeResources(null, personPstmt, personRs);
+	        DatabaseConnection.closeConnection(con);
 	    }
 
 	    return ketQua;
 	}
 
+
 	@Override
 	public int update(Customer t) {
 	    int ketQua = 0;
-	    String updatePersonSql = "UPDATE person SET lastName = ?, firstName = ?, phoneNumber = ?, sex = ?, citizenNumber = ?, address = ?, email = ? WHERE PersonID = ?";
-	    String updateCustomerSql = "UPDATE customer SET registrationDate = ?, loyaltyPoints = ?, AccountID = ? WHERE PersonID = ?";
+		String updatePersonSql = "UPDATE person SET full_name=?, gender=?, phone=?, address=?, email=? WHERE person_id=?";
+	    String updateCustomerSql = "UPDATE customer SET point = ? WHERE customer_id = ?";
 
 	    // Declare the connection outside the try block
 	    Connection con = null;
@@ -95,15 +96,14 @@ public class CustomerRepository implements IRepository<Customer> {
 	        
 	        // 1. Update the 'person' table
 	        try (PreparedStatement pstmt = con.prepareStatement(updatePersonSql)) {
-	            pstmt.setString(1, t.getLastName());
-	            pstmt.setString(2, t.getFirstName());
-	            pstmt.setString(3, t.getPhoneNumber());
-	            pstmt.setInt(4, t.getGender().getCode());
-	            pstmt.setString(5, t.getCitizenNumber());
-	            pstmt.setString(6, t.getAddress());
-	            pstmt.setString(7, t.getEmail());
-	            pstmt.setInt(8, t.getId()); // The ID from the 'customer' table (which is the 'personID')
-
+	        	// Cập nhật thông tin trong bảng person
+	        	pstmt.setString(1, t.getFullName());
+	        	pstmt.setString(2, t.getGender().getDescription());
+	        	pstmt.setString(3, t.getPhone());
+	        	pstmt.setString(4, t.getAddress());
+	        	pstmt.setString(5, t.getEmail());
+	        	pstmt.setInt(6, t.getId());
+				
 	            int rowsAffected = pstmt.executeUpdate();
 	            if (rowsAffected > 0) {
 	                System.out.println("Person update thành công.");
@@ -112,10 +112,8 @@ public class CustomerRepository implements IRepository<Customer> {
 
 	        // 2. Update the 'customer' table
 	        try (PreparedStatement pstmt = con.prepareStatement(updateCustomerSql)) {
-	            pstmt.setDate(1, new java.sql.Date(t.getRegistrationDate().getTime())); // Updated registration date
-	            pstmt.setInt(2, t.getLoyaltyPoints()); // Updated loyalty points
-	            pstmt.setInt(3, t.getAccount().getAccountID()); // Updated accountID
-	            pstmt.setInt(4, t.getId()); // The ID from the 'customer' table (which is the 'personID')
+	            pstmt.setInt(1, t.getPoint());
+	            pstmt.setInt(2, t.getId()); // The ID from the 'customer' table (which is the 'personID')
 
 	            int rowsAffected = pstmt.executeUpdate();
 	            if (rowsAffected > 0) {
@@ -123,11 +121,9 @@ public class CustomerRepository implements IRepository<Customer> {
 	            }
 	        }
 
-	        // Commit the transaction if both updates are successful
 	        con.commit();
-	        ketQua = 1; // Successful update
+	        ketQua = 1; 
 	    } catch (SQLException e) {
-	        // Rollback the transaction if any error occurs
 	        try {
 	            if (con != null) {
 	                con.rollback();
@@ -156,8 +152,8 @@ public class CustomerRepository implements IRepository<Customer> {
 	@Override
 	public int delete(Customer t) {
 	    int ketQua = 0;
-	    String deleteCustomerSql = "DELETE FROM customer WHERE PersonID = ?";
-	    String deletePersonSql = "DELETE FROM person WHERE PersonID = ?"; // Deleting from person based on PersonID
+        String deleteCustomerSql = "DELETE FROM customer WHERE customer_id=?";
+        String deletePersonSql = "DELETE FROM person WHERE person_id=?";
 
 	    Connection con = null;
 
@@ -208,9 +204,10 @@ public class CustomerRepository implements IRepository<Customer> {
 	@Override
 	public List<Customer> selectAll() {
 	    List<Customer> ketQua = new ArrayList<>();
-	    String sql = "SELECT p.*, a.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints FROM customer c "
-	            + "JOIN person p ON c.PersonID = p.PersonID "
-	            + "JOIN account a ON c.AccountID = a.AccountID";
+	    String sql = "SELECT p.*, a.account_id, a.username, c.point "
+	    		+ "FROM customer c "
+	            + "JOIN person p ON c.customer_id = p.person_id "
+	            + "JOIN account a ON c.account_id = a.account_id";
 
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
@@ -236,11 +233,11 @@ public class CustomerRepository implements IRepository<Customer> {
 
 	public Customer selectById(int customerID) {
 	    Customer ketQua = null;
-	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints "
-	            + "FROM customer c "
-	            + "JOIN person p ON c.PersonID = p.PersonID "
-	            + "JOIN account a ON c.AccountID = a.AccountID "
-	            + "WHERE c.PersonID = ?"; 
+	    String sql = "SELECT p.*, a.account_id, a.username, c.point "
+	    		+ "FROM customer c "
+	            + "JOIN person p ON c.customer_id = p.person_id "
+	            + "JOIN account a ON c.account_id = a.account_id "
+	            + "WHERE c.customer_id = ?"; 
 
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
@@ -278,9 +275,11 @@ public class CustomerRepository implements IRepository<Customer> {
 	        throw new IllegalArgumentException("Điều kiện truy vấn không hợp lệ.");
 	    }
 
-	    String sql = "SELECT p.*, c.AccountID, a.UN_Username, a.Email, c.registrationDate, c.loyaltyPoints FROM customer c "
-	            + "JOIN person p ON c.PersonID = p.PersonID "
-	            + "JOIN account a ON c.AccountID = a.AccountID WHERE " + condition;
+	    String sql = "SELECT p.*, c.account_id, a.username, c.point "
+	    		+ "FROM customer c "
+	            + "JOIN person p ON c.customer_id = p.person_id "
+	            + "JOIN account a ON c.account_id = a.account_id "
+	            + "WHERE " + condition;
 
 	    try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -309,36 +308,26 @@ public class CustomerRepository implements IRepository<Customer> {
 
 
 	public void resetAutoIncrement(Connection conn) throws SQLException {
-		String sql = "ALTER TABLE Customer AUTO_INCREMENT = 1";
+		String sql = "ALTER TABLE customer AUTO_INCREMENT = 1";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.executeUpdate();
 		}
 	}
 
 	private Customer getCustomerFromResultSet(ResultSet rs) throws SQLException {
-	    int personID = rs.getInt("PersonID");  // Đọc PersonID từ bảng person
-	    String lName = rs.getString("lastName");
-	    String fName = rs.getString("firstName");
-	    String phone = rs.getString("phoneNumber");
-	    GenderEnum gender = GenderEnum.fromCode(rs.getInt("sex"));
-	    String citizenNumber = rs.getString("citizenNumber");
+		int personID = rs.getInt("person_id");
+	    String fullName = rs.getString("full_name");
+	    GenderEnum gender = GenderEnum.valueOf(rs.getString("gender"));
+	    String phoneNumber = rs.getString("phone");
 	    String address = rs.getString("address");
-	    String email = rs.getString("email");
-	    Date registrationDate = rs.getDate("registrationDate");
-	    int loyaltyPoints = rs.getInt("loyaltyPoints");
+	    String email = rs.getString("email"); // Đảm bảo lấy được email
+	    int point = rs.getInt("point");
+	    Timestamp created_at = rs.getTimestamp("created_at");
 
-	    int accountID = rs.getInt("AccountID");
-	    Account account = null;
-	    if (rs.wasNull()) {
-	        account = null;
-	    } else {
-	        String userName = rs.getString("UN_Username");
-	        String accountEmail = rs.getString("Email");
-	        account = new Account(accountID, userName, null, accountEmail, null);
-	    }
+	    
 
-	    return new Customer(personID, lName, fName, gender, phone, citizenNumber, address, email, account, registrationDate,
-	            loyaltyPoints);
+	    return new Customer(personID, fullName, gender, phoneNumber, address, email, point, created_at);
+
 	}
 
 

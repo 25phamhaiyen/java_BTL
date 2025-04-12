@@ -1,6 +1,5 @@
 package controllers;
 
-import exception.AccountException;
 import exception.BusinessException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,16 +23,7 @@ public class LoginController {
 	private Label messageLabel;
 	@FXML
 	private ImageView togglePasswordVisibilityIcon; // Icon con mắt
-	@FXML
-	private Button forgotPasswordButton;
-	@FXML
-	private TextField emailField;
-	@FXML
-	private TextField verificationCodeField;
-	@FXML
-	private PasswordField newPasswordField;
-	@FXML
-	private Label forgotPasswordMessage;
+	
 
 	private final AccountService accountService = new AccountService();
 	private int failedLoginAttempts = 0; // Biến đếm số lần đăng nhập thất bại
@@ -50,7 +40,6 @@ public class LoginController {
 
 		togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
 
-		forgotPasswordButton.setOnAction(e -> handleForgotPassword());
 	}
 
 	@FXML
@@ -84,10 +73,6 @@ public class LoginController {
 		}
 	}
 
-	@FXML
-	public void switchToRegister() throws IOException {
-		SceneSwitcher.switchScene("register.fxml");
-	}
 
 	@FXML
 	public void togglePasswordVisibility() {
@@ -105,28 +90,6 @@ public class LoginController {
 			passwordField.setText(passwordTextField.getText());
 			// Đổi icon mắt bị gạch chéo
 			togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
-		}
-	}
-
-	@FXML
-	private void handleForgotPassword(){
-		SceneSwitcher.switchScene("forgot_password.fxml");
-	}
-
-	@FXML
-	public void handleResetPassword() {
-		String email = emailField.getText().trim();
-		String code = verificationCodeField.getText().trim();
-		String newPassword = newPasswordField.getText().trim();
-
-		try {
-			if (accountService.resetPassword(email, newPassword, code)) {
-				forgotPasswordMessage.setText("Mật khẩu đã được đặt lại thành công!");
-				forgotPasswordMessage.setStyle("-fx-text-fill: green;");
-			}
-		} catch (AccountException e) {
-			forgotPasswordMessage.setText(e.getMessage());
-			forgotPasswordMessage.setStyle("-fx-text-fill: red;");
 		}
 	}
 

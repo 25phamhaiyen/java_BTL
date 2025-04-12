@@ -15,7 +15,7 @@ public class PetService {
     // Thêm thú cưng
     public int addPet(Pet pet) {
         // Kiểm tra dữ liệu trước khi thêm
-        if (pet == null || pet.getPetName().isEmpty() || pet.getAge() <= 0) {
+        if (pet == null || pet.getName().isEmpty() || pet.getWeight() <= 0) {
             System.out.println("Dữ liệu không hợp lệ.");
             return 0;
         }
@@ -26,7 +26,7 @@ public class PetService {
     // Cập nhật thông tin thú cưng
     public int updatePet(Pet pet) {
         // Kiểm tra dữ liệu trước khi cập nhật
-        if (pet == null || pet.getPetID() <= 0 || pet.getPetName().isEmpty()) {
+        if (pet == null || pet.getPetId()<= 0 || pet.getName().isEmpty()) {
             System.out.println("Dữ liệu không hợp lệ.");
             return 0;
         }
@@ -42,7 +42,7 @@ public class PetService {
         }
         // Tạo đối tượng Pet tạm để gọi phương thức delete
         Pet pet = new Pet();
-        pet.setPetID(petID);
+        pet.setPetId(petID);
         return petRepository.delete(pet);
     }
 
@@ -54,7 +54,7 @@ public class PetService {
     // Lấy thú cưng theo ID
     public Pet getPetById(int petID) {
         Pet pet = new Pet();
-        pet.setPetID(petID);
+        pet.setPetId(petID);
         return petRepository.selectById(pet);
     }
 

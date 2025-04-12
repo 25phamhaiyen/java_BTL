@@ -1,326 +1,391 @@
--- tạo db
 DROP DATABASE IF EXISTS bestpets;
-CREATE DATABASE bestpets
-CHARACTER SET utf8mb4 COLLATE UTF8MB4_UNICODE_CI;
-
--- Sử dụng DB
+CREATE DATABASE IF NOT EXISTS bestpets;
 USE bestpets;
 
--- Cài đặt
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+-- Vai trò trong hệ thống
+CREATE TABLE role (
+    role_id INT PRIMARY KEY AUTO_INCREMENT,
+    role_name VARCHAR(50) NOT NULL UNIQUE COMMENT 'Tên vai trò: MANAGER, STAFF,...'
+);
 
-
-
-
--- 				Tạo bảng Trạng thái thanh toán
-CREATE TABLE `paymentstatus` (
-	`PaymentStatusID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`UN_StatusCode` INT NOT NULL,
-	`StatusName` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`PaymentStatusID`) USING BTREE,
-	UNIQUE INDEX `UnPaymentStatus_UN_StatusCode` (`UN_StatusCode`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
--- 				Tạo bảng Trạng thái xảy ra
-CREATE TABLE `happenstatus` (
-	`HappenStatusID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`UN_StatusCode` INT UNSIGNED NOT NULL,
-	`StatusName` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`HappenStatusID`) USING BTREE,
-	UNIQUE INDEX `UnHappenStatus_UN_StatusCode` (`UN_StatusCode`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
-
---				Tạo bảng Vai trò
-CREATE TABLE `role` (
-	`Role_ID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`RoleName` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`Role_ID`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
-
---				Tạo bảng loại dịch vụ
-CREATE TABLE `typeservice` (
-	`TypeServiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`UN_TypeName` VARCHAR(200) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`TypeServiceID`) USING BTREE,
-	UNIQUE INDEX `UnTypeService_UN_TypeName` (`UN_TypeName`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
--- 				Tạo bảng Dịch vụ
-CREATE TABLE `service` (
-	`serviceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`serviceName` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`CostPrice` DOUBLE NOT NULL DEFAULT '0',
-	`TypeServiceID` INT UNSIGNED NOT NULL,
-	`MoTa` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`serviceID`) USING BTREE,
-	INDEX `FkService_TypeServiceID` (`TypeServiceID`) USING BTREE,
-	CONSTRAINT `FkService_TypeServiceID` FOREIGN KEY (`TypeServiceID`) REFERENCES `typeservice` (`TypeServiceID`) ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
--- 				Tạo bảng Tài khoản
+-- Tài khoản đăng nhập
 CREATE TABLE `account` (
-	`AccountID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`UN_Username` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`Password` VARCHAR(255) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`Email` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
-	`Role_ID` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`AccountID`) USING BTREE,
-	UNIQUE INDEX `UnAccount_UN_Username` (`UN_Username`) USING BTREE,
-	INDEX `Role_ID` (`Role_ID`) USING BTREE,
-	CONSTRAINT `FK_account_role` FOREIGN KEY (`Role_ID`) REFERENCES `role` (`Role_ID`) ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    role_id INT,
+    `active` BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE SET NULL
+);
 
 -- 				Tạo bảng Con người
 CREATE TABLE `person` (
-	`PersonID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`lastName` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`firstName` VARCHAR(20) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`phoneNumber` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`sex` TINYINT NOT NULL,
-	`citizenNumber` VARCHAR(12) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+	`person_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	full_name VARCHAR(100) NOT NULL,
+	gender ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER',
+    `phone` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
 	`address` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
 	`email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`PersonID`) USING BTREE,
-	UNIQUE INDEX `Person_PhoneNumber` (`phoneNumber`) USING BTREE,
-	UNIQUE INDEX `Person_CitizenNumber` (`citizenNumber`) USING BTREE,
-	CONSTRAINT `CkPerson_CitizenNumber` CHECK ((length(`citizenNumber`) = 12)),
-	CONSTRAINT `CkPerson_phoneNumber` CHECK ((length(`phoneNumber`) = 10))
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
-
--- 				Tạo bảng Khách hàng
-CREATE TABLE `customer` (
-    `PersonID` INT UNSIGNED NOT NULL,
-    `AccountID` INT UNSIGNED NOT NULL,
-    `registrationDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `loyaltyPoints` INT UNSIGNED NOT NULL DEFAULT 0,
-    PRIMARY KEY (`PersonID`),
-    INDEX `AccountID` (`AccountID`),
-    CONSTRAINT `FK_customer_person` FOREIGN KEY (`PersonID`) REFERENCES `person` (`PersonID`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `FK_customer_account` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB;
--- 				Tạo bảng Nhân viên
-CREATE TABLE `staff` (
-    `PersonID` INT UNSIGNED NOT NULL,
-    `Role_ID` INT UNSIGNED NOT NULL,
-    `AccountID` INT UNSIGNED NOT NULL,
-    `startDate` DATE DEFAULT NULL,
-    `endDate` DATE DEFAULT NULL,
-    `salary` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    `workShift` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-    `position` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-    PRIMARY KEY (`PersonID`),
-    INDEX `FkStaff_Role_ID` (`Role_ID`) USING BTREE,
-    INDEX `AccountID` (`AccountID`) USING BTREE,
-    CONSTRAINT `FK_staff_person` FOREIGN KEY (`PersonID`) REFERENCES `person` (`PersonID`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `FkStaff_Role_ID` FOREIGN KEY (`Role_ID`) REFERENCES `role` (`Role_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `FK_staff_account` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) 
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB;
-
--- 				Tạo bảng Đơn hàng
--- Tạo bảng Đơn hàng (order)
-CREATE TABLE `order` (
-	`orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`orderDate` DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-	`appointmentDate` DATETIME NULL DEFAULT NULL,
-	`orderType` ENUM('AtStore','Appointment') NOT NULL DEFAULT 'AtStore' COLLATE 'utf8mb4_unicode_ci',
-	`Total` DOUBLE NOT NULL DEFAULT '0',
-	`Customer_ID` INT UNSIGNED NOT NULL,  
-	`StaffID` INT UNSIGNED NULL DEFAULT NULL,
-	`HappenStatusID` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`orderID`) USING BTREE,
-	INDEX `Fkorder_Customer_ID` (`Customer_ID`) USING BTREE,
-	INDEX `Fkorder_StaffID` (`StaffID`) USING BTREE,
-	INDEX `Fkorder_PaymentStatusID` (`HappenStatusID`) USING BTREE,
-	CONSTRAINT `Fkorder_Customer_ID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`PersonID`) ON UPDATE NO ACTION ON DELETE CASCADE,  -- Tham chiếu đến PersonID
-	CONSTRAINT `Fkorder_StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`PersonID`) ON UPDATE NO ACTION ON DELETE CASCADE,
-	CONSTRAINT `FK_order_happenstatus` FOREIGN KEY (`HappenStatusID`) REFERENCES `happenstatus` (`HappenStatusID`) ON UPDATE NO ACTION ON DELETE CASCADE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB;
-ALTER TABLE `order` ADD COLUMN IF NOT EXISTS `Note` TEXT NULL;
-
--- Tạo bảng chi tiết đơn hàng (order_detail)
-CREATE TABLE `order_detail` (
-	`OrderDetailID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`OrderID` INT UNSIGNED NOT NULL,
-	`ServiceID` INT UNSIGNED NOT NULL,
-	`Quantity` INT UNSIGNED NOT NULL DEFAULT '1',
-	`UnitPrice` DECIMAL(10,2) NOT NULL,
-	`TotalPrice` DECIMAL(10,2) AS ((`Quantity` * `UnitPrice`)) stored,
-	PRIMARY KEY (`OrderDetailID`) USING BTREE,
-	INDEX `FkOrderDetail_OrderID` (`OrderID`) USING BTREE,
-	INDEX `FkOrderDetail_ServiceID` (`ServiceID`) USING BTREE,
-	CONSTRAINT `FkOrderDetail_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
-	CONSTRAINT `FkOrderDetail_ServiceID` FOREIGN KEY (`ServiceID`) REFERENCES `service` (`serviceID`) ON UPDATE NO ACTION ON DELETE CASCADE,
-	CONSTRAINT `order_detail_chk_1` CHECK ((`Quantity` > 0)),
-	CONSTRAINT `order_detail_chk_2` CHECK ((`UnitPrice` >= 0))
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-;
-
--- Tạo bảng hóa đơn (invoice)
--- 1. Đảm bảo bảng invoice có cột PaymentMethod
-CREATE TABLE IF NOT EXISTS `invoice` (
-    `InvoiceID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `OrderID` INT UNSIGNED NOT NULL,
-    `Total` DOUBLE NOT NULL DEFAULT '0',
-    `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    `PaymentStatusID` INT UNSIGNED NOT NULL,
-    `PaymentMethod` VARCHAR(50) NULL,
-    PRIMARY KEY (`InvoiceID`),
-    UNIQUE INDEX `UnInvoice_OrderID` (`OrderID`),
-    INDEX `FkInvoice_OrderID` (`OrderID`),
-    INDEX `PaymentStatusID` (`PaymentStatusID`),
-    CONSTRAINT `FkInvoice_OrderID` FOREIGN KEY (`OrderID`) REFERENCES `order` (`orderID`) ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT `FK_invoice_paymentstatus` FOREIGN KEY (`PaymentStatusID`) REFERENCES `paymentstatus` (`PaymentStatusID`) ON UPDATE NO ACTION ON DELETE NO ACTION
-) COLLATE='utf8mb4_unicode_ci' ENGINE=InnoDB;
-drop table invoice;
--- 				Tạo bảng loại thú cưng
-CREATE TABLE `typepet` (
-	`TypePetID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`UN_TypeName` VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`TypePetID`) USING BTREE,
-	UNIQUE INDEX `UnTypePet_UN_TypeName` (`UN_TypeName`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1
-;
-
--- 				Tạo bảng thú cưng
--- Tạo bảng thú cưng (pet)
-CREATE TABLE `pet` (
-	`PetID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`PetName` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`age` TINYINT UNSIGNED NOT NULL,
-	`Customer_ID` INT UNSIGNED NOT NULL,  -- Tham chiếu đến PersonID trong bảng customer
-	`TypePetID` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`PetID`) USING BTREE,
-	INDEX `FkPet_CustomerID` (`Customer_ID`) USING BTREE,  -- Đảm bảo tên cột trùng với cột tham chiếu
-	INDEX `FkParty_TypePetcustomerID` (`TypePetID`) USING BTREE,
-	CONSTRAINT `FkParty_TypePetcustomerID` FOREIGN KEY (`TypePetID`) REFERENCES `typepet` (`TypePetID`) ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT `FkPet_CustomerID` FOREIGN KEY (`Customer_ID`) REFERENCES `customer` (`PersonID`) ON UPDATE NO ACTION ON DELETE NO ACTION  -- Tham chiếu đến PersonID trong customer
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=1;
-CREATE TABLE IF NOT EXISTS available_times (
-    TimeID INT AUTO_INCREMENT PRIMARY KEY,
-    TimeSlot TIME NOT NULL,
-    UNIQUE KEY (TimeSlot)
+	PRIMARY KEY (`person_id`) USING BTREE,
+	UNIQUE INDEX `Person_Phone` (`phone`) USING BTREE,
+	CONSTRAINT `CkPerson_phone` CHECK ((length(`phone`) = 10))
 );
 
+-- Nhân viên
+CREATE TABLE staff (
+    staff_id INT UNSIGNED NOT NULL,
+    dob DATE,
+    salary DECIMAL(12, 2) DEFAULT 0.0,
+    hire_date DATE,
+    account_id INT UNIQUE,
+    role_id INT,
+    PRIMARY KEY (staff_id),
+    FOREIGN KEY (staff_id) REFERENCES `person`(person_id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE SET NULL,
+    FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL
+);
+
+-- Khách hàng
+CREATE TABLE customer (
+    customer_id INT UNSIGNED NOT NULL,
+    `point` INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (customer_id),
+    FOREIGN KEY (customer_id) REFERENCES person(person_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- chuẩn hóa dữ liệu giống loài
+CREATE TABLE pet_type (
+    type_id INT PRIMARY KEY AUTO_INCREMENT,
+    species VARCHAR(50) NOT NULL,   -- Ví dụ: "Chó", "Mèo"
+    breed VARCHAR(100) NOT NULL     -- Ví dụ: "Poodle", "Alaska"
+);
+
+-- Thú cưng
+CREATE TABLE pet (
+    pet_id INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    type_id INT,
+    pet_gender ENUM('MALE', 'FEMALE', 'UNKNOWN') DEFAULT 'UNKNOWN',
+    dob DATE,
+    weight DECIMAL(5,2),
+    note TEXT,
+    customer_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (type_id) REFERENCES pet_type(type_id),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
+);
+
+-- Chương trình khuyến mãi
+CREATE TABLE promotion (
+    promotion_id INT PRIMARY KEY AUTO_INCREMENT,
+    `code` VARCHAR(50) NOT NULL UNIQUE,
+    `description` TEXT,
+    discount_percent INT CHECK (discount_percent >= 0 AND discount_percent <= 100),
+    start_date DATE,
+    end_date DATE,
+    CHECK (start_date <= end_date),
+    active BOOLEAN DEFAULT TRUE
+);
+
+-- Đơn hàng
+CREATE TABLE `order` (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT UNSIGNED NOT NULL,
+    staff_id INT UNSIGNED,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    voucher_code VARCHAR(50),
+    total_amount DECIMAL(12,2) DEFAULT 0.0,
+    `status` ENUM('PENDING', 'COMPLETED', 'CANCELLED') DEFAULT 'PENDING',
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+    FOREIGN KEY (voucher_code) REFERENCES promotion(code)
+);
+
+-- Dịch vụ chăm sóc thú cưng
+CREATE TABLE service (
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `description` TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    duration_minutes INT,
+    `active` BOOLEAN DEFAULT TRUE
+);
+
+-- Đặt lịch chăm sóc
+CREATE TABLE booking (
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT UNSIGNED NOT NULL,
+    pet_id INT NOT NULL,
+    staff_id INT UNSIGNED,
+    booking_time DATETIME NOT NULL,
+    `status` ENUM('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED') DEFAULT 'PENDING',
+    note TEXT,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (pet_id) REFERENCES pet(pet_id),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+-- 1 booking có thể chứa nhiều dịch vụ
+CREATE TABLE booking_detail (
+    booking_detail_id INT PRIMARY KEY AUTO_INCREMENT,
+    booking_id INT NOT NULL,
+    service_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE,
+    FOREIGN KEY (service_id) REFERENCES service(service_id)
+);
+
+-- Hóa đơn
+CREATE TABLE invoice (
+    invoice_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL UNIQUE,
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(12,2),
+    payment_method ENUM('CASH', 'CARD', 'MOMO', 'BANKING') DEFAULT 'CASH',
+    `status` ENUM('COMPLETED', 'PENDING', 'CANCELLED', 'FAILED') DEFAULT 'COMPLETED',
+	staff_id INT UNSIGNED,
+    FOREIGN KEY (order_id) REFERENCES `order`(order_id),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+-- Chi tiết đơn hàng
+CREATE TABLE order_detail (
+    order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    service_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES `order`(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (service_id) REFERENCES service(service_id)
+);
+
+--  Lịch làm việc của nhân viên
+CREATE TABLE work_schedule (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+    staff_id INT UNSIGNED NOT NULL,
+    work_date DATE NOT NULL,
+    shift ENUM('MORNING', 'AFTERNOON', 'EVENING'),
+    note TEXT,
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+-- Danh sách quyền trong hệ thống
+CREATE TABLE permission (
+    permission_code VARCHAR(100) PRIMARY KEY, -- VD: 'CREATE_BOOKING', 'MANAGE_STAFF'
+    `description` TEXT NOT NULL
+);
+
+-- Phân quyền chi tiết cho tài khoản
+CREATE TABLE account_permission (
+    permission_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT NOT NULL,
+    permission_code VARCHAR(100) NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_code) REFERENCES permission(permission_code) ON DELETE CASCADE
+);
+
+CREATE VIEW dashboard_summary AS
+SELECT
+    (SELECT COUNT(*) FROM customer) AS total_customers,
+    (SELECT COUNT(*) FROM booking) AS total_bookings,
+    (SELECT COUNT(*) FROM invoice) AS total_invoices,
+    (SELECT SUM(total) FROM invoice WHERE status = 'COMPLETED') AS total_revenue;
 
 
+-- Tự động cập nhật total_amount cho order
 DELIMITER //
-
-CREATE TRIGGER after_order_detail_delete
-AFTER DELETE ON order_detail
+CREATE TRIGGER trg_update_order_total
+AFTER INSERT ON order_detail
 FOR EACH ROW
 BEGIN
     UPDATE `order`
-    SET Total = (SELECT COALESCE(SUM(TotalPrice), 0) FROM order_detail WHERE OrderID = OLD.OrderID)
-    WHERE OrderID = OLD.OrderID;
+    SET total_amount = (
+        SELECT SUM(price * quantity) FROM order_detail WHERE order_id = NEW.order_id
+    )
+    WHERE order_id = NEW.order_id;
 END;
+// 
+DELIMITER ;
 
+-- Tạo đơn hàng mới và chi tiết đơn hàng
+DELIMITER //
+CREATE PROCEDURE create_order_with_details (
+    IN p_customer_id INT,
+    IN p_staff_id INT,
+    IN p_service_id INT,
+    IN p_quantity INT
+)
+BEGIN
+    DECLARE new_order_id INT;
+    
+    -- 1. Tạo đơn hàng mới
+    INSERT INTO `order` (customer_id, staff_id, order_date, status)
+    VALUES (p_customer_id, p_staff_id, NOW(), 'PENDING');
+    
+    SET new_order_id = LAST_INSERT_ID();
+
+    -- 2. Thêm chi tiết dịch vụ
+    INSERT INTO order_detail (order_id, service_id, quantity, price)
+    SELECT new_order_id, service_id, p_quantity, price FROM service WHERE service_id = p_service_id;
+
+    -- 3. Trả về ID đơn hàng (tùy chọn)
+    SELECT new_order_id AS created_order_id;
+END;
 //
-
 DELIMITER ;
 
-DELIMITER $$
-
-CREATE TRIGGER update_loyaltyPoints_after_invoice_insert
-AFTER INSERT ON `invoice`
+-- cập nhật trạng thái đơn hàng khi hóa đơn thanh toán xong
+DELIMITER //
+CREATE TRIGGER trg_invoice_paid_update_order
+AFTER UPDATE ON invoice
 FOR EACH ROW
 BEGIN
-    DECLARE total_spent DOUBLE;
-
-    -- Tính tổng tiền chi tiêu của khách hàng từ hóa đơn
-    SET total_spent = NEW.Total;
-
-    -- Cập nhật điểm tích lũy cho khách hàng
-    UPDATE `customer`
-    SET `loyaltyPoints` = `loyaltyPoints` + FLOOR(total_spent / 100) -- Giả sử mỗi 100 đơn vị tiền tệ = 1 điểm
-    WHERE `PersonID` = (SELECT `Customer_ID` FROM `order` WHERE `orderID` = NEW.OrderID);
-END $$
-
+    IF NEW.status = 'COMPLETED' THEN
+        UPDATE `order`
+        SET status = 'COMPLETED'
+        WHERE order_id = NEW.order_id;
+    END IF;
+END;
+//
 DELIMITER ;
 
-DELIMITER $$
-
-CREATE TRIGGER update_loyaltyPoints_after_invoice_update
-AFTER UPDATE ON `invoice`
+-- cập nhật total_amount nếu sửa order_detail
+DELIMITER //
+CREATE TRIGGER trg_update_order_total_after_update
+AFTER UPDATE ON order_detail
 FOR EACH ROW
 BEGIN
-    DECLARE old_total_spent DOUBLE;
-    DECLARE new_total_spent DOUBLE;
-
-    -- Lấy tổng tiền chi tiêu cũ và mới
-    SET old_total_spent = OLD.Total;
-    SET new_total_spent = NEW.Total;
-
-    -- Cập nhật điểm tích lũy cho khách hàng
-    UPDATE `customer`
-    SET `loyaltyPoints` = `loyaltyPoints` - FLOOR(old_total_spent / 100) + FLOOR(new_total_spent / 100)
-    WHERE `PersonID` = (SELECT `Customer_ID` FROM `order` WHERE `orderID` = NEW.OrderID);
-END $$
-
+    UPDATE `order`
+    SET total_amount = (
+        SELECT SUM(price * quantity) FROM order_detail WHERE order_id = NEW.order_id
+    )
+    WHERE order_id = NEW.order_id;
+END;
+//
 DELIMITER ;
 
+-- gán quyền
+DROP PROCEDURE IF EXISTS assign_permission_by_role;
 DELIMITER $$
 
-CREATE TRIGGER update_loyaltyPoints_after_invoice_delete
-AFTER DELETE ON `invoice`
-FOR EACH ROW
+CREATE PROCEDURE assign_permission_by_role(IN acc_id INT)
 BEGIN
-    DECLARE total_spent DOUBLE;
+    DECLARE role_name VARCHAR(50);
 
-    -- Lấy tổng tiền chi tiêu của hóa đơn đã xóa
-    SET total_spent = OLD.Total;
+    -- Lấy role_name từ account → staff → role
+    SELECT r.role_name INTO role_name
+    FROM staff s
+    JOIN role r ON s.role_id = r.role_id
+    WHERE s.account_id = acc_id;
 
-    -- Cập nhật điểm tích lũy cho khách hàng
-    UPDATE `customer`
-    SET `loyaltyPoints` = `loyaltyPoints` - FLOOR(total_spent / 100)
-    WHERE `PersonID` = (SELECT `Customer_ID` FROM `order` WHERE `orderID` = OLD.OrderID);
-END $$
+    -- Xoá quyền cũ nếu có
+    DELETE FROM account_permission WHERE account_id = acc_id;
+
+    -- Gán quyền mới dựa trên role_name
+    IF role_name = 'ADMIN' THEN
+        INSERT INTO account_permission(account_id, permission_code)
+        SELECT acc_id, permission_code FROM permission;
+
+    ELSEIF role_name = 'STAFF_CARE' THEN
+        INSERT INTO account_permission(account_id, permission_code)
+        SELECT acc_id, permission_code FROM permission
+        WHERE permission_code IN ('MANAGE_PET', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+
+    ELSEIF role_name = 'STAFF_CASHIER' THEN
+        INSERT INTO account_permission(account_id, permission_code)
+        SELECT acc_id, permission_code FROM permission
+        WHERE permission_code IN ('MANAGE_INVOICE', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+
+    ELSEIF role_name = 'STAFF_RECEPTION' THEN
+        INSERT INTO account_permission(account_id, permission_code)
+        SELECT acc_id, permission_code FROM permission
+        WHERE permission_code IN ('BOOK_SERVICE', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+    END IF;
+END$$
 
 DELIMITER ;
+
+-- Trigger AFTER INSERT trên bảng staff để tự động gán quyền
+DROP TRIGGER IF EXISTS trg_assign_permission_after_staff_insert;
+DELIMITER $$
+
+CREATE TRIGGER trg_assign_permission_after_staff_insert
+AFTER INSERT ON staff
+FOR EACH ROW
+BEGIN
+    CALL assign_permission_by_role(NEW.account_id);
+END$$
+
+DELIMITER ;
+
+-- Thủ tục GÁN quyền cho tài khoản
+DROP PROCEDURE IF EXISTS grant_permission;
+DELIMITER $$
+
+CREATE PROCEDURE grant_permission(
+    IN p_account_id INT,
+    IN p_permission_code VARCHAR(100)
+)
+BEGIN
+    -- Chỉ thêm nếu chưa tồn tại
+    IF NOT EXISTS (
+        SELECT 1 FROM account_permission
+        WHERE account_id = p_account_id AND permission_code = p_permission_code
+    ) THEN
+        INSERT INTO account_permission(account_id, permission_code)
+        VALUES (p_account_id, p_permission_code);
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- Thủ tục XÓA quyền của tài khoản
+DROP PROCEDURE IF EXISTS revoke_permission;
+DELIMITER $$
+
+CREATE PROCEDURE revoke_permission(
+    IN p_account_id INT,
+    IN p_permission_code VARCHAR(100)
+)
+BEGIN
+    DELETE FROM account_permission
+    WHERE account_id = p_account_id AND permission_code = p_permission_code;
+END$$
+
+DELIMITER ;
+
+-- Trigger cập nhật điểm point của khách hàng khi thanh toán hóa đơn
+DROP TRIGGER IF EXISTS trg_update_point_after_invoice;
+DELIMITER $$
+
+CREATE TRIGGER trg_update_point_after_invoice
+AFTER UPDATE ON invoice
+FOR EACH ROW
+BEGIN
+    DECLARE v_customer_id INT;
+
+    IF NEW.status = 'COMPLETED' AND OLD.status != 'COMPLETED' THEN
+        -- Lấy customer_id từ bảng order
+        SELECT customer_id INTO v_customer_id
+        FROM `order`
+        WHERE order_id = NEW.order_id;
+
+        -- Cập nhật điểm thưởng
+        UPDATE customer
+        SET point = point + FLOOR(NEW.total / 1000)
+        W HERE customer_id = v_customer_id;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+
+
+
 
 
 

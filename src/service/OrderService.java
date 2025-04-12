@@ -1,8 +1,10 @@
-<<<<<<< HEAD
-// src/frontend1/service/OrderService.java
 package service;
 
+import model.Customer;
+import model.HappenStatus;
 import model.Order;
+import model.Staff;
+import repository.OrderRepository;
 import utils.DatabaseConnection;
 
 import java.sql.Connection;
@@ -13,7 +15,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import enums.TypeOrder;
+
 public class OrderService {
+	private final OrderRepository orderRepository;
+
+    public OrderService() {
+        this.orderRepository = OrderRepository.getInstance();
+    }
 	public List<Order> getTodayOrders() {
 	    List<Order> orders = new ArrayList<>();
 	    String sql = "SELECT o.orderID, o.orderDate, o.appointmentDate, o.orderType, o.Total, " +
@@ -42,7 +51,7 @@ public class OrderService {
 	                rs.getInt("orderID"),
 	                rs.getTimestamp("orderDate"),
 	                rs.getTimestamp("appointmentDate"),
-	                TypeOrder.fromString(rs.getString("orderType")),
+	                TypeOrder.valueOf(rs.getString("orderType")),
 	                rs.getDouble("Total"),
 	                customer,
 	                staff,
@@ -131,23 +140,8 @@ public class OrderService {
         }
         return 0.0;
     }
-}
-=======
-package service;
-
-import model.Order;
-import repository.OrderRepository;
-import java.util.List;
-
-public class OrderService {
-
-    private final OrderRepository orderRepository;
-
-    public OrderService() {
-        this.orderRepository = OrderRepository.getInstance();
-    }
-
-    // Lấy tất cả các đơn hàng
+    
+ // Lấy tất cả các đơn hàng
     public List<Order> getAllOrders() {
         return orderRepository.selectAll();
     }
@@ -191,4 +185,7 @@ public class OrderService {
         orderRepository.updateTotalPrice(orderId);
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> f7c0757e4d96c7ae98994c63930de7e1506eac26

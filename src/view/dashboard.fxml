@@ -29,10 +29,9 @@
                     <Image url="/images/logo.png" />
                 </image>
             </ImageView>
-            <Label fx:id="lblMessage" text="BestPet - Cửa Hàng Chăm Sóc Thú Cưng số một thế giới ảo. Hân hạnh được phục vụ quý khách" styleClass="info-message"/>
+            <Label fx:id="lblMessage" text="BestPet - Cửa Hàng Chăm Sóc Thú Cưng số một thế giới ảo." styleClass="info-message"/>
             <Button fx:id="btnAdminPanel" text="Tiếp tục" onAction="#handleAdminPanel" visible="false " styleClass="continue-button" /> 
    			<Button fx:id="btnEmployeePanel" text="Tiếp tục" onAction="#handleEmployeePanel" visible="false" styleClass="continue-button" />
-   		 	<Button fx:id="btnCustomerPanel" text="Tiếp tục" onAction="#handleCustomerPanel" visible="false" styleClass="continue-button" />
         </VBox>
     </center>
 </BorderPane>

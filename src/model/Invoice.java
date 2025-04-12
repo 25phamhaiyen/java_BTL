@@ -3,79 +3,116 @@ package model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-public class Invoice {
-    private int invoiceId;
-    private Order order; // Liên kết với Order
-    private BigDecimal totalAmount;
-    private Timestamp createdAt;
-    
-    private PaymentStatus paymentStatus;
+import enums.PaymentMethodEnum;
+import enums.StatusEnum;
 
+public class Invoice {
+	private int invoiceId;
+    private Order order;
+    private Timestamp paymentDate;
+    private BigDecimal total;
+    private PaymentMethodEnum paymentMethod;
+    private StatusEnum status;
+    private Staff staff;
     // Constructor không tham số
     public Invoice() {}
 
-    // Constructor đầy đủ
-    public Invoice(int invoiceId, Order order, BigDecimal totalAmount, Timestamp createdAt, PaymentStatus paymentStatus) {
-        this.invoiceId = invoiceId;
-        this.order = order;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
-        this.paymentStatus = paymentStatus;
-    }
-
-    public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
+    
+    public Invoice(int invoiceId) {
+		super();
+		this.invoiceId = invoiceId;
 	}
 
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
+
+	public Invoice(int invoiceId, Order order, Timestamp paymentDate, BigDecimal total, PaymentMethodEnum paymentMethod,
+			StatusEnum status, Staff staff) {
+		super();
+		this.invoiceId = invoiceId;
+		this.order = order;
+		this.paymentDate = paymentDate;
+		this.total = total;
+		this.paymentMethod = paymentMethod;
+		this.status = status;
+		this.staff = staff;
 	}
 
-	// Getter & Setter
-    public int getInvoiceId() {
-        return invoiceId;
-    }
 
-    public void setInvoiceId(int invoiceId) {
-        this.invoiceId = invoiceId;
-    }
+	public int getInvoiceId() {
+		return invoiceId;
+	}
 
-    public Order getOrder() {
-        return order;
-    }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+	public void setInvoiceId(int invoiceId) {
+		this.invoiceId = invoiceId;
+	}
 
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
-        if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
-            this.totalAmount = totalAmount;
-        } else {
-            throw new IllegalArgumentException("Total amount must be non-negative");
-        }
-    }
+	public Order getOrder() {
+		return order;
+	}
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "invoiceId=" + invoiceId +
-                ", orderId=" + order.getOrderId() +
-                ", totalAmount=" + totalAmount +
-                ", createdAt=" + createdAt +
-                ", happentStatus=" + paymentStatus +
-                '}';
-    }
+
+	public Timestamp getPaymentDate() {
+		return paymentDate;
+	}
+
+
+	public void setPaymentDate(Timestamp paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+
+	public PaymentMethodEnum getPaymentMethod() {
+		return paymentMethod;
+	}
+
+
+	public void setPaymentMethod(PaymentMethodEnum paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+
+	public StatusEnum getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(StatusEnum status) {
+		this.status = status;
+	}
+
+
+	public Staff getStaff() {
+		return staff;
+	}
+
+
+	public void setStaff(Staff staff) {
+		this.staff = staff;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Invoice [invoiceId=" + invoiceId + ", order=" + order + ", paymentDate=" + paymentDate + ", total="
+				+ total + ", paymentMethod=" + paymentMethod + ", status=" + status + ", staff=" + staff + "]";
+	}
+
+
+	
 }

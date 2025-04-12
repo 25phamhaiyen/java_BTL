@@ -21,7 +21,6 @@
         <!-- Nút chức năng -->
         <HBox fx:id="buttonBar" spacing="0" alignment="CENTER_LEFT" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" styleClass="button-bar">
             <Button fx:id="btnLogin" text="Đăng nhập" styleClass="button-left"/>
-            <Button fx:id="btnRegister" text="Đăng ký" styleClass="button-middle"/>
             <Button fx:id="btnLanguage" text="🇻🇳 | 🇺🇸" styleClass="button-right"/>
         </HBox>
     </AnchorPane>
