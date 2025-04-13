@@ -23,7 +23,7 @@ import model.Service;
 import service.PromotionService;
 import service.ServiceService;
 
-
+import utils.RoleChecker; 
 public class PromotionApplyController implements Initializable {
 
     @FXML
@@ -140,9 +140,16 @@ public class PromotionApplyController implements Initializable {
     /**
      * Tải danh sách dịch vụ
      */
+ // Modify loadServices() method to use the correct method from ServiceService
     private void loadServices() {
         try {
-            List<Service> services = serviceService.getAllActiveServices();
+            // Use the available method from ServiceService
+            List<Service> services = serviceService.getAllServices();
+            // Filter active services if needed
+            services = services.stream()
+                          .filter(Service::isActive)
+                          .collect(java.util.stream.Collectors.toList());
+                          
             serviceList = FXCollections.observableArrayList(services);
             serviceTable.setItems(serviceList);
         } catch (Exception e) {

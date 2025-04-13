@@ -21,6 +21,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Schedule;
 import service.ScheduleService;
 import utils.Session;
+import model.Staff;
+import java.util.ArrayList;
 
 public class MyScheduleController implements Initializable {
 
@@ -60,30 +62,34 @@ public class MyScheduleController implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Khởi tạo service
+        // Initialize service
         scheduleService = new ScheduleService();
         
-        // Lấy ID của nhân viên hiện tại từ Session
-        currentStaffId = Session.getCurrentStaff().getStaffId();
-        
-        // Khởi tạo các cột cho bảng
+        // Get current staff ID from Session
+        Staff currentStaff = Session.getInstance().getCurrentStaff();
+        if (currentStaff != null) {
+            currentStaffId = currentStaff.getId(); // Changed from getStaffId() to getId()
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không tìm thấy thông tin nhân viên", 
+                    "Vui lòng đăng nhập lại.");
+            return;
+        }        
         idColumn.setCellValueFactory(new PropertyValueFactory<>("scheduleId"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("workDate"));
         shiftColumn.setCellValueFactory(new PropertyValueFactory<>("shift"));
         noteColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
         
-        // Thiết lập giá trị mặc định cho DatePicker là ngày hiện tại
+        // Set default value for DatePicker
         datePicker.setValue(LocalDate.now());
         
-        // Hiển thị lịch của ngày hiện tại
+        // Load today's schedule
         loadTodaySchedule();
         
-        // Thiết lập sự kiện khi thay đổi giá trị DatePicker
+        // Setup event listener for DatePicker
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             loadScheduleByDate(newValue);
         });
     }
-    
     /**
      * Tải lịch làm việc của ngày hiện tại
      */

@@ -21,9 +21,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
-import controllers.*;
+import controllers.SceneSwitcher;
 import utils.Session;
-import utils.RoleChecker;
+import utils.RoleChecker; // Create this utility class if it doesn't exist
+import model.Staff;
+import enums.StatusEnum;
 
 public class BookingViewController implements Initializable {
 
@@ -138,14 +140,15 @@ public class BookingViewController implements Initializable {
      */
     private void loadBookings() {
         try {
-            int staffId = Session.getCurrentStaff().getStaffId();
+            Staff currentStaff = Session.getInstance().getCurrentStaff();
+            int staffId = currentStaff.getId(); // Changed from getStaffId() to getId()
             List<Booking> bookings;
             
             if (RoleChecker.hasPermission("VIEW_ALL_BOOKINGS")) {
-                // Nếu có quyền xem tất cả booking
+                // If allowed to view all bookings
                 bookings = bookingService.getAllBookings();
             } else {
-                // Nếu chỉ có quyền xem booking được gán
+                // If only allowed to view assigned bookings
                 bookings = bookingService.getBookingsByStaffId(staffId);
             }
             
@@ -155,6 +158,7 @@ public class BookingViewController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải danh sách đặt lịch", e.getMessage());
         }
     }
+
     
     /**
      * Xử lý khi chọn một booking trong bảng

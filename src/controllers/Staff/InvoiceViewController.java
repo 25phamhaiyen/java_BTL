@@ -20,9 +20,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Invoice;
 import service.InvoiceService;
-import utils.RoleChecker;
-import controllers.*;
 import utils.Session;
+import utils.RoleChecker; // Create this utility class if it doesn't exist
+import java.time.LocalDate;
+import controllers.SceneSwitcher; // Create this utility class if it doesn't exist
+
 
 public class InvoiceViewController implements Initializable {
 
@@ -65,58 +67,21 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private Button searchButton;
     
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
     private ObservableList<Invoice> invoiceList;
     private Invoice selectedInvoice;
     
+    public InvoiceViewController() {
+        this.invoiceService = new InvoiceService();
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Khởi tạo service
-        invoiceService = new InvoiceService();
-        
         // Khởi tạo các cột cho bảng
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("invoiceId"));
-        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("paymentDate"));
-        totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
-        paymentMethodColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        
-        // Format ngày giờ và số tiền
-        dateColumn.setCellFactory(column -> {
-            return new javafx.scene.control.TableCell<Invoice, LocalDateTime>() {
-                private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                
-                @Override
-                protected void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                    } else {
-                        setText(formatter.format(item));
-                    }
-                }
-            };
-        });
-        
-        totalColumn.setCellFactory(column -> {
-            return new javafx.scene.control.TableCell<Invoice, Double>() {
-                @Override
-                protected void updateItem(Double item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText(null);
-                    } else {
-                        setText(String.format("%,.0f VND", item));
-                    }
-                }
-            };
-        });
+        initializeTableColumns();
         
         // Thiết lập giá trị mặc định cho DatePicker
-        LocalDateTime now = LocalDateTime.now();
-        fromDatePicker.setValue(now.toLocalDate().minusDays(30));
-        toDatePicker.setValue(now.toLocalDate());
+        setupDatePickers();
         
         // Tải dữ liệu hóa đơn
         loadInvoices();
@@ -127,6 +92,37 @@ public class InvoiceViewController implements Initializable {
         
         // Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
         setupButtonVisibility();
+    }
+    
+    /**
+     * Khởi tạo các cột cho bảng
+     */
+    private void initializeTableColumns() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("invoiceId"));
+        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("paymentDate"));
+        totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+        paymentMethodColumn.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        
+        // Format ngày giờ
+        dateColumn.setCellFactory(column -> new FormattedTableCell<>(
+            item -> item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+        ));
+        
+        // Format số tiền
+        totalColumn.setCellFactory(column -> new FormattedTableCell<>(
+            item -> String.format("%,.0f VND", item)
+        ));
+    }
+    
+    /**
+     * Thiết lập giá trị mặc định cho DatePicker
+     */
+    private void setupDatePickers() {
+        LocalDateTime now = LocalDateTime.now();
+        fromDatePicker.setValue(now.toLocalDate().minusDays(30));
+        toDatePicker.setValue(now.toLocalDate());
     }
     
     /**
@@ -150,12 +146,12 @@ public class InvoiceViewController implements Initializable {
             List<Invoice> invoices;
             
             if (fromDatePicker.getValue() != null && toDatePicker.getValue() != null) {
-                invoices = invoiceService.getInvoicesByDateRange(
-                    fromDatePicker.getValue().atStartOfDay(), 
-                    toDatePicker.getValue().plusDays(1).atStartOfDay()
-                );
+                LocalDateTime startDate = fromDatePicker.getValue().atStartOfDay();
+                LocalDateTime endDate = toDatePicker.getValue().plusDays(1).atStartOfDay();
+                
+                invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
             } else {
-                // Mặc định lấy hóa đơn trong 30 ngày gần nhất
+                // Default to recent invoices
                 invoices = invoiceService.getRecentInvoices(30);
             }
             
@@ -163,6 +159,22 @@ public class InvoiceViewController implements Initializable {
             invoiceTable.setItems(invoiceList);
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải danh sách hóa đơn", e.getMessage());
+        }
+    }
+
+    
+    /**
+     * Lấy danh sách hóa đơn
+     */
+    private List<Invoice> fetchInvoices() {
+        if (fromDatePicker.getValue() != null && toDatePicker.getValue() != null) {
+            return invoiceService.getInvoicesByDateRange(
+                fromDatePicker.getValue().atStartOfDay(), 
+                toDatePicker.getValue().plusDays(1).atStartOfDay()
+            );
+        } else {
+            // Mặc định lấy hóa đơn trong 30 ngày gần nhất
+            return invoiceService.getRecentInvoices(30);
         }
     }
     
@@ -186,19 +198,14 @@ public class InvoiceViewController implements Initializable {
      */
     @FXML
     private void viewDetails(ActionEvent event) {
-        if (selectedInvoice == null) {
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Chưa chọn hóa đơn", 
-                    "Vui lòng chọn một hóa đơn để xem chi tiết.");
-            return;
-        }
-        
-        try {
-            // Hiển thị chi tiết hóa đơn trong một cửa sổ mới
-            Stage currentStage = (Stage) viewDetailsButton.getScene().getWindow();
-            SceneSwitcher.switchToInvoiceDetailScene(currentStage, selectedInvoice.getInvoiceId());
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể mở chi tiết hóa đơn", e.getMessage());
-        }
+        validateAndExecuteInvoiceAction(
+            () -> SceneSwitcher.switchToInvoiceDetailScene(
+                (Stage) viewDetailsButton.getScene().getWindow(), 
+                selectedInvoice.getInvoiceId()
+            ), 
+            "Vui lòng chọn một hóa đơn để xem chi tiết.", 
+            "Không thể mở chi tiết hóa đơn"
+        );
     }
     
     /**
@@ -212,7 +219,7 @@ public class InvoiceViewController implements Initializable {
             return;
         }
         
-        if (!"COMPLETED".equals(selectedInvoice.getStatus())) {
+        if (!"COMPLETED".equals(selectedInvoice.getStatus().name())) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không thể in", 
                     "Chỉ có thể in lại các hóa đơn đã hoàn thành.");
             return;
@@ -232,19 +239,15 @@ public class InvoiceViewController implements Initializable {
      */
     @FXML
     private void sendEmail(ActionEvent event) {
-        if (selectedInvoice == null) {
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Chưa chọn hóa đơn", 
-                    "Vui lòng chọn một hóa đơn để gửi email.");
-            return;
-        }
-        
-        try {
-            invoiceService.sendInvoiceByEmail(selectedInvoice.getInvoiceId());
-            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã gửi email", 
+        validateAndExecuteInvoiceAction(
+            () -> {
+                invoiceService.sendInvoiceByEmail(selectedInvoice.getInvoiceId());
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã gửi email", 
                     "Hóa đơn #" + selectedInvoice.getInvoiceId() + " đã được gửi đến email khách hàng.");
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể gửi email", e.getMessage());
-        }
+            }, 
+            "Vui lòng chọn một hóa đơn để gửi email.", 
+            "Không thể gửi email"
+        );
     }
     
     /**
@@ -279,6 +282,50 @@ public class InvoiceViewController implements Initializable {
     }
     
     /**
+     * Xác thực và thực thi hành động với hóa đơn
+     */
+    private void validateAndExecuteInvoiceAction(
+        Runnable action, 
+        String noSelectionMessage, 
+        String errorTitle
+    ) {
+        validateAndExecuteInvoiceAction(
+            action, 
+            noSelectionMessage, 
+            errorTitle, 
+            () -> false, 
+            null
+        );
+    }
+    
+    /**
+     * Xác thực và thực thi hành động với hóa đơn (có điều kiện)
+     */
+    private void validateAndExecuteInvoiceAction(
+        Runnable action, 
+        String noSelectionMessage, 
+        String errorTitle, 
+        Invoker<Boolean> additionalCondition, 
+        String additionalConditionMessage
+    ) {
+        if (selectedInvoice == null) {
+            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Chưa chọn hóa đơn", noSelectionMessage);
+            return;
+        }
+        
+        try {
+            if (additionalCondition != null && additionalCondition.invoke()) {
+                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không thể thực hiện", additionalConditionMessage);
+                return;
+            }
+            
+            action.run();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", errorTitle, e.getMessage());
+        }
+    }
+    
+    /**
      * Hiển thị thông báo
      */
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
@@ -287,5 +334,34 @@ public class InvoiceViewController implements Initializable {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    
+    /**
+     * Lớp hỗ trợ định dạng ô bảng
+     */
+    private static class FormattedTableCell<S, T> extends javafx.scene.control.TableCell<S, T> {
+        private final java.util.function.Function<T, String> formatter;
+        
+        public FormattedTableCell(java.util.function.Function<T, String> formatter) {
+            this.formatter = formatter;
+        }
+        
+        @Override
+        protected void updateItem(T item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setText(null);
+            } else {
+                setText(formatter.apply(item));
+            }
+        }
+    }
+    
+    /**
+     * Giao diện hỗ trợ cho việc thêm điều kiện động
+     */
+    @FunctionalInterface
+    private interface Invoker<T> {
+        T invoke();
     }
 }
