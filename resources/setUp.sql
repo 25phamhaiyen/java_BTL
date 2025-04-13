@@ -376,7 +376,7 @@ BEGIN
         -- Cập nhật điểm thưởng
         UPDATE customer
         SET point = point + FLOOR(NEW.total / 1000)
-        WHERE customer_id = v_customer_id;
+        W HERE customer_id = v_customer_id;
     END IF;
 END$$
 
