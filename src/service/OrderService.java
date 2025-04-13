@@ -1,7 +1,8 @@
 package service;
 
 import model.Customer;
-import model.HappenStatus;
+
+//import model.HappenStatus;
 import model.Order;
 import model.Staff;
 import repository.OrderRepository;
@@ -185,7 +186,4 @@ public class OrderService {
         orderRepository.updateTotalPrice(orderId);
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> f7c0757e4d96c7ae98994c63930de7e1506eac26
