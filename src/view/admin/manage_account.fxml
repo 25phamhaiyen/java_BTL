@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@/styles/manage_account.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.admin.ManageAccountController">
+    <!-- Header Section -->
+    <top>
+        <VBox alignment="CENTER" spacing="10" styleClass="header-container">
+            <Label styleClass="header-label" text="QUẢN LÝ TÀI KHOẢN" />
+        </VBox>
+    </top>
+
+    <!-- Center Section -->
+    <center>
+        <VBox alignment="CENTER" spacing="20" styleClass="content-container">
+            <!-- Search Bar -->
+            <HBox alignment="CENTER" spacing="10" styleClass="search-bar">
+                <Label text="Tìm kiếm:" />
+                <TextField fx:id="txtSearch" prefWidth="300" promptText="Nhập username hoặc role..." styleClass="search-field" />
+                <Button fx:id="btnSearch" styleClass="search-button" text="Tìm kiếm" />
+            </HBox>
+
+            <!-- TableView -->
+            <TableView fx:id="tblAccounts" prefHeight="400" prefWidth="1300" styleClass="account-table">
+                <columns>
+                    <TableColumn fx:id="colAccountId" prefWidth="100" text="Account ID" />
+                    <TableColumn fx:id="colUsername" prefWidth="150" text="Username" />
+                    <TableColumn fx:id="colRole" prefWidth="150" text="Role" />
+                    <TableColumn fx:id="colActive" prefWidth="150" text="Active" />
+                    <TableColumn fx:id="colPermissions" prefWidth="750" text="Quyền" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- Bottom Section -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" styleClass="button-bar">
+        <Button fx:id="btnEdit" styleClass="action-button" onAction="#handleEditAccount" text="Sửa tài khoản" />
+            <Button fx:id="btnDelete" onAction="#handleDeleteAccount" styleClass="action-button" text="Xóa tài khoản" />
+            <Button fx:id="btnResetPassword" styleClass="action-button" text="Reset Password" />
+            <Button fx:id="btnAssignPermission" onAction="#handleAssignPermission" styleClass="action-button" text="Gán quyền" />
+            <Button fx:id="btnBack" styleClass="back-button" text="Quay lại" />
+        </HBox>
+    </bottom>
+</BorderPane>

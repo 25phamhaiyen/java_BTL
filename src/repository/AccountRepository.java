@@ -2,7 +2,9 @@ package repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -55,7 +57,7 @@ public class AccountRepository implements IRepository<Account> {
 	
 	@Override
 	public int update(Account account) {
-	    String sql = "UPDATE account SET username=?, password=?, role_id=? WHERE account_id=?";
+	    String sql = "UPDATE account SET username=?, password=?, role_id=?, active=? WHERE account_id=?";
 	    try (Connection con = DatabaseConnection.getConnection(); 
 	         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
@@ -68,6 +70,7 @@ public class AccountRepository implements IRepository<Account> {
 	        pstmt.setString(2, newPassword);
 	        pstmt.setInt(3, account.getRole().getRoleID());
 	        pstmt.setInt(4, account.getAccountID());
+	        pstmt.setBoolean(5, account.isActive());
 
 	        return pstmt.executeUpdate();
 	    } catch (SQLException e) {
@@ -128,10 +131,9 @@ public class AccountRepository implements IRepository<Account> {
 	@Override
 	public List<Account> selectAll() {
 		List<Account> list = new ArrayList<>();
-		String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
-				+ "FROM account a "
-				+ "JOIN role r "
-				+ "ON a.role_id = r.role_id";
+		String sql = "SELECT a.account_id, a.username, a.password, a.active, r.role_id, r.role_name "
+		           + "FROM account a "
+		           + "JOIN role r ON a.role_id = r.role_id";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql);
@@ -147,7 +149,7 @@ public class AccountRepository implements IRepository<Account> {
 	}
 
 	public Account selectById(int accountID) {
-		String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+		String sql = "SELECT a.account_id, a.username, a.password, a.active, r.role_id, r.role_name "
 				+ "FROM account a "
 				+ "JOIN role r "
 				+ "ON a.role_id = r.role_id WHERE a.account_id = ?";
@@ -172,7 +174,7 @@ public class AccountRepository implements IRepository<Account> {
 	}
 
 	public Account getAccountByUsername(String username) {
-	    String sql = "SELECT a.account_id, a.username, a.password, r.role_id, r.role_name "
+	    String sql = "SELECT a.account_id, a.username, a.password, a.active, r.role_id, r.role_name "
 	               + "FROM account a "
 	               + "JOIN role r "
 	               + "ON a.role_id = r.role_id WHERE a.username = ?";
@@ -194,10 +196,18 @@ public class AccountRepository implements IRepository<Account> {
 
 
 	private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
-		String roleName = rs.getString("role_name").toUpperCase();
-		Role role = new Role(rs.getInt("role_id"), roleName);
+	    String roleName = rs.getString("role_name").toUpperCase();
+	    Role role = new Role(rs.getInt("role_id"), roleName);
 
-		return new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"), role);
+	    Account acc = new Account(
+	        rs.getInt("account_id"),
+	        rs.getString("username"),
+	        rs.getString("password"),
+	        role
+	    );
+	    acc.setActive(rs.getInt("active") == 1);
+
+	    return acc;
 	}
 
 	public List<Account> selectByCondition(String whereClause, Object... params) {
@@ -238,4 +248,42 @@ public class AccountRepository implements IRepository<Account> {
             return false;
         }
     }
+	public Map<Account, String> getAllAccountsWithPermissions() {
+		Map<Account, String> accountPermissionsMap = new LinkedHashMap<>();
+		String query = "SELECT a.account_id, a.username, r.role_id, r.role_name, a.active, " +
+					   "GROUP_CONCAT(p.permission_code) AS permissions " +
+					   "FROM account a " +
+					   "JOIN role r ON r.role_id = a.role_id " +
+					   "LEFT JOIN account_permission ap ON a.account_id = ap.account_id " +
+					   "LEFT JOIN permission p ON ap.permission_code = p.permission_code " +
+					   "GROUP BY a.account_id";
+	
+		try (Connection connection = DatabaseConnection.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(query);
+			 ResultSet resultSet = statement.executeQuery()) {
+	
+			while (resultSet.next()) {
+				// Tạo đối tượng Account
+				Account account = new Account();
+				account.setAccountID(resultSet.getInt("account_id"));
+				account.setUserName(resultSet.getString("username"));
+	
+				// Tạo đối tượng Role và gán vào Account
+				Role role = new Role(resultSet.getInt("role_id"), resultSet.getString("role_name"));
+				account.setRole(role);
+	
+				// Gán trạng thái hoạt động
+				account.setActive(resultSet.getBoolean("active"));
+	
+				// Lấy danh sách quyền dưới dạng chuỗi
+				String permissions = resultSet.getString("permissions");
+	
+				// Thêm vào Map
+				accountPermissionsMap.put(account, permissions != null ? permissions : "");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return accountPermissionsMap;
+	}
 }

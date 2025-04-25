@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enums.StatusEnum;
+import javafx.scene.chart.XYChart;
 import model.Booking;
 import model.Customer;
 import model.Pet;
@@ -88,28 +89,22 @@ public class BookingRepository implements IRepository<Booking> {
 	}
 
 	@Override
-	public int delete(Booking t) {
-		int ketQua = 0;
-        String sql = "DELETE FROM booking WHERE booking_id = ?";
+public int delete(Booking t) {
+    int ketQua = 0;
+    String sql = "DELETE FROM booking WHERE booking_id = ?";
 
-		Connection con = null;
-		PreparedStatement pstmt = null;
+    try (Connection con = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-		try {
-			con = DatabaseConnection.getConnection();
-			pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, t.getBookingId());
+        pstmt.setInt(1, t.getBookingId());
+        ketQua = pstmt.executeUpdate();
+        System.out.println("DELETE thành công, " + ketQua + " dòng bị xóa.");
 
-			ketQua = pstmt.executeUpdate();
-			System.out.println("DELETE thành công, " + ketQua + " dòng bị thay đổi.");
-
-		} catch (SQLException e) {
-			System.err.println("Lỗi khi xóa booking: " + e.getMessage());
-		} finally {
-			DBUtil.closeResources(con, pstmt);
-		}
-		return ketQua;
-	}
+    } catch (SQLException e) {
+        System.err.println("Lỗi khi xóa booking: " + e.getMessage());
+    }
+    return ketQua;
+}
 
 	@Override
 	public List<Booking> selectAll() {
@@ -246,5 +241,54 @@ public class BookingRepository implements IRepository<Booking> {
 	        System.err.println("Lỗi khi truy vấn booking theo điều kiện: " + e.getMessage());
 	    }
 	    return bookings;
+    }
+
+    public int getMonthlyBookings() {
+        String query = "SELECT COUNT(*) AS total_bookings " +
+                       "FROM booking " +
+                       "WHERE MONTH(booking_time) = MONTH(CURRENT_DATE) " +
+                       "AND YEAR(booking_time) = YEAR(CURRENT_DATE)";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt("total_bookings");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Return 0 if no data is found or an error occurs
+    }
+    public XYChart.Series<String, Number> getBookingData(String timeUnit) {
+        String query = "";
+        if (timeUnit.equals("WEEK")) {
+            query = "SELECT WEEK(booking_time) AS time, COUNT(*) AS total_bookings " +
+                    "FROM booking " +
+                    "GROUP BY WEEK(booking_time)";
+        } else if (timeUnit.equals("MONTH")) {
+            query = "SELECT MONTH(booking_time) AS time, COUNT(*) AS total_bookings " +
+                    "FROM booking " +
+                    "GROUP BY MONTH(booking_time)";
+        } else if (timeUnit.equals("YEAR")) {
+            query = "SELECT YEAR(booking_time) AS time, COUNT(*) AS total_bookings " +
+                    "FROM booking " +
+                    "GROUP BY YEAR(booking_time)";
+        }
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String time = resultSet.getString("time");
+                int totalBookings = resultSet.getInt("total_bookings");
+                series.getData().add(new XYChart.Data<>(time, totalBookings));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return series;
     }
 }

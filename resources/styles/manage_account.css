@@ -1,0 +1,107 @@
+/* Toàn bộ font */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 16px;
+}
+
+/* Header Label */
+.header-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B4513;
+    -fx-alignment: center;
+}
+
+/* Search Field */
+.search-field {
+    -fx-background-color: #fffbe6;
+    -fx-border-color: #f7c948;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 12;
+    -fx-font-size: 16px;
+}
+
+/* Nút tìm kiếm */
+.search-button {
+    -fx-background-color: #f7c948;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.search-button:hover {
+    -fx-background-color: #ffe066;
+}
+
+/* Bảng TableView */
+.account-table {
+    -fx-font-size: 14px; /* Phông chữ lớn hơn */
+    -fx-border-color: #DDD; /* Viền nhạt */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-column-header-background: #FFD700; 
+    -fx-table-cell-border-color: #e60000; 
+}
+.account-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+}
+
+/* Bảng khi hover */
+.account-table .table-row-cell:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+
+.account-table .column-header .label {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+
+/* Bảng có viền đậm hơn khi click */
+.account-table .table-row-cell:filled:selected {
+    -fx-background-color: #ffe066;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: #e0a800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+
+
+/* Buttons chung */
+.action-button, .back-button {
+    -fx-background-color: #83b90f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
+}
+
+.action-button:hover, .back-button:hover {
+    -fx-background-color: #43a047;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Các container */
+.header-container {
+    -fx-padding: 20;
+}
+
+.content-container {
+    -fx-padding: 20;
+}
+
+.button-bar {
+    -fx-padding: 15;
+}

@@ -1,0 +1,38 @@
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+/* Sidebar styling */
+.sidebar {
+    -fx-background-color: #f9e0b7; /* Màu nền sidebar */
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* Navigation buttons */
+.nav-button {
+    -fx-background-color: #d35400; /* Màu cam */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #e67e22; /* Màu cam nhạt */
+}
+
+.nav-button:pressed {
+    -fx-background-color: #a84300; /* Màu cam đậm */
+}
+
+/* Welcome Label */
+.welcome-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}

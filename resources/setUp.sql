@@ -180,7 +180,7 @@ CREATE TABLE permission (
 
 -- Phân quyền chi tiết cho tài khoản
 CREATE TABLE account_permission (
-    permission_id INT PRIMARY KEY AUTO_INCREMENT,
+    permission_account_id INT PRIMARY KEY AUTO_INCREMENT,
     account_id INT NOT NULL,
     permission_code VARCHAR(100) NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE CASCADE,
@@ -268,9 +268,7 @@ END;
 DELIMITER ;
 
 -- gán quyền
-DROP PROCEDURE IF EXISTS assign_permission_by_role;
 DELIMITER $$
-
 CREATE PROCEDURE assign_permission_by_role(IN acc_id INT)
 BEGIN
     DECLARE role_name VARCHAR(50);
@@ -284,32 +282,34 @@ BEGIN
     -- Xoá quyền cũ nếu có
     DELETE FROM account_permission WHERE account_id = acc_id;
 
-    -- Gán quyền mới dựa trên role_name
+    -- Gán quyền theo role
     IF role_name = 'ADMIN' THEN
         INSERT INTO account_permission(account_id, permission_code)
-        SELECT acc_id, permission_code FROM permission;
+        SELECT acc_id, permission_code FROM permission, (SELECT acc_id AS acc_id) AS temp;
 
     ELSEIF role_name = 'STAFF_CARE' THEN
         INSERT INTO account_permission(account_id, permission_code)
-        SELECT acc_id, permission_code FROM permission
-        WHERE permission_code IN ('MANAGE_PET', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        SELECT acc_id, permission_code
+        FROM permission, (SELECT acc_id AS acc_id) AS temp
+        WHERE permission_code IN ('VIEW_BOOKING_ASSIGNED', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
 
     ELSEIF role_name = 'STAFF_CASHIER' THEN
         INSERT INTO account_permission(account_id, permission_code)
-        SELECT acc_id, permission_code FROM permission
-        WHERE permission_code IN ('MANAGE_INVOICE', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        SELECT acc_id, permission_code
+        FROM permission, (SELECT acc_id AS acc_id) AS temp
+        WHERE permission_code IN ('PRINT_RECEIPT', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
 
     ELSEIF role_name = 'STAFF_RECEPTION' THEN
         INSERT INTO account_permission(account_id, permission_code)
-        SELECT acc_id, permission_code FROM permission
-        WHERE permission_code IN ('BOOK_SERVICE', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        SELECT acc_id, permission_code
+        FROM permission, (SELECT acc_id AS acc_id) AS temp
+        WHERE permission_code IN ('APPLY_PROMOTION', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
     END IF;
 END$$
 
 DELIMITER ;
 
 -- Trigger AFTER INSERT trên bảng staff để tự động gán quyền
-DROP TRIGGER IF EXISTS trg_assign_permission_after_staff_insert;
 DELIMITER $$
 
 CREATE TRIGGER trg_assign_permission_after_staff_insert
@@ -318,11 +318,9 @@ FOR EACH ROW
 BEGIN
     CALL assign_permission_by_role(NEW.account_id);
 END$$
-
 DELIMITER ;
 
 -- Thủ tục GÁN quyền cho tài khoản
-DROP PROCEDURE IF EXISTS grant_permission;
 DELIMITER $$
 
 CREATE PROCEDURE grant_permission(
@@ -343,7 +341,6 @@ END$$
 DELIMITER ;
 
 -- Thủ tục XÓA quyền của tài khoản
-DROP PROCEDURE IF EXISTS revoke_permission;
 DELIMITER $$
 
 CREATE PROCEDURE revoke_permission(
@@ -358,7 +355,6 @@ END$$
 DELIMITER ;
 
 -- Trigger cập nhật điểm point của khách hàng khi thanh toán hóa đơn
-DROP TRIGGER IF EXISTS trg_update_point_after_invoice;
 DELIMITER $$
 
 CREATE TRIGGER trg_update_point_after_invoice

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.admin.GeneralStatisticsController" 
+	stylesheets="@/styles/general_statistics.css"
+	spacing="20" alignment="TOP_CENTER">
+    <Label text="THỐNG KÊ CHUNG" styleClass="header-label" />
+    
+    <!-- Time Selection -->
+    <HBox spacing="10" alignment="CENTER" styleClass="time-selection" prefWidth="500">
+        <Label text="Thống kê theo:" />
+        <RadioButton fx:id="rbWeek" text="Tuần" selected="true"/>
+        <RadioButton fx:id="rbMonth" text="Tháng"/>
+        <RadioButton fx:id="rbYear" text="Năm"/>
+    </HBox>
+
+    <!-- Charts Layout -->
+    <VBox spacing="20">
+        <!-- Top Row: Revenue and Bookings Charts -->
+        <HBox spacing="20" alignment="CENTER">
+            <!-- Revenue Chart -->
+            <VBox spacing="10" prefWidth="400">
+                <Label text="Biểu đồ doanh thu" styleClass="chart-title"/>
+                <BarChart fx:id="revenueChart" title="Doanh thu" prefWidth="400" prefHeight="300">
+                    <xAxis>
+                        <CategoryAxis fx:id="revenueXAxis" label="Thời gian"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="revenueYAxis" label="Doanh thu (VND)"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Bookings Chart -->
+            <VBox spacing="10" prefWidth="400">
+                <Label text="Biểu đồ số lượng đặt lịch" styleClass="chart-title"/>
+                <BarChart fx:id="bookingsChart" title="Số lượng đặt lịch" prefWidth="400" prefHeight="300">
+                    <xAxis>
+                        <CategoryAxis fx:id="bookingsXAxis" label="Thời gian"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="bookingsYAxis" label="Số lượng"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- Bottom Row: Customers Chart -->
+        <HBox spacing="20" alignment="CENTER">
+            <VBox spacing="10" prefWidth="400">
+                <Label text="Biểu đồ khách hàng mới" styleClass="chart-title"/>
+                <BarChart fx:id="customersChart" title="Khách hàng mới" prefWidth="400" prefHeight="300">
+                    <xAxis>
+                        <CategoryAxis fx:id="customersXAxis" label="Thời gian"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="customersYAxis" label="Số lượng (Người)"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Statistics Summary -->
+    <VBox spacing="10" alignment="CENTER" styleClass="stat-label">
+        <Label fx:id="lblRevenueStats" text="Doanh thu: 0" />
+        <Label fx:id="lblBookingsStats" text="Số lượng đặt lịch: 0"/>
+        <Label fx:id="lblNewCustomersStats" text="Khách hàng mới: 0"/>
+    </VBox>
+</VBox>
