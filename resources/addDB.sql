@@ -1,8 +1,8 @@
-INSERT INTO role (role_id, role_name) VALUES 
-(1, 'ADMIN'), 
-(2, 'STAFF_CARE'), 
-(3, 'STAFF_CASHIER'), 
-(4, 'STAFF_RECEPTION');
+INSERT INTO role (role_name) VALUES 
+('ADMIN'), 
+('STAFF_CARE'), 
+('STAFF_CASHIER'), 
+('STAFF_RECEPTION');
 
 INSERT INTO person (person_id, full_name, gender, phone, address, email)
 VALUES
@@ -184,4 +184,17 @@ INSERT INTO permission (permission_code, description) VALUES
 ('VIEW_FINANCE', 'Xem báo cáo tài chính, doanh thu, chi phí'),
 ('VIEW_DASHBOARD', 'Xem tổng quan số liệu cửa hàng'),
 ('UPDATE_PROFILE', 'Cập nhật thông tin tài khoản cá nhân');
+
+CALL assign_permission_by_role(1);
+CALL assign_permission_by_role(2);
+CALL assign_permission_by_role(3);
+CALL assign_permission_by_role(4);
+CALL assign_permission_by_role(5);
+CALL assign_permission_by_role(6);
+CALL assign_permission_by_role(7);
+CALL assign_permission_by_role(8);
+CALL assign_permission_by_role(9);
+CALL assign_permission_by_role(10);
+CALL assign_permission_by_role(11);
+CALL assign_permission_by_role(12);
 
