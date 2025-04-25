@@ -30,7 +30,6 @@ public class InvoiceService {
 		this.invoiceRepository = invoiceRepo;
 		this.orderRepository = orderRepo;
 		this.orderDetailRepository = orderDetailRepo;
-	}
 
 	// Phương thức xuất hóa đơn ra file PDF
 	public void generateInvoicePDF(int orderId, String filePath) {

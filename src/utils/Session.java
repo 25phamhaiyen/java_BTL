@@ -1,31 +1,47 @@
 package utils;
 
 import model.Account;
-import model.Role;
+import model.Staff;
+import service.StaffService;
 
 public class Session {
-    private static Account currentUser;
-
-    // Lấy thông tin người dùng đang đăng nhập
-    public static Account getCurrentUser() {
-        return currentUser;
+    private static Session instance;
+    private Account currentAccount;
+    private Staff currentStaff;
+    
+    private Session() {
+        // Private constructor for singleton
     }
     
-    public static Role getUserRole() {
-        if (currentUser != null) {
-            return currentUser.getRole(); 
+    public static Session getInstance() {
+        if (instance == null) {
+            instance = new Session();
         }
-        return null;
+        return instance;
     }
-
-    // Đăng xuất
-    public static void logout() {
-        currentUser = null;
+    
+    public void setCurrentAccount(Account account) {
+        this.currentAccount = account;
+        
+        // If an account is set, also try to find the associated staff
+        if (account != null) {
+            StaffService staffService = new StaffService();
+            this.currentStaff = staffService.getStaffByAccountID(account.getAccountID());
+        } else {
+            this.currentStaff = null;
+        }
     }
-
-    // Thiết lập người dùng hiện tại
-    public static void setCurrentUser(Account user) {
-        currentUser = user;
+    
+    public static Account getCurrentAccount() {
+        return getInstance().currentAccount;
     }
-
+    
+    public static Staff getCurrentStaff() {
+        return getInstance().currentStaff;
+    }
+    
+    public static void clearSession() {
+        getInstance().currentAccount = null;
+        getInstance().currentStaff = null;
+    }
 }
