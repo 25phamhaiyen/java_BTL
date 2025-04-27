@@ -1,57 +1,66 @@
 package utils;
 
-import model.Staff;
 import java.util.HashMap;
 import java.util.Map;
+import model.Account;
+import model.Staff;
+import repository.AccountPermissionRepository;
+import service.StaffService;
 
 public class RoleChecker {
-    private static final Map<String, String[]> rolePermissions = new HashMap<>();
-
-    static {
-        // Khởi tạo quyền cho từng vai trò
-        rolePermissions.put("ADMIN", new String[]{
-            "VIEW_SCHEDULE", "VIEW_ALL_BOOKINGS", "CREATE_BOOKING", "VIEW_INVOICE",
-            "MANAGE_PAYMENT", "PRINT_RECEIPT", "APPLY_PROMOTION", "MARK_SERVICE_DONE"
-        });
-
-        rolePermissions.put("STAFF_RECEPTION", new String[]{
-            "VIEW_SCHEDULE", "CREATE_BOOKING", "VIEW_INVOICE", "APPLY_PROMOTION"
-        });
-
-        rolePermissions.put("STAFF_CARE", new String[]{
-            "VIEW_SCHEDULE", "VIEW_BOOKING_ASSIGNED", "MARK_SERVICE_DONE"
-        });
-
-        rolePermissions.put("STAFF_CASHIER", new String[]{
-            "VIEW_SCHEDULE", "VIEW_INVOICE", "MANAGE_PAYMENT", "PRINT_RECEIPT"
-        });
-    }
-
+    
+    private static Map<String, Boolean> staffPermissions = new HashMap<>();
+    
     /**
-     * Kiểm tra xem người dùng hiện tại có quyền được chỉ định hay không
-     * @param permission Tên quyền cần kiểm tra
-     * @return true nếu người dùng có quyền, false nếu không
+     * Kiểm tra xem người dùng hiện tại có quyền cụ thể hay không
+     * @param permissionCode Mã quyền cần kiểm tra
+     * @return true nếu có quyền, false nếu không có
      */
-    public static boolean hasPermission(String permission) {
-        // Lấy nhân viên hiện tại từ Session
-        Staff staff = Session.getCurrentStaff();
-        if (staff == null) return false;
-
-        // Lấy vai trò của nhân viên
-        String role = staff.getRole();
-        if (role == null) return false;
-
-        // Lấy danh sách quyền của vai trò
-        String[] permissions = rolePermissions.get(role);
-        if (permissions == null) return false;
-
-        // Kiểm tra xem quyền được yêu cầu có trong danh sách không
-        for (String perm : permissions) {
-            if (perm.equals(permission)) {
-                return true;
-            }
+    public static boolean hasPermission(String permissionCode) {
+        // Lấy thông tin nhân viên hiện tại từ session
+        Staff currentStaff = Session.getCurrentStaff();
+        if (currentStaff == null) {
+            return false;
         }
-
-        return false;
+        
+        // Nếu là admin thì có tất cả quyền
+        if ("ADMIN".equalsIgnoreCase(currentStaff.getRole().getRoleName())) {
+            return true;
+        }
+        
+        // Kiểm tra cache trước
+        String key = currentStaff.getId() + "_" + permissionCode;
+        if (staffPermissions.containsKey(key)) {
+            return staffPermissions.get(key);
+        }
+        
+        // Nếu chưa có trong cache, truy vấn từ database
+        Account account = currentStaff.getAccount();
+        if (account == null) {
+            return false;
+        }
+        
+        boolean hasPermission = AccountPermissionRepository.getInstance()
+                .checkPermission(account.getAccountID(), permissionCode);
+        
+        // Lưu vào cache
+        staffPermissions.put(key, hasPermission);
+        
+        return hasPermission;
+    }
+    
+    /**
+     * Xóa cache quyền của một nhân viên cụ thể
+     * @param staffId ID của nhân viên
+     */
+    public static void clearPermissionCache(int staffId) {
+        staffPermissions.entrySet().removeIf(entry -> entry.getKey().startsWith(staffId + "_"));
+    }
+    
+    /**
+     * Xóa toàn bộ cache quyền
+     */
+    public static void clearAllPermissionCache() {
+        staffPermissions.clear();
     }
 }

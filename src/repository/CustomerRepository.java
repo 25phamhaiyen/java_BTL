@@ -6,6 +6,7 @@ import java.util.List;
 
 import enums.GenderEnum;
 import exception.BusinessException;
+import javafx.scene.chart.XYChart;
 import model.Customer;
 import utils.DBUtil;
 import utils.DatabaseConnection;
@@ -330,5 +331,52 @@ public class CustomerRepository implements IRepository<Customer> {
 
 	}
 
+	public int getMonthlyNewCustomers() {
+	    String query = "SELECT COUNT(*) AS total_new_customers " +
+	                   "FROM customer " +
+	                   "WHERE MONTH(created_at) = MONTH(CURRENT_DATE) " +
+	                   "AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement statement = connection.prepareStatement(query);
+	         ResultSet resultSet = statement.executeQuery()) {
 
+	        if (resultSet.next()) {
+	            return resultSet.getInt("total_new_customers");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return 0; // Return 0 if no data is found or an error occurs
+	}
+	public XYChart.Series<String, Number> getCustomerData(String timeUnit) {
+        String query = "";
+        if (timeUnit.equals("WEEK")) {
+            query = "SELECT WEEK(created_at) AS time, COUNT(*) AS total_customers " +
+                    "FROM customer " +
+                    "GROUP BY WEEK(created_at)";
+        } else if (timeUnit.equals("MONTH")) {
+            query = "SELECT MONTH(created_at) AS time, COUNT(*) AS total_customers " +
+                    "FROM customer " +
+                    "GROUP BY MONTH(created_at)";
+        } else if (timeUnit.equals("YEAR")) {
+            query = "SELECT YEAR(created_at) AS time, COUNT(*) AS total_customers " +
+                    "FROM customer " +
+                    "GROUP BY YEAR(created_at)";
+        }
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String time = resultSet.getString("time");
+                int totalCustomers = resultSet.getInt("total_customers");
+                series.getData().add(new XYChart.Data<>(time, totalCustomers));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return series;
+    }
 }

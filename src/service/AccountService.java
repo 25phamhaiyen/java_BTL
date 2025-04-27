@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -27,15 +28,16 @@ public class AccountService {
     /**
      * Đăng ký tài khoản mới
      */
-    public boolean register(String username, String password, String email, Role role) {
-        validateAccountData(username, password);
-
-        if (accountRepository.isAccountExist(username)) {
-            throw new AccountException("Tên đăng nhập đã tồn tại!");
-        }
-
-        Account newAccount = new Account(0, username, password, role);
-        return accountRepository.insert(newAccount) > 0;
+    public boolean register(String username, String password, Role role) {
+        Account newAccount;
+		try {
+			newAccount = new Account(0, username, password, role);
+			return accountRepository.insert(newAccount) > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+	        return false;
+		}
+        
     }
 
     /**
@@ -86,6 +88,9 @@ public class AccountService {
 
         return accountRepository.update(existingAccount) > 0;
     }
+    public boolean updateAccount(Account account) {
+        return accountRepository.update(account) > 0;
+    }
 
     public boolean updatePassword(int accountID, String newPassword) {
         try {
@@ -95,6 +100,7 @@ public class AccountService {
             return false;
         }
     }
+    
 
     /**
      * Xóa tài khoản (Không xóa tài khoản admin mặc định)
@@ -123,16 +129,22 @@ public class AccountService {
     /**
      * Kiểm tra dữ liệu tài khoản
      */
-    public void validateAccountData(String username, String password) {
+    public String validateAccountData(String username, String password) {
         
     	if (username == null || username.trim().isEmpty()) {
-            throw new AccountException("Tên đăng nhập không được để trống!");
+            return "Tên đăng nhập không được để trống!";
+        }
+    	if (accountRepository.isAccountExist(username)) {
+            return "Tên đăng nhập đã tồn tại!";
         }
         if (password == null || !PASSWORD_PATTERN.matcher(password).matches()) {
-            throw new AccountException("Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!");
+            return "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!";
         }
+        return null;
+        
     }
-    
-
+    public Map<Account, String> getAllAccountsWithPermissions() {
+        return accountRepository.getAllAccountsWithPermissions();
+    }
 
 }

@@ -23,9 +23,7 @@ import model.Booking;
 import service.BookingService;
 import controllers.SceneSwitcher;
 import utils.Session;
-import utils.RoleChecker; // Create this utility class if it doesn't exist
-import model.Staff;
-import enums.StatusEnum;
+import utils.RoleChecker;
 
 public class BookingViewController implements Initializable {
 
@@ -140,15 +138,14 @@ public class BookingViewController implements Initializable {
      */
     private void loadBookings() {
         try {
-            Staff currentStaff = Session.getInstance().getCurrentStaff();
-            int staffId = currentStaff.getId(); // Changed from getStaffId() to getId()
+            int staffId = Session.getCurrentStaff().getId();
             List<Booking> bookings;
             
             if (RoleChecker.hasPermission("VIEW_ALL_BOOKINGS")) {
-                // If allowed to view all bookings
+                // Nếu có quyền xem tất cả booking
                 bookings = bookingService.getAllBookings();
             } else {
-                // If only allowed to view assigned bookings
+                // Nếu chỉ có quyền xem booking được gán
                 bookings = bookingService.getBookingsByStaffId(staffId);
             }
             
@@ -158,7 +155,6 @@ public class BookingViewController implements Initializable {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải danh sách đặt lịch", e.getMessage());
         }
     }
-
     
     /**
      * Xử lý khi chọn một booking trong bảng
@@ -167,9 +163,9 @@ public class BookingViewController implements Initializable {
         selectedBooking = booking;
         
         boolean hasSelection = (booking != null);
-        boolean isPending = hasSelection && "PENDING".equals(booking.getStatus());
-        boolean isConfirmed = hasSelection && "CONFIRMED".equals(booking.getStatus());
-        boolean isStarted = hasSelection && "STARTED".equals(booking.getStatus());
+        boolean isPending = hasSelection && "PENDING".equals(booking.getStatus().name());
+        boolean isConfirmed = hasSelection && "CONFIRMED".equals(booking.getStatus().name());
+        boolean isStarted = hasSelection && "STARTED".equals(booking.getStatus().name());
         
         // Cập nhật trạng thái của các nút
         startButton.setDisable(!(isPending || isConfirmed));

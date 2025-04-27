@@ -52,7 +52,7 @@ public class DashboardController {
 	// Chuyển đến trang Admin
 	@FXML
 	private void handleAdminPanel() {
-		SceneSwitcher.switchScene("admin/adminDashboard.fxml");
+		SceneSwitcher.switchScene("admin/admin_home.fxml");
 	}
 
 	// Chuyển đến trang Employee

@@ -148,6 +148,81 @@ public class PermissionRepository implements IRepository<Permission> {
         
         return list;
     }
+    
+
+	public List<String> getPermissionsByAccountId(int accountId) {
+		List<String> permissions = new ArrayList<>();
+		String query = "SELECT p.permission_code FROM permission p " +
+					   "JOIN account_permission ap ON p.permission_code = ap.permission_code " +
+					   "WHERE ap.account_id = ?";
+		try (Connection connection = DatabaseConnection.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(query)) {
+			statement.setInt(1, accountId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				permissions.add(resultSet.getString("permission_code"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return permissions;
+	}
+	public void assignPermissionToAccount(int accountId, String permissionCode) {
+	    String query = "INSERT INTO account_permission (account_id, permission_code) " +
+	                   "SELECT ?, permission_code FROM permission WHERE permission_code = ?";
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement statement = connection.prepareStatement(query)) {
+	        statement.setInt(1, accountId);
+	        statement.setString(2, permissionCode);
+	        int rowsAffected = statement.executeUpdate();
+	        if (rowsAffected == 0) {
+	            System.err.println("Không thể gán quyền. Mã quyền không tồn tại: " + permissionCode);
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Lỗi khi gán quyền cho tài khoản ID: " + accountId + ", Mã quyền: " + permissionCode);
+	        e.printStackTrace();
+	    }
+	}
+
+	public void removePermissionFromAccount(int accountId, String permissionCode) {
+	    String query = "DELETE FROM account_permission WHERE account_id = ? " +
+	                   "AND permission_code = (SELECT permission_code FROM permission WHERE permission_code = ?)";
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement statement = connection.prepareStatement(query)) {
+	        statement.setInt(1, accountId);
+	        statement.setString(2, permissionCode);
+	        int rowsAffected = statement.executeUpdate();
+	        if (rowsAffected == 0) {
+	            System.err.println("Không thể xóa quyền. Mã quyền không tồn tại hoặc không được gán: " + permissionCode);
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Lỗi khi xóa quyền cho tài khoản ID: " + accountId + ", Mã quyền: " + permissionCode);
+	        e.printStackTrace();
+	    }
+	}
+    public void deletePermissionsByAccountId(int accountId) {
+        String sql = "DELETE FROM account_permission WHERE account_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addPermissionToAccount(int accountId, String permissionCode) {
+        String sql = "INSERT INTO account_permission (account_id, permission_code) VALUES (?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, accountId);
+            stmt.setString(2, permissionCode);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
 
