@@ -22,7 +22,7 @@ import model.Promotion;
 import model.Service;
 import service.PromotionService;
 import service.ServiceService;
-
+import utils.RoleChecker;
 
 public class PromotionApplyController implements Initializable {
 
@@ -142,7 +142,7 @@ public class PromotionApplyController implements Initializable {
      */
     private void loadServices() {
         try {
-            List<Service> services = serviceService.getAllActiveServices();
+            List<Service> services = serviceService.getAllServices();
             serviceList = FXCollections.observableArrayList(services);
             serviceTable.setItems(serviceList);
         } catch (Exception e) {

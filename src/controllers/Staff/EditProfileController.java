@@ -1,6 +1,8 @@
-package controllers;
+package	controllers.Staff;
+
 
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -15,6 +17,9 @@ import model.Staff;
 import service.AuthService;
 import service.StaffService;
 import utils.Session;
+
+import model.Staff;
+import enums.GenderEnum;
 
 public class EditProfileController implements Initializable {
 
@@ -54,29 +59,42 @@ public class EditProfileController implements Initializable {
     
     private void loadProfile() {
         Account account = Session.getInstance().getCurrentAccount();
-        Staff staff = staffService.getStaffByAccountID(account.getAccountID());
-        if (staff != null) {
-            fullNameField.setText(staff.getFullName());
-            emailField.setText(staff.getEmail());
-            phoneField.setText(staff.getPhone());
+        if (account != null) {
+            Staff staff = staffService.getStaffByAccountID(account.getAccountID());
+            if (staff != null) {
+                fullNameField.setText(staff.getFullName());
+                emailField.setText(staff.getEmail());
+                phoneField.setText(staff.getPhone());
+            }
         }
     }
-    
+
+    // Update handleUpdateProfile() method to properly set fields
     @FXML
     private void handleUpdateProfile(ActionEvent event) {
         try {
             Account account = Session.getInstance().getCurrentAccount();
             Staff staff = staffService.getStaffByAccountID(account.getAccountID());
+            
+            // Set updated values
             staff.setFullName(fullNameField.getText());
             staff.setEmail(emailField.getText());
             staff.setPhone(phoneField.getText());
             
-            staffService.updateStaff(staff);
+            // Validate input before updating
+            staffService.validatePerson(staff);
             
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thành công");
-            alert.setContentText("Cập nhật hồ sơ thành công!");
-            alert.showAndWait();
+            // Update staff
+            boolean success = staffService.updateStaff(staff);
+            
+            if (success) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Thành công");
+                alert.setContentText("Cập nhật hồ sơ thành công!");
+                alert.showAndWait();
+            } else {
+                throw new Exception("Cập nhật không thành công");
+            }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi");

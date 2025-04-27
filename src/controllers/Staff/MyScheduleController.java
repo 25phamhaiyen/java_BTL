@@ -64,7 +64,7 @@ public class MyScheduleController implements Initializable {
         scheduleService = new ScheduleService();
         
         // Lấy ID của nhân viên hiện tại từ Session
-        currentStaffId = Session.getCurrentStaff().getStaffId();
+        currentStaffId = Session.getCurrentStaff().getId();
         
         // Khởi tạo các cột cho bảng
         idColumn.setCellValueFactory(new PropertyValueFactory<>("scheduleId"));

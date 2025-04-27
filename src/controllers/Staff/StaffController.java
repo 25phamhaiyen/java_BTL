@@ -17,15 +17,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Staff;
-
 import service.StaffService;
 import utils.RoleChecker;
 import controllers.*;
 import utils.Session;
 
-/**
- * Controller chính cho giao diện nhân viên, quản lý việc chuyển đổi các màn hình con
- */
 public class StaffController implements Initializable {
 
     @FXML
@@ -57,13 +53,11 @@ public class StaffController implements Initializable {
     
     private Staff currentStaff;
     private StaffService staffService;
-    private AuthService authService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Khởi tạo service
         staffService = new StaffService();
-        authService = new AuthService();
         
         // Lấy thông tin nhân viên hiện tại từ Session
         currentStaff = Session.getCurrentStaff();
@@ -81,9 +75,6 @@ public class StaffController implements Initializable {
         loadStaffHomeView();
     }
     
-    /**
-     * Thiết lập hiển thị/ẩn các nút dựa trên quyền của người dùng
-     */
     private void setupButtonVisibility() {
         // Các nút mặc định hiển thị cho tất cả nhân viên
         editProfileButton.setVisible(true);
@@ -97,9 +88,6 @@ public class StaffController implements Initializable {
         promotionButton.setVisible(RoleChecker.hasPermission("APPLY_PROMOTION"));
     }
     
-    /**
-     * Tải màn hình chính cho nhân viên
-     */
     private void loadStaffHomeView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
@@ -110,9 +98,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Chuyển đến màn hình xem lịch làm việc
-     */
     @FXML
     private void showMySchedule(ActionEvent event) {
         try {
@@ -130,9 +115,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Chuyển đến màn hình xem booking
-     */
     @FXML
     private void showBookingView(ActionEvent event) {
         try {
@@ -150,9 +132,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Chuyển đến màn hình xem hóa đơn
-     */
     @FXML
     private void showInvoiceView(ActionEvent event) {
         try {
@@ -170,9 +149,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Chuyển đến màn hình áp dụng khuyến mãi
-     */
     @FXML
     private void showPromotionView(ActionEvent event) {
         try {
@@ -190,9 +166,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Chuyển đến màn hình chỉnh sửa hồ sơ
-     */
     @FXML
     private void showEditProfile(ActionEvent event) {
         try {
@@ -204,9 +177,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Đăng xuất khỏi hệ thống
-     */
     @FXML
     private void logout(ActionEvent event) {
         try {
@@ -222,9 +192,6 @@ public class StaffController implements Initializable {
         }
     }
     
-    /**
-     * Hiển thị thông báo
-     */
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
