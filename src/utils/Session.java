@@ -5,25 +5,29 @@ import model.Staff;
 import service.StaffService;
 
 public class Session {
-    private static Session instance;
+    private static volatile Session instance; // Thread-safe Singleton
     private Account currentAccount;
     private Staff currentStaff;
 
-    private Session() {
-        // Private constructor for singleton
-    }
+    // Private constructor for Singleton
+    private Session() {}
 
+    // Thread-safe Singleton instance retrieval
     public static Session getInstance() {
         if (instance == null) {
-            instance = new Session();
+            synchronized (Session.class) {
+                if (instance == null) {
+                    instance = new Session();
+                }
+            }
         }
         return instance;
     }
 
+    // Set the current account and update the associated staff
     public void setCurrentAccount(Account account) {
         this.currentAccount = account;
 
-        // If an account is set, also try to find the associated staff
         if (account != null) {
             StaffService staffService = new StaffService();
             this.currentStaff = staffService.getStaffByAccountID(account.getAccountID());
@@ -32,20 +36,23 @@ public class Session {
         }
     }
 
+    // Get the current account
     public static Account getCurrentAccount() {
         return getInstance().currentAccount;
     }
 
+    // Get the current staff
     public static Staff getCurrentStaff() {
         return getInstance().currentStaff;
     }
 
+    // Clear the session (logout)
     public static void clearSession() {
         getInstance().currentAccount = null;
         getInstance().currentStaff = null;
     }
-    
-    // Add the logout method as an alias for clearSession
+
+    // Alias for clearSession
     public static void logout() {
         clearSession();
     }
