@@ -21,17 +21,17 @@ public class StaffRepository implements IRepository<Staff> {
 
 	private static StaffRepository instance;
 
-    public static StaffRepository getInstance() {
-        if (instance == null) {
-            synchronized (StaffRepository.class) {
-                if (instance == null) {
-                    instance = new StaffRepository();
-                }
-            }
-        }
-        return instance;
-    }
-    
+	public static StaffRepository getInstance() {
+		if (instance == null) {
+			synchronized (StaffRepository.class) {
+				if (instance == null) {
+					instance = new StaffRepository();
+				}
+			}
+		}
+		return instance;
+	}
+
 	@Override
 	public int insert(Staff staff) {
 		String insertPersonSql = "INSERT INTO person (full_name, gender, phone, address, email) "
@@ -100,49 +100,48 @@ public class StaffRepository implements IRepository<Staff> {
 				staffStmt.setDouble(2, staff.getSalary());
 				staffStmt.setDate(1, new java.sql.Date(staff.getHire_date().getTime()));
 				staffStmt.setInt(4, staff.getAccount().getAccountID());
-                staffStmt.setInt(5, staff.getRole().getRoleID());
+				staffStmt.setInt(5, staff.getRole().getRoleID());
 				staffStmt.setInt(6, staff.getId());
 
-				return staffStmt.executeUpdate(); 
+				return staffStmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			LOGGER.severe("Update staff failed: " + e.getMessage());
 		}
-		return 0; 
+		return 0;
 	}
 
 	@Override
-    public int delete(Staff staff) {
-        String deleteStaffSql = "DELETE FROM staff WHERE staff_id=?";
-        String deletePersonSql = "DELETE FROM person WHERE person_id=?";
-        
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement staffStmt = con.prepareStatement(deleteStaffSql);
-             PreparedStatement personStmt = con.prepareStatement(deletePersonSql)) {
+	public int delete(Staff staff) {
+		String deleteStaffSql = "DELETE FROM staff WHERE staff_id=?";
+		String deletePersonSql = "DELETE FROM person WHERE person_id=?";
 
-            // Xóa nhân viên từ bảng staff
-            staffStmt.setInt(1, staff.getId());
-            int staffAffectedRows = staffStmt.executeUpdate();
-            
-            // Nếu xóa bảng staff thành công, tiếp tục xóa bảng person
-            if (staffAffectedRows > 0) {
-                personStmt.setInt(1, staff.getId());
-                return personStmt.executeUpdate(); 
-            }
-        } catch (SQLException e) {
-            LOGGER.severe("Delete staff failed: " + e.getMessage());
-        }
-        return 0; 
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement staffStmt = con.prepareStatement(deleteStaffSql);
+				PreparedStatement personStmt = con.prepareStatement(deletePersonSql)) {
+
+			// Xóa nhân viên từ bảng staff
+			staffStmt.setInt(1, staff.getId());
+			int staffAffectedRows = staffStmt.executeUpdate();
+
+			// Nếu xóa bảng staff thành công, tiếp tục xóa bảng person
+			if (staffAffectedRows > 0) {
+				personStmt.setInt(1, staff.getId());
+				return personStmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			LOGGER.severe("Delete staff failed: " + e.getMessage());
+		}
+		return 0;
 	}
+
 	@Override
 	public List<Staff> selectAll() {
 		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
-	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
-	               + "FROM person p "
-	               + "JOIN staff s ON p.person_id = s.staff_id "
-	               + "JOIN role r ON s.role_id = r.role_id "
-	               + "LEFT JOIN account a ON s.account_id = a.account_id";
-	    return executeQuery(sql);
+				+ "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary " + "FROM person p "
+				+ "JOIN staff s ON p.person_id = s.staff_id " + "JOIN role r ON s.role_id = r.role_id "
+				+ "LEFT JOIN account a ON s.account_id = a.account_id";
+		return executeQuery(sql);
 	}
 
 	@Override
@@ -152,29 +151,24 @@ public class StaffRepository implements IRepository<Staff> {
 
 	public Staff selectById(int personID) {
 		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
-	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
-	               + "FROM person p "
-	               + "JOIN staff s ON p.person_id = s.staff_id "
-	               + "JOIN role r ON s.role_id = r.role_id "
-	               + "LEFT JOIN account a ON s.account_id = a.account_id "
-	               + "WHERE p.person_id = ?";
-	    List<Staff> result = executeQuery(sql, personID);
-	    return result.isEmpty() ? null : result.get(0);
+				+ "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary " + "FROM person p "
+				+ "JOIN staff s ON p.person_id = s.staff_id " + "JOIN role r ON s.role_id = r.role_id "
+				+ "LEFT JOIN account a ON s.account_id = a.account_id " + "WHERE p.person_id = ?";
+		List<Staff> result = executeQuery(sql, personID);
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	public List<Staff> selectByCondition(String whereClause, Object... params) {
 		String sql = "SELECT p.person_id, p.full_name, p.gender, p.phone, p.address, p.email, "
-	               + "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary "
-	               + "FROM person p "
-	               + "JOIN staff s ON p.person_id = s.staff_id "
-	               + "JOIN role r ON s.role_id = r.role_id "
-	               + "LEFT JOIN account a ON s.account_id = a.account_id";
+				+ "a.account_id, a.username, r.role_id, r.role_name, s.dob, s.hire_date, s.salary " + "FROM person p "
+				+ "JOIN staff s ON p.person_id = s.staff_id " + "JOIN role r ON s.role_id = r.role_id "
+				+ "LEFT JOIN account a ON s.account_id = a.account_id";
 
-	    if (whereClause != null && !whereClause.trim().isEmpty()) {
-	        sql += " WHERE " + whereClause;
-	    }
+		if (whereClause != null && !whereClause.trim().isEmpty()) {
+			sql += " WHERE " + whereClause;
+		}
 
-	    return executeQuery(sql, params);
+		return executeQuery(sql, params);
 	}
 
 	private List<Staff> executeQuery(String sql, Object... params) {
@@ -195,34 +189,34 @@ public class StaffRepository implements IRepository<Staff> {
 		}
 		return list;
 	}
+
 	private Staff mapResultSetToStaff(ResultSet rs) throws SQLException {
-	    // Lấy các giá trị từ ResultSet
-	    int personID = rs.getInt("person_id");
-	    String fullName = rs.getString("full_name");
-	    GenderEnum gender = GenderEnum.fromCode(rs.getInt("gender"));
-	    String phoneNumber = rs.getString("phone");
-	    String address = rs.getString("address");
-	    String email = rs.getString("email"); // Đảm bảo lấy được email
-	    int accountID = rs.getInt("account_id");
-	    Role role = new Role(rs.getInt("role_id"), rs.getString("role_name"));
-	    
-	    Date dob = rs.getDate("dob");
+		// Lấy các giá trị từ ResultSet
+		int personID = rs.getInt("person_id");
+		String fullName = rs.getString("full_name");
+		GenderEnum gender = GenderEnum.valueOf(rs.getString("gender"));
+		String phoneNumber = rs.getString("phone");
+		String address = rs.getString("address");
+		String email = rs.getString("email"); // Đảm bảo lấy được email
+		int accountID = rs.getInt("account_id");
+		Role role = new Role(rs.getInt("role_id"), rs.getString("role_name"));
 
-	    // Lấy các giá trị khác
-	    double salary = rs.getDouble("salary");
-	    Date hire_date = rs.getDate("hire_date");
-	    
-	    
-	    // Kiểm tra tài khoản
-	    Account account = null;
-	    if (accountID > 0) { // Kiểm tra nếu accountID hợp lệ
-	        String userName = rs.getString("username");
-	        account = new Account(accountID, userName, null, role);
-	    }
-	    
-	    // Trả về đối tượng Staff với tất cả các tham số đã lấy từ ResultSet
-	    return new Staff(personID, fullName, gender, phoneNumber, address, email, dob, salary, hire_date, account, role);
+		Date dob = rs.getDate("dob");
+
+		// Lấy các giá trị khác
+		double salary = rs.getDouble("salary");
+		Date hire_date = rs.getDate("hire_date");
+
+		// Kiểm tra tài khoản
+		Account account = null;
+		if (accountID > 0) { // Kiểm tra nếu accountID hợp lệ
+			String userName = rs.getString("username");
+			account = new Account(accountID, userName, null, role);
+		}
+
+		// Trả về đối tượng Staff với tất cả các tham số đã lấy từ ResultSet
+		return new Staff(personID, fullName, gender, phoneNumber, address, email, dob, salary, hire_date, account,
+				role);
 	}
-
 
 }
