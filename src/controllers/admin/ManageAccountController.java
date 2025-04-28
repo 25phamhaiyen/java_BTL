@@ -18,6 +18,7 @@ import model.Permission;
 import model.Role;
 import service.AccountService;
 import service.PermissionService;
+import service.RoleService;
 
 public class ManageAccountController {
 
@@ -45,6 +46,7 @@ public class ManageAccountController {
 
 
 	private final AccountService accountService = new AccountService();
+	private final RoleService roleService = new RoleService();
 
 	private ObservableList<Account> accountList = FXCollections.observableArrayList();
 	@FXML
@@ -231,7 +233,7 @@ private void handleEditAccount() {
 
         // ComboBox để chọn vai trò
         ComboBox<String> cbRole = new ComboBox<>();
-        cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEIPTION");
+        cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
         cbRole.getSelectionModel().select(selectedAccount.getRole().getRoleName());
         cbRole.setPromptText("Chọn vai trò");
 
@@ -264,15 +266,23 @@ private void handleEditAccount() {
         // Xử lý kết quả khi nhấn OK
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                String roleName = cbRole.getValue();
-                boolean isActive = rbActive.isSelected(); // Lấy trạng thái từ RadioButton
+				String roleName = cbRole.getValue();
+                int roleId = roleService.getRoleIdByRoleName(roleName);
+				if (roleId == -1) {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Lỗi");
+					alert.setHeaderText("Không thể cập nhật tài khoản");
+					alert.setContentText("Vai trò không hợp lệ.");
+					alert.showAndWait();
+					return null;
+				}
 
-                // Tạo đối tượng Account mới với thông tin đã chỉnh sửa
-                Account updatedAccount = new Account();
-                updatedAccount.setAccountID(selectedAccount.getAccountID());
-				updatedAccount.setUserName(selectedAccount.getUserName()); 
-				updatedAccount.setPassword(selectedAccount.getPassword()); 
-				updatedAccount.setRole(new Role(0, roleName)); 
+				Account updatedAccount = new Account();
+				updatedAccount.setAccountID(selectedAccount.getAccountID());
+				updatedAccount.setUserName(selectedAccount.getUserName());
+				updatedAccount.setPassword(selectedAccount.getPassword());
+				updatedAccount.setRole(new Role(roleId, roleName)); // Gán role_id hợp lệ
+				boolean isActive = rbActive.isSelected(); 
 				updatedAccount.setActive(isActive);
 
                 return updatedAccount;
@@ -408,8 +418,23 @@ private void handleDeleteAccount() {
 	private void handleResetPassword() {
 		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 		if (selectedAccount != null) {
-			// Confirm and reset password
-			System.out.println("Reset mật khẩu cho tài khoản: " + selectedAccount.getUserName());
+			// Tạo hộp thoại xác nhận
+			// reset password thành mặc định = 123456789
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Xác nhận đặt lại mật khẩu");
+			alert.setHeaderText("Bạn có chắc chắn muốn đặt lại mật khẩu cho tài khoản này?");
+			alert.setContentText("Tài khoản: " + selectedAccount.getUserName() + "\nMật khẩu mới sẽ là: 123456789");
+			// Chờ người dùng chọn OK hoặc Cancel
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				// Nếu người dùng chọn OK, thực hiện đặt lại mật khẩu
+				accountService.resetPassword(selectedAccount.getAccountID(), "123456789");
+				Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+				successAlert.setTitle("Thành công");
+				successAlert.setHeaderText(null);
+				successAlert.setContentText("Mật khẩu đã được đặt lại thành công.");
+				successAlert.showAndWait();
+			}
 		}
 	}
 }

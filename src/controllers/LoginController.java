@@ -59,7 +59,7 @@ public class LoginController {
 			Account account = user.orElseThrow(() -> new BusinessException("Sai tên đăng nhập hoặc mật khẩu"));
 			messageLabel.setText("Đăng nhập thành công!");
 			messageLabel.setStyle("-fx-text-fill: green;");
-			Session.setCurrentUser(account);
+			Session.setCurrentAccount(account);
 
 			// Đặt lại số lần thất bại khi đăng nhập thành công
 			failedLoginAttempts = 0;

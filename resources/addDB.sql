@@ -2,7 +2,8 @@ INSERT INTO role (role_name) VALUES
 ('ADMIN'), 
 ('STAFF_CARE'), 
 ('STAFF_CASHIER'), 
-('STAFF_RECEPTION');
+('STAFF_RECEPTION'),
+('OUT');
 
 INSERT INTO person (person_id, full_name, gender, phone, address, email)
 VALUES

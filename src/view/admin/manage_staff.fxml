@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+    fx:controller="controllers.admin.ManageStaff"
+    stylesheets="@/styles/style.css">
+
+    <!-- Bố cục chính -->
+    <VBox spacing="10" alignment="TOP_CENTER" prefWidth="800" prefHeight="600">
+        <!-- Tiêu đề -->
+        <Label text="Quản Lý Nhân Viên" styleClass="header-label" />
+
+        <!-- Thanh tìm kiếm -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Tìm kiếm:" />
+            <TextField fx:id="txtSearch" promptText="Nhập tên nhân viên, vai trò hoặc tài khoản..." />
+            <Button text="Tìm kiếm" onAction="#handleSearchStaff" />
+        </HBox>
+
+        <!-- Bảng hiển thị danh sách nhân viên -->
+        <TableView fx:id="tblStaff" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colStaffId" text="ID" prefWidth="50" />
+                <TableColumn fx:id="colStaffName" text="Tên nhân viên" prefWidth="150" />
+                <TableColumn fx:id="colStaffRole" text="Vai trò" prefWidth="100" />
+                <TableColumn fx:id="colStaffPhone" text="Số điện thoại" prefWidth="120" />
+                <TableColumn fx:id="colStaffEmail" text="Email" prefWidth="150" />
+                <TableColumn fx:id="colStartDate" text="Ngày bắt đầu" prefWidth="120" />
+                <TableColumn fx:id="colSalary" text="Lương" prefWidth="100" />
+                <TableColumn fx:id="colAccount" text="Tên tài khoản" prefWidth="150" />
+            </columns>
+        </TableView>
+
+        <!-- Các nút chức năng -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Thêm nhân viên" onAction="#handleAddStaff" />
+            <Button text="Sửa thông tin" onAction="#handleEditStaff" />
+            <Button text="Xóa nhân viên" onAction="#handleDeleteStaff" />
+            <Button fx:id="terminateButton" text="Cho nghỉ việc" onAction="#handleTerminateStaff" />
+        </HBox>
+    </VBox>
+</AnchorPane>

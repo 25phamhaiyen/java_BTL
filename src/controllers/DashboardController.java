@@ -20,10 +20,10 @@ public class DashboardController {
 
 	@FXML
 	public void initialize() {
-		System.out.println("Current User: " + Session.getCurrentUser());
-		if (Session.getCurrentUser() != null) {
+		System.out.println("Current User: " + Session.getCurrentAccount());
+		if (Session.getCurrentAccount() != null) {
 			Role role = Session.getUserRole();
-			lblWelcome.setText("🐾 Xin chào, " + Session.getCurrentUser().getUserName());
+			lblWelcome.setText("🐾 Xin chào, " + Session.getCurrentAccount().getUserName());
 			// Sử dụng Platform.runLater để đảm bảo giao diện được cập nhật sau khi đăng
 			// nhập thành công
 			Platform.runLater(() -> {
@@ -32,8 +32,11 @@ public class DashboardController {
 					case 1: // admin
 						btnAdminPanel.setVisible(true); // Hiển thị nút cho Admin/Manager
 						break;
-					case 2: // Employee
+					case 2: case 3: case 4:// Employee
 						btnEmployeePanel.setVisible(true); // Hiển thị nút cho Employee
+						break;
+					case 5: 
+						lblWelcome.setText("Bạn đã nghỉ việc");
 						break;
 					default:
 						lblWelcome.setText("Vai trò không xác định, vui lòng đăng nhập lại!");

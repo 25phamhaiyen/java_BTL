@@ -78,6 +78,21 @@ public class AccountRepository implements IRepository<Account> {
 	        return 0;
 	    }
 	}
+	public int updateRoleAndActive(Account account) {
+	    String sql = "UPDATE account SET role_id=?, active=? WHERE account_id=?";
+	    try (Connection con = DatabaseConnection.getConnection(); 
+	         PreparedStatement pstmt = con.prepareStatement(sql)) {
+
+	        pstmt.setInt(1, account.getRole().getRoleID());
+	        pstmt.setBoolean(2, account.isActive());
+	        pstmt.setInt(3, account.getAccountID());
+
+	        return pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        System.err.println("Lỗi khi cập nhật tài khoản: " + e.getMessage());
+	        return 0;
+	    }
+	}
 
 
 	// Hàm lấy mật khẩu cũ từ DB nếu không cập nhật mật khẩu mới
@@ -285,5 +300,37 @@ public class AccountRepository implements IRepository<Account> {
 			e.printStackTrace();
 		}
 		return accountPermissionsMap;
+	}
+	public boolean resetPassword(int accountID, String newPassword) {
+	    String query = "UPDATE account SET password = ? WHERE account_id = ?";
+	    try (Connection connection = DatabaseConnection.getConnection();
+	         PreparedStatement statement = connection.prepareStatement(query)) {
+	        if (newPassword == null || newPassword.trim().isEmpty()) {
+	            newPassword = getPasswordById(accountID);
+	        }
+	        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+	        statement.setString(1, hashedPassword);
+	        statement.setInt(2, accountID);
+	        return statement.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+
+	public int getAccountIdByUsername(String username) {
+		String sql = "SELECT account_id FROM account WHERE username = ?";
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt("account_id");
+			}
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi lấy accountId theo username: " + e.getMessage());
+		}
+		return 0;
 	}
 }

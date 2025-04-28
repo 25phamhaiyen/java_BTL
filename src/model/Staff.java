@@ -31,6 +31,13 @@ public class Staff extends Person {
 	public Account getAccount() {
 		return account;
 	}
+	 public String getRoleName() {
+	        return role != null ? role.getRoleName() : "N/A";
+	 }
+
+	    public String getAccountName() {
+	        return account != null ? account.getUserName() : "N/A";
+	    }
 
 	public void setAccount(Account account) {
 		this.account = account;

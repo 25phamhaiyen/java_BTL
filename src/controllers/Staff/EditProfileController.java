@@ -1,4 +1,4 @@
-package controllers;
+package controllers.Staff;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -53,7 +53,7 @@ public class EditProfileController implements Initializable {
     }
     
     private void loadProfile() {
-        Account account = Session.getInstance().getCurrentAccount();
+        Account account = Session.getCurrentAccount();
         Staff staff = staffService.getStaffByAccountID(account.getAccountID());
         if (staff != null) {
             fullNameField.setText(staff.getFullName());
@@ -65,7 +65,7 @@ public class EditProfileController implements Initializable {
     @FXML
     private void handleUpdateProfile(ActionEvent event) {
         try {
-            Account account = Session.getInstance().getCurrentAccount();
+            Account account = Session.getCurrentAccount();
             Staff staff = staffService.getStaffByAccountID(account.getAccountID());
             staff.setFullName(fullNameField.getText());
             staff.setEmail(emailField.getText());
@@ -99,7 +99,7 @@ public class EditProfileController implements Initializable {
         }
         
         try {
-            Account account = Session.getInstance().getCurrentAccount();
+            Account account = Session.getCurrentAccount();
             authService.changePassword(account.getAccountID(), password);
             
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

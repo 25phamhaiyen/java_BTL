@@ -45,7 +45,7 @@ public class StaffRepository implements IRepository<Staff> {
 
 			// Insert vào bảng person
 			personStmt.setString(1, staff.getFullName());
-			personStmt.setString(2, staff.getGender().getDescription());
+			personStmt.setString(2, staff.getGender().name());
 			personStmt.setString(3, staff.getPhone());
 			personStmt.setString(4, staff.getAddress());
 			personStmt.setString(5, staff.getEmail());
@@ -59,9 +59,9 @@ public class StaffRepository implements IRepository<Staff> {
 
 						// Insert vào bảng staff
 						staffStmt.setInt(1, personID);
-						staffStmt.setDate(1, new java.sql.Date(staff.getDob().getTime()));
+						staffStmt.setDate(2, new java.sql.Date(staff.getDob().getTime()));
 						staffStmt.setDouble(3, staff.getSalary());
-						staffStmt.setDate(1, new java.sql.Date(staff.getHire_date().getTime()));
+						staffStmt.setDate(4, new java.sql.Date(staff.getHire_date().getTime()));
 						staffStmt.setInt(5, staff.getAccount().getAccountID());
 						staffStmt.setInt(6, staff.getRole().getRoleID());
 
@@ -98,7 +98,7 @@ public class StaffRepository implements IRepository<Staff> {
 			if (personAffectedRows > 0) {
 				staffStmt.setDate(1, new java.sql.Date(staff.getDob().getTime()));
 				staffStmt.setDouble(2, staff.getSalary());
-				staffStmt.setDate(1, new java.sql.Date(staff.getHire_date().getTime()));
+				staffStmt.setDate(3, new java.sql.Date(staff.getHire_date().getTime()));
 				staffStmt.setInt(4, staff.getAccount().getAccountID());
                 staffStmt.setInt(5, staff.getRole().getRoleID());
 				staffStmt.setInt(6, staff.getId());
@@ -199,7 +199,7 @@ public class StaffRepository implements IRepository<Staff> {
 	    // Lấy các giá trị từ ResultSet
 	    int personID = rs.getInt("person_id");
 	    String fullName = rs.getString("full_name");
-	    GenderEnum gender = GenderEnum.fromCode(rs.getInt("gender"));
+	    GenderEnum gender = GenderEnum.valueOf(rs.getString("gender"));
 	    String phoneNumber = rs.getString("phone");
 	    String address = rs.getString("address");
 	    String email = rs.getString("email"); // Đảm bảo lấy được email
