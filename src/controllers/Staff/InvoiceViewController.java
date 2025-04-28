@@ -1,11 +1,12 @@
 package controllers.Staff;
 
 import java.net.URL;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-
+import service.InvoiceService; // Thêm dòng này
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,9 +20,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Invoice;
-import service.InvoiceService;
+
 import utils.RoleChecker;
-import controllers.*;
+import controllers.SceneSwitcher;
 import utils.Session;
 
 public class InvoiceViewController implements Initializable {
@@ -173,7 +174,7 @@ public class InvoiceViewController implements Initializable {
         selectedInvoice = invoice;
         
         boolean hasSelection = (invoice != null);
-        boolean isCompleted = hasSelection && "COMPLETED".equals(invoice.getStatus());
+        boolean isCompleted = hasSelection && "COMPLETED".equals(invoice.getStatus().name());
         
         // Cập nhật trạng thái của các nút
         viewDetailsButton.setDisable(!hasSelection);
@@ -212,7 +213,7 @@ public class InvoiceViewController implements Initializable {
             return;
         }
         
-        if (!"COMPLETED".equals(selectedInvoice.getStatus())) {
+        if (!"COMPLETED".equals(selectedInvoice.getStatus().name())) {
             showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không thể in", 
                     "Chỉ có thể in lại các hóa đơn đã hoàn thành.");
             return;

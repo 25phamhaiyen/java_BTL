@@ -22,7 +22,7 @@ public class DashboardController {
 	public void initialize() {
 		System.out.println("Current User: " + Session.getCurrentAccount());
 		if (Session.getCurrentAccount() != null) {
-			Role role = Session.getUserRole();
+			Role role = Session.getCurrentAccount().getRole();
 			lblWelcome.setText("🐾 Xin chào, " + Session.getCurrentAccount().getUserName());
 			// Sử dụng Platform.runLater để đảm bảo giao diện được cập nhật sau khi đăng
 			// nhập thành công
@@ -61,7 +61,7 @@ public class DashboardController {
 	// Chuyển đến trang Employee
 	@FXML
 	private void handleEmployeePanel() {
-		SceneSwitcher.switchScene("staff/Staff.fxml");
+		SceneSwitcher.switchScene("staff/staff_home.fxml");
 	}
 
 	// Đăng xuất

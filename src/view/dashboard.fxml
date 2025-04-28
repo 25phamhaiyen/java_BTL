@@ -31,7 +31,7 @@
             </ImageView>
             <Label fx:id="lblMessage" text="BestPet - Cửa Hàng Chăm Sóc Thú Cưng số một thế giới ảo." styleClass="info-message"/>
             <Button fx:id="btnAdminPanel" text="Tiếp tục" onAction="#handleAdminPanel" visible="false " styleClass="continue-button" /> 
-   			<Button fx:id="btnEmployeePanel" text="Tiếp tục" onAction="#handleEmployeePanel" visible="false" styleClass="continue-button" />
+   			<Button fx:id="btnEmployeePanel" text="Tiếp tục" onAction="#handleEmployeePanel" visible="false " styleClass="continue-button" /> 
         </VBox>
     </center>
 </BorderPane>

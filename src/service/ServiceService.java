@@ -83,5 +83,13 @@ public class ServiceService {
         Service service = serviceRepository.selectById(serviceID);
         return service != null;
     }
+    /**
+     * Lấy tất cả dịch vụ đang còn hoạt động
+     * @return Danh sách các dịch vụ đang hoạt động
+     */
+    public List<Service> getAllActiveServices() {
+        String condition = "active = ?";
+        return serviceRepository.selectByCondition(condition, true);
+    }
 }
 

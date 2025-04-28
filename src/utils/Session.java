@@ -25,7 +25,7 @@ public class Session {
             currentStaff = null;
         }
     }
-    
+
     public static Account getCurrentAccount() {
         return currentAccount;
     }
@@ -35,11 +35,11 @@ public class Session {
         }
         return null;
     }
-    
+
     public static Staff getCurrentStaff() {
         return currentStaff;
     }
-    
+
     public static void clearSession() {
         currentAccount = null;
         currentStaff = null;
@@ -51,5 +51,10 @@ public class Session {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    // Add the logout method as an alias for clearSession
+    public static void logout() {
+        clearSession();
     }
 }

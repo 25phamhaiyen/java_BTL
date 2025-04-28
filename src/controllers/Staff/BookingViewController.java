@@ -21,7 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
-import controllers.*;
+import controllers.SceneSwitcher;
 import utils.Session;
 import utils.RoleChecker;
 
@@ -138,7 +138,7 @@ public class BookingViewController implements Initializable {
      */
     private void loadBookings() {
         try {
-            int staffId = Session.getCurrentStaff().getStaffId();
+            int staffId = Session.getCurrentStaff().getId();
             List<Booking> bookings;
             
             if (RoleChecker.hasPermission("VIEW_ALL_BOOKINGS")) {
@@ -163,9 +163,9 @@ public class BookingViewController implements Initializable {
         selectedBooking = booking;
         
         boolean hasSelection = (booking != null);
-        boolean isPending = hasSelection && "PENDING".equals(booking.getStatus());
-        boolean isConfirmed = hasSelection && "CONFIRMED".equals(booking.getStatus());
-        boolean isStarted = hasSelection && "STARTED".equals(booking.getStatus());
+        boolean isPending = hasSelection && "PENDING".equals(booking.getStatus().name());
+        boolean isConfirmed = hasSelection && "CONFIRMED".equals(booking.getStatus().name());
+        boolean isStarted = hasSelection && "STARTED".equals(booking.getStatus().name());
         
         // Cập nhật trạng thái của các nút
         startButton.setDisable(!(isPending || isConfirmed));
