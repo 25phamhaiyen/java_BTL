@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.admin.ManageSchedule">
+
+    <!-- Tiêu đề -->
+    <top>
+        <VBox alignment="CENTER" spacing="10">
+            <Label text="Quản lý lịch làm việc" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Từ ngày:" />
+                <DatePicker fx:id="startDatePicker" />
+                <Label text="Đến ngày:" />
+                <DatePicker fx:id="endDatePicker" />
+                <Button text="Hiển thị lịch" onAction="#handleShowSchedule" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Bảng lịch làm việc -->
+    <center>
+        <GridPane fx:id="scheduleGrid" hgap="5" vgap="5">
+            <!-- Cấu hình hàng -->
+            <rowConstraints>
+                <RowConstraints minHeight="40" />
+                <RowConstraints minHeight="40" />
+                <RowConstraints minHeight="80" />
+                <RowConstraints minHeight="80" />
+                <RowConstraints minHeight="80" />
+            </rowConstraints>
+
+            <!-- Cấu hình cột -->
+            <columnConstraints>
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+                <ColumnConstraints percentWidth="12.5" />
+            </columnConstraints>
+        </GridPane>
+    </center>
+
+    <!-- Các nút chức năng -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="addButton" text="Thêm lịch" onAction="#handleAddSchedule" />
+            <Button fx:id="editButton" text="Sửa lịch" onAction="#handleEditSchedule" />
+            <Button fx:id="deleteButton" text="Xóa lịch" onAction="#handleDeleteSchedule" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

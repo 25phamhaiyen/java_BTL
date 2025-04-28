@@ -51,4 +51,19 @@ public class RoleService {
 
         return false;
     }
+    public int getRoleIdByRoleName(String roleName) {
+        String query = "SELECT role_id FROM role WHERE role_name = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, roleName);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("role_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
 }

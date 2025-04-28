@@ -89,7 +89,7 @@ public class AccountService {
         return accountRepository.update(existingAccount) > 0;
     }
     public boolean updateAccount(Account account) {
-        return accountRepository.update(account) > 0;
+        return accountRepository.updateRoleAndActive(account) > 0;
     }
 
     public boolean updatePassword(int accountID, String newPassword) {
@@ -146,5 +146,17 @@ public class AccountService {
     public Map<Account, String> getAllAccountsWithPermissions() {
         return accountRepository.getAllAccountsWithPermissions();
     }
+    public boolean resetPassword(int accountID, String newPassword) {
+        return accountRepository.resetPassword(accountID, newPassword);
+    }
+
+	public int getAccountIdByUsername(String username) {
+        try {
+            return accountRepository.getAccountIdByUsername(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return 0;
+	}
 
 }

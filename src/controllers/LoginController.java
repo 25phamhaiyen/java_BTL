@@ -55,9 +55,7 @@ public class LoginController {
 
 			messageLabel.setText("Đăng nhập thành công!");
 			messageLabel.setStyle("-fx-text-fill: green;");
-
-			// Sửa chỗ này: set lại đúng cách
-			Session.getInstance().setCurrentAccount(account);
+			Session.setCurrentAccount(account);
 
 			failedLoginAttempts = 0; // Reset lại số lần login fail
 			SceneSwitcher.switchScene("dashboard.fxml");

@@ -45,9 +45,8 @@
         <HBox alignment="CENTER" spacing="20" styleClass="button-bar">
         <Button fx:id="btnEdit" styleClass="action-button" onAction="#handleEditAccount" text="Sửa tài khoản" />
             <Button fx:id="btnDelete" onAction="#handleDeleteAccount" styleClass="action-button" text="Xóa tài khoản" />
-            <Button fx:id="btnResetPassword" styleClass="action-button" text="Reset Password" />
+            <Button fx:id="btnResetPassword" onAction="#handleResetPassword" styleClass="action-button" text="Reset Password" />
             <Button fx:id="btnAssignPermission" onAction="#handleAssignPermission" styleClass="action-button" text="Gán quyền" />
-            <Button fx:id="btnBack" styleClass="back-button" text="Quay lại" />
         </HBox>
     </bottom>
 </BorderPane>

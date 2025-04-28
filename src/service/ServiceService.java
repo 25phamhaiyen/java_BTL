@@ -56,9 +56,7 @@ public class ServiceService {
 
     // Tìm kiếm dịch vụ theo tên
     public List<Service> searchServicesByName(String serviceName) {
-        String condition = "serviceName LIKE ?";
-        String searchPattern = "%" + serviceName + "%"; // Tìm kiếm theo mẫu tên
-        return serviceRepository.selectByCondition(condition, searchPattern);
+        return serviceRepository.searchServices(serviceName);
     }
 
     // Kiểm tra tính hợp lệ của dịch vụ (tên dịch vụ không được rỗng, giá trị hợp lệ)
@@ -76,7 +74,7 @@ public class ServiceService {
 
     // Kiểm tra xem dịch vụ đã tồn tại hay chưa (theo tên)
     private boolean isServiceExists(String serviceName) {
-        List<Service> services = serviceRepository.selectByCondition("serviceName = ?", serviceName);
+        List<Service> services = serviceRepository.selectByCondition("name = ?", serviceName);
         return !services.isEmpty();
     }
 

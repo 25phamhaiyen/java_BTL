@@ -19,8 +19,8 @@ public class AdminHomeController {
         // Gắn sự kiện cho các nút sidebar
         btnAccountManagement.setOnAction(e -> switchContent("/view/admin/manage_account.fxml"));
         btnStaffManagement.setOnAction(e -> switchContent("/view/admin/manage_staff.fxml"));
-        btnCreateWorkSchedule.setOnAction(e -> switchContent("/view/admin/create_schedule.fxml"));
-        btnServices.setOnAction(e -> switchContent("/view/admin/manage_services.fxml"));
+        btnCreateWorkSchedule.setOnAction(e -> switchContent("/view/admin/manage_schedule.fxml"));
+        btnServices.setOnAction(e -> switchContent("/view/admin/manage_service.fxml"));
         btnFinance.setOnAction(e -> switchContent("/view/admin/manage_finance.fxml"));
         btnDetailedDashboard.setOnAction(e -> switchContent("/view/admin/general_statistics.fxml"));
 

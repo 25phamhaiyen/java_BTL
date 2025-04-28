@@ -1,0 +1,80 @@
+/* Tiêu đề */
+.label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* Tiêu đề chính */
+.top .label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0078d7;
+}
+
+/* HBox và VBox */
+.hbox, .vbox {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+/* DatePicker */
+.date-picker {
+    -fx-padding: 5;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+/* Nút */
+.button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5px 10px;
+}
+
+.button:hover {
+    -fx-background-color: #005bb5;
+}
+
+/* GridPane */
+.grid-pane {
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-background-color: #f9f9f9;
+}
+
+/* Ô trong GridPane */
+.grid-pane .label {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 5;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3;
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+/* Tiêu đề cột và hàng trong GridPane */
+.grid-pane .header {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0078d7;
+    -fx-background-color: #e6f7ff;
+    -fx-padding: 5;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3;
+}
+
+/* Lịch dạng Calendar (DatePicker) */
+.date-picker {
+    -fx-border-color: #0078d7;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+}
