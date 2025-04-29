@@ -141,7 +141,7 @@ public class ServiceRepository implements IRepository<Service> {
         String description = rs.getString("description");
         double costPrice = rs.getDouble("price");
         int duration_minutes = rs.getInt("duration_minutes");
-        Boolean active = rs.getBoolean("avtive");
+        Boolean active = rs.getBoolean("active");
 
         return new Service(serviceID, serviceName, description, costPrice, duration_minutes, active);
     }
