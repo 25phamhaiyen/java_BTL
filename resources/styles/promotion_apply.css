@@ -1,0 +1,118 @@
+/* promotion_apply.css */
+
+/* Root BorderPane */
+.promotion-root {
+    -fx-background-color: #f9fafe;
+}
+
+/* Title Label */
+.promotion-root > .top > Label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5b6abf;
+    -fx-padding: 20px;
+    -fx-alignment: center;
+}
+
+/* TableView Style */
+.table-view {
+    -fx-background-radius: 10px;
+    -fx-border-color: #d8dcf0;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+}
+
+.table-view .column-header {
+    -fx-background-color: #eef0fa;
+    -fx-text-fill: #414e9e;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #eef0fa;
+    -fx-text-fill: #414e9e;
+}
+
+/* ComboBox Style */
+.combo-box {
+    -fx-background-radius: 8px;
+    -fx-border-color: #d8dcf0;
+    -fx-border-radius: 8px;
+    -fx-padding: 4px 8px;
+    -fx-background-color: #ffffff;
+}
+
+.combo-box:focused {
+    -fx-border-color: #5b6abf;
+}
+
+/* Primary Button */
+.primary-button {
+    -fx-background-color: #5b6abf;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+}
+.primary-button:hover {
+    -fx-background-color: #414e9e;
+    -fx-cursor: hand;
+}
+
+/* Secondary Button */
+.secondary-button {
+    -fx-background-color: #ff9756;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 15px;
+}
+.secondary-button:hover {
+    -fx-background-color: #e87b39;
+    -fx-cursor: hand;
+}
+
+/* Labels nhỏ */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* Labels số tiền */
+.total-price-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #5bae6a;
+    -fx-font-weight: bold;
+}
+.discounted-price-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #e05c5c;
+    -fx-font-weight: bold;
+}
+.back-button {
+    -fx-background-color: #eef0fa;
+    -fx-text-fill: #5b6abf;
+    -fx-font-weight: bold;
+    -fx-border-color: #d8dcf0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+}
+
+.back-button:hover {
+    -fx-background-color: #d8dcf0;
+    -fx-cursor: hand;
+}
+
+/* Input fields */
+.text-field, .password-field {
+    -fx-background-radius: 8px;
+    -fx-border-color: #d8dcf0;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #5b6abf;
+}

@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.IOException;
 
+import controllers.Staff.InvoiceViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,7 +33,7 @@ public class SceneSwitcher {
 	public static void switchScene(String fxmlPath) {
 		try {
 			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/" + fxmlPath));
-			Scene scene = new Scene(root);
+			Scene scene = new Scene(root, 800, 700);
 			mainStage.setScene(scene);
 			mainStage.show();
 		} catch (IOException e) {
@@ -49,9 +50,9 @@ public class SceneSwitcher {
 	public static void switchToLoginScene(Stage currentStage) {
 		try {
 			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/login.fxml"));
-			Scene scene = new Scene(root);
-			currentStage.setScene(scene);
+//			Scene scene = new Scene(root);
 			currentStage.setTitle("Đăng nhập");
+			currentStage.setScene(new Scene(root, 500, 500));
 			currentStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -181,30 +182,30 @@ public class SceneSwitcher {
 		}
 	}
 
-	/**
-	 * Chuyển đến màn hình chi tiết hóa đơn
-	 * 
-	 * @param currentStage Stage hiện tại
-	 * @param invoiceId    ID của hóa đơn
-	 */
-	public static void switchToInvoiceDetailScene(Stage currentStage, int invoiceId) {
-		try {
-			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/invoiceDetail.fxml"));
-			Parent root = loader.load();
-
-			// Truyền invoiceId cho controller
-			InvoiceDetailController controller = loader.getController();
-			controller.initData(invoiceId);
-
-			Scene scene = new Scene(root);
-			currentStage.setScene(scene);
-			currentStage.setTitle("Chi tiết hóa đơn #" + invoiceId);
-			currentStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Không thể tải màn hình chi tiết hóa đơn: " + e.getMessage());
-		}
-	}
+//	/**
+//	 * Chuyển đến màn hình chi tiết hóa đơn
+//	 * 
+//	 * @param currentStage Stage hiện tại
+//	 * @param invoiceId    ID của hóa đơn
+//	 */
+//	public static void switchToInvoiceDetailScene(Stage currentStage, int invoiceId) {
+//		try {
+//			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/invoiceDetail.fxml"));
+//			Parent root = loader.load();
+//
+//			// Truyền invoiceId cho controller
+//			InvoiceViewController controller = loader.getController();
+//			controller.initData(invoiceId);
+//
+//			Scene scene = new Scene(root);
+//			currentStage.setScene(scene);
+//			currentStage.setTitle("Chi tiết hóa đơn #" + invoiceId);
+//			currentStage.show();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			showErrorDialog("Không thể tải màn hình chi tiết hóa đơn: " + e.getMessage());
+//		}
+//	}
 
 	/**
 	 * Hiển thị hộp thoại thông báo lỗi
@@ -214,7 +215,7 @@ public class SceneSwitcher {
 	private static void showErrorDialog(String message) {
 		javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
 		alert.setTitle("Lỗi");
-		alert.setHeaderText("Đã xảy ra lỗi");
+	alert.setHeaderText("Đã xảy ra lỗi");
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
