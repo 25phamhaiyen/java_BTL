@@ -10,6 +10,10 @@ public class WorkSchedule {
     private LocalDate workDate;
     private Shift shift;
     private String note;
+    
+	public WorkSchedule() {
+		super();
+	}
 	public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift, String note) {
 		super();
 		this.scheduleID = scheduleID;

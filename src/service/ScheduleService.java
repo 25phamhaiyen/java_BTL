@@ -5,6 +5,7 @@ import java.util.List;
 
 import model.Schedule;
 import model.Staff;
+import model.WorkSchedule;
 import repository.WorkScheduleRepository;
 
 public class ScheduleService {
@@ -58,6 +59,11 @@ public class ScheduleService {
         return convertToSchedules(scheduleRepository.selectByCondition(whereClause, date));
     }
     
+ // Lấy danh sách lịch làm việc
+    public List<WorkSchedule> getAllSchedules() {
+        return scheduleRepository.selectAll();
+    }
+
     /**
      * Thêm lịch làm việc mới
      * @param staffId ID của nhân viên
@@ -90,6 +96,27 @@ public class ScheduleService {
             note
         );
         
+        int result = scheduleRepository.insert(workSchedule);
+        return result > 0;
+    }
+    
+    public boolean addSchedule(WorkSchedule workSchedule) {
+        if (workSchedule == null || workSchedule.getStaff() == null || workSchedule.getWorkDate() == null || workSchedule.getShift() == null) {
+            System.err.println("Thông tin lịch làm việc không đầy đủ.");
+            return false;
+        }
+
+        int staffId = workSchedule.getStaff().getId();
+        LocalDate workDate = workSchedule.getWorkDate();
+        String shift = workSchedule.getShift().toString();
+
+        // Kiểm tra xem đã có lịch vào ca này cho nhân viên này vào ngày này chưa
+        if (isScheduleExists(staffId, workDate, shift)) {
+            System.err.println("Đã có lịch cho nhân viên " + staffId + " vào ca " + shift + " ngày " + workDate);
+            return false; // Đã có lịch
+        }
+
+        // Gọi repository để thêm WorkSchedule trực tiếp
         int result = scheduleRepository.insert(workSchedule);
         return result > 0;
     }
