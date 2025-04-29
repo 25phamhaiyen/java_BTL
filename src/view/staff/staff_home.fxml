@@ -1,63 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="mainContainer" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Staff.StaffController"
-stylesheets="@/styles/staff.css">
+<?import javafx.scene.layout.Region?>
 
-<!-- Phần header trên cùng -->
-<top>
-<VBox spacing="10" style="-fx-padding: 10;">
-<HBox alignment="CENTER_LEFT" spacing="20">
-<Label text="Nhân viên:"/>
-<Label fx:id="staffNameLabel"/>
-<Label text="Vai trò:"/>
-<Label fx:id="staffRoleLabel"/>
-<Button fx:id="logoutButton" text="Đăng xuất" onAction="#logout"/>
-</HBox>
-<Separator />
-</VBox>
-</top>
+<BorderPane fx:id="mainContainer" maxHeight="-Infinity"
+	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	stylesheets="@/styles/staff.css" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	fx:controller="controllers.Staff.StaffController">
 
-<!-- Phần nội dung chính -->
-<center>
-<HBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
-    <!-- Lịch hôm nay -->
-    <VBox spacing="10">
-        <Label text="Lịch hôm nay"/>
-        <ListView fx:id="todayScheduleLabel" prefHeight="500" prefWidth="200"/>
-        <VBox spacing="5">
-            <Button fx:id="myScheduleButton" text="Lịch làm việc" onAction="#showMySchedule" prefWidth="200"/>
-        </VBox>
-    </VBox>
+	<!-- Đưa header vào phần TOP của BorderPane -->
+	<top>
+		<HBox alignment="CENTER" spacing="20"
+			xmlns="http://javafx.com/javafx/21"
+			xmlns:fx="http://javafx.com/fxml/1">
+			<!-- Phần bên trái: thông tin và nút -->
+			<HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="20">
+				<Label text="Nhân viên:" />
+				<Label fx:id="staffNameLabel" />
+				<Label text="Vai trò:" />
+				<Label fx:id="staffRoleLabel" />
+				<Button fx:id="logoutButton" onAction="#logout"
+					prefHeight="25.0" prefWidth="137.0" text="Đăng xuất" />
 
-    <!-- Thú cưng cần chăm sóc -->
-    <VBox spacing="10">
-        <Label text="Thú cưng cần chăm sóc"/>
-        <ListView fx:id="petCareListView" prefHeight="500" prefWidth="200"/>
-        <VBox spacing="5">
-            
-            <Button fx:id="promotionButton" text="Khuyến mãi" onAction="#showPromotionView" prefWidth="200"/>
-        </VBox>
-    </VBox>
+			</HBox>
 
-    <!-- Booking hôm nay -->
-    <VBox spacing="10">
-        <Label text="Booking hôm nay"/>
-        <ListView fx:id="todayBookingListView" prefHeight="500" prefWidth="200"/>
-        <VBox spacing="5">
-            <Button fx:id="bookingViewButton" text="Chi tiết đặt lịch hẹn" onAction="#showBookingView" prefWidth="200"/>
-            <Button fx:id="invoiceViewButton" text="Hóa đơn" onAction="#showInvoiceView" prefWidth="200"/>
-            <Button fx:id="editProfileButton" text="Hồ sơ cá nhân" onAction="#showEditProfile" prefWidth="200"/>
-        </VBox>
-    </VBox>
-</HBox>
-</center>
+			<!-- Phần logo bên phải -->
+			<HBox alignment="CENTER_RIGHT" HBox.hgrow="NEVER" spacing="20">
+				<Button fx:id="editProfileButton" onAction="#showEditProfile"
+					prefHeight="25.0" prefWidth="137.0" text="Hồ sơ cá nhân" />
+				<ImageView fitHeight="50" fitWidth="50"
+					pickOnBounds="true" preserveRatio="true">
+					<image>
+						<Image url="@/images/logo.png" />
+					</image>
+				</ImageView>
+			</HBox>
+		</HBox>
+	</top>
 
+	<!-- Phần nội dung chính -->
+	<center>
+		<VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;"
+			fillWidth="true" maxWidth="Infinity">
+			<!-- Tên giao diện -->
+			<HBox alignment="CENTER" spacing="10">
+				<Region HBox.hgrow="ALWAYS" />
+				<Label fx:id="welcomeLabel"
+					style="-fx-font-size: 16px; -fx-font-weight: bold;"
+					text="BestPets Xin Chào!" />
+				<Region HBox.hgrow="ALWAYS" />
+			</HBox>
+
+
+			<HBox alignment="CENTER" spacing="20" maxWidth="Infinity"
+				HBox.hgrow="ALWAYS">
+				<!-- Lịch hôm nay -->
+				<VBox alignment="CENTER" spacing="10"
+					styleClass="list-view-box" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+					<Label styleClass="list-view-title" text="Lịch hôm nay" />
+					<ListView fx:id="todayScheduleListView" prefHeight="300"
+						maxWidth="Infinity" VBox.vgrow="ALWAYS" />
+					<VBox alignment="CENTER" spacing="5" maxWidth="Infinity">
+						<Button fx:id="myScheduleButton" onAction="#showMySchedule"
+							text="Lịch làm việc" maxWidth="200" />
+						<Button fx:id="bookingViewButton"
+							onAction="#showBookingView" text="Chi tiết đặt lịch hẹn"
+							maxWidth="200" />
+					</VBox>
+				</VBox>
+
+				<!-- Khách hẹn hôm nay -->
+				<VBox alignment="CENTER" spacing="10"
+					styleClass="list-view-box" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+					<Label styleClass="list-view-title" text="Khách hẹn hôm nay" />
+					<ListView fx:id="todayAppointmentListView"
+						prefHeight="300" maxWidth="Infinity" VBox.vgrow="ALWAYS" />
+					<VBox alignment="CENTER" spacing="5" maxWidth="Infinity">
+						<Button fx:id="invoiceViewButton"
+							onAction="#showInvoiceView" text="Hóa đơn" maxWidth="200" />
+						<Button fx:id="promotionButton"
+							onAction="#showPromotionView" text="Khuyến mãi" maxWidth="200" />
+					</VBox>
+				</VBox>
+			</HBox>
+		</VBox>
+	</center>
 </BorderPane>

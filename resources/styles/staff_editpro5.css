@@ -1,0 +1,73 @@
+/* =================== Edit Profile Screen =================== */
+
+/* Giao diện tổng thể */
+.root {
+    -fx-background-color: #f9f3e6; /* Nền nhẹ */
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* Tiêu đề "Chỉnh sửa hồ sơ" */
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a3d2a; /* Nâu đậm */
+}
+
+/* Các Label trong Form */
+.label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a3d2a;
+}
+
+/* Các TextField và PasswordField */
+.text-field, .password-field {
+    -fx-padding: 10px;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-color: #ffffff;
+}
+
+/* Các nút hành động */
+.button {
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+/* Hover nút */
+.button:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+}
+
+/* HBox chứa 2 nút */
+.hbox {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+/* GridPane chứa Form */
+.grid-pane {
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+}
+
+/* VBox tổng thể */
+.vbox {
+    -fx-spacing: 20px;
+    -fx-alignment: center;
+}
+
+/* Padding cho VBox */
+.vbox > .padding {
+    -fx-padding: 20px;
+}

@@ -3,6 +3,7 @@ package controllers.Staff;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import controllers.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,7 +36,10 @@ public class EditProfileController implements Initializable {
 
 	@FXML
 	private Button updateProfileBtn;
-
+	
+	@FXML
+	private Button backButton;
+	
 	@FXML
 	private Button changePasswordBtn;
 
@@ -128,5 +132,10 @@ public class EditProfileController implements Initializable {
 			alert.setContentText("Đổi mật khẩu thất bại: " + e.getMessage());
 			alert.showAndWait();
 		}
+	}
+	@FXML
+	private void handleBack(ActionEvent event) {
+	    // Quay lại màn trước, ví dụ như:
+	    SceneSwitcher.switchScene("staff/staff_home.fxml");
 	}
 }

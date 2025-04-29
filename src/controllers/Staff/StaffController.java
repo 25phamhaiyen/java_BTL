@@ -2,9 +2,13 @@ package controllers.Staff;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import controllers.SceneSwitcher;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +17,19 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Booking;
+import model.Customer;
+import model.Pet;
+import model.Schedule;
 import model.Staff;
+import service.BookingService;
+import service.ScheduleService;
 import service.StaffService;
 import utils.RoleChecker;
+import javafx.scene.control.ListCell;
 import utils.Session;
 
 public class StaffController implements Initializable {
@@ -48,14 +60,23 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private Button logoutButton;
+	
+	@FXML
+	private ListView<Schedule> todayScheduleListView;
+
+	private final ScheduleService scheduleService = new ScheduleService();
 
 	private Staff currentStaff;
-	private StaffService staffService;
+	
+	 @FXML
+	    private Label welcomeLabel;
+	 @FXML
+	 private ListView<String> todayAppointmentListView;
 
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// Khởi tạo service
-		staffService = new StaffService();
+		new StaffService();
 
 		// Lấy thông tin nhân viên hiện tại từ Session
 		currentStaff = Session.getCurrentStaff();
@@ -65,13 +86,103 @@ public class StaffController implements Initializable {
 			staffNameLabel.setText(currentStaff.getFullName());
 			staffRoleLabel.setText(currentStaff.getRole().getRoleName());
 		}
-
+		
+        // Cập nhật tên giao diện
+        welcomeLabel.setText("Chào mừng " + currentStaff.getFullName() + ", " + currentStaff.getRole().getRoleName());
+        
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		setupButtonVisibility();
 
 		// Mặc định hiển thị màn hình chính của nhân viên
 //        loadStaffHomeView();
+		todayScheduleListView.setCellFactory(lv -> new ListCell<Schedule>() {
+		    @Override
+		    protected void updateItem(Schedule item, boolean empty) {
+		        super.updateItem(item, empty);
+		        if (empty || item == null) {
+		            setText(null);
+		        } else {
+		            setText(item.getShift()  + (item.getWorkDate()==null ? "": "-" + item.getWorkDate()) ); // Hiển thị thông tin lịch
+		        }
+		    }
+		});
+
+		 loadTodaySchedule();
+		 loadTodayAppointments();
 	}
+	
+	
+	private void loadTodaySchedule() {
+	    currentStaff = Session.getCurrentStaff(); // Kiểm tra lại thông tin nhân viên từ session
+
+	    LocalDate today = LocalDate.now();
+	    List<Schedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
+
+	    // Log để kiểm tra dữ liệu
+	    if (schedules != null && !schedules.isEmpty()) {
+	        System.out.println("Dữ liệu lịch làm việc: ");
+	        for (Schedule schedule : schedules) {
+	            System.out.println(schedule); // In ra thông tin của mỗi lịch làm việc
+	        }
+	        // Đổ vào ListView nếu có lịch
+	        todayScheduleListView.getItems().setAll(schedules);
+	    } else {
+	        System.out.println("Không có lịch làm việc cho hôm nay.");
+	        
+	        // Tạo một đối tượng Schedule đặc biệt với giá trị "NO_SCHEDULE"
+	        Schedule noSchedule = new Schedule();
+	        noSchedule.setShift("Trống!"); // Sử dụng giá trị đặc biệt để phân biệt
+
+	        // Đổ vào ListView với thông báo này
+	        todayScheduleListView.getItems().setAll(noSchedule);
+	    }
+	}
+
+	private void loadTodayAppointments() {
+	    ObservableList<String> appointments = FXCollections.observableArrayList();
+	    BookingService bookingService = new BookingService();
+
+	    try {
+	        currentStaff = Session.getCurrentStaff(); // Đảm bảo có thông tin nhân viên
+	        if (currentStaff == null) {
+	            appointments.add("Không thể xác định nhân viên.");
+	            todayAppointmentListView.setItems(appointments);
+	            return;
+	        }
+
+	        List<Booking> bookings = bookingService.getBookingsByStaffId(currentStaff.getId());
+	        LocalDate today = LocalDate.now();
+
+	        for (Booking booking : bookings) {
+	            if (booking.getBookingTime().toLocalDate().equals(today)) {
+	                Pet pet = booking.getPet();
+	                Customer customer = booking.getCustomer();
+
+	                String time = booking.getBookingTime().toLocalTime().toString();
+	                String petName = (pet != null) ? pet.getName() : "Không rõ";
+	                String customerName = (customer != null) ? customer.getFullName() : "Không rõ";
+
+	                String displayText = time + " - " + petName + " (" + customerName + ")";
+	                appointments.add(displayText);
+	            }
+	        }
+
+	        if (appointments.isEmpty()) {
+	            appointments.add("Không có lịch hẹn nào hôm nay.");
+	        }
+
+	        todayAppointmentListView.setItems(appointments);
+
+	    } catch (Exception e) {
+	        appointments.clear();
+	        appointments.add("Lỗi khi tải lịch hẹn hôm nay: " + e.getMessage());
+	        todayAppointmentListView.setItems(appointments);
+	        e.printStackTrace();
+	    }
+	}
+
+
+
 
 	private void setupButtonVisibility() {
 		// Các nút mặc định hiển thị cho tất cả nhân viên
