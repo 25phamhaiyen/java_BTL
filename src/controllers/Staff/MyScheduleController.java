@@ -1,4 +1,3 @@
-
 package controllers.Staff;
 
 import java.io.File;
@@ -31,7 +30,15 @@ import javafx.util.StringConverter;
 import model.Staff;
 import model.WorkSchedule;
 import service.ScheduleService;
+import utils.RoleChecker;
 import utils.Session;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+
 
 public class MyScheduleController implements Initializable {
 
@@ -79,7 +86,11 @@ public class MyScheduleController implements Initializable {
     @FXML private VBox monMorning, tueMorning, wedMorning, thuMorning, friMorning, satMorning, sunMorning;
     @FXML private VBox monAfternoon, tueAfternoon, wedAfternoon, thuAfternoon, friAfternoon, satAfternoon, sunAfternoon;
     @FXML private VBox monEvening, tueEvening, wedEvening, thuEvening, friEvening, satEvening, sunEvening;
-
+    @FXML private Button requestLeaveButton;
+    @FXML private Button requestShiftChangeButton;
+    @FXML private Button registerShiftButton;
+    
+    @FXML private Button homeButton;
     private ScheduleService scheduleService;
     private ObservableList<WorkSchedule> scheduleList;
     private ObservableList<MonthlyStats> monthlyStatsList;
@@ -92,15 +103,19 @@ public class MyScheduleController implements Initializable {
 
         // Get current staff information from Session
         Staff currentStaff = Session.getInstance().getCurrentStaff();
-        if (currentStaff != null) {
-            currentStaffId = currentStaff.getId();
-            staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
-            positionLabel.setText("Vị trí: " + (currentStaff.getRole().getRoleName() != null ? currentStaff.getRole().getRoleName() : "Nhân viên"));
-        } else {
-            showAlert(AlertType.ERROR, "Lỗi", "Không tìm thấy thông tin nhân viên",
-                    "Vui lòng đăng nhập lại.");
+
+        if (currentStaff == null || !RoleChecker.hasPermission("VIEW_SCHEDULE")) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
+                    "Bạn không có quyền truy cập vào màn hình lịch làm việc.");
+            Stage stage = (Stage) dateLabel.getScene().getWindow();
+            stage.close();
+
             return;
         }
+
+        currentStaffId = currentStaff.getId();
+        staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
+        positionLabel.setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
 
         // Initialize table columns
         setupTableColumns();
@@ -123,8 +138,29 @@ public class MyScheduleController implements Initializable {
 
         // Add listener for viewModeSelector
         viewModeSelector.setOnAction(event -> handleViewModeChange());
+
+        // Thiết lập hiển thị nút dựa trên quyền
+        setupButtonVisibility();
     }
 
+    private void setupButtonVisibility() {
+        // Thay vì sử dụng scene.lookup, hãy sử dụng trực tiếp các tham chiếu đã được FXML inject
+        // Giả sử bạn đã có các tham chiếu @FXML cho các nút này
+        
+        // Kiểm tra quyền người dùng
+        if (requestLeaveButton != null) {
+            requestLeaveButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
+        }
+        
+        if (requestShiftChangeButton != null) {
+            requestShiftChangeButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
+        }
+        
+        // Đảm bảo registerShiftButton đã được khai báo và inject qua FXML
+        if (registerShiftButton != null) {
+            registerShiftButton.setDisable(!RoleChecker.hasPermission("REGISTER_SHIFT"));
+        }
+    }
     private void setupTableColumns() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("scheduleID"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("workDate"));
@@ -869,6 +905,24 @@ public class MyScheduleController implements Initializable {
                 "Liên hệ quản trị viên để được hỗ trợ thêm.");
     }
 
+    @FXML
+    private void goToHome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Staff/MainStaffView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) homeButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
+            
+            // Hiển thị thông báo lỗi
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+                    "Đã xảy ra lỗi: " + e.getMessage());
+        }
+    }
+    
     @FXML
     private void exitApplication() {
         Stage stage = (Stage) scheduleTable.getScene().getWindow();

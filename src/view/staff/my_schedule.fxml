@@ -194,24 +194,24 @@
                               <Label text="Tổng ca làm việc:" GridPane.columnIndex="0" GridPane.rowIndex="1"
                                      style="-fx-font-weight: bold;" />
                                      
-                              <HBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER_LEFT">
-                                 <Label fx:id="totalShiftsLabel" text="0" style="-fx-font-size: 14;" />
-                                 <Separator orientation="VERTICAL" />
-                                 <Label text="Ca sáng:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="morningShiftsLabel" text="0" />
-                                 <Separator orientation="VERTICAL" />
-                                 <Label text="Ca chiều:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="afternoonShiftsLabel" text="0" />
-                                 <Separator orientation="VERTICAL" />
-                                 <Label text="Ca tối:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="eveningShiftsLabel" text="0" />
-                              </HBox>
+									<HBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER_LEFT">
+									    <Label fx:id="totalShiftsLabel" text="0" style="-fx-font-size: 14;" />
+									    <Separator orientation="VERTICAL" />
+									    <Label text="Ca sáng:" style="-fx-font-weight: bold;" />
+									    <Label fx:id="morningShiftsLabel" text="0" />
+									    <Separator orientation="VERTICAL" />
+									    <Label text="Ca chiều:" style="-fx-font-weight: bold;" />
+									    <Label fx:id="afternoonShiftsLabel" text="0" />
+									    <Separator orientation="VERTICAL" />
+									    <Label text="Ca tối:" style="-fx-font-weight: bold;" />
+									    <Label fx:id="eveningShiftsLabel" text="0" />
+									</HBox>                              
                            </GridPane>
                            
                            <HBox spacing="10" alignment="CENTER_RIGHT">
-                              <Button text="Yêu cầu nghỉ phép" onAction="#requestLeave"
+                              <Button fx:id="requestLeaveButton" text="Yêu cầu nghỉ phép" onAction="#requestLeave"
                                       style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-                              <Button text="Đổi ca" onAction="#requestShiftChange" />
+                              <Button fx:id="requestShiftChangeButton" text="Đổi ca" onAction="#requestShiftChange" />
                               <Button text="Làm mới" onAction="#refreshSchedule" />
                            </HBox>
                         </VBox>
@@ -255,7 +255,7 @@
                                      
                            <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" 
                                  GridPane.rowIndex="4" GridPane.columnSpan="2">
-                              <Button text="Đăng ký ca làm" onAction="#registerShift"
+                              <Button fx:id="registerShiftButton" text="Đăng ký ca làm" onAction="#registerShift"
                                       style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
                               <Button text="Hủy" onAction="#cancelRegistration" />
                            </HBox>
@@ -385,5 +385,18 @@
          <Button text="Thoát" onAction="#exitApplication" />
       </HBox>
    </bottom>
+   
+   <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-background-color: #f0f0f0;">
+   <padding>
+      <Insets top="10" right="15" bottom="10" left="15"/>
+   </padding>
+   
+   <Label fx:id="statusLabel" text="Trạng thái: Đã tải lịch làm việc" />
+   <Region HBox.hgrow="ALWAYS" />
+   <Button fx:id="homeButton" text="Về trang chủ" onAction="#goToHome"
+          style="-fx-background-color: #d88e3f; -fx-text-fill: white;" />
+   <Button text="Trợ giúp" onAction="#showHelp" />
+   <Button text="Thoát" onAction="#exitApplication" />
+</HBox>
    
 </BorderPane>

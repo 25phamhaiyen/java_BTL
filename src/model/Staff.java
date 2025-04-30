@@ -10,7 +10,7 @@ public class Staff extends Person {
 	private Date hire_date;
 	private Account account;
     private Role role;
-    
+    private String position;
 
     public Staff() {
         super();
@@ -76,6 +76,13 @@ public class Staff extends Person {
 		this.hire_date = hire_date;
 	}
 
+	public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 	@Override
 	public String toString() {
 		return "Staff [dob=" + dob + ", salary=" + salary + ", hire_date=" + hire_date + ", account=" + account
