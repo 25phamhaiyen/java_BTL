@@ -205,13 +205,13 @@
                                  <Separator orientation="VERTICAL" />
                                  <Label text="Ca tối:" style="-fx-font-weight: bold;" />
                                  <Label fx:id="eveningShiftsLabel" text="0" />
-                              </HBox>
+                              </HBox>                              
                            </GridPane>
                            
                            <HBox spacing="10" alignment="CENTER_RIGHT">
-                              <Button text="Yêu cầu nghỉ phép" onAction="#requestLeave"
+                              <Button fx:id="requestLeaveButton" text="Yêu cầu nghỉ phép" onAction="#requestLeave"
                                       style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-                              <Button text="Đổi ca" onAction="#requestShiftChange" />
+                              <Button fx:id="requestShiftChangeButton" text="Đổi ca" onAction="#requestShiftChange" />
                               <Button text="Làm mới" onAction="#refreshSchedule" />
                            </HBox>
                         </VBox>
@@ -255,7 +255,7 @@
                                      
                            <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" 
                                  GridPane.rowIndex="4" GridPane.columnSpan="2">
-                              <Button text="Đăng ký ca làm" onAction="#registerShift"
+                              <Button fx:id="registerShiftButton" text="Đăng ký ca làm" onAction="#registerShift"
                                       style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
                               <Button text="Hủy" onAction="#cancelRegistration" />
                            </HBox>
@@ -277,98 +277,6 @@
                   </BorderPane>
                </content>
             </Tab>
-            
-            <Tab text="Thống kê giờ làm">
-               <content>
-                  <BorderPane>
-                     <top>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="15" right="15" bottom="15" left="15"/>
-                           </padding>
-                           
-                           <HBox spacing="15" alignment="CENTER_LEFT">
-                              <Label text="Thống kê tháng:" style="-fx-font-weight: bold;" />
-                              <ComboBox fx:id="statisticsMonthSelector" prefWidth="120" />
-                              
-                              <Label text="Năm:" style="-fx-font-weight: bold;" />
-                              <ComboBox fx:id="statisticsYearSelector" prefWidth="100" />
-                              
-                              <Button text="Xem thống kê" onAction="#viewWorkStatistics" />
-                              
-                              <Region HBox.hgrow="ALWAYS" />
-                              
-                              <Label text="Loại xuất:" />
-                              <ComboBox fx:id="exportTypeSelector" prefWidth="150" promptText="Chọn loại xuất">
-                                  <items>
-                                      <FXCollections fx:factory="observableArrayList">
-                                          <String fx:value="Báo cáo thống kê" />
-                                          <String fx:value="Lịch làm việc" />
-                                      </FXCollections>
-                                  </items>
-                              </ComboBox>
-                              <Button text="Xuất báo cáo" onAction="#exportWorkReport" />
-                           </HBox>
-                           
-                           <Separator />
-                        </VBox>
-                     </top>
-                     
-                     <center>
-                        <VBox alignment="TOP_CENTER" spacing="20">
-                           <padding>
-                              <Insets top="20" right="25" bottom="20" left="25"/>
-                           </padding>
-                           
-                           <!-- Summary cards -->
-                           <HBox spacing="20">
-                              <VBox style="-fx-background-color: #e1f5fe; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Tổng giờ làm việc" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="totalHoursLabel" text="160 giờ" style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #f9fbe7; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Tăng ca" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="overtimeHoursLabel" text="12 giờ" style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #fff8e1; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Ngày công chuẩn" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="standardWorkdaysLabel" text="22 ngày" style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #e8eaf6; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Ngày nghỉ phép" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="leaveCountLabel" text="1 ngày" style="-fx-font-size: 24; -fx-font-weight: bold;" />
-                              </VBox>
-                           </HBox>
-                           
-                           <!-- Work distribution graph would be here -->
-                           <VBox style="-fx-background-color: #f5f5f5; -fx-padding: 15; -fx-background-radius: 5;">
-                              <Label text="Biểu đồ phân bố thời gian làm việc" style="-fx-font-weight: bold;" />
-                              <Region prefHeight="300" />
-                           </VBox>
-                           
-                           <!-- Monthly comparison table -->
-                           <TableView fx:id="monthlyStatsTable" prefHeight="200">
-                              <columns>
-                                 <TableColumn prefWidth="100" text="Tháng" />
-                                 <TableColumn prefWidth="150" text="Tổng giờ làm việc" />
-                                 <TableColumn prefWidth="120" text="Tăng ca" />
-                                 <TableColumn prefWidth="120" text="Ngày công" />
-                                 <TableColumn prefWidth="120" text="Ngày nghỉ" />
-                                 <TableColumn prefWidth="150" text="Hiệu suất" />
-                              </columns>
-                           </TableView>
-                        </VBox>
-                     </center>
-                  </BorderPane>
-               </content>
-            </Tab>
          </tabs>
       </TabPane>
    </center>
@@ -381,9 +289,10 @@
          
          <Label fx:id="statusLabel" text="Trạng thái: Đã tải lịch làm việc" />
          <Region HBox.hgrow="ALWAYS" />
+         <Button fx:id="homeButton" text="Về trang chủ" onAction="#goToHome"
+                style="-fx-background-color: #d88e3f; -fx-text-fill: white;" />
          <Button text="Trợ giúp" onAction="#showHelp" />
          <Button text="Thoát" onAction="#exitApplication" />
       </HBox>
    </bottom>
-   
 </BorderPane>

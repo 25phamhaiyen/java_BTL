@@ -1,4 +1,3 @@
-
 package controllers.Staff;
 
 import java.io.File;
@@ -8,9 +7,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.layout.GridPane;
@@ -31,8 +28,13 @@ import javafx.util.StringConverter;
 import model.Staff;
 import model.WorkSchedule;
 import service.ScheduleService;
+import utils.RoleChecker;
 import utils.Session;
-
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import java.util.Map;
+import java.util.HashMap;
 public class MyScheduleController implements Initializable {
 
     @FXML private Label dateLabel;
@@ -59,30 +61,19 @@ public class MyScheduleController implements Initializable {
     @FXML private ComboBox<Shift> shiftSelector;
     @FXML private ComboBox<String> locationSelector;
     @FXML private TextArea registrationNotes;
-    @FXML private ComboBox<String> statisticsMonthSelector;
-    @FXML private ComboBox<String> statisticsYearSelector;
-    @FXML private ComboBox<String> exportTypeSelector;
-    @FXML private Label totalHoursLabel;
-    @FXML private Label overtimeHoursLabel;
-    @FXML private Label standardWorkdaysLabel;
-    @FXML private Label leaveCountLabel;
-    @FXML private TableView<MonthlyStats> monthlyStatsTable;
-    @FXML private TableColumn<MonthlyStats, String> monthColumn;
-    @FXML private TableColumn<MonthlyStats, String> totalHoursColumn;
-    @FXML private TableColumn<MonthlyStats, String> overtimeHoursColumn;
-    @FXML private TableColumn<MonthlyStats, String> workdaysColumn;
-    @FXML private TableColumn<MonthlyStats, String> leaveDaysColumn;
-    @FXML private TableColumn<MonthlyStats, String> performanceColumn;
     @FXML private Label statusLabel;
     @FXML private VBox dayView;
     @FXML private VBox weekView;
     @FXML private VBox monMorning, tueMorning, wedMorning, thuMorning, friMorning, satMorning, sunMorning;
     @FXML private VBox monAfternoon, tueAfternoon, wedAfternoon, thuAfternoon, friAfternoon, satAfternoon, sunAfternoon;
     @FXML private VBox monEvening, tueEvening, wedEvening, thuEvening, friEvening, satEvening, sunEvening;
+    @FXML private Button requestLeaveButton;
+    @FXML private Button requestShiftChangeButton;
+    @FXML private Button registerShiftButton;
+    @FXML private Button homeButton;
 
     private ScheduleService scheduleService;
     private ObservableList<WorkSchedule> scheduleList;
-    private ObservableList<MonthlyStats> monthlyStatsList;
     private int currentStaffId;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -92,15 +83,19 @@ public class MyScheduleController implements Initializable {
 
         // Get current staff information from Session
         Staff currentStaff = Session.getInstance().getCurrentStaff();
-        if (currentStaff != null) {
-            currentStaffId = currentStaff.getId();
-            staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
-            positionLabel.setText("Vị trí: " + (currentStaff.getRole().getRoleName() != null ? currentStaff.getRole().getRoleName() : "Nhân viên"));
-        } else {
-            showAlert(AlertType.ERROR, "Lỗi", "Không tìm thấy thông tin nhân viên",
-                    "Vui lòng đăng nhập lại.");
+
+        if (currentStaff == null || !RoleChecker.hasPermission("VIEW_SCHEDULE")) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
+                    "Bạn không có quyền truy cập vào màn hình lịch làm việc.");
+            Stage stage = (Stage) dateLabel.getScene().getWindow();
+            stage.close();
+
             return;
         }
+
+        currentStaffId = currentStaff.getId();
+        staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
+        positionLabel.setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
 
         // Initialize table columns
         setupTableColumns();
@@ -111,11 +106,8 @@ public class MyScheduleController implements Initializable {
         // Set default values for date pickers
         initializeDatePickers();
         
-        // Initialize monthly stats table
-        setupMonthlyStatsTable();
-        
-        // Load today's schedule by default
-        loadScheduleByDate(LocalDate.now());
+        // Load schedule for a date that has data (e.g., 2025-05-10)
+        loadScheduleByDate(LocalDate.of(2025, 5, 10));
         
         // Add selection listener for schedule table
         scheduleTable.getSelectionModel().selectedItemProperty().addListener(
@@ -123,6 +115,23 @@ public class MyScheduleController implements Initializable {
 
         // Add listener for viewModeSelector
         viewModeSelector.setOnAction(event -> handleViewModeChange());
+
+        // Thiết lập hiển thị nút dựa trên quyền
+        setupButtonVisibility();
+    }
+
+    private void setupButtonVisibility() {
+        if (requestLeaveButton != null) {
+            requestLeaveButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
+        }
+        
+        if (requestShiftChangeButton != null) {
+            requestShiftChangeButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
+        }
+        
+        if (registerShiftButton != null) {
+            registerShiftButton.setDisable(!RoleChecker.hasPermission("REGISTER_SHIFT"));
+        }
     }
 
     private void setupTableColumns() {
@@ -191,25 +200,6 @@ public class MyScheduleController implements Initializable {
         // Location selector
         locationSelector.getItems().addAll("Chi nhánh 1", "Chi nhánh 2", "Chi nhánh 3");
         
-        // Statistics month selector
-        for (int i = 1; i <= 12; i++) {
-            statisticsMonthSelector.getItems().add(String.format("%02d", i));
-        }
-        
-        // Statistics year selector
-        int currentYear = LocalDate.now().getYear();
-        for (int i = currentYear - 2; i <= currentYear + 1; i++) {
-            statisticsYearSelector.getItems().add(String.valueOf(i));
-        }
-        
-        // Set default values
-        statisticsMonthSelector.setValue(String.format("%02d", LocalDate.now().getMonthValue()));
-        statisticsYearSelector.setValue(String.valueOf(LocalDate.now().getYear()));
-        
-        // Export type selector
-        exportTypeSelector.getItems().addAll("Báo cáo thống kê", "Lịch làm việc");
-        exportTypeSelector.setValue("Báo cáo thống kê");
-        
         // View mode selector
         viewModeSelector.getItems().addAll("Hôm nay", "Tuần", "Tháng");
         viewModeSelector.setValue("Hôm nay");
@@ -234,9 +224,9 @@ public class MyScheduleController implements Initializable {
         registrationDatePicker.setConverter(converter);
         
         // Set default values
-        LocalDate today = LocalDate.now();
-        datePicker.setValue(today);
-        registrationDatePicker.setValue(today);
+        LocalDate defaultDate = LocalDate.of(2025, 5, 10); // Ngày có dữ liệu
+        datePicker.setValue(defaultDate);
+        registrationDatePicker.setValue(defaultDate);
         
         // Add listener for date picker changes
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -245,23 +235,10 @@ public class MyScheduleController implements Initializable {
             }
         });
     }
-    
-    private void setupMonthlyStatsTable() {
-        monthlyStatsList = FXCollections.observableArrayList();
-        
-        if (monthColumn != null) monthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
-        if (totalHoursColumn != null) totalHoursColumn.setCellValueFactory(new PropertyValueFactory<>("totalHours"));
-        if (overtimeHoursColumn != null) overtimeHoursColumn.setCellValueFactory(new PropertyValueFactory<>("overtimeHours"));
-        if (workdaysColumn != null) workdaysColumn.setCellValueFactory(new PropertyValueFactory<>("workdays"));
-        if (leaveDaysColumn != null) leaveDaysColumn.setCellValueFactory(new PropertyValueFactory<>("leaveDays"));
-        if (performanceColumn != null) performanceColumn.setCellValueFactory(new PropertyValueFactory<>("performance"));
-        
-        monthlyStatsTable.setItems(monthlyStatsList);
-    }
 
     private void handleViewModeChange() {
         String mode = viewModeSelector.getValue();
-        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
         
         switch (mode) {
             case "Hôm nay":
@@ -280,19 +257,29 @@ public class MyScheduleController implements Initializable {
         try {
             List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaffId, date);
             scheduleList = FXCollections.observableArrayList(schedules);
-            applyShiftFilter();
+
+            // Kiểm tra nếu không có dữ liệu
+            if (schedules.isEmpty()) {
+                showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+                        "Không có lịch làm việc vào ngày " + date.format(dateFormatter));
+                scheduleTable.setItems(FXCollections.observableArrayList());
+            } else {
+                scheduleTable.setItems(scheduleList);
+            }
+
             dateLabel.setText("Lịch làm việc ngày: " + date.format(dateFormatter));
             updateShiftSummary(schedules);
             showDayView();
             statusLabel.setText("Trạng thái: Đã tải lịch làm việc ngày " + date.format(dateFormatter));
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc", e.getMessage());
+            statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc");
         }
     }
 
     private void loadWeekSchedule() {
         try {
-            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
             LocalDate endOfWeek = startOfWeek.plusDays(6);
             
@@ -300,7 +287,16 @@ public class MyScheduleController implements Initializable {
                     currentStaffId, startOfWeek, endOfWeek);
             
             scheduleList = FXCollections.observableArrayList(schedules);
-            applyShiftFilter();
+
+            // Kiểm tra nếu không có dữ liệu
+            if (schedules.isEmpty()) {
+                showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+                        "Không có lịch làm việc trong tuần từ " + startOfWeek.format(dateFormatter) +
+                        " đến " + endOfWeek.format(dateFormatter));
+                scheduleTable.setItems(FXCollections.observableArrayList());
+            } else {
+                scheduleTable.setItems(scheduleList);
+            }
             
             dateLabel.setText("Lịch làm việc từ: " +
                     startOfWeek.format(dateFormatter) + " đến " +
@@ -316,12 +312,13 @@ public class MyScheduleController implements Initializable {
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tuần", 
                     e.getMessage());
+            statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tuần");
         }
     }
 
     private void loadMonthSchedule() {
         try {
-            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfMonth = date.withDayOfMonth(1);
             LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
             
@@ -329,7 +326,15 @@ public class MyScheduleController implements Initializable {
                     currentStaffId, startOfMonth, endOfMonth);
             
             scheduleList = FXCollections.observableArrayList(schedules);
-            applyShiftFilter();
+
+            // Kiểm tra nếu không có dữ liệu
+            if (schedules.isEmpty()) {
+                showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+                        "Không có lịch làm việc trong tháng " + date.getMonthValue() + "/" + date.getYear());
+                scheduleTable.setItems(FXCollections.observableArrayList());
+            } else {
+                scheduleTable.setItems(scheduleList);
+            }
             
             dateLabel.setText("Lịch làm việc tháng: " + date.getMonthValue() + "/" + date.getYear());
             updateShiftSummary(schedules);
@@ -340,6 +345,7 @@ public class MyScheduleController implements Initializable {
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tháng", 
                     e.getMessage());
+            statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tháng");
         }
     }
 
@@ -750,125 +756,33 @@ public class MyScheduleController implements Initializable {
     }
 
     @FXML
-    private void viewWorkStatistics() {
-        String monthStr = statisticsMonthSelector.getValue();
-        String yearStr = statisticsYearSelector.getValue();
-        
-        if (monthStr == null || yearStr == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Chưa chọn thời gian",
-                    "Vui lòng chọn tháng và năm để xem thống kê.");
-            return;
-        }
-        
-        try {
-            int month = Integer.parseInt(monthStr);
-            int year = Integer.parseInt(yearStr);
-            
-            Map<String, Object> stats = scheduleService.getMonthlyStatistics(currentStaffId, month, year);
-            
-            totalHoursLabel.setText(stats.get("totalHours") + " giờ");
-            overtimeHoursLabel.setText(stats.get("overtimeHours") + " giờ");
-            standardWorkdaysLabel.setText(stats.get("standardWorkdays") + " ngày");
-            leaveCountLabel.setText(stats.get("leaveCount") + " ngày");
-            
-            int expectedHours = (int) stats.get("standardWorkdays") * 8;
-            int totalHours = (int) stats.get("totalHours");
-            String performance = expectedHours > 0 ? 
-                    String.format("%.0f%%", (totalHours * 100.0 / expectedHours)) : "N/A";
-            
-            monthlyStatsList.clear();
-            monthlyStatsList.add(new MonthlyStats(
-                    month, 
-                    year, 
-                    (int)stats.get("totalHours"), 
-                    (int)stats.get("overtimeHours"), 
-                    (int)stats.get("standardWorkdays"), 
-                    (int)stats.get("leaveCount"), 
-                    performance));
-            
-            statusLabel.setText("Trạng thái: Đã tải thống kê giờ làm tháng " + month + "/" + year);
-        } catch (NumberFormatException e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Dữ liệu không hợp lệ",
-                    "Tháng và năm phải là số nguyên.");
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tải thống kê", e.getMessage());
-        }
-    }
-
-    @FXML
-    private void exportWorkReport() {
-        String exportType = exportTypeSelector.getValue();
-        String monthStr = statisticsMonthSelector.getValue();
-        String yearStr = statisticsYearSelector.getValue();
-        
-        if (monthStr == null || yearStr == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Chưa chọn thời gian",
-                    "Vui lòng chọn tháng và năm để xuất báo cáo.");
-            return;
-        }
-        
-        try {
-            int month = Integer.parseInt(monthStr);
-            int year = Integer.parseInt(yearStr);
-            String fileName = (exportType.equals("Báo cáo thống kê") ? 
-                    "work_statistics_" : "work_schedule_") + year + "_" + month + ".csv";
-            
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Lưu báo cáo");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-            fileChooser.setInitialFileName(fileName);
-            
-            File file = fileChooser.showSaveDialog(null);
-            if (file != null) {
-                try (FileWriter writer = new FileWriter(file)) {
-                    if (exportType.equals("Báo cáo thống kê")) {
-                        Map<String, Object> stats = scheduleService.getMonthlyStatistics(currentStaffId, month, year);
-                        writer.write("Thống kê,Giá trị\n");
-                        writer.append("Tổng giờ làm việc,").append(stats.get("totalHours") + " giờ\n");
-                        writer.append("Tăng ca,").append(stats.get("overtimeHours") + " giờ\n");
-                        writer.append("Ngày công chuẩn,").append(stats.get("standardWorkdays") + " ngày\n");
-                        writer.append("Ngày nghỉ phép,").append(stats.get("leaveCount") + " ngày\n");
-                    } else {
-                        LocalDate startDate = LocalDate.of(year, month, 1);
-                        LocalDate endDate = startDate.withDayOfMonth(startDate.getMonth().length(startDate.isLeapYear()));
-                        List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDateRange(
-                                currentStaffId, startDate, endDate);
-                        
-                        writer.append("Mã lịch,Ngày,Ca,Giờ bắt đầu,Giờ kết thúc,Địa điểm,Công việc,Ghi chú\n");
-                        for (WorkSchedule schedule : schedules) {
-                            writer.append(String.format("%d,%s,%s,%s,%s,%s,%s,%s\n",
-                                    schedule.getScheduleID(),
-                                    schedule.getWorkDate().format(dateFormatter),
-                                    schedule.getShift() != null ? schedule.getShift().name() : "",
-                                    schedule.getStartTime() != null ? schedule.getStartTime().toString() : "",
-                                    schedule.getEndTime() != null ? schedule.getEndTime().toString() : "",
-                                    schedule.getLocation() != null ? schedule.getLocation() : "",
-                                    schedule.getTask() != null ? schedule.getTask() : "",
-                                    schedule.getNote() != null ? schedule.getNote() : ""));
-                        }
-                    }
-                    showAlert(AlertType.INFORMATION, "Thành công", "Đã xuất báo cáo",
-                            "Báo cáo đã được lưu tại: " + file.getAbsolutePath());
-                    statusLabel.setText("Trạng thái: Đã xuất " + exportType.toLowerCase());
-                }
-            }
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể xuất báo cáo", e.getMessage());
-        }
-    }
-
-    @FXML
     private void showHelp() {
         showAlert(AlertType.INFORMATION, "Trợ giúp", "Hướng dẫn sử dụng",
                 "Phần quản lý lịch làm việc cho phép bạn:\n\n" +
                 "- Xem lịch làm việc theo ngày, tuần, tháng\n" +
                 "- Đăng ký ca làm việc mới\n" +
-                "- Xem thống kê giờ làm\n" +
                 "- Yêu cầu nghỉ phép hoặc đổi ca\n\n" +
                 "Liên hệ quản trị viên để được hỗ trợ thêm.");
     }
 
+    @FXML
+    private void goToHome() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Staff/MainStaffView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) homeButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
+            
+            // Hiển thị thông báo lỗi
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+                    "Đã xảy ra lỗi: " + e.getMessage());
+        }
+    }
+    
     @FXML
     private void exitApplication() {
         Stage stage = (Stage) scheduleTable.getScene().getWindow();
@@ -881,32 +795,5 @@ public class MyScheduleController implements Initializable {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
-    }
-
-    public static class MonthlyStats {
-        private final int month;
-        private final int year;
-        private final int totalHours;
-        private final int overtimeHours;
-        private final int workdays;
-        private final int leaveDays;
-        private final String performance;
-
-        public MonthlyStats(int month, int year, int totalHours, int overtimeHours, int workdays, int leaveDays, String performance) {
-            this.month = month;
-            this.year = year;
-            this.totalHours = totalHours;
-            this.overtimeHours = overtimeHours;
-            this.workdays = workdays;
-            this.leaveDays = leaveDays;
-            this.performance = performance;
-        }
-
-        public String getMonth() { return String.format("%02d/%d", month, year); }
-        public String getTotalHours() { return totalHours + " giờ"; }
-        public String getOvertimeHours() { return overtimeHours + " giờ"; }
-        public String getWorkdays() { return workdays + " ngày"; }
-        public String getLeaveDays() { return leaveDays + " ngày"; }
-        public String getPerformance() { return performance; }
     }
 }
