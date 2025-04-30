@@ -55,7 +55,7 @@ public class InvoiceDetailController implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        invoiceService = new InvoiceService(null, null, null); // TODO: Cập nhật constructor
+        invoiceService = new InvoiceService(); // TODO: Cập nhật constructor
     }
     
     /**

@@ -95,7 +95,7 @@ public class MyScheduleController implements Initializable {
         if (currentStaff != null) {
             currentStaffId = currentStaff.getId();
             staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
-            positionLabel.setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
+            positionLabel.setText("Vị trí: " + (currentStaff.getRole().getRoleName() != null ? currentStaff.getRole().getRoleName() : "Nhân viên"));
         } else {
             showAlert(AlertType.ERROR, "Lỗi", "Không tìm thấy thông tin nhân viên",
                     "Vui lòng đăng nhập lại.");

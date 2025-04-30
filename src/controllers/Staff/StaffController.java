@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import controllers.SceneSwitcher;
+import enums.Shift;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,8 +24,8 @@ import javafx.stage.Stage;
 import model.Booking;
 import model.Customer;
 import model.Pet;
-import model.Schedule;
 import model.Staff;
+import model.WorkSchedule;
 import service.BookingService;
 import service.ScheduleService;
 import service.StaffService;
@@ -42,7 +43,6 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private Label staffRoleLabel;
-
 	@FXML
 	private Button myScheduleButton;
 
@@ -62,7 +62,7 @@ public class StaffController implements Initializable {
 	private Button logoutButton;
 	
 	@FXML
-	private ListView<Schedule> todayScheduleListView;
+	private ListView<WorkSchedule> todayScheduleListView;
 
 	private final ScheduleService scheduleService = new ScheduleService();
 
@@ -95,9 +95,9 @@ public class StaffController implements Initializable {
 
 		// Mặc định hiển thị màn hình chính của nhân viên
 //        loadStaffHomeView();
-		todayScheduleListView.setCellFactory(lv -> new ListCell<Schedule>() {
+		todayScheduleListView.setCellFactory(lv -> new ListCell<WorkSchedule>() {
 		    @Override
-		    protected void updateItem(Schedule item, boolean empty) {
+		    protected void updateItem(WorkSchedule item, boolean empty) {
 		        super.updateItem(item, empty);
 		        if (empty || item == null) {
 		            setText(null);
@@ -116,12 +116,12 @@ public class StaffController implements Initializable {
 	    currentStaff = Session.getCurrentStaff(); // Kiểm tra lại thông tin nhân viên từ session
 
 	    LocalDate today = LocalDate.now();
-	    List<Schedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
+	    List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
 
 	    // Log để kiểm tra dữ liệu
 	    if (schedules != null && !schedules.isEmpty()) {
 	        System.out.println("Dữ liệu lịch làm việc: ");
-	        for (Schedule schedule : schedules) {
+	        for (WorkSchedule schedule : schedules) {
 	            System.out.println(schedule); // In ra thông tin của mỗi lịch làm việc
 	        }
 	        // Đổ vào ListView nếu có lịch
@@ -130,8 +130,8 @@ public class StaffController implements Initializable {
 	        System.out.println("Không có lịch làm việc cho hôm nay.");
 	        
 	        // Tạo một đối tượng Schedule đặc biệt với giá trị "NO_SCHEDULE"
-	        Schedule noSchedule = new Schedule();
-	        noSchedule.setShift("Trống!"); // Sử dụng giá trị đặc biệt để phân biệt
+	        WorkSchedule noSchedule = new WorkSchedule();
+	        noSchedule.setShift(Shift.NOSHIFT); // Sử dụng giá trị đặc biệt để phân biệt
 
 	        // Đổ vào ListView với thông báo này
 	        todayScheduleListView.getItems().setAll(noSchedule);
