@@ -103,11 +103,13 @@ public class MyScheduleController implements Initializable {
 
         // Get current staff information from Session
         Staff currentStaff = Session.getInstance().getCurrentStaff();
+
         if (currentStaff == null || !RoleChecker.hasPermission("VIEW_SCHEDULE")) {
             showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
                     "Bạn không có quyền truy cập vào màn hình lịch làm việc.");
             Stage stage = (Stage) dateLabel.getScene().getWindow();
             stage.close();
+
             return;
         }
 

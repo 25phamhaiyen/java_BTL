@@ -22,7 +22,8 @@ public class SceneSwitcher {
 	 */
 	public static void setMainStage(Stage stage) {
 		mainStage = stage;
-		mainStage.setTitle("Pet Care System");
+		mainStage.setTitle("Cửa hàng chăm sóc thú cưng BESTPETS");
+		
 	}
 
 	/**
@@ -79,31 +80,13 @@ public class SceneSwitcher {
 	}
 
 	/**
-	 * Chuyển đến màn hình admin dashboard
-	 * 
-	 * @param currentStage Stage hiện tại
-	 */
-	public static void switchToAdminDashboardScene(Stage currentStage) {
-		try {
-			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/admin/adminDashboard.fxml"));
-			Scene scene = new Scene(root);
-			currentStage.setScene(scene);
-			currentStage.setTitle("Quản lý hệ thống");
-			currentStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Không thể tải màn hình quản lý: " + e.getMessage());
-		}
-	}
-
-	/**
 	 * Chuyển đến màn hình nhân viên
 	 * 
 	 * @param currentStage Stage hiện tại
 	 */
 	public static void switchToStaffScene(Stage currentStage) {
 		try {
-			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/staff/staffView.fxml"));
+			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/staff/staff_home.fxml"));
 			Scene scene = new Scene(root);
 			currentStage.setScene(scene);
 			currentStage.setTitle("Nhân viên");
@@ -114,23 +97,6 @@ public class SceneSwitcher {
 		}
 	}
 
-	/**
-	 * Chuyển đến màn hình khách hàng
-	 * 
-	 * @param currentStage Stage hiện tại
-	 */
-	public static void switchToCustomerScene(Stage currentStage) {
-		try {
-			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/customer/customerDashboard.fxml"));
-			Scene scene = new Scene(root);
-			currentStage.setScene(scene);
-			currentStage.setTitle("Khách hàng");
-			currentStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Không thể tải màn hình khách hàng: " + e.getMessage());
-		}
-	}
 
 	/**
 	 * Chuyển đến màn hình chi tiết booking

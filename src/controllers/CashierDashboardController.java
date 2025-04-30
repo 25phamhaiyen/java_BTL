@@ -1,6 +1,8 @@
 // src/frontend1/controller/CashierDashboardController.java
 package controllers;
 
+import java.time.LocalDateTime;
+
 import javafx.fxml.FXML;
 
 import javafx.scene.control.Label;
@@ -17,7 +19,7 @@ public class CashierDashboardController {
     @FXML private TableView<Order> bookingTable;
     @FXML private TableColumn<Order, String> petColumn;
     @FXML private TableColumn<Order, String> serviceColumn;
-    //@FXML private TableColumn<Order, LocalDateTime> timeColumn;
+    @FXML private TableColumn<Order, LocalDateTime> timeColumn;
     @FXML private TableColumn<Order, Integer> statusColumn;
 
     private OrderService orderService;

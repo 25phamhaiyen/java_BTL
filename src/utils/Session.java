@@ -69,7 +69,6 @@ public class Session {
             instance.attributes.clear();
         }
     }
-
     public static void logout() {
         clearSession();
     }

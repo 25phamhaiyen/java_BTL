@@ -1,7 +1,9 @@
 package enums;
 
 public enum Shift {
+
     MORNING(0), AFTERNOON(1), EVENING(2), NOSHIFT(3);
+
 
     private final int code;
 
