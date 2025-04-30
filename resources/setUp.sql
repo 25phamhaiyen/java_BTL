@@ -26,7 +26,7 @@ CREATE TABLE `person` (
     full_name VARCHAR(100) NOT NULL,
     gender ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER',
     `phone` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-    `address` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+    `address` TEXT COLLATE 'utf8mb4_unicode_ci', -- Bỏ NOT NULL để cho phép giá trị NULL
     `email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
     PRIMARY KEY (`person_id`) USING BTREE,
     UNIQUE INDEX `Person_Phone` (`phone`) USING BTREE,

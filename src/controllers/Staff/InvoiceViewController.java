@@ -1594,7 +1594,7 @@ public class InvoiceViewController implements Initializable {
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == saveButtonType) {
                     try {
-                        String sql = "INSERT INTO person (full_name, phone, address, created_at) VALUES (?, ?, NULL, NOW())";
+                    	String sql = "INSERT INTO person (full_name, phone, address) VALUES (?, ?, NULL)";
                         try (Connection conn = DatabaseConnection.getConnection();
                              PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                             stmt.setString(1, nameField.getText().trim());

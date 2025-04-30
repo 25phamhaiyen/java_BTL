@@ -17,7 +17,6 @@ DELETE FROM promotion;
 DELETE FROM permission;
 DELETE FROM role;
 
-
 INSERT INTO role (role_name) VALUES 
 ('ADMIN'), 
 ('STAFF_CARE'), 
@@ -53,7 +52,6 @@ VALUES
 
 INSERT INTO `account` (account_id, username, `password`, role_id)
 VALUES
-
 (1, 'admin01', '$2a$10$bxB8Fa1fAwS7BZoplZQCQOyc6CQEMDixqUWZ1e6O/6QJRUVW5mYlG', 1), -- pass: admin123
 (2, 'care01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
 (3, 'care02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
@@ -66,6 +64,7 @@ VALUES
 (10, 'cashier02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 3), -- pass: 123
 (11, 'reception01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4), -- pass: 123
 (12, 'reception02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4); -- pass: 123
+
 INSERT INTO staff (staff_id, dob, salary, hire_date, account_id, role_id)
 VALUES
 (1, '1990-01-01', 20000000, '2020-01-01', 1, 1),
@@ -93,12 +92,14 @@ VALUES
 (20, 80),
 (21, 90),
 (22, 60);
+
 INSERT INTO pet_type (type_id, species, breed) VALUES
 (1, 'Dog', 'Poodle'),
 (2, 'Dog', 'Shiba'),
 (3, 'Cat', 'Mèo Anh Lông Ngắn'),
 (4, 'Cat', 'Mèo Ba Tư'),
 (5, 'Hamster', 'Hamster Bear');
+
 INSERT INTO pet (name, pet_gender, dob, customer_id, type_id, weight) VALUES
 ('Milo', 'MALE', '2022-01-01', 22, 1, 5.2),
 ('Luna', 'FEMALE', '2021-03-12', 22, 3, 4.0),
@@ -120,18 +121,21 @@ INSERT INTO pet (name, pet_gender, dob, customer_id, type_id, weight) VALUES
 ('Toto', 'MALE', '2023-03-03', 19, 5, 0.5),
 ('Mun', 'FEMALE', '2021-04-04', 20, 3, 4.3),
 ('Misa', 'FEMALE', '2022-06-06', 20, 4, 3.2);
+
 INSERT INTO service (service_id, name, description, price, duration_minutes, active) VALUES
 (1, 'Tắm thú cưng', 'Tắm, sấy khô và chải lông cho thú cưng', 100000, 30, true),
 (2, 'Cắt tỉa lông', 'Cắt tỉa tạo kiểu theo yêu cầu', 150000, 45, true),
-(3, 'Khám sức khỏe', 'Kiểm tra tổng quát sức khỏe thú cưng', 200000, 30, true),
+(3, 'Khám sức khỏe', 'Kiểm tra tổng quát sức khỏe thú AFF', 200000, 30, true),
 (4, 'Tiêm phòng', 'Tiêm các loại vaccine cơ bản', 250000, 15, true),
 (5, 'Gửi trông thú cưng', 'Dịch vụ giữ thú cưng theo giờ', 50000, 60, true),
 (6, 'Huấn luyện cơ bản', 'Dạy ngồi, đứng, bắt tay,...', 300000, 60, false);
+
 INSERT INTO promotion (promotion_id, code, description, discount_percent, start_date, end_date, active) VALUES
 (1, 'KM1', 'Giảm 10% cho tất cả các dịch vụ', 10, '2025-04-01', '2025-04-15', true),
 (2, 'KM2', 'Chỉ áp dụng cho khách hàng lần đầu sử dụng', 20, '2025-04-01', '2025-04-30', true),
 (3, 'KM3', 'Giảm 15% khi sử dụng combo 2 dịch vụ', 15, '2025-03-15', '2025-04-10', false),
 (4, 'KM4', 'Giảm 5% toàn bộ đơn hàng >300k', 5, '2025-06-01', '2025-06-30', true);
+
 INSERT INTO booking (customer_id, pet_id, staff_id, booking_time, status, note) VALUES
 (21, 1, 2, '2025-04-01 10:00:00', 'PENDING', NULL),
 (22, 2, 3, '2025-04-02 14:00:00', 'CONFIRMED', NULL),
@@ -143,6 +147,7 @@ INSERT INTO booking (customer_id, pet_id, staff_id, booking_time, status, note) 
 (18, 8, 9, '2025-04-08 08:30:00', 'CONFIRMED', NULL),
 (19, 9, 10, '2025-04-09 17:30:00', 'COMPLETED', NULL),
 (20, 10, 11, '2025-04-10 10:45:00', 'PENDING', NULL);
+
 INSERT INTO booking_detail (booking_id, service_id, quantity, price) VALUES
 (1, 1, 1, 100000),
 (1, 2, 1, 50000),
@@ -156,12 +161,14 @@ INSERT INTO booking_detail (booking_id, service_id, quantity, price) VALUES
 (8, 3, 1, 80000),
 (9, 4, 1, 120000),
 (10, 1, 1, 100000);
+
 INSERT INTO `order` (order_id, customer_id, order_date, total_amount, status, voucher_code) VALUES
 (1, 21, '2025-04-01', 200000, 'PENDING', NULL),
 (2, 22, '2025-04-02', 150000, 'COMPLETED', 'KM3'),
 (3, 13, '2025-04-03', 300000, 'CANCELLED', NULL),
 (4, 14, '2025-04-04', 100000, 'PENDING', NULL),
 (5, 15, '2025-04-05', 180000, 'COMPLETED', NULL);
+
 INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES
 (1, 1, 1, 100000),
 (1, 2, 1, 100000),
@@ -169,6 +176,7 @@ INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES
 (3, 3, 1, 300000),
 (4, 4, 1, 100000),
 (5, 5, 2, 90000);
+
 INSERT INTO invoice (invoice_id, order_id, payment_date, total, status, payment_method, staff_id) VALUES
 (1, 1, '2025-04-01', 200000, 'PENDING', 'CASH', 9),
 (2, 2, '2025-04-02', 150000, 'COMPLETED', 'CARD', 10),
@@ -176,17 +184,30 @@ INSERT INTO invoice (invoice_id, order_id, payment_date, total, status, payment_
 (4, 4, '2025-04-04', 100000, 'PENDING', 'CARD', 10),
 (5, 5, '2025-04-05', 180000, 'COMPLETED', 'CASH', 9);
 
-INSERT INTO work_schedule (schedule_id, staff_id, work_date, shift, note) VALUES
-(1, 2, '2025-04-08', 'MORNING', 'WORKING'),
-(2, 3, '2025-04-08', 'AFTERNOON', 'WORKING'),
-(3, 4, '2025-04-08', 'MORNING', 'ABSENT'),
-(4, 5, '2025-04-08', 'EVENING', 'WORKING'),
-(5, 6, '2025-04-09', 'MORNING', 'WORKING'),
-(6, 7, '2025-04-09', 'AFTERNOON', 'WORKING'),
-(7, 8, '2025-04-09', 'EVENING', 'WORKING'),
-(8, 9, '2025-04-09', 'MORNING', 'OFF'),
-(9, 10, '2025-04-09', 'MORNING', 'WORKING'),
-(10, 11, '2025-04-09', 'AFTERNOON', 'WORKING');
+INSERT INTO work_schedule (schedule_id, staff_id, work_date, shift, note, start_time, end_time, location, task) VALUES
+-- Dữ liệu hiện có
+(1, 2, '2025-04-08', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(2, 3, '2025-04-08', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(3, 4, '2025-04-08', 'MORNING', 'ABSENT', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(4, 5, '2025-04-08', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(5, 6, '2025-04-09', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(6, 7, '2025-04-09', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(7, 8, '2025-04-09', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(8, 9, '2025-04-09', 'MORNING', 'OFF', NULL, NULL, NULL, NULL),
+(9, 10, '2025-04-09', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Thu ngân'),
+(10, 11, '2025-04-09', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Tiếp nhận khách'),
+-- Thêm dữ liệu mới cho MyScheduleController
+(11, 1, '2025-05-10', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Quản lý hệ thống'),
+(12, 2, '2025-05-10', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 2', 'Chăm sóc thú cưng'),
+(13, 3, '2025-05-10', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 2', 'Chăm sóc thú cưng'),
+(14, 4, '2025-05-11', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(15, 5, '2025-05-11', 'AFTERNOON', 'ABSENT', '13:00:00', '17:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(16, 6, '2025-05-11', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 2', 'Chăm sóc thú cưng'),
+(17, 7, '2025-05-12', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(18, 8, '2025-05-12', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(19, 9, '2025-05-12', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 1', 'Thu ngân'),
+(20, 12, '2025-05-12', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 2', 'Tiếp nhận khách');
+
 INSERT INTO permission (permission_code, description) VALUES
 ('CREATE_BOOKING', 'Đặt lịch hẹn cho khách'),
 ('MANAGE_PAYMENT', 'Thực hiện thanh toán, áp dụng KM, ghi nhận hóa đơn'),
@@ -219,4 +240,3 @@ CALL assign_permission_by_role(9);
 CALL assign_permission_by_role(10);
 CALL assign_permission_by_role(11);
 CALL assign_permission_by_role(12);
-
