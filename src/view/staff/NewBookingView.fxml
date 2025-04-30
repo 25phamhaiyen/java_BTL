@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.Staff.BookingViewController"
+      spacing="10" alignment="CENTER" style="-fx-background-color: #f4f4f4;">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Tạo lịch hẹn mới" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <!-- Thông tin khách hàng -->
+    <Label text="Số điện thoại khách hàng"/>
+    <TextField fx:id="phoneField" promptText="Nhập số điện thoại"/>
+
+    <Label text="Tên khách hàng"/>
+    <TextField fx:id="customerNameField" promptText="Tên khách hàng" disable="true"/>
+
+    <!-- Thú cưng -->
+    <Label text="Thú cưng"/>
+    <ComboBox fx:id="petComboBox" promptText="Chọn thú cưng" style="-fx-pref-width: 200px;"/>
+
+    <!-- Dịch vụ -->
+    <Label text="Dịch vụ"/>
+    <ComboBox fx:id="serviceComboBox" promptText="Chọn dịch vụ" style="-fx-pref-width: 200px;"/>
+
+    <!-- Ngày và giờ -->
+    <Label text="Ngày đặt lịch"/>
+    <DatePicker fx:id="bookingDatePicker" style="-fx-pref-width: 200px;"/>
+
+    <Label text="Giờ đặt lịch"/>
+    <TextField fx:id="bookingTimeField" promptText="HH:mm (VD: 14:30)" style="-fx-pref-width: 200px;"/>
+
+    <!-- Ghi chú -->
+    <Label text="Ghi chú"/>
+    <TextArea fx:id="notesAreaNewBooking" promptText="Nhập ghi chú (nếu có)" wrapText="true" style="-fx-pref-height: 80px;"/>
+
+    <!-- Nút hành động -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="saveButton" text="Lưu" onAction="#saveBooking" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button fx:id="cancelButton" text="Hủy" onAction="#cancelNewBooking" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

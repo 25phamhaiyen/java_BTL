@@ -95,7 +95,8 @@ public class PetTypeRepository implements IRepository<PetType> {
 
     public PetType selectById(int typePetID) {
         PetType petType = null;
-        String sql = "SELECT * FROM pet_type WHERE TypePetID = ?";
+        // Sửa lỗi: Thay TypePetID thành type_id
+        String sql = "SELECT * FROM pet_type WHERE type_id = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -148,6 +149,4 @@ public class PetTypeRepository implements IRepository<PetType> {
         
         return list;
     }
-
 }
-

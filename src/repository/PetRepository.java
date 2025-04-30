@@ -159,7 +159,7 @@ public class PetRepository implements IRepository<Pet> {
 	    String sql = "SELECT p.*, c.*, t.* " 
 				+ "FROM pet p " 
 				+ "JOIN customer c ON p.customer_id = c.customer_id "
-				+ "JOIN pet_type t ON p.type_id = t.type_id WHERE pet_id = ?"; 
+				+ "JOIN pet_type t ON p.type_id = t.type_id WHERE p.pet_id = ?"; 
 
 	    Connection con = null;
 	    PreparedStatement pstmt = null;
@@ -180,7 +180,8 @@ public class PetRepository implements IRepository<Pet> {
 				PetTypeRepository petTypeRepository = new PetTypeRepository();
 				PetType petType = petTypeRepository.selectById(rs.getInt("type_id"));
 
-			    GenderEnum gender = GenderEnum.valueOf(rs.getString("gender"));
+			    // Sửa lỗi: Thay gender thành pet_gender
+			    GenderEnum gender = GenderEnum.valueOf(rs.getString("pet_gender"));
 
 				// Tạo đối tượng Pet với đúng constructor
 				ketQua = new Pet(
@@ -196,7 +197,7 @@ public class PetRepository implements IRepository<Pet> {
 			} 
 
 	    } catch (SQLException e) {
-	        System.err.println("Lỗi khi tìm kpet theo ID: " + e.getMessage());
+	        System.err.println("Lỗi khi tìm pet theo ID: " + e.getMessage());
 	    } finally {
 	        DBUtil.closeResources(con, pstmt, rs);
 	    }
@@ -259,5 +260,4 @@ public class PetRepository implements IRepository<Pet> {
 
 		return list;
 	}
-
 }
