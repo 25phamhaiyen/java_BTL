@@ -1,0 +1,39 @@
+.label {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #a0522d; /* Sienna */
+    -fx-padding: 10px;
+}
+
+.grid-pane {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 20px;
+}
+
+.grid-pane > Label {
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-font-size: 1.2em;
+    -fx-padding: 10px 20px;
+    -fx-background-color: #ffd700; /* Gold */
+    -fx-text-fill: black;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #ffc300; /* Lighter Gold */
+}
+
+.date-picker {
+    -fx-font-size: 1.1em;
+}
+
+.hbox {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 20px;
+}

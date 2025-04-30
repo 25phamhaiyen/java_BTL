@@ -32,10 +32,11 @@ public class DashboardController {
 					case 1: // admin
 						btnAdminPanel.setVisible(true); // Hiển thị nút cho Admin/Manager
 						break;
-					case 2:
-					case 3:
-					case 4:// Employee
+					case 2: case 3: case 4:// Employee
 						btnEmployeePanel.setVisible(true); // Hiển thị nút cho Employee
+						break;
+					case 5: 
+						lblWelcome.setText("Bạn đã nghỉ việc");
 						break;
 					default:
 						lblWelcome.setText("Vai trò không xác định, vui lòng đăng nhập lại!");
@@ -60,7 +61,7 @@ public class DashboardController {
 	// Chuyển đến trang Employee
 	@FXML
 	private void handleEmployeePanel() {
-		SceneSwitcher.switchScene("staff/staff_home.fxml");
+		SceneSwitcher.switchScene("staff/staff_home.fxml"); 
 	}
 
 	// Đăng xuất
@@ -69,5 +70,4 @@ public class DashboardController {
 		Session.logout();
 		SceneSwitcher.switchScene("login.fxml");
 	}
-
 }

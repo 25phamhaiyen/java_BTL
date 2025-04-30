@@ -134,4 +134,5 @@ public class RoleRepository implements IRepository<Role> {
 
 		return new Role(role_id, roleName);
 	}
+	
 }
