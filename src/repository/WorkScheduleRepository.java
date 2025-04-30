@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import enums.Shift;
 
@@ -179,4 +180,46 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
         return new WorkSchedule(scheduleID, staff, workDate, shift, startTime, endTime, location, task, note);
     }
+<<<<<<< HEAD
+    
+    public List<WorkSchedule> selectByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<WorkSchedule> workSchedules = new ArrayList<>();
+        String sql = "SELECT ws.schedule_id, ws.work_date, ws.shift, ws.note, ws.staff_id " +
+                     "FROM work_schedule ws " +
+                     "WHERE ws.work_date >= ? AND ws.work_date <= ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDate(1, java.sql.Date.valueOf(startDate));
+            preparedStatement.setDate(2, java.sql.Date.valueOf(endDate));
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int scheduleID = resultSet.getInt("schedule_id");
+                LocalDate workDate = resultSet.getDate("work_date").toLocalDate();
+                Shift shift = Shift.valueOf(resultSet.getString("shift").toUpperCase());
+                String note = resultSet.getString("note");
+                int staffID = resultSet.getInt("staff_id");
+
+                // Sử dụng StaffRepository để lấy thông tin đầy đủ của nhân viên (bao gồm cả Role)
+                Staff staff = StaffRepository.getInstance().selectById(staffID);
+
+                if (staff != null) {
+                    WorkSchedule workSchedule = new WorkSchedule(scheduleID, staff, workDate, shift, note);
+                    workSchedules.add(workSchedule);
+                } else {
+                    System.err.println("Không tìm thấy nhân viên với ID: " + staffID + " cho lịch có ID: " + scheduleID);
+                    // Xử lý trường hợp không tìm thấy nhân viên (có thể bỏ qua bản ghi hoặc log lỗi)
+                }
+            }
+            System.err.println("Truy vấn lịch làm việc theo khoảng ngày thành công. Số lượng: " + workSchedules.size());
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi truy vấn lịch làm việc theo khoảng ngày: " + e.getMessage());
+        }
+        return workSchedules;
+    }
+
 }
+=======
+}
+>>>>>>> origin/main

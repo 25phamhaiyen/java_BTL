@@ -226,4 +226,5 @@ public class OrderRepository implements IRepository<Order> {
 
         return new Order(orderId, customer, staff, orderDate, voucher, total, status);
     }
+}
 

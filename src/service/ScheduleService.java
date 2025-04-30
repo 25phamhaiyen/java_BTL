@@ -62,6 +62,17 @@ public class ScheduleService {
         return scheduleRepository.selectByCondition(whereClause, date);
     }
     
+    public List<WorkSchedule> getWorkSchedulesByWeek(LocalDate startDate, LocalDate endDate) {
+        try {
+            // Gọi repository để lấy danh sách lịch làm việc trong khoảng thời gian từ startDate đến endDate
+            List<WorkSchedule> workSchedules = scheduleRepository.selectByDateRange(startDate, endDate);
+            System.err.println("Lấy lịch làm việc cho tuần từ " + startDate + " đến " + endDate + " thành công. Số lượng: " + workSchedules.size());
+            return workSchedules;
+        } catch (Exception e) {
+        	System.err.println("Lỗi khi lấy lịch làm việc theo tuần: " + e.getMessage());
+            return List.of(); // Trả về danh sách rỗng nếu có lỗi
+        }
+    }
     /**
      * Lấy danh sách lịch làm việc
      * @return Danh sách lịch làm việc

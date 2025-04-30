@@ -70,5 +70,4 @@ public class DashboardController {
 		Session.logout();
 		SceneSwitcher.switchScene("login.fxml");
 	}
-
 }

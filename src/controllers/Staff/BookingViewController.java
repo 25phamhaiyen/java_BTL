@@ -20,9 +20,12 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import controllers.SceneSwitcher;
+<<<<<<< HEAD
+=======
 import enums.StatusEnum;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
+>>>>>>> origin/main
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -47,7 +50,11 @@ import repository.BookingDetailRepository;
 import repository.BookingRepository;
 import repository.ServiceRepository;
 import service.BookingService;
+<<<<<<< HEAD
+import utils.Session;
+=======
 import utils.DatabaseConnection;
+>>>>>>> origin/main
 import utils.RoleChecker;
 import utils.Session;
 
