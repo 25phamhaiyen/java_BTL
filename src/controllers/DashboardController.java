@@ -61,7 +61,7 @@ public class DashboardController {
 	// Chuyển đến trang Employee
 	@FXML
 	private void handleEmployeePanel() {
-		SceneSwitcher.switchScene("staff/staff_home.fxml");
+		SceneSwitcher.switchScene("/view/staff/booking_view.fxml"); 
 	}
 
 	// Đăng xuất
