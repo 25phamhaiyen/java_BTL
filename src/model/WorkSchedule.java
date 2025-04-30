@@ -14,6 +14,13 @@ public class WorkSchedule {
 	public WorkSchedule() {
 		super();
 	}
+	public WorkSchedule( Staff staff, LocalDate workDate, Shift shift, String note) {
+		super();
+		this.staff = staff;
+		this.workDate = workDate;
+		this.shift = shift;
+		this.note = note;
+	}
 	public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift, String note) {
 		super();
 		this.scheduleID = scheduleID;

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import controllers.SceneSwitcher;
 import service.InvoiceService; // Thêm dòng này
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +24,6 @@ import javafx.stage.Stage;
 import model.Invoice;
 
 import utils.RoleChecker;
-import controllers.SceneSwitcher;
 import utils.Session;
 
 public class InvoiceViewController implements Initializable {

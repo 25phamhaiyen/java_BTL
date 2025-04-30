@@ -1,27 +1,15 @@
 package repository;
 
-import java.io.File;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Properties;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.*;
 
 import enums.PaymentMethodEnum;
 import enums.StatusEnum;
-import model.Booking;
 import model.Invoice;
 import model.Order;
-import model.OrderDetail;
 import model.Staff;
-import repository.BookingRepository;
-import repository.InvoiceRepository;
-import repository.OrderDetailRepository;
 
 import utils.Session;
 

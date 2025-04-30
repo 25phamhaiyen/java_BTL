@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import enums.TypeOrder;
 
 public class OrderService {
 	private final OrderRepository orderRepository;

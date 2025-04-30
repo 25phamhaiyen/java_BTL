@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import controllers.SceneSwitcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +22,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
-import controllers.SceneSwitcher;
 import utils.Session;
 import utils.RoleChecker;
 

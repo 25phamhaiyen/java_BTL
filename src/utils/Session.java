@@ -52,9 +52,4 @@ public class Session {
 			e.printStackTrace();
 		}
     }
-    
-    // Add the logout method as an alias for clearSession
-    public static void logout() {
-        clearSession();
-    }
 }
