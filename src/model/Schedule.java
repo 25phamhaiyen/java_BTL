@@ -114,12 +114,12 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule{" +
-                "scheduleId=" + scheduleId +
-                ", staffId=" + staffId +
-                ", workDate=" + workDate +
-                ", shift='" + shift + '\'' +
-                ", note='" + note + '\'' +
-                '}';
+        return String.format(
+            "- Ngày: %s, Ca: %s, Ghi chú: %s",
+            (workDate == null ? "Chưa xác định" : workDate.toString()), // Kiểm tra null cho workDate
+            shift,
+            (note == null || note.isBlank()) ? "Không có" : note
+        );
     }
+
 }

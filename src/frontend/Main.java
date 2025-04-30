@@ -9,6 +9,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		SceneSwitcher.setMainStage(primaryStage);
 		SceneSwitcher.switchScene("home.fxml");
+
 	}
 
 	public static void main(String[] args) {

@@ -1,3 +1,10 @@
 /CustomerService.class
 /AccountService.class
 /StaffService.class
+/AuthService.class
+/PermissionService.class
+/PetService.class
+/PromotionService.class
+/RoleService.class
+/ScheduleService.class
+/ServiceService.class
