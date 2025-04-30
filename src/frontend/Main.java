@@ -1,4 +1,4 @@
-// In src/frontend/Main.java
+
 package frontend;
 
 import controllers.SceneSwitcher;
@@ -14,6 +14,7 @@ public class Main extends Application {
         SceneSwitcher.switchScene("home.fxml");
         //SceneSwitcher.switchScene("staff/invoice_view.fxml");
        // SceneSwitcher.switchScene("staff/booking_view.fxml");
+  
      
     }
 
