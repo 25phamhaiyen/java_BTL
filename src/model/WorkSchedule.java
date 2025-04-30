@@ -16,97 +16,93 @@ public class WorkSchedule {
     private String location;
     private String task;
     private String note;
-
-    // Default constructor
-    public WorkSchedule() {
-    }
-
-    // Constructor for use in ScheduleService
-    public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift,
-                        LocalTime startTime, LocalTime endTime, String location, String task, String note) {
-        this.scheduleID = scheduleID;
-        this.staff = staff;
-        this.workDate = workDate;
-        this.shift = shift;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.location = location;
-        this.task = task;
-        this.note = note;
-    }
-
-    // Getters and Setters
-    public int getScheduleID() {
-        return scheduleID;
-    }
-
-    public void setScheduleID(int scheduleID) {
-        this.scheduleID = scheduleID;
-    }
-
-    public Staff getStaff() {
-        return staff;
-    }
-
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-
-    public LocalDate getWorkDate() {
-        return workDate;
-    }
-
-    public void setWorkDate(LocalDate workDate) {
-        this.workDate = workDate;
-    }
-
-    public Shift getShift() {
-        return shift;
-    }
-
-    public void setShift(Shift shift) {
-        this.shift = shift;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getTask() {
-        return task;
-    }
-
-    public void setTask(String task) {
-        this.task = task;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
+    
+	public WorkSchedule() {
+		super();
+	}
+	public WorkSchedule( Staff staff, LocalDate workDate, Shift shift, String note) {
+		super();
+		this.staff = staff;
+		this.workDate = workDate;
+		this.shift = shift;
+		this.note = note;
+	}
+	
+	public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift, LocalTime startTime,
+			LocalTime endTime, String location, String task, String note) {
+		super();
+		this.scheduleID = scheduleID;
+		this.staff = staff;
+		this.workDate = workDate;
+		this.shift = shift;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.location = location;
+		this.task = task;
+		this.note = note;
+	}
+	public LocalTime getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
+	}
+	public LocalTime getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(LocalTime endTime) {
+		this.endTime = endTime;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getTask() {
+		return task;
+	}
+	public void setTask(String task) {
+		this.task = task;
+	}
+	public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift, String note) {
+		super();
+		this.scheduleID = scheduleID;
+		this.staff = staff;
+		this.workDate = workDate;
+		this.shift = shift;
+		this.note = note;
+	}
+	public int getScheduleID() {
+		return scheduleID;
+	}
+	public void setScheduleID(int scheduleID) {
+		this.scheduleID = scheduleID;
+	}
+	public Staff getStaff() {
+		return staff;
+	}
+	public void setStaff(Staff staff) {
+		this.staff = staff;
+	}
+	public LocalDate getWorkDate() {
+		return workDate;
+	}
+	public void setWorkDate(LocalDate workDate) {
+		this.workDate = workDate;
+	}
+	public Shift getShift() {
+		return shift;
+	}
+	public void setShift(Shift shift) {
+		this.shift = shift;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
 
     @Override
     public boolean equals(Object o) {

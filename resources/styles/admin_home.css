@@ -1,38 +1,41 @@
-/* ScrollPane styling */
-.scroll-pane {
-    -fx-padding: 0;
-    -fx-background-color: transparent;
-}
-
-/* Sidebar styling */
 .sidebar {
-    -fx-background-color: #f9e0b7; /* Màu nền sidebar */
-    -fx-padding: 10;
-    -fx-spacing: 10;
+    -fx-background-color: linear-gradient(to bottom, #FFB74D, #FF9800);  /* Gradient từ vàng nhạt sang vàng cam đậm */
+    -fx-padding: 15;
+    -fx-pref-width: 220;
+    -fx-spacing: 15;
 }
 
-/* Navigation buttons */
 .nav-button {
-    -fx-background-color: #d35400; /* Màu cam */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
+    -fx-padding: 8;
+    -fx-background-color: transparent;
     -fx-cursor: hand;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 13px;  /* Tăng kích thước chữ */
+    -fx-font-weight: bold;  /* In đậm chữ */
+    -fx-text-fill: white;
+    -fx-transition: background-color 0.3s;  /* Thêm hiệu ứng chuyển màu cho nút */
 }
 
 .nav-button:hover {
-    -fx-background-color: #e67e22; /* Màu cam nhạt */
+    -fx-background-color: linear-gradient(to bottom, #FF5722, #FF9800);  /* Gradient khi hover từ cam đậm sang vàng cam */
+    -fx-text-fill: white;
 }
 
-.nav-button:pressed {
-    -fx-background-color: #a84300; /* Màu cam đậm */
+.nav-button > ImageView {
+    -fx-fit-width: 30;  /* Tăng kích thước icon */
+    -fx-fit-height: 30;
+    -fx-padding: 5;  /* Đảm bảo khoảng cách giữa icon và chữ */
 }
 
-/* Welcome Label */
-.welcome-label {
-    -fx-font-size: 18px;
+.logo-text {
+    -fx-font-size: 24px;  /* Tăng kích thước logo */
+    -fx-text-fill: white;
     -fx-font-weight: bold;
+}
+
+.welcome-label {
+    -fx-font-size: 24px;
     -fx-text-fill: #333;
 }
