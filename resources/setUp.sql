@@ -20,17 +20,17 @@ CREATE TABLE `account` (
     FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE SET NULL
 );
 
--- 				Tạo bảng Con người
+-- Con người
 CREATE TABLE `person` (
-	`person_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	full_name VARCHAR(100) NOT NULL,
-	gender ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER',
+    `person_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    full_name VARCHAR(100) NOT NULL,
+    gender ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER',
     `phone` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`address` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	`email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
-	PRIMARY KEY (`person_id`) USING BTREE,
-	UNIQUE INDEX `Person_Phone` (`phone`) USING BTREE,
-	CONSTRAINT `CkPerson_phone` CHECK ((length(`phone`) = 10))
+    `address` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+    `email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+    PRIMARY KEY (`person_id`) USING BTREE,
+    UNIQUE INDEX `Person_Phone` (`phone`) USING BTREE,
+    CONSTRAINT `CkPerson_phone` CHECK ((length(`phone`) = 10))
 );
 
 -- Nhân viên
@@ -42,7 +42,7 @@ CREATE TABLE staff (
     account_id INT UNIQUE,
     role_id INT,
     PRIMARY KEY (staff_id),
-    FOREIGN KEY (staff_id) REFERENCES `person`(person_id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    FOREIGN KEY (staff_id) REFERENCES `person`(person_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE SET NULL,
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL
 );
@@ -52,15 +52,15 @@ CREATE TABLE customer (
     customer_id INT UNSIGNED NOT NULL,
     `point` INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (customer_id),
+    PRIMARY KEY (customer_id),
     FOREIGN KEY (customer_id) REFERENCES person(person_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- chuẩn hóa dữ liệu giống loài
+-- Chuẩn hóa dữ liệu giống loài
 CREATE TABLE pet_type (
     type_id INT PRIMARY KEY AUTO_INCREMENT,
-    species VARCHAR(50) NOT NULL,   -- Ví dụ: "Chó", "Mèo"
-    breed VARCHAR(100) NOT NULL     -- Ví dụ: "Poodle", "Alaska"
+    species VARCHAR(50) NOT NULL,
+    breed VARCHAR(100) NOT NULL
 );
 
 -- Thú cưng
@@ -143,12 +143,20 @@ CREATE TABLE invoice (
     invoice_id INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT NOT NULL UNIQUE,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    subtotal DECIMAL(15,2) DEFAULT 0.00,
+    discount_percent DECIMAL(5,2) DEFAULT 0.00,
+    discount_amount DECIMAL(15,2) DEFAULT 0.00,
+    points_used INT DEFAULT 0,
+    promotion_code VARCHAR(50),
     total DECIMAL(12,2),
+    amount_paid DECIMAL(15,2) DEFAULT 0.00,
     payment_method ENUM('CASH', 'CARD', 'MOMO', 'BANKING') DEFAULT 'CASH',
     `status` ENUM('COMPLETED', 'PENDING', 'CANCELLED', 'FAILED') DEFAULT 'COMPLETED',
-	staff_id INT UNSIGNED,
+    staff_id INT UNSIGNED,
+    note TEXT,
     FOREIGN KEY (order_id) REFERENCES `order`(order_id),
-    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+    FOREIGN KEY (promotion_code) REFERENCES promotion(code) ON DELETE SET NULL
 );
 
 -- Chi tiết đơn hàng
@@ -162,19 +170,23 @@ CREATE TABLE order_detail (
     FOREIGN KEY (service_id) REFERENCES service(service_id)
 );
 
---  Lịch làm việc của nhân viên
+-- Lịch làm việc của nhân viên
 CREATE TABLE work_schedule (
     schedule_id INT PRIMARY KEY AUTO_INCREMENT,
     staff_id INT UNSIGNED NOT NULL,
     work_date DATE NOT NULL,
     shift ENUM('MORNING', 'AFTERNOON', 'EVENING'),
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(100),
+    task VARCHAR(255),
     note TEXT,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
 
 -- Danh sách quyền trong hệ thống
 CREATE TABLE permission (
-    permission_code VARCHAR(100) PRIMARY KEY, -- VD: 'CREATE_BOOKING', 'MANAGE_STAFF'
+    permission_code VARCHAR(100) PRIMARY KEY,
     `description` TEXT NOT NULL
 );
 
@@ -187,6 +199,7 @@ CREATE TABLE account_permission (
     FOREIGN KEY (permission_code) REFERENCES permission(permission_code) ON DELETE CASCADE
 );
 
+-- View tổng quan dashboard
 CREATE VIEW dashboard_summary AS
 SELECT
     (SELECT COUNT(*) FROM customer) AS total_customers,
@@ -194,8 +207,7 @@ SELECT
     (SELECT COUNT(*) FROM invoice) AS total_invoices,
     (SELECT SUM(total) FROM invoice WHERE status = 'COMPLETED') AS total_revenue;
 
-
--- Tự động cập nhật total_amount cho order
+-- Trigger tự động cập nhật total_amount cho order
 DELIMITER //
 CREATE TRIGGER trg_update_order_total
 AFTER INSERT ON order_detail
@@ -210,7 +222,7 @@ END;
 // 
 DELIMITER ;
 
--- Tạo đơn hàng mới và chi tiết đơn hàng
+-- Procedure tạo đơn hàng mới và chi tiết đơn hàng
 DELIMITER //
 CREATE PROCEDURE create_order_with_details (
     IN p_customer_id INT,
@@ -221,23 +233,20 @@ CREATE PROCEDURE create_order_with_details (
 BEGIN
     DECLARE new_order_id INT;
     
-    -- 1. Tạo đơn hàng mới
     INSERT INTO `order` (customer_id, staff_id, order_date, status)
     VALUES (p_customer_id, p_staff_id, NOW(), 'PENDING');
     
     SET new_order_id = LAST_INSERT_ID();
 
-    -- 2. Thêm chi tiết dịch vụ
     INSERT INTO order_detail (order_id, service_id, quantity, price)
     SELECT new_order_id, service_id, p_quantity, price FROM service WHERE service_id = p_service_id;
 
-    -- 3. Trả về ID đơn hàng (tùy chọn)
     SELECT new_order_id AS created_order_id;
 END;
 //
 DELIMITER ;
 
--- cập nhật trạng thái đơn hàng khi hóa đơn thanh toán xong
+-- Trigger cập nhật trạng thái đơn hàng khi hóa đơn thanh toán xong
 DELIMITER //
 CREATE TRIGGER trg_invoice_paid_update_order
 AFTER UPDATE ON invoice
@@ -252,7 +261,7 @@ END;
 //
 DELIMITER ;
 
--- cập nhật total_amount nếu sửa order_detail
+-- Trigger cập nhật total_amount nếu sửa order_detail
 DELIMITER //
 CREATE TRIGGER trg_update_order_total_after_update
 AFTER UPDATE ON order_detail
@@ -267,22 +276,19 @@ END;
 //
 DELIMITER ;
 
--- gán quyền
+-- Procedure gán quyền theo vai trò
 DELIMITER $$
 CREATE PROCEDURE assign_permission_by_role(IN acc_id INT)
 BEGIN
     DECLARE role_name VARCHAR(50);
 
-    -- Lấy role_name từ account → staff → role
     SELECT r.role_name INTO role_name
     FROM staff s
     JOIN role r ON s.role_id = r.role_id
     WHERE s.account_id = acc_id;
 
-    -- Xoá quyền cũ nếu có
     DELETE FROM account_permission WHERE account_id = acc_id;
 
-    -- Gán quyền theo role
     IF role_name = 'ADMIN' THEN
         INSERT INTO account_permission(account_id, permission_code)
         SELECT acc_id, permission_code FROM permission, (SELECT acc_id AS acc_id) AS temp;
@@ -306,12 +312,10 @@ BEGIN
         WHERE permission_code IN ('APPLY_PROMOTION', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
     END IF;
 END$$
-
 DELIMITER ;
 
--- Trigger AFTER INSERT trên bảng staff để tự động gán quyền
+-- Trigger tự động gán quyền sau khi thêm nhân viên
 DELIMITER $$
-
 CREATE TRIGGER trg_assign_permission_after_staff_insert
 AFTER INSERT ON staff
 FOR EACH ROW
@@ -320,15 +324,13 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Thủ tục GÁN quyền cho tài khoản
+-- Procedure gán quyền cho tài khoản
 DELIMITER $$
-
 CREATE PROCEDURE grant_permission(
     IN p_account_id INT,
     IN p_permission_code VARCHAR(100)
 )
 BEGIN
-    -- Chỉ thêm nếu chưa tồn tại
     IF NOT EXISTS (
         SELECT 1 FROM account_permission
         WHERE account_id = p_account_id AND permission_code = p_permission_code
@@ -337,12 +339,10 @@ BEGIN
         VALUES (p_account_id, p_permission_code);
     END IF;
 END$$
-
 DELIMITER ;
 
--- Thủ tục XÓA quyền của tài khoản
+-- Procedure xóa quyền của tài khoản
 DELIMITER $$
-
 CREATE PROCEDURE revoke_permission(
     IN p_account_id INT,
     IN p_permission_code VARCHAR(100)
@@ -351,12 +351,10 @@ BEGIN
     DELETE FROM account_permission
     WHERE account_id = p_account_id AND permission_code = p_permission_code;
 END$$
-
 DELIMITER ;
 
--- Trigger cập nhật điểm point của khách hàng khi thanh toán hóa đơn
+-- Trigger cập nhật điểm thưởng của khách hàng khi thanh toán hóa đơn
 DELIMITER $$
-
 CREATE TRIGGER trg_update_point_after_invoice
 AFTER UPDATE ON invoice
 FOR EACH ROW
@@ -364,24 +362,13 @@ BEGIN
     DECLARE v_customer_id INT;
 
     IF NEW.status = 'COMPLETED' AND OLD.status != 'COMPLETED' THEN
-        -- Lấy customer_id từ bảng order
         SELECT customer_id INTO v_customer_id
         FROM `order`
         WHERE order_id = NEW.order_id;
 
-        -- Cập nhật điểm thưởng
         UPDATE customer
         SET point = point + FLOOR(NEW.total / 1000)
-        W HERE customer_id = v_customer_id;
+        WHERE customer_id = v_customer_id;
     END IF;
 END$$
-
 DELIMITER ;
-
-
-
-
-
-
-
-

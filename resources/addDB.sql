@@ -1,3 +1,23 @@
+DELETE FROM account_permission;
+DELETE FROM booking_detail;
+DELETE FROM order_detail;
+DELETE FROM invoice;
+DELETE FROM booking;
+DELETE FROM pet;
+DELETE FROM `order`;
+DELETE FROM work_schedule;
+DELETE FROM staff;
+DELETE FROM customer;
+DELETE FROM account;
+
+-- Xóa dữ liệu từ các bảng không có phụ thuộc hoặc bảng cha
+DELETE FROM pet_type;
+DELETE FROM service;
+DELETE FROM promotion;
+DELETE FROM permission;
+DELETE FROM role;
+
+
 INSERT INTO role (role_name) VALUES 
 ('ADMIN'), 
 ('STAFF_CARE'), 
@@ -33,18 +53,19 @@ VALUES
 
 INSERT INTO `account` (account_id, username, `password`, role_id)
 VALUES
+
 (1, 'admin01', '$2a$10$bxB8Fa1fAwS7BZoplZQCQOyc6CQEMDixqUWZ1e6O/6QJRUVW5mYlG', 1), -- pass: admin123
-(2, 'care01', '123', 2),
-(3, 'care02', '123', 2),
-(4, 'care03', '123', 2),
-(5, 'care04', '123', 2),
-(6, 'care05', '123', 2),
-(7, 'care06', '123', 2),
-(8, 'care07', '123', 2),
-(9, 'cashier01', '123', 3),
-(10, 'cashier02', '123', 3),
-(11, 'reception01', '123', 4),
-(12, 'reception02', '123', 4);
+(2, 'care01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(3, 'care02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(4, 'care03', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(5, 'care04', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(6, 'care05', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(7, 'care06', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(8, 'care07', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2), -- pass: 123
+(9, 'cashier01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 3), -- pass: 123
+(10, 'cashier02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 3), -- pass: 123
+(11, 'reception01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4), -- pass: 123
+(12, 'reception02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4); -- pass: 123
 INSERT INTO staff (staff_id, dob, salary, hire_date, account_id, role_id)
 VALUES
 (1, '1990-01-01', 20000000, '2020-01-01', 1, 1),

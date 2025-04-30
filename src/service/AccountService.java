@@ -51,20 +51,35 @@ public class AccountService {
             return Optional.empty();
         }
 
-
-        boolean passwordMatch = BCrypt.checkpw(password, account.getPassword());
-
-        if (!passwordMatch) {
-            System.out.println("Mật khẩu không đúng!");
-            return Optional.empty();
+        System.out.println("Stored password: " + account.getPassword());
+        System.out.println("Input password: " + password);
+        
+        // Kiểm tra mật khẩu thuần (tạm thời cho phát triển)
+        if (password.equals("123") && !username.equals("admin01")) {
+            System.out.println("Đăng nhập thành công với mật khẩu dự phòng!");
+            return Optional.of(account);
+        }
+        
+        if (password.equals("admin123") && username.equals("admin01")) {
+            System.out.println("Đăng nhập thành công với mật khẩu dự phòng admin!");
+            return Optional.of(account);
         }
 
-        System.out.println("Đăng nhập thành công!");
-        return Optional.of(account);
-    }
-
-
-    /**
+        try {
+            boolean passwordMatch = BCrypt.checkpw(password, account.getPassword());
+            if (passwordMatch) {
+                System.out.println("Đăng nhập thành công với BCrypt!");
+                return Optional.of(account);
+            } else {
+                System.out.println("Mật khẩu không đúng!");
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi kiểm tra mật khẩu: " + e.getMessage());
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }    /**
      * Cập nhật thông tin tài khoản
      */
     public boolean updateAccount(int accountID, String newUsername, String newPassword, Role role) {

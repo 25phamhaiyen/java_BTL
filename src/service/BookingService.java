@@ -100,6 +100,15 @@ public class BookingService {
     }
     
     /**
+     * Lấy danh sách booking của một nhân viên trong khoảng thời gian
+     * New method implementation (was missing)
+     */
+    public List<Booking> getBookingsByStaffAndDateRange(int staffId, LocalDate startDate, LocalDate endDate) throws Exception {
+        String condition = "staff_id = ? AND DATE(booking_time) BETWEEN ? AND ?";
+        return bookingRepository.selectByCondition(condition, staffId, startDate, endDate);
+    }
+    
+    /**
      * Tạo booking mới
      */
     public Booking createBooking(int customerId, int petId, int staffId, LocalDateTime bookingTime, String note) throws Exception {
@@ -187,31 +196,26 @@ public class BookingService {
     
     /**
      * Cập nhật trạng thái booking
+     * Modified method to accept StatusEnum directly instead of String
      */
-    public Booking updateBookingStatus(int bookingId, String status) throws Exception {
+    /**
+     * Cập nhật trạng thái lịch đặt
+     */
+    public Booking updateBookingStatus(int bookingId, StatusEnum status) throws Exception {
         Booking booking = bookingRepository.selectById(bookingId);
         if (booking == null) {
             throw new Exception("Lịch đặt không tồn tại");
         }
         
-        // Kiểm tra trạng thái hợp lệ
-        try {
-            StatusEnum statusEnum = StatusEnum.valueOf(status);
-            
-            // Kiểm tra logic chuyển trạng thái
-            validateStatusChange(booking.getStatus(), statusEnum);
-            
-            // Cập nhật trạng thái
-            booking.setStatus(statusEnum);
-            bookingRepository.update(booking);
-            
-            return booking;
-            
-        } catch (IllegalArgumentException e) {
-            throw new Exception("Trạng thái không hợp lệ");
-        }
+        // Kiểm tra logic chuyển trạng thái
+        validateStatusChange(booking.getStatus(), status);
+        
+        // Cập nhật trạng thái
+        booking.setStatus(status);
+        bookingRepository.update(booking);
+        
+        return booking;
     }
-    
     /**
      * Xóa booking
      */
@@ -255,18 +259,11 @@ public class BookingService {
                 break;
                 
             case CONFIRMED:
-                // Từ confirmed có thể chuyển sang started, cancelled
-                if (!StatusEnum.STARTED.equals(newStatus) && 
+                // Từ confirmed có thể chuyển sang completed, cancelled
+                if (!StatusEnum.COMPLETED.equals(newStatus) && 
                     !StatusEnum.CANCELLED.equals(newStatus) && 
                     !StatusEnum.CONFIRMED.equals(newStatus)) {
-                    throw new Exception("Lịch đã xác nhận chỉ có thể chuyển sang trạng thái đã bắt đầu hoặc đã hủy");
-                }
-                break;
-                
-            case STARTED:
-                // Từ started chỉ có thể chuyển sang completed
-                if (!StatusEnum.COMPLETED.equals(newStatus) && !StatusEnum.STARTED.equals(newStatus)) {
-                    throw new Exception("Lịch đã bắt đầu chỉ có thể chuyển sang trạng thái đã hoàn thành");
+                    throw new Exception("Lịch đã xác nhận chỉ có thể chuyển sang trạng thái đã hoàn thành hoặc đã hủy");
                 }
                 break;
             
@@ -342,11 +339,27 @@ public class BookingService {
     }
     
     /**
-     * Lấy thời lượng phục vụ cho một booking (tính bằng phút)
+     * Thời lượng phục vụ cho một booking (tính bằng phút)
      */
     public int getBookingDuration(int bookingId) throws Exception {
         // Tạm thời hardcode thời lượng là 60 phút (1 giờ)
         // Trong thực tế, bạn có thể tính tổng thời lượng của tất cả dịch vụ trong booking
         return 60;
+    }
+    
+    /**
+     * Tìm kiếm booking theo từ khóa
+     * New method implementation (was missing)
+     */
+    public List<Booking> searchBookings(String keyword) throws Exception {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllBookings();
+        }
+        
+        // Tìm kiếm theo tên khách hàng, số điện thoại, hoặc tên thú cưng
+        String condition = "c.full_name LIKE ? OR c.phone LIKE ? OR p.name LIKE ?";
+        String searchParam = "%" + keyword + "%";
+        
+        return bookingRepository.selectByCondition(condition, searchParam, searchParam, searchParam);
     }
 }
