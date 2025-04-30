@@ -1,15 +1,20 @@
 package controllers.Staff;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import controllers.SceneSwitcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import model.Promotion;
 import model.Service;
 import service.PromotionService;
@@ -58,6 +64,9 @@ public class PromotionApplyController implements Initializable {
     
     @FXML
     private Button applyButton;
+    
+    @FXML
+    private Button backButton;
     
     @FXML
     private Button removePromoButton;
@@ -309,4 +318,17 @@ public class PromotionApplyController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    private void goBack(ActionEvent event) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
+//            Parent root = loader.load();
+//            Stage stage = (Stage) backButton.getScene().getWindow();
+//            stage.setScene(new Scene(root));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    	SceneSwitcher.switchScene("staff/staff_home.fxml");
+    }
+
 }

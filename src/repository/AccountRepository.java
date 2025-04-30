@@ -189,14 +189,13 @@ public class AccountRepository implements IRepository<Account> {
 	}
 
 	public Account getAccountByUsername(String username) {
-	    String sql = "SELECT a.account_id, a.username, a.password, a.active, r.role_id, r.role_name "
-	               + "FROM account a "
-	               + "JOIN role r "
-	               + "ON a.role_id = r.role_id WHERE a.username = ?";
+	    String sql = "SELECT a.account_id, a.username, a.password, a.active, r.role_id, r.role_name " +
+	                 "FROM account a " +
+	                 "JOIN role r " +
+	                 "ON a.role_id = r.role_id WHERE a.username = ?";
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement pstmt = con.prepareStatement(sql)) {
-
 	        pstmt.setString(1, username);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
@@ -206,7 +205,7 @@ public class AccountRepository implements IRepository<Account> {
 	    } catch (SQLException e) {
 	        System.err.println("Lỗi khi tìm tài khoản theo username: " + e.getMessage());
 	    }
-	    return null; 
+	    return null;
 	}
 
 

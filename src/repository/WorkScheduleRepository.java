@@ -1,12 +1,12 @@
 package repository;
 
-
 import model.Staff;
 import model.WorkSchedule;
 import utils.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,7 +30,8 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
     @Override
     public int insert(WorkSchedule workSchedule) {
-        String sql = "INSERT INTO work_schedule (staff_id, work_date, shift, note) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO work_schedule (staff_id, work_date, shift, start_time, end_time, location, task, note) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -38,7 +39,11 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
             pstmt.setInt(1, workSchedule.getStaff().getId());
             pstmt.setDate(2, java.sql.Date.valueOf(workSchedule.getWorkDate()));
             pstmt.setString(3, workSchedule.getShift().name());
-            pstmt.setString(4, workSchedule.getNote());
+            pstmt.setTime(4, workSchedule.getStartTime() != null ? Time.valueOf(workSchedule.getStartTime()) : null);
+            pstmt.setTime(5, workSchedule.getEndTime() != null ? Time.valueOf(workSchedule.getEndTime()) : null);
+            pstmt.setString(6, workSchedule.getLocation());
+            pstmt.setString(7, workSchedule.getTask());
+            pstmt.setString(8, workSchedule.getNote());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
@@ -57,16 +62,21 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
     @Override
     public int update(WorkSchedule workSchedule) {
-        String sql = "UPDATE work_schedule SET staff_id=?, work_date=?, shift=?, note=? WHERE schedule_id=?";
+        String sql = "UPDATE work_schedule SET staff_id=?, work_date=?, shift=?, start_time=?, end_time=?, " +
+                     "location=?, task=?, note=? WHERE schedule_id=?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-        	pstmt.setInt(1, workSchedule.getStaff().getId());
+            pstmt.setInt(1, workSchedule.getStaff().getId());
             pstmt.setDate(2, java.sql.Date.valueOf(workSchedule.getWorkDate()));
             pstmt.setString(3, workSchedule.getShift().name());
-            pstmt.setString(4, workSchedule.getNote());
-            pstmt.setInt(5, workSchedule.getScheduleID());
+            pstmt.setTime(4, workSchedule.getStartTime() != null ? Time.valueOf(workSchedule.getStartTime()) : null);
+            pstmt.setTime(5, workSchedule.getEndTime() != null ? Time.valueOf(workSchedule.getEndTime()) : null);
+            pstmt.setString(6, workSchedule.getLocation());
+            pstmt.setString(7, workSchedule.getTask());
+            pstmt.setString(8, workSchedule.getNote());
+            pstmt.setInt(9, workSchedule.getScheduleID());
 
             return pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -130,23 +140,22 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
         }
         return null;
     }
-    
+
     @Override
     public List<WorkSchedule> selectByCondition(String whereClause, Object... params) {
         List<WorkSchedule> list = new ArrayList<>();
-        String baseQuery = "SELECT * FROM work_schedule WHERE " + whereClause;  
+        String baseQuery = "SELECT * FROM work_schedule WHERE " + whereClause;
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(baseQuery)) {
 
-            // Đặt tham số động
             for (int i = 0; i < params.length; i++) {
                 pstmt.setObject(i + 1, params[i]);
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    list.add(mapResultSetToWorkSchedule(rs)); 
+                    list.add(mapResultSetToWorkSchedule(rs));
                 }
             }
         } catch (SQLException e) {
@@ -156,18 +165,22 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
         return list;
     }
 
-
     private WorkSchedule mapResultSetToWorkSchedule(ResultSet rs) throws SQLException {
         int scheduleID = rs.getInt("schedule_id");
         int staffID = rs.getInt("staff_id");
         LocalDate workDate = rs.getDate("work_date").toLocalDate();
-        Shift shift = Shift.valueOf(rs.getString("shift")); 
+        Shift shift = Shift.valueOf(rs.getString("shift"));
+        LocalTime startTime = rs.getTime("start_time") != null ? rs.getTime("start_time").toLocalTime() : null;
+        LocalTime endTime = rs.getTime("end_time") != null ? rs.getTime("end_time").toLocalTime() : null;
+        String location = rs.getString("location");
+        String task = rs.getString("task");
         String note = rs.getString("note");
 
-        Staff staff = StaffRepository.getInstance().selectById(staffID); 
+        Staff staff = StaffRepository.getInstance().selectById(staffID);
 
-        return new WorkSchedule(scheduleID, staff, workDate, shift, note);
+        return new WorkSchedule(scheduleID, staff, workDate, shift, startTime, endTime, location, task, note);
     }
+<<<<<<< HEAD
     
     public List<WorkSchedule> selectByDateRange(LocalDate startDate, LocalDate endDate) {
         List<WorkSchedule> workSchedules = new ArrayList<>();
@@ -207,3 +220,6 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
     }
 
 }
+=======
+}
+>>>>>>> origin/main

@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Objects;
 
 import enums.Shift;
 
@@ -9,6 +11,10 @@ public class WorkSchedule {
     private Staff staff;
     private LocalDate workDate;
     private Shift shift;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private String location;
+    private String task;
     private String note;
     
 	public WorkSchedule() {
@@ -59,12 +65,40 @@ public class WorkSchedule {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	@Override
-	public String toString() {
-		return "WorkSchedule [scheduleID=" + scheduleID + ", staff=" + staff + ", workDate=" + workDate + ", shift="
-				+ shift + ", note=" + note + "]";
-	}
-	
 
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkSchedule that = (WorkSchedule) o;
+        return scheduleID == that.scheduleID &&
+               Objects.equals(staff, that.staff) &&
+               Objects.equals(workDate, that.workDate) &&
+               shift == that.shift &&
+               Objects.equals(startTime, that.startTime) &&
+               Objects.equals(endTime, that.endTime) &&
+               Objects.equals(location, that.location) &&
+               Objects.equals(task, that.task) &&
+               Objects.equals(note, that.note);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scheduleID, staff, workDate, shift, startTime, endTime, location, task, note);
+    }
+
+    @Override
+    public String toString() {
+        return "WorkSchedule{" +
+               "scheduleID=" + scheduleID +
+               ", staff=" + (staff != null ? staff.getId() : null) +
+               ", workDate=" + workDate +
+               ", shift=" + shift +
+               ", startTime=" + startTime +
+               ", endTime=" + endTime +
+               ", location='" + location + '\'' +
+               ", task='" + task + '\'' +
+               ", note='" + note + '\'' +
+               '}';
+    }
 }
