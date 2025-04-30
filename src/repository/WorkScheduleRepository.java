@@ -180,7 +180,6 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
         return new WorkSchedule(scheduleID, staff, workDate, shift, startTime, endTime, location, task, note);
     }
-<<<<<<< HEAD
     
     public List<WorkSchedule> selectByDateRange(LocalDate startDate, LocalDate endDate) {
         List<WorkSchedule> workSchedules = new ArrayList<>();
@@ -220,6 +219,3 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
     }
 
 }
-=======
-}
->>>>>>> origin/main
