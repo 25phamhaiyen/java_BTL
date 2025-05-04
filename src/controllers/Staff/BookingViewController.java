@@ -27,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -1085,7 +1086,7 @@ public class BookingViewController implements Initializable {
     @FXML
     private void goToHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -1093,8 +1094,9 @@ public class BookingViewController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
-
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+            
+            // Hiển thị thông báo lỗi
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
                     "Đã xảy ra lỗi: " + e.getMessage());
         }
     }

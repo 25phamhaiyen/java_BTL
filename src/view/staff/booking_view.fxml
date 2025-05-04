@@ -2,52 +2,50 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="controllers.Staff.BookingViewController"
-            stylesheets="@../../styles/staff.css">
+<BorderPane stylesheets="@/styles/booking.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Staff.BookingViewController">
    
    <top>
       <VBox spacing="5">
          <padding>
-            <Insets top="15" right="20" bottom="5" left="20"/>
+            <Insets bottom="5" left="20" right="20" top="15" />
          </padding>
          
          <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="Quản lý đặt lịch" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d88e3f;">
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d88e3f;" text="Quản lý đặt lịch">
                <font>
-                  <Font name="System Bold" size="24"/>
+                  <Font name="System Bold" size="24" />
                </font>
             </Label>
             
-            <Region HBox.hgrow="ALWAYS" />
+            <Region prefWidth="310.0" HBox.hgrow="ALWAYS" />
             
             <HBox alignment="CENTER" spacing="10">
-               <Label fx:id="currentDateLabel" text="Ngày hiện tại: 30/04/2025" style="-fx-font-size: 14px;">
+               <Label fx:id="currentDateLabel" style="-fx-font-size: 14px;" text="Ngày hiện tại: 30/04/2025">
                   <font>
-                     <Font size="14"/>
+                     <Font size="14" />
                   </font>
                </Label>
                <Separator orientation="VERTICAL" />
-               <Label fx:id="staffNameLabel" text="Nhân viên: Nguyễn Văn A" style="-fx-font-size: 14px;">
+               <Label fx:id="staffNameLabel" style="-fx-font-size: 14px;" text="Nhân viên: Nguyễn Văn A">
                   <font>
-                     <Font size="14"/>
+                     <Font size="14" />
                   </font>
                </Label>
             </HBox>
@@ -66,42 +64,37 @@
                      <top>
                         <VBox spacing="10">
                            <padding>
-                              <Insets top="15" right="20" bottom="10" left="20"/>
+                              <Insets bottom="10" left="20" right="20" top="15" />
                            </padding>
                            
-                           <HBox spacing="15" alignment="CENTER_LEFT">
+                           <HBox alignment="CENTER_LEFT" spacing="15">
                               <Label text="Ngày:" />
                               <DatePicker fx:id="datePicker" />
                               
-                              <Button fx:id="todayButton" text="Hôm nay" onAction="#loadTodaySchedule" 
-                                      style="-fx-background-color: #d88e3f; -fx-text-fill: white;">
+                              <Button fx:id="todayButton" onAction="#loadTodaySchedule" style="-fx-background-color: #d88e3f; -fx-text-fill: white;" text="Hôm nay">
                                  <font>
-                                    <Font name="System Bold" size="12"/>
+                                    <Font name="System Bold" size="12" />
                                  </font>
                               </Button>
                               
                               <Separator orientation="VERTICAL" />
                               
-                              <TextField fx:id="searchField" promptText="Tìm theo số điện thoại khách hàng" prefWidth="250" />
-                              <Button text="Tìm kiếm" onAction="#searchBookings" 
-                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              <TextField fx:id="searchField" prefWidth="250" promptText="Tìm theo số điện thoại khách hàng" />
+                              <Button onAction="#searchBookings" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Tìm kiếm" />
                               
                               <Region HBox.hgrow="ALWAYS" />
                               
-                              <ComboBox fx:id="statusFilter" promptText="Lọc trạng thái" prefWidth="180" />
-                              <Button text="Áp dụng" onAction="#applyFilters" 
-                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              <ComboBox fx:id="statusFilter" prefWidth="180" promptText="Lọc trạng thái" />
+                              <Button onAction="#applyFilters" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Áp dụng" />
                            </HBox>
                            
-                           <HBox spacing="10" alignment="CENTER_LEFT">
-                              <Button fx:id="newBookingButton" text="Đặt lịch mới" onAction="#handleNewBooking" 
-                                      style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
+                           <HBox alignment="CENTER_LEFT" spacing="10">
+                              <Button fx:id="newBookingButton" onAction="#handleNewBooking" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Đặt lịch mới">
                                  <font>
-                                    <Font name="System Bold" size="12"/>
+                                    <Font name="System Bold" size="12" />
                                  </font>
                               </Button>
-                              <Button text="Làm mới" onAction="#refreshBookings" 
-                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              <Button onAction="#refreshBookings" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Làm mới" />
                            </HBox>
                         </VBox>
                      </top>
@@ -109,10 +102,10 @@
                      <center>
                         <VBox spacing="10">
                            <padding>
-                              <Insets top="0" right="20" bottom="10" left="20"/>
+                              <Insets bottom="10" left="20" right="20" top="0" />
                            </padding>
                            
-                           <TableView fx:id="bookingTable" VBox.vgrow="ALWAYS">
+                           <TableView fx:id="bookingTable" prefHeight="300.0" prefWidth="1063.0" VBox.vgrow="ALWAYS">
                               <columns>
                                  <TableColumn fx:id="idColumn" prefWidth="70" text="Mã đặt lịch" />
                                  <TableColumn fx:id="timeColumn" prefWidth="130" text="Thời gian" />
@@ -133,36 +126,30 @@
                      <bottom>
                         <HBox spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 10 20 20 20;">
                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                              <Label text="Ghi chú:" style="-fx-font-weight: bold;" />
+                              <Label style="-fx-font-weight: bold;" text="Ghi chú:" />
                               <TextArea fx:id="notesArea" prefHeight="100" wrapText="true" />
                            </VBox>
                            
-                           <VBox spacing="15" alignment="CENTER" prefWidth="180">
+                           <VBox alignment="CENTER" prefWidth="180" spacing="15">
                               <padding>
-                                 <Insets top="15" right="0" bottom="0" left="0"/>
+                                 <Insets bottom="0" left="0" right="0" top="15" />
                               </padding>
                               
-                              <Button fx:id="confirmArrivalButton" disable="true" maxWidth="Infinity" 
-                                      text="Xác nhận đến" onAction="#confirmArrival"
-                                      style="-fx-background-color: #FF9800; -fx-text-fill: white;">
+                              <Button fx:id="confirmArrivalButton" disable="true" maxWidth="Infinity" onAction="#confirmArrival" style="-fx-background-color: #FF9800; -fx-text-fill: white;" text="Xác nhận đến">
                                  <font>
-                                    <Font name="System Bold" size="12"/>
+                                    <Font name="System Bold" size="12" />
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="startButton" disable="true" maxWidth="Infinity" 
-                                      text="Bắt đầu dịch vụ" onAction="#startService"
-                                      style="-fx-background-color: #2196F3; -fx-text-fill: white;">
+                              <Button fx:id="startButton" disable="true" maxWidth="Infinity" onAction="#startService" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Bắt đầu dịch vụ">
                                  <font>
-                                    <Font name="System Bold" size="12"/>
+                                    <Font name="System Bold" size="12" />
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="completeButton" disable="true" maxWidth="Infinity" 
-                                      text="Hoàn thành" onAction="#completeService"
-                                      style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
+                              <Button fx:id="completeButton" disable="true" maxWidth="Infinity" onAction="#completeService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Hoàn thành">
                                  <font>
-                                    <Font name="System Bold" size="12"/>
+                                    <Font name="System Bold" size="12" />
                                  </font>
                               </Button>
                                       
@@ -180,51 +167,51 @@
                      <top>
                         <VBox spacing="10">
                            <padding>
-                              <Insets top="15" right="20" bottom="10" left="20"/>
+                              <Insets bottom="10" left="20" right="20" top="15" />
                            </padding>
                            
-                           <HBox spacing="15" alignment="CENTER_LEFT">
+                           <HBox alignment="CENTER_LEFT" spacing="15">
                               <Label text="Xem từ:" />
                               <DatePicker fx:id="startDatePicker" />
                               
                               <Label text="Đến:" />
                               <DatePicker fx:id="endDatePicker" />
                               
-                              <Button text="Xem" onAction="#viewDateRange" 
-                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              <Button onAction="#viewDateRange" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Xem" />
                               
                               <Region HBox.hgrow="ALWAYS" />
                               
-                              <ComboBox fx:id="upcomingStatusFilter" promptText="Lọc trạng thái" prefWidth="180" />
-                              <Button text="Áp dụng" onAction="#applyUpcomingFilters" 
-                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              <ComboBox fx:id="upcomingStatusFilter" prefWidth="150" promptText="Lọc trạng thái" />
+                              <Button onAction="#applyUpcomingFilters" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Áp dụng" />
                            </HBox>
                         </VBox>
                      </top>
                      
                      <center>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="0" right="20" bottom="10" left="20"/>
-                           </padding>
-                           
-                           <TableView fx:id="upcomingBookingTable" VBox.vgrow="ALWAYS">
-                              <columns>
-                                 <TableColumn fx:id="upcomingIdColumn" prefWidth="70" text="Mã đặt lịch" />
-                                 <TableColumn fx:id="upcomingDateColumn" prefWidth="110" text="Ngày" />
-                                 <TableColumn fx:id="upcomingTimeColumn" prefWidth="80" text="Giờ" />
-                                 <TableColumn fx:id="upcomingCustomerColumn" prefWidth="170" text="Khách hàng" />
-                                 <TableColumn fx:id="upcomingPhoneColumn" prefWidth="120" text="Số điện thoại" />
-                                 <TableColumn fx:id="upcomingPetColumn" prefWidth="110" text="Thú cưng" />
-                                 <TableColumn fx:id="upcomingServiceColumn" prefWidth="170" text="Dịch vụ" />
-                                 <TableColumn fx:id="upcomingStatusColumn" prefWidth="130" text="Trạng thái" />
-                                 <TableColumn fx:id="upcomingStaffColumn" prefWidth="150" text="Nhân viên phụ trách" />
-                              </columns>
-                              <placeholder>
-                                 <Label text="Không có lịch hẹn nào trong khoảng thời gian này" />
-                              </placeholder>
-                           </TableView>
-                        </VBox>
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                           <VBox spacing="10">
+                              <padding>
+                                 <Insets bottom="10" left="20" right="20" top="0" />
+                              </padding>
+                              
+                              <TableView fx:id="upcomingBookingTable" prefHeight="350.0" prefWidth="1061.0" VBox.vgrow="ALWAYS">
+                                 <columns>
+                                    <TableColumn fx:id="upcomingIdColumn" prefWidth="60" text="Mã đặt lịch" />
+                                    <TableColumn fx:id="upcomingDateColumn" prefWidth="90" text="Ngày" />
+                                    <TableColumn fx:id="upcomingTimeColumn" prefWidth="70" text="Giờ" />
+                                    <TableColumn fx:id="upcomingCustomerColumn" prefWidth="150" text="Khách hàng" />
+                                    <TableColumn fx:id="upcomingPhoneColumn" prefWidth="110" text="Số điện thoại" />
+                                    <TableColumn fx:id="upcomingPetColumn" prefWidth="100" text="Thú cưng" />
+                                    <TableColumn fx:id="upcomingServiceColumn" prefWidth="150" text="Dịch vụ" />
+                                    <TableColumn fx:id="upcomingStatusColumn" prefWidth="110" text="Trạng thái" />
+                                    <TableColumn fx:id="upcomingStaffColumn" prefWidth="120" text="Nhân viên phụ trách" />
+                                 </columns>
+                                 <placeholder>
+                                    <Label text="Không có lịch hẹn nào trong khoảng thời gian này" />
+                                 </placeholder>
+                              </TableView>
+                           </VBox>
+                        </ScrollPane>
                      </center>
                   </BorderPane>
                </content>
@@ -233,20 +220,18 @@
       </TabPane>
    </center>
    
- 
-   <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-background-color: #BBDEFB; -fx-border-color: #1976D2; -fx-border-width: 1 0 0 0;">
-   <padding>
-      <Insets top="10" right="20" bottom="10" left="20"/>
-   </padding>
-   
-   <Label fx:id="statusMessageLabel" text="Sẵn sàng" style="-fx-text-fill: #333333;" />
-   <Region HBox.hgrow="ALWAYS" />
-   <Button fx:id="homeButton" text="Về trang chủ" onAction="#goToHome" 
-          style="-fx-background-color: #d88e3f; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 15;" />
-   <Button text="Trợ giúp" onAction="#showHelp" 
-          style="-fx-background-color: #DDDDDD; -fx-text-fill: #333333; -fx-background-radius: 4; -fx-padding: 8 15;" />
-   <Button text="Thoát" onAction="#exitApplication" 
-          style="-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-background-radius: 4; -fx-padding: 8 15;" />
-</HBox>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-background-color: #BBDEFB; -fx-border-color: #1976D2; -fx-border-width: 1 0 0 0;">
+         <padding>
+            <Insets bottom="10" left="20" right="20" top="10" />
+         </padding>
+         
+         <Label fx:id="statusMessageLabel" style="-fx-text-fill: #333333;" text="Sẵn sàng" />
+         <Region HBox.hgrow="ALWAYS" />
+         <Button fx:id="homeButton" onAction="#goToHome" style="-fx-background-color: #d88e3f; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 15;" text="Về trang chủ" />
+         <Button onAction="#showHelp" style="-fx-background-color: #DDDDDD; -fx-text-fill: #333333; -fx-background-radius: 4; -fx-padding: 8 15;" text="Trợ giúp" />
+         <Button onAction="#exitApplication" style="-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-background-radius: 4; -fx-padding: 8 15;" text="Thoát" />
+      </HBox>
+   </bottom>
    
 </BorderPane>
