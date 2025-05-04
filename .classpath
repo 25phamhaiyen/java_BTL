@@ -11,5 +11,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX24"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText"/>
+	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/slf4j-api-2.0.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

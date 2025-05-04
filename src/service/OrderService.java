@@ -43,22 +43,22 @@ public class OrderService {
 	            
 	            Staff staff = new Staff();
 	            staff.setId(rs.getInt("StaffID"));
+//	            
+//	            HappenStatus status = new HappenStatus();
+//	            status.setHappenStatusID(rs.getInt("HappenStatusID"));
+//	            
+//	            Order order = new Order(
+//	                rs.getInt("orderID"),
+//	                rs.getTimestamp("orderDate"),
+//	                rs.getTimestamp("appointmentDate"),
+//	                TypeOrder.valueOf(rs.getString("orderType")),
+//	                rs.getDouble("Total"),
+//	                customer,
+//	                staff,
+//	                status
+//	            );
 	            
-	            HappenStatus status = new HappenStatus();
-	            status.setHappenStatusID(rs.getInt("HappenStatusID"));
-	            
-	            Order order = new Order(
-	                rs.getInt("orderID"),
-	                rs.getTimestamp("orderDate"),
-	                rs.getTimestamp("appointmentDate"),
-	                TypeOrder.valueOf(rs.getString("orderType")),
-	                rs.getDouble("Total"),
-	                customer,
-	                staff,
-	                status
-	            );
-	            
-	            orders.add(order);
+//	            orders.add(order);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();

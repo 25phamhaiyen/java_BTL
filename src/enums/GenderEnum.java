@@ -30,4 +30,14 @@ public enum GenderEnum {
         }
         throw new IllegalArgumentException("Invalid gender code: " + code);
     }
+    
+    @Override
+    public String toString() {
+        return switch (this) {
+            case MALE -> "Nam";
+            case FEMALE -> "Nữ";
+            case OTHER -> "Khác";
+            default -> "Không xác định";
+        };
+    }
 }

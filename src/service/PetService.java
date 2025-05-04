@@ -1,8 +1,19 @@
 package service;
 
+import model.Customer;
 import model.Pet;
+import model.PetType;
 import repository.PetRepository;
+import repository.PetTypeRepository;
+import utils.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+import enums.GenderEnum;
 
 public class PetService {
 
@@ -62,4 +73,18 @@ public class PetService {
     public List<Pet> getPetsByCondition(String condition, Object... params) {
         return petRepository.selectByCondition(condition, params);
     }
+    public String getPetNamesByCustomerId(int customerId) {
+        List<String> petNames = petRepository.getPetNamesByCustomerId(customerId);
+        return String.join(", ", petNames);
+    }
+    
+ // Trong PetService.java
+    public List<PetType> getAllPetTypes() {
+        PetTypeRepository petTypeRepo = new PetTypeRepository();
+        return petTypeRepo.selectAll(); 
+    }
+    public Pet getPetByCustomerId(int customerId) {
+	    return petRepository.getPetByCustomerId(customerId);
+	}
+
 }

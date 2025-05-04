@@ -18,10 +18,10 @@ public class OrderDetailService {
 	public List<OrderDetail> getAllOrderDetails() {
 		return orderDetailRepository.selectAll();
 	}
-
-	public List<OrderDetail> getDetailsByOrderId(int orderId) {
-		return orderDetailRepository.selectById(orderId);
-	}
+//
+//	public List<OrderDetail> getDetailsByOrderId(int orderId) {
+//		return orderDetailRepository.selectById(orderId);
+//	}
 
 	public void addOrderDetail(OrderDetail detail) {
 		int rowsAffected = orderDetailRepository.insert(detail);

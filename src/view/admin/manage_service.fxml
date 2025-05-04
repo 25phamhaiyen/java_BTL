@@ -27,14 +27,14 @@
 
     <!-- Bảng danh sách dịch vụ -->
     <center>
-        <TableView fx:id="tableView" prefHeight="400" prefWidth="600">
+        <TableView fx:id="tableView" prefHeight="400" prefWidth="1400">
             <columns>
                 <TableColumn fx:id="idColumn" text="ID" prefWidth="100" />
-                <TableColumn fx:id="nameColumn" text="Tên dịch vụ" prefWidth="200" />
-                <TableColumn fx:id="descriptionColumn" text="Mô tả" prefWidth="300" />
+                <TableColumn fx:id="nameColumn" text="Tên dịch vụ" prefWidth="300" />
+                <TableColumn fx:id="descriptionColumn" text="Mô tả" prefWidth="550" />
                 <TableColumn fx:id="priceColumn" text="Giá" prefWidth="150" />
                 <TableColumn fx:id="durationColumn" text="Thời gian (phút)" prefWidth="150" />
-                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="100" />
+                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="200" />
             </columns>
         </TableView>
     </center>

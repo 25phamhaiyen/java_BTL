@@ -173,5 +173,9 @@ public class AccountService {
         }
 		return 0;
 	}
+	
+	public Account getAccountByUsername(String username) {
+		return accountRepository.getAccountByUsername(username);
+	}
 
 }

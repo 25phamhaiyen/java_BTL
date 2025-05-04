@@ -137,5 +137,8 @@ public class EditProfileController implements Initializable {
 	private void handleBack(ActionEvent event) {
 	    // Quay lại màn trước, ví dụ như:
 	    SceneSwitcher.switchScene("staff/staff_home.fxml");
+	    if(Session.getCurrentAccount().getRole().getRoleName().equals("ADMIN")) {
+	    	SceneSwitcher.switchScene("admin/admin_home.fxml");
+	    }
 	}
 }

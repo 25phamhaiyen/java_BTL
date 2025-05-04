@@ -83,16 +83,16 @@ VALUES
 
 INSERT INTO customer (customer_id, `point`)
 VALUES
-(13, 100),
-(14, 200),
-(15, 150),
-(16, 250),
-(17, 300),
-(18, 120),
-(19, 220),
-(20, 80),
-(21, 90),
-(22, 60);
+(13, 0),
+(14, 0),
+(15, 0),
+(16, 0),
+(17, 0),
+(18, 0),
+(19, 0),
+(20, 0),
+(21, 0),
+(22, 0);
 INSERT INTO pet_type (type_id, species, breed) VALUES
 (1, 'Dog', 'Poodle'),
 (2, 'Dog', 'Shiba'),
@@ -133,48 +133,38 @@ INSERT INTO promotion (promotion_id, code, description, discount_percent, start_
 (3, 'KM3', 'Giảm 15% khi sử dụng combo 2 dịch vụ', 15, '2025-03-15', '2025-04-10', false),
 (4, 'KM4', 'Giảm 5% toàn bộ đơn hàng >300k', 5, '2025-06-01', '2025-06-30', true);
 INSERT INTO booking (customer_id, pet_id, staff_id, booking_time, status, note) VALUES
-(21, 1, 2, '2025-04-01 10:00:00', 'PENDING', NULL),
-(22, 2, 3, '2025-04-02 14:00:00', 'CONFIRMED', NULL),
-(13, 3, 4, '2025-04-03 09:30:00', 'PENDING', NULL),
-(14, 4, 5, '2025-04-04 16:00:00', 'COMPLETED', NULL),
-(15, 5, 6, '2025-04-05 11:00:00', 'CONFIRMED', NULL),
-(16, 6, 7, '2025-04-06 15:00:00', 'CANCELLED', NULL),
-(17, 7, 8, '2025-04-07 13:00:00', 'PENDING', NULL),
-(18, 8, 9, '2025-04-08 08:30:00', 'CONFIRMED', NULL),
-(19, 9, 10, '2025-04-09 17:30:00', 'COMPLETED', NULL),
-(20, 10, 11, '2025-04-10 10:45:00', 'PENDING', NULL);
-INSERT INTO booking_detail (booking_id, service_id, quantity, price) VALUES
-(1, 1, 1, 100000),
-(1, 2, 1, 50000),
-(2, 1, 2, 200000),
-(3, 3, 1, 80000),
-(4, 2, 1, 50000),
-(4, 4, 1, 120000),
-(5, 1, 1, 100000),
-(6, 2, 2, 100000),
-(7, 5, 1, 150000),
-(8, 3, 1, 80000),
-(9, 4, 1, 120000),
-(10, 1, 1, 100000);
-INSERT INTO `order` (order_id, customer_id, order_date, total_amount, status, voucher_code) VALUES
-(1, 21, '2025-04-01', 200000, 'PENDING', NULL),
-(2, 22, '2025-04-02', 150000, 'COMPLETED', 'KM3'),
-(3, 13, '2025-04-03', 300000, 'CANCELLED', NULL),
-(4, 14, '2025-04-04', 100000, 'PENDING', NULL),
-(5, 15, '2025-04-05', 180000, 'COMPLETED', NULL);
-INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES
-(1, 1, 1, 100000),
-(1, 2, 1, 100000),
-(2, 1, 1, 150000),
-(3, 3, 1, 300000),
-(4, 4, 1, 100000),
-(5, 5, 2, 90000);
-INSERT INTO invoice (invoice_id, order_id, payment_date, total, status, payment_method, staff_id) VALUES
-(1, 1, '2025-04-01', 200000, 'PENDING', 'CASH', 9),
-(2, 2, '2025-04-02', 150000, 'COMPLETED', 'CARD', 10),
-(3, 3, '2025-04-03', 300000, 'CANCELLED', 'CASH', 9),
-(4, 4, '2025-04-04', 100000, 'PENDING', 'CARD', 10),
-(5, 5, '2025-04-05', 180000, 'COMPLETED', 'CASH', 9);
+(13, 1, 11, '2024-04-01 14:27:51', 'COMPLETED', NULL),
+(14, 2, 11, '2024-04-01 15:00:00', 'COMPLETED', NULL),
+(15, 3, 12, '2025-04-03 09:30:00', 'COMPLETED', NULL),
+(16, 4, 11, '2025-04-04 16:00:00', 'COMPLETED', NULL),
+(17, 5, 11, '2025-04-05 11:00:00', 'COMPLETED', NULL),
+(18, 6, 12, '2025-04-06 15:00:00', 'CANCELLED', NULL),
+(19, 7, 12, '2025-04-07 13:00:00', 'COMPLETED', NULL),
+(20, 8, 12, '2025-04-08 08:30:00', 'COMPLETED', NULL),
+(21, 9, 12, '2025-04-09 17:30:00', 'COMPLETED', NULL),
+(22, 10, 11, '2025-04-10 10:45:00', 'COMPLETED', NULL);
+
+CALL add_booking_detail(1, 1, 1, NULL);
+CALL add_booking_detail(2, 2, 2, NULL);
+CALL add_booking_detail(3, 3, 3, NULL);
+CALL add_booking_detail(4, 4, 2, NULL);
+CALL add_booking_detail(5, 5, 1, NULL);
+CALL add_booking_detail(6, 6, 2, NULL);
+CALL add_booking_detail(7, 1, 3, NULL);
+CALL add_booking_detail(8, 2, 1, NULL);
+CALL add_booking_detail(9, 3, 1, NULL);
+CALL add_booking_detail(10, 4, 1, NULL);
+
+CALL create_order_from_booking(1, 11);
+CALL create_order_from_booking(2, 11);
+CALL create_order_from_booking(3, 12);
+CALL create_order_from_booking(4, 11);
+CALL create_order_from_booking(5, 11);
+CALL create_order_from_booking(6, 12);
+CALL create_order_from_booking(7, 12);
+CALL create_order_from_booking(8, 12);
+CALL create_order_from_booking(9, 12);
+CALL create_order_from_booking(10, 11);
 
 INSERT INTO work_schedule (schedule_id, staff_id, work_date, shift, note) VALUES
 (1, 2, '2025-04-08', 'MORNING', 'WORKING'),

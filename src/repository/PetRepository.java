@@ -260,4 +260,66 @@ public class PetRepository implements IRepository<Pet> {
 		return list;
 	}
 
+	public List<String> getPetNamesByCustomerId(int customerId) {
+	    List<String> petNames = new ArrayList<>();
+	    String query = "SELECT name FROM pet WHERE customer_id = ?";
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setInt(1, customerId);
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            petNames.add(rs.getString("name"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return petNames;
+	}
+	public Pet getPetByCustomerId(int customerId) {
+	    Pet pet = null;
+	    String query = "SELECT * FROM pet "
+	    		+ "JOIN pet_type ON pet.type_id = pet_type.type_id "
+	    		+ "WHERE customer_id = ?";
+	    
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	        
+	        stmt.setInt(1, customerId);
+	        ResultSet rs = stmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // Get customer details
+	            Customer customer = new Customer(
+	                    rs.getInt("customer_id")
+	            );
+
+	            // Get pet type details
+	            PetType petType = new PetType(
+	                    rs.getInt("type_id"),
+	                    rs.getString("species"),
+	                    rs.getString("breed")
+	            );
+
+	            // Get pet details, including pet gender
+	            GenderEnum petGender = GenderEnum.valueOf(rs.getString("pet_gender"));
+	            pet = new Pet(
+	                    rs.getInt("pet_id"),
+	                    rs.getString("name"),
+	                    petType,
+	                    petGender,
+	                    rs.getDate("dob").toLocalDate(),
+	                    rs.getDouble("weight"),
+	                    rs.getString("note"),
+	                    customer
+	            );
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return pet;
+	}
+
+
+
 }
