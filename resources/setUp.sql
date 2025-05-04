@@ -249,7 +249,7 @@ DELIMITER ;
 -- Trigger cập nhật trạng thái đơn hàng khi hóa đơn thanh toán xong
 -- Cập nhật trigger tích điểm
 DELIMITER $$
-DROP TRIGGER IF EXISTS trg_update_point_after_invoice;
+DROP TRIGGER IF EXISTS trg_update_point_after_invoice$$
 CREATE TRIGGER trg_update_point_after_invoice
 AFTER UPDATE ON invoice
 FOR EACH ROW
@@ -313,19 +313,19 @@ BEGIN
         INSERT INTO account_permission(account_id, permission_code)
         SELECT acc_id, permission_code
         FROM permission, (SELECT acc_id AS acc_id) AS temp
-        WHERE permission_code IN ('VIEW_BOOKING_ASSIGNED', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        WHERE permission_code IN ('VIEW_BOOKING_ASSIGNED', 'VIEW_SCHEDULE', 'UPDATE_PROFILE');
 
     ELSEIF role_name = 'STAFF_CASHIER' THEN
         INSERT INTO account_permission(account_id, permission_code)
         SELECT acc_id, permission_code
         FROM permission, (SELECT acc_id AS acc_id) AS temp
-        WHERE permission_code IN ('PRINT_RECEIPT', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        WHERE permission_code IN ('CREATE_BOOKING', 'VIEW_INVOICE', 'VIEW_SCHEDULE', 'UPDATE_PROFILE', 'VIEW_BOOKING_ASSIGNED');
 
     ELSEIF role_name = 'STAFF_RECEPTION' THEN
         INSERT INTO account_permission(account_id, permission_code)
         SELECT acc_id, permission_code
         FROM permission, (SELECT acc_id AS acc_id) AS temp
-        WHERE permission_code IN ('APPLY_PROMOTION', 'VIEW_CUSTOMER', 'UPDATE_PROFILE');
+        WHERE permission_code IN ('CREATE_BOOKING', 'VIEW_SCHEDULE', 'UPDATE_PROFILE','VIEW_BOOKING_ASSIGNED');
     END IF;
 END$$
 DELIMITER ;
@@ -366,25 +366,5 @@ CREATE PROCEDURE revoke_permission(
 BEGIN
     DELETE FROM account_permission
     WHERE account_id = p_account_id AND permission_code = p_permission_code;
-END$$
-DELIMITER ;
-
--- Trigger cập nhật điểm thưởng của khách hàng khi thanh toán hóa đơn
-DELIMITER $$
-CREATE TRIGGER trg_update_point_after_invoice
-AFTER UPDATE ON invoice
-FOR EACH ROW
-BEGIN
-    DECLARE v_customer_id INT;
-
-    IF NEW.status = 'COMPLETED' AND OLD.status != 'COMPLETED' THEN
-        SELECT customer_id INTO v_customer_id
-        FROM `order`
-        WHERE order_id = NEW.order_id;
-
-        UPDATE customer
-        SET point = point + FLOOR(NEW.total / 1000)
-        WHERE customer_id = v_customer_id;
-    END IF;
 END$$
 DELIMITER ;

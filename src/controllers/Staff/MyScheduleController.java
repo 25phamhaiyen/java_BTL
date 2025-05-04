@@ -109,7 +109,7 @@ public class MyScheduleController implements Initializable {
         initializeDatePickers();
         
         // Load schedule for a date that has data (e.g., 2025-05-10)
-        loadScheduleByDate(LocalDate.of(2025, 5, 10));
+        loadScheduleByDate(LocalDate.now());
         
         // Add selection listener for schedule table
         scheduleTable.getSelectionModel().selectedItemProperty().addListener(
@@ -230,7 +230,7 @@ public class MyScheduleController implements Initializable {
         registrationDatePicker.setConverter(converter);
         
         // Set default values
-        LocalDate defaultDate = LocalDate.of(2025, 5, 10); // Ngày có dữ liệu
+        LocalDate defaultDate = LocalDate.now(); // Ngày có dữ liệu
         datePicker.setValue(defaultDate);
         registrationDatePicker.setValue(defaultDate);
         
@@ -244,7 +244,7 @@ public class MyScheduleController implements Initializable {
 
     private void handleViewModeChange() {
         String mode = viewModeSelector.getValue();
-        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
+        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
         
         switch (mode) {
             case "Hôm nay":
@@ -285,7 +285,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadWeekSchedule() {
         try {
-            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
+            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
             LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
             LocalDate endOfWeek = startOfWeek.plusDays(6);
             
@@ -324,7 +324,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadMonthSchedule() {
         try {
-            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
+            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
             LocalDate startOfMonth = date.withDayOfMonth(1);
             LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
             
@@ -855,7 +855,7 @@ public class MyScheduleController implements Initializable {
     @FXML
     private void goToHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Staff/MainStaffView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(new Scene(root));
