@@ -14,8 +14,6 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -80,89 +78,91 @@
                               
                               <Separator orientation="VERTICAL" />
                               
+                              <TextField fx:id="searchField" promptText="Tìm theo số điện thoại khách hàng" prefWidth="250" />
+                              <Button text="Tìm kiếm" onAction="#searchBookings" 
+                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
+                              
                               <Region HBox.hgrow="ALWAYS" />
                               
-                              <ComboBox fx:id="statusFilter" prefWidth="150" promptText="Lọc trạng thái" />
-                              <Button onAction="#applyFilters" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Áp dụng" />
+                              <ComboBox fx:id="statusFilter" promptText="Lọc trạng thái" prefWidth="180" />
+                              <Button text="Áp dụng" onAction="#applyFilters" 
+                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
                            </HBox>
                            
-                           <HBox alignment="CENTER_LEFT" spacing="15">
-                              <TextField fx:id="searchField" prefWidth="250" promptText="Tìm theo số điện thoại khách hàng" />
-                              <Button onAction="#searchBookings" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Tìm kiếm" />
-                              
-                              <Region HBox.hgrow="ALWAYS" />
-                              
-                              <Button fx:id="newBookingButton" onAction="#handleNewBooking" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Đặt lịch mới">
+                           <HBox spacing="10" alignment="CENTER_LEFT">
+                              <Button fx:id="newBookingButton" text="Đặt lịch mới" onAction="#handleNewBooking" 
+                                      style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
                                  <font>
-                                    <Font name="System Bold" size="12" />
+                                    <Font name="System Bold" size="12"/>
                                  </font>
                               </Button>
-                              <Button onAction="#refreshBookings" style="-fx-background-color: #1976D2; -fx-text-fill: white;" text="Làm mới" />
+                              <Button text="Làm mới" onAction="#refreshBookings" 
+                                      style="-fx-background-color: #1976D2; -fx-text-fill: white;" />
                            </HBox>
                         </VBox>
                      </top>
                      
                      <center>
-                        <ScrollPane fitToWidth="true" fitToHeight="true">
-                           <VBox spacing="10">
-                              <padding>
-                                 <Insets bottom="10" left="20" right="20" top="0" />
-                              </padding>
-                              
-                              <TableView fx:id="bookingTable" prefHeight="250.0" prefWidth="963.0" VBox.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="idColumn" prefWidth="60" text="Mã đặt lịch" />
-                                    <TableColumn fx:id="timeColumn" prefWidth="110" text="Thời gian" />
-                                    <TableColumn fx:id="customerColumn" prefWidth="150" text="Khách hàng" />
-                                    <TableColumn fx:id="phoneColumn" prefWidth="110" text="Số điện thoại" />
-                                    <TableColumn fx:id="petColumn" prefWidth="100" text="Thú cưng" />
-                                    <TableColumn fx:id="serviceColumn" prefWidth="150" text="Dịch vụ" />
-                                    <TableColumn fx:id="statusColumn" prefWidth="110" text="Trạng thái" />
-                                    <TableColumn fx:id="assignedStaffColumn" prefWidth="140" text="Nhân viên phụ trách" />
-                                 </columns>
-                                 <placeholder>
-                                    <Label text="Không có lịch hẹn nào trong ngày này" />
-                                 </placeholder>
-                              </TableView>
-                           </VBox>
-                        </ScrollPane>
+                        <VBox spacing="10">
+                           <padding>
+                              <Insets top="0" right="20" bottom="10" left="20"/>
+                           </padding>
+                           
+                           <TableView fx:id="bookingTable" VBox.vgrow="ALWAYS">
+                              <columns>
+                                 <TableColumn fx:id="idColumn" prefWidth="70" text="Mã đặt lịch" />
+                                 <TableColumn fx:id="timeColumn" prefWidth="130" text="Thời gian" />
+                                 <TableColumn fx:id="customerColumn" prefWidth="170" text="Khách hàng" />
+                                 <TableColumn fx:id="phoneColumn" prefWidth="120" text="Số điện thoại" />
+                                 <TableColumn fx:id="petColumn" prefWidth="110" text="Thú cưng" />
+                                 <TableColumn fx:id="serviceColumn" prefWidth="170" text="Dịch vụ" />
+                                 <TableColumn fx:id="statusColumn" prefWidth="130" text="Trạng thái" />
+                                 <TableColumn fx:id="assignedStaffColumn" prefWidth="160" text="Nhân viên phụ trách" />
+                              </columns>
+                              <placeholder>
+                                 <Label text="Không có lịch hẹn nào trong ngày này" />
+                              </placeholder>
+                           </TableView>
+                        </VBox>
                      </center>
                      
                      <bottom>
-                        <HBox spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
-                           <padding>
-                              <Insets bottom="10" left="20" right="20" top="10" />
-                           </padding>
-                           
-                           <VBox prefHeight="99.0" spacing="5" HBox.hgrow="ALWAYS">
-                              <Label style="-fx-font-weight: bold;" text="Ghi chú:" />
-                              <TextArea fx:id="notesArea" prefHeight="80" wrapText="true" />
+                        <HBox spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 10 20 20 20;">
+                           <VBox spacing="5" HBox.hgrow="ALWAYS">
+                              <Label text="Ghi chú:" style="-fx-font-weight: bold;" />
+                              <TextArea fx:id="notesArea" prefHeight="100" wrapText="true" />
                            </VBox>
                            
-                           <VBox alignment="CENTER" prefWidth="170" spacing="10">
+                           <VBox spacing="15" alignment="CENTER" prefWidth="180">
                               <padding>
-                                 <Insets bottom="0" left="0" right="0" top="5" />
+                                 <Insets top="15" right="0" bottom="0" left="0"/>
                               </padding>
                               
-                              <Button fx:id="confirmArrivalButton" disable="true" maxWidth="Infinity" onAction="#confirmArrival" style="-fx-background-color: #FF9800; -fx-text-fill: white;" text="Xác nhận đến">
+                              <Button fx:id="confirmArrivalButton" disable="true" maxWidth="Infinity" 
+                                      text="Xác nhận đến" onAction="#confirmArrival"
+                                      style="-fx-background-color: #FF9800; -fx-text-fill: white;">
                                  <font>
-                                    <Font name="System Bold" size="12" />
+                                    <Font name="System Bold" size="12"/>
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="startButton" disable="true" maxWidth="Infinity" onAction="#startService" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Bắt đầu dịch vụ">
+                              <Button fx:id="startButton" disable="true" maxWidth="Infinity" 
+                                      text="Bắt đầu dịch vụ" onAction="#startService"
+                                      style="-fx-background-color: #2196F3; -fx-text-fill: white;">
                                  <font>
-                                    <Font name="System Bold" size="12" />
+                                    <Font name="System Bold" size="12"/>
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="completeButton" disable="true" maxWidth="Infinity" onAction="#completeService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Hoàn thành">
+                              <Button fx:id="completeButton" disable="true" maxWidth="Infinity" 
+                                      text="Hoàn thành" onAction="#completeService"
+                                      style="-fx-background-color: #4CAF50; -fx-text-fill: white;">
                                  <font>
-                                    <Font name="System Bold" size="12" />
+                                    <Font name="System Bold" size="12"/>
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="printInvoiceButton"  disable="true" maxWidth="Infinity" onAction="#printInvoice" style="-fx-background-color: #9C27B0; -fx-text-fill: white;" text="Tạo hóa đơn" />
+                            
                            </VBox>
                         </HBox>
                      </bottom>

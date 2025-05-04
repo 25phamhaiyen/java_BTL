@@ -12,7 +12,7 @@ public class Booking {
     private LocalDateTime bookingTime;
     private StatusEnum status;
     private String note;
-    
+    private String location;
 	public Booking() {
 		super();
 	}
@@ -68,6 +68,13 @@ public class Booking {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getLocation() {
+	    return location;
+	}
+
+	public void setLocation(String location) {
+	    this.location = location;
 	}
 	@Override
 	public String toString() {

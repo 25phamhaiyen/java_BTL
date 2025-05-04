@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import controllers.SceneSwitcher;
 import javafx.scene.layout.GridPane;
 import enums.Shift;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,6 +35,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import java.util.Map;
 import java.util.HashMap;
+
 public class MyScheduleController implements Initializable {
 
     @FXML private Label dateLabel;
@@ -72,8 +71,8 @@ public class MyScheduleController implements Initializable {
     @FXML private Button requestLeaveButton;
     @FXML private Button requestShiftChangeButton;
     @FXML private Button registerShiftButton;
+    @FXML private Button selectScheduleButton;
     @FXML private Button homeButton;
-    
 
     private ScheduleService scheduleService;
     private ObservableList<WorkSchedule> scheduleList;
@@ -109,15 +108,14 @@ public class MyScheduleController implements Initializable {
         // Set default values for date pickers
         initializeDatePickers();
         
-        // Load schedule for a date that has data 
-        loadScheduleByDate(LocalDate.now());
+        // Load schedule for a date that has data (e.g., 2025-05-10)
+        loadScheduleByDate(LocalDate.of(2025, 5, 10));
         
         // Add selection listener for schedule table
         scheduleTable.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> showScheduleDetails(newValue));
 
         // Add listener for viewModeSelector
-        viewModeSelector.setItems(FXCollections.observableArrayList("Hôm nay", "Tuần", "Tháng"));
         viewModeSelector.setOnAction(event -> handleViewModeChange());
 
         // Thiết lập hiển thị nút dựa trên quyền
@@ -135,6 +133,10 @@ public class MyScheduleController implements Initializable {
         
         if (registerShiftButton != null) {
             registerShiftButton.setDisable(!RoleChecker.hasPermission("REGISTER_SHIFT"));
+        }
+
+        if (selectScheduleButton != null) {
+            selectScheduleButton.setDisable(!RoleChecker.hasPermission("REGISTER_SHIFT"));
         }
     }
 
@@ -201,8 +203,8 @@ public class MyScheduleController implements Initializable {
             }
         });
         
-        // Location selector
-        locationSelector.getItems().addAll("Chi nhánh 1", "Chi nhánh 2", "Chi nhánh 3");
+        // Location selector (đổi thành danh sách store)
+        locationSelector.getItems().addAll("Store 1", "Store 2", "Store 3");
         
         // View mode selector
         viewModeSelector.getItems().addAll("Hôm nay", "Tuần", "Tháng");
@@ -228,7 +230,7 @@ public class MyScheduleController implements Initializable {
         registrationDatePicker.setConverter(converter);
         
         // Set default values
-        LocalDate defaultDate = LocalDate.now(); // Ngày có dữ liệu
+        LocalDate defaultDate = LocalDate.of(2025, 5, 10); // Ngày có dữ liệu
         datePicker.setValue(defaultDate);
         registrationDatePicker.setValue(defaultDate);
         
@@ -242,7 +244,7 @@ public class MyScheduleController implements Initializable {
 
     private void handleViewModeChange() {
         String mode = viewModeSelector.getValue();
-        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
         
         switch (mode) {
             case "Hôm nay":
@@ -283,7 +285,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadWeekSchedule() {
         try {
-            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
             LocalDate endOfWeek = startOfWeek.plusDays(6);
             
@@ -322,7 +324,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadMonthSchedule() {
         try {
-            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfMonth = date.withDayOfMonth(1);
             LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
             
@@ -693,6 +695,87 @@ public class MyScheduleController implements Initializable {
     }
 
     @FXML
+    private void selectSchedule() {
+        if (scheduleList == null || scheduleList.isEmpty()) {
+            showAlert(AlertType.WARNING, "Cảnh báo", "Không có ca làm việc",
+                    "Hiện tại không có ca làm việc nào để lựa chọn.");
+            return;
+        }
+
+        // Tạo dialog để hiển thị danh sách ca làm việc
+        Dialog<WorkSchedule> dialog = new Dialog<>();
+        dialog.setTitle("Lựa chọn ca làm việc");
+        dialog.setHeaderText("Chọn một ca làm việc từ lịch làm việc hiện tại");
+
+        ButtonType selectButtonType = new ButtonType("Chọn", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(selectButtonType, ButtonType.CANCEL);
+
+        // Tạo TableView để hiển thị danh sách ca làm việc
+        TableView<WorkSchedule> scheduleSelectionTable = new TableView<>();
+        scheduleSelectionTable.setItems(scheduleList);
+
+        TableColumn<WorkSchedule, LocalDate> dateCol = new TableColumn<>("Ngày");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("workDate"));
+        dateCol.setCellFactory(column -> new TableCell<WorkSchedule, LocalDate>() {
+            @Override
+            protected void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : dateFormatter.format(item));
+            }
+        });
+
+        TableColumn<WorkSchedule, String> shiftCol = new TableColumn<>("Ca làm việc");
+        shiftCol.setCellValueFactory(cellData -> new SimpleStringProperty(
+                cellData.getValue().getShift() != null ? cellData.getValue().getShift().name() : ""));
+
+        TableColumn<WorkSchedule, LocalTime> startTimeCol = new TableColumn<>("Giờ bắt đầu");
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        startTimeCol.setCellFactory(column -> new TableCell<WorkSchedule, LocalTime>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : timeFormatter.format(item));
+            }
+        });
+
+        TableColumn<WorkSchedule, LocalTime> endTimeCol = new TableColumn<>("Giờ kết thúc");
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        endTimeCol.setCellFactory(column -> new TableCell<WorkSchedule, LocalTime>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : timeFormatter.format(item));
+            }
+        });
+
+        TableColumn<WorkSchedule, String> locationCol = new TableColumn<>("Store");
+        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+
+        scheduleSelectionTable.getColumns().addAll(dateCol, shiftCol, startTimeCol, endTimeCol, locationCol);
+        scheduleSelectionTable.setPrefWidth(600);
+        scheduleSelectionTable.setPrefHeight(400);
+
+        dialog.getDialogPane().setContent(scheduleSelectionTable);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == selectButtonType) {
+                return scheduleSelectionTable.getSelectionModel().getSelectedItem();
+            }
+            return null;
+        });
+
+        Optional<WorkSchedule> result = dialog.showAndWait();
+        result.ifPresent(schedule -> {
+            // Điền thông tin từ ca làm việc được chọn vào form đăng ký
+            registrationDatePicker.setValue(schedule.getWorkDate());
+            shiftSelector.setValue(schedule.getShift());
+            locationSelector.setValue(schedule.getLocation());
+            statusLabel.setText("Trạng thái: Đã chọn ca làm việc ngày " + schedule.getWorkDate().format(dateFormatter));
+        });
+    }
+
+    @FXML
     private void refreshSchedule() {
         String mode = viewModeSelector.getValue();
         switch (mode) {
@@ -718,7 +801,7 @@ public class MyScheduleController implements Initializable {
 
         if (date == null || shift == null || location == null) {
             showAlert(AlertType.WARNING, "Cảnh báo", "Chưa đủ thông tin",
-                    "Vui lòng chọn ngày, ca làm và vị trí làm việc.");
+                    "Vui lòng chọn ngày, ca làm và store.");
             return;
         }
 
@@ -771,7 +854,20 @@ public class MyScheduleController implements Initializable {
 
     @FXML
     private void goToHome() {
-        	SceneSwitcher.switchScene("staff/staff_home.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Staff/MainStaffView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) homeButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
+            
+            // Hiển thị thông báo lỗi
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+                    "Đã xảy ra lỗi: " + e.getMessage());
+        }
     }
     
     @FXML

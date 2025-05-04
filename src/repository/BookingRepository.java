@@ -9,6 +9,8 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import enums.StatusEnum;
 import javafx.scene.chart.XYChart;
 import model.Booking;
@@ -183,7 +185,11 @@ public class BookingRepository implements IRepository<Booking> {
 
         return list;
     }
-
+    public Booking getNewestBookingByPhone(String phone) {
+        String condition = "cp.phone = ? ORDER BY b.booking_id DESC LIMIT 1";
+        List<Booking> bookings = selectByCondition(condition, phone);
+        return bookings.isEmpty() ? null : bookings.get(0);
+    }
     public Booking selectById(int bookingID) {
         Booking ketQua = null;
         String sql = "SELECT b.booking_id, b.booking_time, b.status, b.note, " +

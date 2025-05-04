@@ -199,4 +199,112 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
         
         return new OrderDetail(orderDetailId, order, service, quantity, unitPrice);
     }
+    /**
+     * Obtiene la lista de servicios asociados a un pedido específico
+     * @param orderId El ID del pedido
+     * @return Lista de servicios del pedido
+     */
+    public List<Service> getServicesByOrderId(int orderId) {
+        List<Service> services = new ArrayList<>();
+        String sql = "SELECT s.* FROM service s " +
+                     "JOIN order_detail od ON s.service_id = od.service_id " +
+                     "WHERE od.order_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Service service = new Service();
+                    service.setServiceId(rs.getInt("service_id"));
+                    service.setName(rs.getString("name"));
+                    service.setDescription(rs.getString("description"));
+                    service.setPrice(rs.getDouble("price"));
+                    service.setDurationMinutes(rs.getInt("duration_minutes"));
+                    service.setActive(rs.getBoolean("active"));
+                    services.add(service);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy danh sách dịch vụ theo mã đơn hàng: " + e.getMessage());
+        }
+        
+        return services;
+    }
+
+    /**
+     * Calcula el precio total de los servicios de un pedido
+     * @param orderId El ID del pedido
+     * @return El precio total
+     */
+    public double calculateOrderTotal(int orderId) {
+        double total = 0;
+        String sql = "SELECT SUM(od.price * od.quantity) as total " +
+                     "FROM order_detail od WHERE od.order_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getDouble("total");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tính tổng tiền đơn hàng: " + e.getMessage());
+        }
+        
+        return total;
+    }
+
+    /**
+     * Obtiene la cantidad de un servicio específico en un pedido
+     * @param orderId El ID del pedido
+     * @param serviceId El ID del servicio
+     * @return La cantidad del servicio
+     */
+    public int getServiceQuantity(int orderId, int serviceId) {
+        int quantity = 0;
+        String sql = "SELECT quantity FROM order_detail " +
+                     "WHERE order_id = ? AND service_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, serviceId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    quantity = rs.getInt("quantity");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy số lượng dịch vụ: " + e.getMessage());
+        }
+        
+        return quantity;
+    }
+
+    /**
+     * Obtiene todos los detalles de un pedido
+     * @param orderId El ID del pedido
+     * @return Lista de detalles del pedido
+     */
+    public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        String sql = "SELECT * FROM order_detail WHERE order_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    orderDetails.add(mapResultSetToOrderDetail(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy chi tiết đơn hàng: " + e.getMessage());
+        }
+        
+        return orderDetails;
+    }
 }
