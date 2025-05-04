@@ -1,3 +1,4 @@
+
 package frontend;
 
 import controllers.SceneSwitcher;
@@ -6,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
 	@Override
 	public void start(Stage primaryStage) {
 		SceneSwitcher.setMainStage(primaryStage);
@@ -13,7 +15,8 @@ public class Main extends Application {
 		SceneSwitcher.switchScene("home.fxml");
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

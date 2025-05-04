@@ -14,8 +14,13 @@ import model.Staff;
 
 public class OrderRepository implements IRepository<Order> {
     
+    private static OrderRepository instance;
+    
     public static OrderRepository getInstance() {
-        return new OrderRepository();
+        if (instance == null) {
+            instance = new OrderRepository();
+        }
+        return instance;
     }
 
     public void updateTotal(int orderId, double total) {
@@ -29,6 +34,7 @@ public class OrderRepository implements IRepository<Order> {
             System.err.println("Lỗi khi cập nhật tổng tiền: " + e.getMessage());
         }
     }
+    
     public void updateTotalPrice(int orderId) {
         String sql = "SELECT SUM(price * quantity) FROM order_detail WHERE order_id = ?";
         try (Connection con = DatabaseConnection.getConnection();
@@ -45,7 +51,7 @@ public class OrderRepository implements IRepository<Order> {
         }
     }
 
-
+    @Override
     public int insert(Order order) {
         String sql = "INSERT INTO `order` (customer_id, staff_id, order_date, voucher_code, total_amount, status) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -82,9 +88,6 @@ public class OrderRepository implements IRepository<Order> {
         return 0;
     }
 
-
-
-
     @Override
     public int update(Order order) {
         String sql = "UPDATE `order` SET customer_id=?, staff_id=?, order_date=?, voucher_code=?, total_amount=?, status=? WHERE order_id=?";
@@ -120,7 +123,6 @@ public class OrderRepository implements IRepository<Order> {
             return 0;
         }
     }
-
 
     @Override
     public int delete(Order order) {
@@ -217,14 +219,17 @@ public class OrderRepository implements IRepository<Order> {
         }
         
         String voucherCode = rs.getString("voucher_code");
-        Promotion voucher = new Promotion();
-        voucher.setDescription(voucherCode); 
-
+        Promotion voucher = null;
+        if (voucherCode != null) {
+            voucher = new Promotion();
+            voucher.setDescription(voucherCode);
+        }
 
         String statusStr = rs.getString("status");
         StatusEnum status = StatusEnum.valueOf(statusStr);
 
         return new Order(orderId, customer, staff, orderDate, voucher, total, status);
     }
+
 }
 

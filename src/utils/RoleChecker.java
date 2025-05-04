@@ -2,10 +2,8 @@ package utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import model.Account;
 import model.Staff;
-import repository.AccountPermissionRepository;
-import service.StaffService;
+import utils.Session;
 
 public class RoleChecker {
     
@@ -34,18 +32,45 @@ public class RoleChecker {
             return staffPermissions.get(key);
         }
         
-        // Nếu chưa có trong cache, truy vấn từ database
-        Account account = currentStaff.getAccount();
-        if (account == null) {
-            return false;
-        }
+        // Lấy vai trò của nhân viên
+        String roleName = currentStaff.getRole().getRoleName();
         
-        boolean hasPermission = AccountPermissionRepository.getInstance()
-                .checkPermission(account.getAccountID(), permissionCode);
+        // Phân quyền dựa trên vai trò
+        boolean hasPermission = false;
+        switch (roleName.toUpperCase()) {
+            case "STAFF_CARE":
+                hasPermission = permissionCode.equals("VIEW_SCHEDULE") ||
+                                permissionCode.equals("REGISTER_SHIFT") ||
+                                permissionCode.equals("REQUEST_LEAVE") ||
+                                permissionCode.equals("VIEW_BOOKING_ASSIGNED") ||
+                                permissionCode.equals("MARK_SERVICE_DONE");
+                break;
+            case "STAFF_CASHIER":
+                hasPermission = permissionCode.equals("VIEW_SCHEDULE") ||
+                                permissionCode.equals("REGISTER_SHIFT") ||
+                                permissionCode.equals("REQUEST_LEAVE") ||
+                                permissionCode.equals("VIEW_INVOICE") ||
+                                permissionCode.equals("MANAGE_PAYMENT") ||
+                                permissionCode.equals("PRINT_RECEIPT") ||
+                                permissionCode.equals("CREATE_BOOKING") ||
+                                permissionCode.equals("APPLY_PROMOTION");
+                break;
+            case "STAFF_RECEPTION":
+                hasPermission = permissionCode.equals("VIEW_SCHEDULE") ||
+                                permissionCode.equals("REGISTER_SHIFT") ||
+                                permissionCode.equals("REQUEST_LEAVE") ||
+                                permissionCode.equals("VIEW_BOOKING_ASSIGNED") ||
+                                permissionCode.equals("CREATE_BOOKING") ||
+                                permissionCode.equals("MARK_SERVICE_DONE") ||
+                                permissionCode.equals("PRINT_RECEIPT");
+                break;
+            default:
+                hasPermission = false;
+                break;
+        }
         
         // Lưu vào cache
         staffPermissions.put(key, hasPermission);
-        
         return hasPermission;
     }
     

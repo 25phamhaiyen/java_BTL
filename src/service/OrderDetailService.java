@@ -1,3 +1,4 @@
+
 package service;
 
 import java.util.List;
@@ -18,10 +19,6 @@ public class OrderDetailService {
 	public List<OrderDetail> getAllOrderDetails() {
 		return orderDetailRepository.selectAll();
 	}
-//
-//	public List<OrderDetail> getDetailsByOrderId(int orderId) {
-//		return orderDetailRepository.selectById(orderId);
-//	}
 
 	public void addOrderDetail(OrderDetail detail) {
 		int rowsAffected = orderDetailRepository.insert(detail);

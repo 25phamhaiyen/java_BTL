@@ -52,3 +52,6 @@
     -fx-background-color: #C0E68B;
     -fx-text-fill: black;
 }
+.table-view .table-row-cell:empty {
+    -fx-background-color: transparent;
+}

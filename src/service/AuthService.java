@@ -2,7 +2,17 @@ package service;
 
 import model.Account;
 import repository.AccountRepository;
+import utils.DatabaseConnection;
+
 import org.mindrot.jbcrypt.BCrypt;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class AuthService {
@@ -47,5 +57,34 @@ public class AuthService {
     public boolean logout() {
         // Any logout-specific operations
         return true;
+    }
+    public boolean verifyPassword(int accountID, String password) {
+        try {
+            // Thực hiện truy vấn lấy mật khẩu đã hash từ database
+            String sql = "SELECT password FROM account WHERE account_id = ?";
+            try (Connection con = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(sql)) {
+                
+                pstmt.setInt(1, accountID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        String storedHashedPassword = rs.getString("password");
+                        // Sử dụng BCrypt để kiểm tra mật khẩu
+                        return BCrypt.checkpw(password, storedHashedPassword);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+        	showAlert(AlertType.ERROR, "Lỗi", "Không kiểm tra được mật khẩu:", e.getMessage());
+        }
+        return false;
+    }
+    
+    private void showAlert(AlertType alertType, String title, String header, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
