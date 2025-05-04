@@ -104,24 +104,24 @@ public class SceneSwitcher {
 	 * @param currentStage Stage hiện tại
 	 * @param bookingId    ID của booking
 	 */
-	public static void switchToBookingDetailScene(Stage currentStage, int bookingId) {
-		try {
-			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/bookingDetail.fxml"));
-			Parent root = loader.load();
-
-			// Truyền bookingId cho controller
-			BookingDetailController controller = loader.getController();
-			controller.initData(bookingId);
-
-			Scene scene = new Scene(root);
-			currentStage.setScene(scene);
-			currentStage.setTitle("Chi tiết đặt lịch #" + bookingId);
-			currentStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Không thể tải màn hình chi tiết đặt lịch: " + e.getMessage());
-		}
-	}
+//	public static void switchToBookingDetailScene(Stage currentStage, int bookingId) {
+//		try {
+//			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/bookingDetail.fxml"));
+//			Parent root = loader.load();
+//
+//			// Truyền bookingId cho controller
+//			BookingDetailController controller = loader.getController();
+//			controller.initData(bookingId);
+//
+//			Scene scene = new Scene(root);
+//			currentStage.setScene(scene);
+//			currentStage.setTitle("Chi tiết đặt lịch #" + bookingId);
+//			currentStage.show();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			showErrorDialog("Không thể tải màn hình chi tiết đặt lịch: " + e.getMessage());
+//		}
+//	}
 
 	/**
 	 * Chuyển đến màn hình xử lý hóa đơn

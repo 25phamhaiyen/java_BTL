@@ -88,7 +88,7 @@ public class StaffController implements Initializable {
 		}
 		
         // Cập nhật tên giao diện
-        welcomeLabel.setText("Chào mừng " + currentStaff.getFullName() + ", " + currentStaff.getRole().getRoleName());
+        //welcomeLabel.setText("Chào mừng " + currentStaff.getFullName() + ", " + currentStaff.getRole().getRoleName());
         
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		setupButtonVisibility();
@@ -191,9 +191,9 @@ public class StaffController implements Initializable {
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
 		bookingViewButton.setVisible(
-				RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED") || RoleChecker.hasPermission("CREATE_BOOKING"));
+				RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED"));
 		invoiceViewButton
-				.setVisible(RoleChecker.hasPermission("VIEW_INVOICE") || RoleChecker.hasPermission("MANAGE_PAYMENT"));
+				.setVisible(RoleChecker.hasPermission("VIEW_INVOICE"));
 		promotionButton.setVisible(RoleChecker.hasPermission("APPLY_PROMOTION"));
 	}
 //

@@ -1,73 +1,207 @@
-/* =================== Edit Profile Screen =================== */
-
-/* Giao diện tổng thể */
+/* Màu sắc chủ đạo - Tông cam dịu */
 .root {
-    -fx-background-color: #f9f3e6; /* Nền nhẹ */
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
-    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
 }
 
-/* Tiêu đề "Chỉnh sửa hồ sơ" */
-.title-label {
-    -fx-font-size: 24px;
+/* Màu chính */
+.primary-color {
+    -primary-orange: #FFA07A;       /* Cam nhạt */
+    -primary-orange-dark: #E9967A;  /* Cam đậm hơn */
+    -primary-orange-light: #FFB6C1; /* Cam hồng nhạt */
+}
+
+/* Header */
+.header-box {
+    -fx-background-color: #FFA07A; /* Màu cam chủ đạo */
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #5a3d2a; /* Nâu đậm */
 }
 
-/* Các Label trong Form */
-.label {
+/* Main Container */
+.main-container {
+    -fx-background-color: #FFF5EE; /* Màu nền kem nhạt */
+    -fx-padding: 20;
+}
+
+/* Form Cards */
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-min-width: 400;
+    -fx-max-width: 600;
+}
+
+.form-title {
+    -fx-text-fill: #FF8C69; /* Cam đậm hơn một chút */
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #5a3d2a;
+    -fx-padding: 0 0 10 0;
 }
 
-/* Các TextField và PasswordField */
-.text-field, .password-field {
-    -fx-padding: 10px;
-    -fx-border-color: #d88e3f;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-background-color: #ffffff;
+/* Form Grid */
+.form-grid {
+    -fx-padding: 10 0;
 }
 
-/* Các nút hành động */
-.button {
-    -fx-background-color: #f1d6a1;
-    -fx-text-fill: #5a3d2a;
+.field-label {
+    -fx-text-fill: #5F4B32; /* Màu nâu nhạt */
     -fx-font-size: 14px;
-    -fx-padding: 8px 16px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-border-color: #d88e3f;
-    -fx-border-width: 1px;
+    -fx-alignment: center-right;
+}
+
+.field-input {
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #E0C9B9; /* Viền màu be nhạt */
+    -fx-border-width: 1;
+}
+
+.field-input:focused {
+    -fx-border-color: #FFA07A; /* Cam chủ đạo */
+    -fx-effect: innershadow(gaussian, rgba(255,160,122,0.3), 5, 0, 0, 0);
+}
+
+/* Buttons */
+.button-group {
+	-fx-background-color: #ffe0b3;
+    -fx-padding: 15 50 15 120;
+	-fx-background-radius: 5;
+}
+
+.btn-primary {
+    -fx-background-color: #FFA07A; /* Cam chủ đạo */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
     -fx-cursor: hand;
 }
 
-/* Hover nút */
-.button:hover {
-    -fx-background-color: #e09c4d;
+.btn-primary:hover {
+    -fx-background-color: #E9967A; /* Cam đậm hơn */
+}
+
+.btn-success {
+    -fx-background-color: #A2D9A6; /* Xanh lá dịu */
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
 }
 
-/* HBox chứa 2 nút */
-.hbox {
-    -fx-spacing: 10px;
+.btn-success:hover {
+    -fx-background-color: #8FBC8F; /* Xanh lá đậm hơn */
+}
+
+.btn-danger {
+    -fx-background-color: #FF7F7F; /* Đỏ cam nhạt */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #F08080; /* Đỏ cam đậm hơn */
+}
+
+.btn-secondary {
+   -fx-background-color: #A2D9A6; 
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #A9A44E; /* Vàng nâu đậm hơn */
+}
+
+.btn-neutral {
+    -fx-background-color: white;
+    -fx-text-fill: #FF8C69; /* Cam đậm */
+    -fx-border-color: #FFA07A; /* Cam chủ đạo */
+    -fx-border-width: 1;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-neutral:hover {
+    -fx-background-color: #FFF0F5; /* Hồng rất nhạt */
+}
+
+/* Avatar Section */
+.avatar-section {
+    -fx-padding: 20;
     -fx-alignment: center;
 }
 
-/* GridPane chứa Form */
-.grid-pane {
-    -fx-hgap: 10px;
-    -fx-vgap: 10px;
+.avatar-image {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 60;
+    -fx-border-radius: 60;
+    -fx-border-width: 3;
+    -fx-border-color: #FFA07A; /* Cam chủ đạo */
 }
 
-/* VBox tổng thể */
-.vbox {
-    -fx-spacing: 20px;
-    -fx-alignment: center;
+/* Footer */
+.footer-box {
+    -fx-background-color: #FFF5EE; /* Màu nền kem nhạt */
+    -fx-border-color: #E0C9B9; /* Viền màu be nhạt */
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 15;
+}
+/* Làm nổi bật tiêu đề */
+.header-title {
+    -fx-font-size: 24px; /* Tăng kích thước */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
 }
 
-/* Padding cho VBox */
-.vbox > .padding {
-    -fx-padding: 20px;
+/* Làm nổi bật nút bấm */
+.btn-primary, .btn-success, .btn-danger, .btn-secondary {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-padding: 10 25; /* Tăng padding */
+}
+
+/* Form title nổi bật hơn */
+.form-title {
+    -fx-font-size: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 0, 0, 1);
+}
+
+/* Responsive Adjustments */
+.small-screen .form-card {
+    -fx-min-width: 300;
+    -fx-padding: 15;
+}
+
+.small-screen .form-grid {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.small-screen .field-label {
+    -fx-font-size: 13px;
+}
+
+.small-screen .field-input {
+    -fx-font-size: 13px;
+    -fx-padding: 6;
 }

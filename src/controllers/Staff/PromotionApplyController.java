@@ -320,14 +320,6 @@ public class PromotionApplyController implements Initializable {
     }
     @FXML
     private void goBack(ActionEvent event) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
-//            Parent root = loader.load();
-//            Stage stage = (Stage) backButton.getScene().getWindow();
-//            stage.setScene(new Scene(root));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     	SceneSwitcher.switchScene("staff/staff_home.fxml");
     }
 

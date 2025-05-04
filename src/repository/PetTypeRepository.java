@@ -95,7 +95,7 @@ public class PetTypeRepository implements IRepository<PetType> {
 
     public PetType selectById(int typePetID) {
         PetType petType = null;
-        String sql = "SELECT * FROM pet_type WHERE TypePetID = ?";
+        String sql = "SELECT * FROM pet_type WHERE type_id = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {

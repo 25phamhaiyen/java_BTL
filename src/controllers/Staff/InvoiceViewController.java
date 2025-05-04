@@ -13,12 +13,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.io.FileWriter;
+
+import controllers.SceneSwitcher;
 import enums.PaymentMethodEnum;
 import enums.StatusEnum;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -39,13 +42,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Customer;
 import model.Invoice;
 import model.Order;
-import model.OrderDetail;
 import model.Service;
 import model.Staff;
 import repository.CustomerRepository;
@@ -57,6 +58,10 @@ import service.InvoiceService;
 import utils.DatabaseConnection;
 import utils.RoleChecker;
 import utils.Session;
+
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 
 public class InvoiceViewController implements Initializable {
 
@@ -85,11 +90,13 @@ public class InvoiceViewController implements Initializable {
     @FXML private Button viewDetailsButton;
     @FXML private Button applyDiscountButton;
     @FXML private Button refundButton;
+    @FXML private Button processPaymentButton;
+    @FXML private Button processPaymentAndPrintButton;
     @FXML private TextField customerSearchField;
     @FXML private TextField customerIdField;
     @FXML private TextField customerNameField;
     @FXML private TextField customerPhoneField;
-    @FXML private TextField customerEmailField;
+    
     @FXML private Label customerPointsLabel;
     @FXML private CheckBox usePointsCheckbox;
     @FXML private Label invoiceIdLabel;
@@ -109,17 +116,11 @@ public class InvoiceViewController implements Initializable {
     @FXML private ComboBox<String> serviceSelector;
     @FXML private TextField quantityField;
     @FXML private TableView<InvoiceItem> invoiceItemsTable;
-    @FXML private ComboBox<String> reportTypeSelector;
-    @FXML private DatePicker reportFromDatePicker;
-    @FXML private DatePicker reportToDatePicker;
-    @FXML private Label reportTotalRevenueLabel;
-    @FXML private Label reportInvoiceCountLabel;
-    @FXML private Label reportAverageValueLabel;
-    @FXML private Label reportTopServiceLabel;
-    @FXML private TableView<RevenueReport> revenueReportTable;
     @FXML private ProgressBar progressBar;
     @FXML private Label statusMessageLabel;
+    @FXML private TabPane tabPane;
 
+    @FXML private Button homeButton;
     private final InvoiceRepository invoiceRepository;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
@@ -129,9 +130,11 @@ public class InvoiceViewController implements Initializable {
     
     private ObservableList<Invoice> invoiceList;
     private ObservableList<InvoiceItem> invoiceItems;
-    private ObservableList<RevenueReport> revenueReports;
     private Invoice selectedInvoice;
-    
+    // Map để lưu trữ danh sách dịch vụ theo customerId
+    private Map<Integer, ObservableList<InvoiceItem>> customerServicesMap;
+    private Integer currentCustomerId; // Lưu customerId hiện tại
+
     public InvoiceViewController() {
         this.invoiceRepository = InvoiceRepository.getInstance();
         this.orderRepository = OrderRepository.getInstance();
@@ -140,15 +143,26 @@ public class InvoiceViewController implements Initializable {
         this.customerRepository = CustomerRepository.getInstance();
         this.invoiceService = new InvoiceService();
         this.invoiceItems = FXCollections.observableArrayList();
-        this.revenueReports = FXCollections.observableArrayList();
+        this.customerServicesMap = new HashMap<>();
+        this.currentCustomerId = null;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Kiểm tra quyền truy cập vào controller
+        if (!RoleChecker.hasPermission("VIEW_INVOICE")) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
+                    "Bạn không có quyền truy cập vào màn hình quản lý hóa đơn.");
+            Stage stage = (Stage) dateTimeLabel.getScene().getWindow();
+            stage.close();
+            return;
+        }
+
         updateDateTime();
         Staff currentStaff = Session.getCurrentStaff();
-        staffNameLabel.setText("Thu ngân: " + (currentStaff != null ? currentStaff.getFullName() : "N/A"));
-        cashierNameLabel.setText(currentStaff != null ? currentStaff.getFullName() : "N/A");
+        String staffName = currentStaff != null ? currentStaff.getFullName() : "N/A";
+        staffNameLabel.setText("Thu ngân: " + staffName);
+        cashierNameLabel.setText(staffName);
 
         initializeTableColumns();
         initializeInvoiceItemsTable();
@@ -179,23 +193,28 @@ public class InvoiceViewController implements Initializable {
     }
 
     private void initializeTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("invoiceId"));
+        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getInvoiceId()).asObject());
+        
         orderIdColumn.setCellValueFactory(cellData -> {
             Invoice invoice = cellData.getValue();
-            return new SimpleIntegerProperty(invoice.getOrder() != null ? invoice.getOrder().getOrderId() : 0).asObject();
+            Order order = invoice.getOrder();
+            return new SimpleIntegerProperty(order != null ? order.getOrderId() : 0).asObject();
         });
+        
         customerColumn.setCellValueFactory(cellData -> {
             Invoice invoice = cellData.getValue();
-            return new SimpleStringProperty(
-                    invoice.getOrder() != null && invoice.getOrder().getCustomer() != null
-                            ? invoice.getOrder().getCustomer().getFullName() : "N/A");
+            Order order = invoice.getOrder();
+            Customer customer = (order != null) ? order.getCustomer() : null;
+            return new SimpleStringProperty(customer != null && customer.getFullName() != null ? customer.getFullName() : "N/A");
         });
+        
         phoneColumn.setCellValueFactory(cellData -> {
             Invoice invoice = cellData.getValue();
-            return new SimpleStringProperty(
-                    invoice.getOrder() != null && invoice.getOrder().getCustomer() != null
-                            ? invoice.getOrder().getCustomer().getPhone() : "N/A");
+            Order order = invoice.getOrder();
+            Customer customer = (order != null) ? order.getCustomer() : null;
+            return new SimpleStringProperty(customer != null && customer.getPhone() != null ? customer.getPhone() : "N/A");
         });
+        
         dateColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(
                 cellData.getValue().getPaymentDate() != null ? 
                 cellData.getValue().getPaymentDate().toLocalDateTime() : null));
@@ -207,27 +226,36 @@ public class InvoiceViewController implements Initializable {
                 setText(empty || item == null ? "N/A" : formatter.format(item));
             }
         });
+        
         serviceColumn.setCellValueFactory(cellData -> {
+            Invoice invoice = cellData.getValue();
+            Order order = invoice.getOrder();
+            if (order == null) {
+                return new SimpleStringProperty("N/A");
+            }
             try {
-                Invoice invoice = cellData.getValue();
-                if (invoice == null || invoice.getOrder() == null) {
-                    return new SimpleStringProperty("N/A");
+                String sql = "SELECT s.name " +
+                            "FROM order_detail od " +
+                            "JOIN service s ON od.service_id = s.service_id " +
+                            "WHERE od.order_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, order.getOrderId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        StringBuilder serviceNames = new StringBuilder();
+                        while (rs.next()) {
+                            serviceNames.append(rs.getString("name")).append(", ");
+                        }
+                        String result = serviceNames.length() > 0 ? serviceNames.substring(0, serviceNames.length() - 2) : "Không có dịch vụ";
+                        return new SimpleStringProperty(result);
+                    }
                 }
-                
-                List<OrderDetail> details = orderDetailRepository.selectByCondition("order_id = ?", invoice.getOrder().getOrderId());
-                if (details.isEmpty()) {
-                    return new SimpleStringProperty("Không có dịch vụ");
-                }
-                
-                String serviceName = details.get(0).getService().getName();
-                if (details.size() > 1) {
-                    serviceName += " + " + (details.size() - 1) + " dịch vụ khác";
-                }
-                return new SimpleStringProperty(serviceName);
-            } catch (Exception e) {
+            } catch (SQLException e) {
+                System.err.println("Lỗi khi lấy danh sách dịch vụ: " + e.getMessage());
                 return new SimpleStringProperty("Lỗi: " + e.getMessage());
             }
         });
+        
         totalColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(
                 cellData.getValue().getTotal() != null ? cellData.getValue().getTotal().doubleValue() : 0).asObject());
         totalColumn.setCellFactory(column -> new TableCell<Invoice, Double>() {
@@ -237,14 +265,16 @@ public class InvoiceViewController implements Initializable {
                 setText(empty || item == null ? "0 VND" : String.format("%,.0f VND", item));
             }
         });
+        
         paymentMethodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
                 cellData.getValue().getPaymentMethod() != null
                         ? cellData.getValue().getPaymentMethod().name() : "N/A"));
+        
         statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
                 cellData.getValue().getStatus() != null
                         ? cellData.getValue().getStatus().name() : "N/A"));
     }
-
+    
     private void initializeInvoiceItemsTable() {
         invoiceItemsTable.setItems(invoiceItems);
         if (invoiceItemsTable.getColumns().size() >= 6) {
@@ -266,6 +296,10 @@ public class InvoiceViewController implements Initializable {
                         deleteButton.setOnAction(event -> {
                             InvoiceItem invoiceItem = getTableView().getItems().get(getIndex());
                             invoiceItems.remove(invoiceItem);
+                            // Cập nhật lại Map khi xóa dịch vụ
+                            if (currentCustomerId != null) {
+                                customerServicesMap.put(currentCustomerId, invoiceItems);
+                            }
                             updateInvoiceSummary();
                         });
                         setGraphic(deleteButton);
@@ -279,8 +313,6 @@ public class InvoiceViewController implements Initializable {
         LocalDate now = LocalDate.now();
         fromDatePicker.setValue(now.minusDays(30));
         toDatePicker.setValue(now);
-        reportFromDatePicker.setValue(now.minusDays(30));
-        reportToDatePicker.setValue(now);
     }
 
     private void setupComboBoxes() {
@@ -306,9 +338,6 @@ public class InvoiceViewController implements Initializable {
         }
         paymentMethodComboBox.setItems(paymentMethods);
         paymentMethodComboBox.setValue(PaymentMethodEnum.CASH.name());
-
-        reportTypeSelector.getItems().addAll("Doanh thu theo ngày", "Doanh thu theo dịch vụ", "Doanh thu theo phương thức thanh toán");
-        reportTypeSelector.setValue("Doanh thu theo ngày");
     }
     
     private void loadServices() {
@@ -338,6 +367,13 @@ public class InvoiceViewController implements Initializable {
         viewDetailsButton.setVisible(canViewInvoice);
         applyDiscountButton.setVisible(canManagePayment);
         refundButton.setVisible(canManagePayment);
+        
+        if (processPaymentButton != null) {
+            processPaymentButton.setVisible(canManagePayment);
+        }
+        if (processPaymentAndPrintButton != null) {
+            processPaymentAndPrintButton.setVisible(canManagePayment);
+        }
     }
     
     private void setupEventListeners() {
@@ -379,12 +415,71 @@ public class InvoiceViewController implements Initializable {
     private void loadInvoices() {
         try {
             progressBar.setVisible(true);
-            List<Invoice> invoices;
+            List<Invoice> invoices = new ArrayList<>();
             
             if (fromDatePicker.getValue() != null && toDatePicker.getValue() != null) {
                 LocalDateTime startDate = fromDatePicker.getValue().atStartOfDay();
                 LocalDateTime endDate = toDatePicker.getValue().plusDays(1).atStartOfDay();
-                invoices = invoiceService.getInvoicesByDateRange(startDate, endDate);
+                
+                String sql = "SELECT i.*, o.order_id, o.customer_id, o.order_date, o.total_amount, o.status as order_status, " +
+                             "c.customer_id, c.point, p.full_name, p.phone, p.email, s.staff_id, sp.full_name as staff_name " +
+                             "FROM invoice i " +
+                             "LEFT JOIN `order` o ON i.order_id = o.order_id " +
+                             "LEFT JOIN customer c ON o.customer_id = c.customer_id " +
+                             "LEFT JOIN person p ON c.customer_id = p.person_id " +
+                             "LEFT JOIN staff s ON i.staff_id = s.staff_id " +
+                             "LEFT JOIN person sp ON s.staff_id = sp.person_id " +
+                             "WHERE i.payment_date BETWEEN ? AND ?";
+                
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setTimestamp(1, java.sql.Timestamp.valueOf(startDate));
+                    stmt.setTimestamp(2, java.sql.Timestamp.valueOf(endDate));
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        while (rs.next()) {
+                            Invoice invoice = new Invoice();
+                            invoice.setInvoiceId(rs.getInt("invoice_id"));
+                            invoice.setSubtotal(rs.getBigDecimal("subtotal"));
+                            invoice.setDiscountPercent(rs.getBigDecimal("discount_percent"));
+                            invoice.setDiscountAmount(rs.getBigDecimal("discount_amount"));
+                            invoice.setPointsUsed(rs.getInt("points_used"));
+                            if (rs.wasNull()) {
+                                invoice.setPointsUsed(null);
+                            }
+                            invoice.setPromotionCode(rs.getString("promotion_code"));
+                            invoice.setTotal(rs.getBigDecimal("total"));
+                            invoice.setAmountPaid(rs.getBigDecimal("amount_paid"));
+                            String paymentMethodStr = rs.getString("payment_method");
+                            invoice.setPaymentMethod(paymentMethodStr != null ? PaymentMethodEnum.valueOf(paymentMethodStr) : null);
+                            invoice.setPaymentDate(rs.getTimestamp("payment_date"));
+                            String statusStr = rs.getString("status");
+                            invoice.setStatus(statusStr != null ? StatusEnum.valueOf(statusStr) : null);
+                            invoice.setNote(rs.getString("note"));
+                            
+                            Staff staff = new Staff();
+                            staff.setId(rs.getInt("staff_id"));
+                            staff.setFullName(rs.getString("staff_name"));
+                            invoice.setStaff(staff);
+                            
+                            Order order = new Order();
+                            order.setOrderId(rs.getInt("order_id"));
+                            order.setOrderDate(rs.getTimestamp("order_date"));
+                            order.setTotalAmount(rs.getDouble("total_amount"));
+                            order.setStatus(StatusEnum.valueOf(rs.getString("order_status")));
+                            
+                            Customer customer = new Customer();
+                            customer.setId(rs.getInt("customer_id"));
+                            customer.setPoint(rs.getInt("point"));
+                            customer.setFullName(rs.getString("full_name"));
+                            customer.setPhone(rs.getString("phone"));
+                            customer.setEmail(rs.getString("email"));
+                            order.setCustomer(customer);
+                            
+                            invoice.setOrder(order);
+                            invoices.add(invoice);
+                        }
+                    }
+                }
             } else {
                 invoices = invoiceService.getRecentInvoices(30);
             }
@@ -399,6 +494,7 @@ public class InvoiceViewController implements Initializable {
             progressBar.setVisible(false);
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải danh sách hóa đơn", e.getMessage());
             statusMessageLabel.setText("Lỗi: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -413,7 +509,7 @@ public class InvoiceViewController implements Initializable {
                              "pet.pet_id, pet.name AS pet_name " +
                              "FROM booking b " +
                              "JOIN customer c ON b.customer_id = c.customer_id " +
-                             "JOIN person p ON c.person_id = p.person_id " +
+                             "JOIN person p ON c.customer_id = p.person_id " +
                              "JOIN pet ON b.pet_id = pet.pet_id " +
                              "WHERE b.booking_id = ?"; 
                 
@@ -432,11 +528,15 @@ public class InvoiceViewController implements Initializable {
                             customerIdField.setText("KH-" + String.format("%05d", customerId));
                             customerNameField.setText(customerName);
                             customerPhoneField.setText(customerPhone);
-                            customerEmailField.setText(customerEmail);
+                          
                             customerPointsLabel.setText(String.valueOf(points));
                             
                             invoiceIdLabel.setText("HĐ-" + String.format("%05d", getNextInvoiceId()));
                             invoiceDateLabel.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                            
+                            // Cập nhật currentCustomerId và tải dịch vụ
+                            currentCustomerId = customerId;
+                            loadCustomerServices(customerId);
                             
                             loadBookingServices(bookingId);
                         }
@@ -446,12 +546,7 @@ public class InvoiceViewController implements Initializable {
                 showAlert(AlertType.ERROR, "Lỗi", "Không thể tải thông tin booking", e.getMessage());
             }
         } else {
-            subtotalLabel.setText("0 VND");
-            discountAmountLabel.setText("0 VND");
-            totalAmountLabel.setText("0 VND");
-            changeAmountLabel.setText("0 VND");
-            invoiceIdLabel.setText("HĐ-" + String.format("%05d", getNextInvoiceId()));
-            invoiceDateLabel.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            resetInvoiceForm();
         }
     }
     
@@ -497,6 +592,11 @@ public class InvoiceViewController implements Initializable {
                         invoiceItems.add(new InvoiceItem(index++, serviceName, quantity, price, total));
                     }
                     
+                    // Lưu danh sách dịch vụ vào Map cho khách hàng hiện tại
+                    if (currentCustomerId != null) {
+                        customerServicesMap.put(currentCustomerId, invoiceItems);
+                    }
+                    
                     updateInvoiceSummary();
                 }
             }
@@ -510,6 +610,7 @@ public class InvoiceViewController implements Initializable {
         double subtotal = invoiceItems.stream().mapToDouble(InvoiceItem::getTotal).sum();
         double discount = 0;
         double pointsValue = 0;
+        double promotionDiscount = 0;
         
         try {
             if (discountField.getText() != null && !discountField.getText().isEmpty()) {
@@ -519,24 +620,44 @@ public class InvoiceViewController implements Initializable {
                 }
             }
         } catch (NumberFormatException e) {
-            // Ignore if not a number
+            // Bỏ qua nếu không phải số
         }
         
         if (usePointsCheckbox.isSelected() && pointsUsedField.getText() != null && !pointsUsedField.getText().isEmpty()) {
             try {
                 int pointsUsed = Integer.parseInt(pointsUsedField.getText());
                 pointsValue = pointsUsed * 1000;
-                pointsValueLabel.setText(String.format("%,.0f VND", pointsValue));
+                pointsValueLabel.setText(String.format("%,d VND", pointsValue));
             } catch (NumberFormatException e) {
-                // Ignore if not a number
+                // Bỏ qua nếu không phải số
             }
         }
         
-        double total = subtotal - discount - pointsValue;
+        if (promotionCodeField.getText() != null && !promotionCodeField.getText().isEmpty()) {
+            try {
+                String sql = "SELECT discount_percent FROM promotion WHERE code = ? AND active = TRUE AND start_date <= ? AND end_date >= ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setString(1, promotionCodeField.getText());
+                    stmt.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                    stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            double promoPercent = rs.getInt("discount_percent");
+                            promotionDiscount = subtotal * promoPercent / 100;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                // Bỏ qua nếu mã khuyến mãi không hợp lệ
+            }
+        }
+        
+        double total = subtotal - discount - pointsValue - promotionDiscount;
         if (total < 0) total = 0;
         
         subtotalLabel.setText(String.format("%,.0f VND", subtotal));
-        discountAmountLabel.setText(String.format("%,.0f VND", discount));
+        discountAmountLabel.setText(String.format("%,.0f VND", discount + promotionDiscount));
         totalAmountLabel.setText(String.format("%,.0f VND", total));
         
         updateChangeAmount();
@@ -561,7 +682,7 @@ public class InvoiceViewController implements Initializable {
             if (pointsUsedField.getText() != null && !pointsUsedField.getText().isEmpty()) {
                 int pointsUsed = Integer.parseInt(pointsUsedField.getText());
                 double pointsValue = pointsUsed * 1000;
-                pointsValueLabel.setText(String.format("%,.0f VND", pointsValue));
+                pointsValueLabel.setText(String.format("%,d VND", pointsValue));
                 
                 try {
                     int availablePoints = Integer.parseInt(customerPointsLabel.getText());
@@ -572,7 +693,7 @@ public class InvoiceViewController implements Initializable {
                         pointsUsedField.setText(String.valueOf(availablePoints));
                     }
                 } catch (NumberFormatException e) {
-                    // Ignore if points label is not a number
+                    // Bỏ qua nếu nhãn điểm không phải số
                 }
             }
         } catch (NumberFormatException e) {
@@ -587,7 +708,15 @@ public class InvoiceViewController implements Initializable {
         viewDetailsButton.setDisable(!hasSelectedInvoice);
         applyDiscountButton.setDisable(!hasSelectedInvoice);
         refundButton.setDisable(!hasSelectedInvoice || 
-                (hasSelectedInvoice && !StatusEnum.PAID.equals(invoice.getStatus())));
+                (hasSelectedInvoice && !StatusEnum.COMPLETED.equals(invoice.getStatus())));
+        if (processPaymentButton != null) {
+            processPaymentButton.setDisable(!hasSelectedInvoice || 
+                    (hasSelectedInvoice && !StatusEnum.PENDING.equals(invoice.getStatus())));
+        }
+        if (processPaymentAndPrintButton != null) {
+            processPaymentAndPrintButton.setDisable(!hasSelectedInvoice || 
+                    (hasSelectedInvoice && !StatusEnum.PENDING.equals(invoice.getStatus())));
+        }
         
         if (hasSelectedInvoice) {
             loadInvoiceDetails(invoice);
@@ -601,8 +730,11 @@ public class InvoiceViewController implements Initializable {
             invoiceIdLabel.setText("HĐ-" + String.format("%05d", invoice.getInvoiceId()));
             
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            invoiceDateLabel.setText(invoice.getPaymentDate() != null ? 
-                    invoice.getPaymentDate().toLocalDateTime().format(formatter) : "N/A");
+            if (invoice.getPaymentDate() != null) {
+                invoiceDateLabel.setText(invoice.getPaymentDate().toLocalDateTime().format(formatter));
+            } else {
+                invoiceDateLabel.setText("N/A");
+            }
             
             Staff cashier = invoice.getStaff();
             cashierNameLabel.setText(cashier != null ? cashier.getFullName() : "N/A");
@@ -611,36 +743,47 @@ public class InvoiceViewController implements Initializable {
             if (order != null && order.getCustomer() != null) {
                 Customer customer = order.getCustomer();
                 customerIdField.setText("KH-" + String.format("%05d", customer.getId()));
-                customerNameField.setText(customer.getFullName());
-                customerPhoneField.setText(customer.getPhone());
-                customerEmailField.setText(customer.getEmail());
+                customerNameField.setText(customer.getFullName() != null ? customer.getFullName() : "N/A");
+                customerPhoneField.setText(customer.getPhone() != null ? customer.getPhone() : "N/A");
+           
                 customerPointsLabel.setText(String.valueOf(customer.getPoint()));
+                
+                // Cập nhật currentCustomerId và tải dịch vụ
+                currentCustomerId = customer.getId();
+                loadCustomerServices(currentCustomerId);
             } else {
                 customerIdField.clear();
                 customerNameField.clear();
                 customerPhoneField.clear();
-                customerEmailField.clear();
+                
                 customerPointsLabel.setText("0");
+                currentCustomerId = null;
+                invoiceItems.clear();
             }
             
             if (order != null) {
-                List<OrderDetail> details = orderDetailRepository.selectByCondition("order_id = ?", order.getOrderId());
-                int index = 1;
-                
-                for (OrderDetail detail : details) {
-                    Service service = detail.getService();
-                    if (service != null) {
-                        double unitPrice = service.getPrice();
-                        double total = unitPrice * detail.getQuantity();
-                        
-                        invoiceItems.add(new InvoiceItem(
-                                index++,
-                                service.getName(),
-                                detail.getQuantity(),
-                                unitPrice,
-                                total
-                        ));
+                String sql = "SELECT s.name, od.quantity, od.price " +
+                            "FROM order_detail od " +
+                            "JOIN service s ON od.service_id = s.service_id " +
+                            "WHERE od.order_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                    PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, order.getOrderId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        int index = 1;
+                        while (rs.next()) {
+                            String serviceName = rs.getString("name");
+                            int quantity = rs.getInt("quantity");
+                            double unitPrice = rs.getDouble("price");
+                            double total = unitPrice * quantity;
+                            invoiceItems.add(new InvoiceItem(index++, serviceName, quantity, unitPrice, total));
+                        }
                     }
+                }
+                
+                // Lưu danh sách dịch vụ vào Map
+                if (currentCustomerId != null) {
+                    customerServicesMap.put(currentCustomerId, invoiceItems);
                 }
             }
             
@@ -651,10 +794,11 @@ public class InvoiceViewController implements Initializable {
             discountAmountLabel.setText(String.format("%,.0f VND", 
                     invoice.getDiscountAmount() != null ? invoice.getDiscountAmount().doubleValue() : 0));
             
-            int pointsUsed = invoice.getPointsUsed() != null ? invoice.getPointsUsed() : 0;
-            pointsUsedField.setText(String.valueOf(pointsUsed));
-            pointsValueLabel.setText(String.format("%,.0f VND", pointsUsed * 1000));
-            usePointsCheckbox.setSelected(pointsUsed > 0);
+            Integer pointsUsed = invoice.getPointsUsed();
+            int pointsUsedValue = (pointsUsed != null) ? pointsUsed : 0;
+            pointsUsedField.setText(String.valueOf(pointsUsedValue));
+            pointsValueLabel.setText(String.format("%,d VND", pointsUsedValue * 1000));
+            usePointsCheckbox.setSelected(pointsUsedValue > 0);
             
             promotionCodeField.setText(invoice.getPromotionCode() != null ? 
                     invoice.getPromotionCode() : "");
@@ -677,11 +821,18 @@ public class InvoiceViewController implements Initializable {
             
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tải chi tiết hóa đơn", e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void addServiceToInvoice() {
+        if (currentCustomerId == null) {
+            showAlert(AlertType.WARNING, "Cảnh báo", "Chưa chọn khách hàng", 
+                    "Vui lòng chọn hoặc thêm khách hàng trước khi thêm dịch vụ.");
+            return;
+        }
+
         if (serviceSelector.getValue() == null || serviceSelector.getValue().isEmpty()) {
             showAlert(AlertType.WARNING, "Cảnh báo", "Dịch vụ trống", 
                     "Vui lòng chọn một dịch vụ.");
@@ -705,48 +856,66 @@ public class InvoiceViewController implements Initializable {
         }
         
         try {
-            String condition = "name = ?";
-            List<Service> services = serviceRepository.selectByCondition(condition, 
-                    serviceSelector.getValue());
-            Service service = services.isEmpty() ? null : services.get(0);
-            
-            if (service != null) {
-                Optional<InvoiceItem> existingItem = invoiceItems.stream()
-                        .filter(item -> item.getServiceName().equals(service.getName()))
-                        .findFirst();
-                
-                if (existingItem.isPresent()) {
-                    InvoiceItem item = existingItem.get();
-                    int newQuantity = item.getQuantity() + quantity;
-                    item.setQuantity(newQuantity);
-                    item.setTotal(item.getUnitPrice() * newQuantity);
-                    invoiceItemsTable.refresh();
-                } else {
-                    double unitPrice = service.getPrice();
-                    invoiceItems.add(new InvoiceItem(
-                            invoiceItems.size() + 1,
-                            service.getName(),
-                            quantity,
-                            unitPrice,
-                            unitPrice * quantity
-                    ));
+            String sql = "SELECT name, price FROM service WHERE name = ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, serviceSelector.getValue());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        String serviceName = rs.getString("name");
+                        double unitPrice = rs.getDouble("price");
+                        
+                        Optional<InvoiceItem> existingItem = invoiceItems.stream()
+                                .filter(item -> item.getServiceName().equals(serviceName))
+                                .findFirst();
+                        
+                        if (existingItem.isPresent()) {
+                            InvoiceItem item = existingItem.get();
+                            int newQuantity = item.getQuantity() + quantity;
+                            item.setQuantity(newQuantity);
+                            item.setTotal(item.getUnitPrice() * newQuantity);
+                            invoiceItemsTable.refresh();
+                        } else {
+                            invoiceItems.add(new InvoiceItem(
+                                    invoiceItems.size() + 1,
+                                    serviceName,
+                                    quantity,
+                                    unitPrice,
+                                    unitPrice * quantity
+                            ));
+                        }
+                        
+                        // Cập nhật danh sách dịch vụ vào Map
+                        if (currentCustomerId != null) {
+                            customerServicesMap.put(currentCustomerId, invoiceItems);
+                        }
+                        
+                        serviceSelector.setValue(null);
+                        quantityField.setText("1");
+                        
+                        updateInvoiceSummary();
+                    } else {
+                        showAlert(AlertType.WARNING, "Cảnh báo", "Dịch vụ không tồn tại", 
+                                "Không tìm thấy dịch vụ " + serviceSelector.getValue());
+                    }
                 }
-                
-                serviceSelector.setValue(null);
-                quantityField.setText("1");
-                
-                updateInvoiceSummary();
-            } else {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Dịch vụ không tồn tại", 
-                        "Không tìm thấy dịch vụ " + serviceSelector.getValue());
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ", e.getMessage());
         }
-    }  
+    }
 
     @FXML
     private void processPaymentAndPrint() {
+        processPaymentLogic(true);
+    }
+
+    @FXML
+    private void processPayment() {
+        processPaymentLogic(false);
+    }
+
+    private void processPaymentLogic(boolean print) {
         try {
             if (invoiceItems.isEmpty()) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Hóa đơn trống", 
@@ -755,75 +924,221 @@ public class InvoiceViewController implements Initializable {
             }
             
             double total = Double.parseDouble(totalAmountLabel.getText().replaceAll("[^\\d]", ""));
-            double amountPaid = amountPaidField.getText().isEmpty() ? 0 : 
-                    Double.parseDouble(amountPaidField.getText());
             
-            if (amountPaid < total) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Số tiền không đủ", 
-                        "Số tiền khách trả phải lớn hơn hoặc bằng tổng thanh toán.");
-                return;
+            if (amountPaidField.getText().isEmpty() || 
+                Double.parseDouble(amountPaidField.getText()) < total) {
+                amountPaidField.setText(String.valueOf(total));
             }
+            
+            double amountPaid = Double.parseDouble(amountPaidField.getText());
             
             if (customerIdField.getText().isEmpty()) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Thiếu thông tin khách hàng", 
                         "Vui lòng tìm hoặc thêm khách hàng trước khi thanh toán.");
                 return;
             }
-            
-            Invoice invoice = new Invoice();
-            invoice.setInvoiceId(Integer.parseInt(invoiceIdLabel.getText().replace("HĐ-", "")));
-            invoice.setSubtotal(new BigDecimal(subtotalLabel.getText().replaceAll("[^\\d]", "")));
-            invoice.setDiscountPercent(discountField.getText().isEmpty() ? 
-                    BigDecimal.ZERO : BigDecimal.valueOf(Integer.parseInt(discountField.getText())));
-            invoice.setDiscountAmount(new BigDecimal(discountAmountLabel.getText().replaceAll("[^\\d]", "")));
-            invoice.setPointsUsed(Integer.parseInt(pointsUsedField.getText().isEmpty() ? 
-                    "0" : pointsUsedField.getText()));
-            invoice.setTotal(new BigDecimal(total));
-            invoice.setPaymentMethod(PaymentMethodEnum.valueOf(paymentMethodComboBox.getValue()));
-            invoice.setAmountPaid(new BigDecimal(amountPaid));
-            invoice.setPaymentDate(Timestamp.valueOf(LocalDateTime.now()));
-            invoice.setStatus(StatusEnum.PAID);
-            invoice.setNote(invoiceNoteField.getText());
-            invoice.setStaff(Session.getCurrentStaff());
-            
-            Order order = new Order();
-            String customerIdStr = customerIdField.getText().replace("KH-", "");
-            int customerId = Integer.parseInt(customerIdStr);
-            List<Customer> customers = customerRepository.selectByCondition("customer_id = ?", customerId);
-            order.setCustomer(customers.isEmpty() ? null : customers.get(0));
-            order.setOrderDate(Timestamp.valueOf(LocalDateTime.now()));
-            order.setStatus(StatusEnum.COMPLETED);
-            order.setTotalAmount(total);
-            orderRepository.insert(order);
-            
-            for (InvoiceItem item : invoiceItems) {
-                OrderDetail detail = new OrderDetail();
-                detail.setOrder(order);
-                List<Service> services = serviceRepository.selectByCondition("name = ?", item.getServiceName());
-                detail.setService(services.isEmpty() ? null : services.get(0));
-                detail.setQuantity(item.getQuantity());
-                detail.setPrice(BigDecimal.valueOf(item.getUnitPrice()));
-                orderDetailRepository.insert(detail);
+
+            if (selectedInvoice != null && StatusEnum.PENDING.equals(selectedInvoice.getStatus())) {
+                String customerIdStr = customerIdField.getText().replace("KH-", "");
+                int customerId = Integer.parseInt(customerIdStr);
+                int invoiceId = selectedInvoice.getInvoiceId();
+                int orderId = selectedInvoice.getOrder().getOrderId();
+
+                String deleteOrderDetailSql = "DELETE FROM order_detail WHERE order_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(deleteOrderDetailSql)) {
+                    stmt.setInt(1, orderId);
+                    stmt.executeUpdate();
+                }
+
+                String insertOrderDetailSql = "INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES (?, ?, ?, ?)";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(insertOrderDetailSql)) {
+                    for (InvoiceItem item : invoiceItems) {
+                        String serviceName = item.getServiceName();
+                        String getServiceIdSql = "SELECT service_id FROM service WHERE name = ?";
+                        int serviceId;
+                        try (PreparedStatement serviceStmt = conn.prepareStatement(getServiceIdSql)) {
+                            serviceStmt.setString(1, serviceName);
+                            try (ResultSet rs = serviceStmt.executeQuery()) {
+                                if (rs.next()) {
+                                    serviceId = rs.getInt("service_id");
+                                } else {
+                                    throw new SQLException("Không tìm thấy dịch vụ: " + serviceName);
+                                }
+                            }
+                        }
+                        
+                        stmt.setInt(1, orderId);
+                        stmt.setInt(2, serviceId);
+                        stmt.setInt(3, item.getQuantity());
+                        stmt.setDouble(4, item.getUnitPrice());
+                        stmt.executeUpdate();
+                    }
+                }
+
+                String updateInvoiceSql = "UPDATE invoice SET payment_date = ?, subtotal = ?, discount_percent = ?, discount_amount = ?, points_used = ?, promotion_code = ?, total = ?, amount_paid = ?, payment_method = ?, status = ?, note = ? WHERE invoice_id = ?";
+                double subtotal = invoiceItems.stream().mapToDouble(InvoiceItem::getTotal).sum();
+                double discountPercent = discountField.getText().isEmpty() ? 0 : Double.parseDouble(discountField.getText());
+                double discountAmount = discountAmountLabel.getText().isEmpty() ? 0 : 
+                        Double.parseDouble(discountAmountLabel.getText().replaceAll("[^\\d]", ""));
+                int pointsUsed = pointsUsedField.getText().isEmpty() ? 0 : Integer.parseInt(pointsUsedField.getText());
+
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(updateInvoiceSql)) {
+                    stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+                    stmt.setBigDecimal(2, BigDecimal.valueOf(subtotal));
+                    stmt.setBigDecimal(3, BigDecimal.valueOf(discountPercent));
+                    stmt.setBigDecimal(4, BigDecimal.valueOf(discountAmount));
+                    stmt.setInt(5, pointsUsed);
+                    stmt.setString(6, promotionCodeField.getText().isEmpty() ? null : promotionCodeField.getText());
+                    stmt.setDouble(7, total);
+                    stmt.setBigDecimal(8, BigDecimal.valueOf(amountPaid));
+                    stmt.setString(9, paymentMethodComboBox.getValue());
+                    stmt.setString(10, StatusEnum.COMPLETED.name());
+                    stmt.setString(11, invoiceNoteField.getText());
+                    stmt.setInt(12, invoiceId);
+                    stmt.executeUpdate();
+                }
+
+                if (usePointsCheckbox.isSelected() && pointsUsed > 0) {
+                    String updatePointsSql = "UPDATE customer SET point = point - ? WHERE customer_id = ?";
+                    try (Connection conn = DatabaseConnection.getConnection();
+                         PreparedStatement stmt = conn.prepareStatement(updatePointsSql)) {
+                        stmt.setInt(1, pointsUsed);
+                        stmt.setInt(2, customerId);
+                        stmt.executeUpdate();
+                    }
+                }
+
+                if (print) {
+                    String fileName = "invoice_" + invoiceId + ".pdf";
+                    invoiceService.generateInvoicePDF(orderId, fileName);
+                    
+                    File file = new File(fileName);
+                    if (file.exists()) {
+                        java.awt.Desktop.getDesktop().open(file);
+                    }
+                }
+
+                showAlert(AlertType.INFORMATION, "Thành công", print ? "Thanh toán và in hóa đơn" : "Thanh toán hóa đơn", 
+                        "Hóa đơn #" + invoiceId + " đã được thanh toán thành công.");
+
+                // Xóa dịch vụ của khách hàng khỏi Map sau khi thanh toán
+                if (currentCustomerId != null) {
+                    customerServicesMap.remove(currentCustomerId);
+                }
+            } else {
+                String customerIdStr = customerIdField.getText().replace("KH-", "");
+                int customerId = Integer.parseInt(customerIdStr);
+                
+                String insertOrderSql = "INSERT INTO `order` (customer_id, order_date, total_amount, status) VALUES (?, ?, ?, ?)";
+                int orderId;
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(insertOrderSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    stmt.setInt(1, customerId);
+                    stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+                    stmt.setDouble(3, total);
+                    stmt.setString(4, StatusEnum.COMPLETED.name());
+                    stmt.executeUpdate();
+                    
+                    try (ResultSet rs = stmt.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            orderId = rs.getInt(1);
+                        } else {
+                            throw new SQLException("Không thể lấy order_id sau khi thêm đơn hàng.");
+                        }
+                    }
+                }
+                
+                String insertOrderDetailSql = "INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES (?, ?, ?, ?)";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(insertOrderDetailSql)) {
+                    for (InvoiceItem item : invoiceItems) {
+                        String serviceName = item.getServiceName();
+                        String getServiceIdSql = "SELECT service_id FROM service WHERE name = ?";
+                        int serviceId;
+                        try (PreparedStatement serviceStmt = conn.prepareStatement(getServiceIdSql)) {
+                            serviceStmt.setString(1, serviceName);
+                            try (ResultSet rs = serviceStmt.executeQuery()) {
+                                if (rs.next()) {
+                                    serviceId = rs.getInt("service_id");
+                                } else {
+                                    throw new SQLException("Không tìm thấy dịch vụ: " + serviceName);
+                                }
+                            }
+                        }
+                        
+                        stmt.setInt(1, orderId);
+                        stmt.setInt(2, serviceId);
+                        stmt.setInt(3, item.getQuantity());
+                        stmt.setDouble(4, item.getUnitPrice());
+                        stmt.executeUpdate();
+                    }
+                }
+                
+                String insertInvoiceSql = "INSERT INTO invoice (invoice_id, order_id, payment_date, subtotal, discount_percent, discount_amount, points_used, promotion_code, total, amount_paid, payment_method, status, staff_id, note) " +
+                                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                int invoiceId = Integer.parseInt(invoiceIdLabel.getText().replace("HĐ-", ""));
+                
+                double subtotal = invoiceItems.stream().mapToDouble(InvoiceItem::getTotal).sum();
+                double discountPercent = discountField.getText().isEmpty() ? 0 : Double.parseDouble(discountField.getText());
+                double discountAmount = discountAmountLabel.getText().isEmpty() ? 0 : 
+                        Double.parseDouble(discountAmountLabel.getText().replaceAll("[^\\d]", ""));
+                int pointsUsed = pointsUsedField.getText().isEmpty() ? 0 : Integer.parseInt(pointsUsedField.getText());
+                
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(insertInvoiceSql)) {
+                    stmt.setInt(1, invoiceId);
+                    stmt.setInt(2, orderId);
+                    stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+                    stmt.setBigDecimal(4, BigDecimal.valueOf(subtotal));
+                    stmt.setBigDecimal(5, BigDecimal.valueOf(discountPercent));
+                    stmt.setBigDecimal(6, BigDecimal.valueOf(discountAmount));
+                    stmt.setInt(7, pointsUsed);
+                    stmt.setString(8, promotionCodeField.getText().isEmpty() ? null : promotionCodeField.getText());
+                    stmt.setDouble(9, total);
+                    stmt.setBigDecimal(10, BigDecimal.valueOf(amountPaid));
+                    stmt.setString(11, paymentMethodComboBox.getValue());
+                    stmt.setString(12, StatusEnum.COMPLETED.name());
+                    stmt.setInt(13, Session.getCurrentStaff().getId());
+                    stmt.setString(14, invoiceNoteField.getText());
+                    stmt.executeUpdate();
+                }
+                
+                if (usePointsCheckbox.isSelected() && pointsUsed > 0) {
+                    String updatePointsSql = "UPDATE customer SET point = point - ? WHERE customer_id = ?";
+                    try (Connection conn = DatabaseConnection.getConnection();
+                         PreparedStatement stmt = conn.prepareStatement(updatePointsSql)) {
+                        stmt.setInt(1, pointsUsed);
+                        stmt.setInt(2, customerId);
+                        stmt.executeUpdate();
+                    }
+                }
+                
+                if (print) {
+                    String fileName = "invoice_" + invoiceId + ".pdf";
+                    invoiceService.generateInvoicePDF(orderId, fileName);
+                    
+                    File file = new File(fileName);
+                    if (file.exists()) {
+                        java.awt.Desktop.getDesktop().open(file);
+                    }
+                }
+                
+                showAlert(AlertType.INFORMATION, "Thành công", print ? "Thanh toán và in hóa đơn" : "Thanh toán hóa đơn", 
+                        "Hóa đơn đã được lưu và in thành công.");
+
+                // Xóa dịch vụ của khách hàng khỏi Map sau khi thanh toán
+                if (currentCustomerId != null) {
+                    customerServicesMap.remove(currentCustomerId);
+                }
             }
-            
-            invoice.setOrder(order);
-            invoiceRepository.insert(invoice);
-            
-            String fileName = "invoice_" + invoice.getInvoiceId() + ".pdf";
-            invoiceService.generateInvoicePDF(order.getOrderId(), fileName);
-            
-            File file = new File(fileName);
-            if (file.exists()) {
-                java.awt.Desktop.getDesktop().open(file);
-            }
-            
-            showAlert(AlertType.INFORMATION, "Thành công", "Thanh toán và in hóa đơn", 
-                    "Hóa đơn đã được lưu và in thành công.");
             
             resetInvoiceForm();
             loadInvoices();
         } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể xử lý thanh toán và in", e.getMessage());
+            showAlert(AlertType.ERROR, "Lỗi", print ? "Không thể xử lý thanh toán và in" : "Không thể xử lý thanh toán", e.getMessage());
         }
     }
 
@@ -831,7 +1146,8 @@ public class InvoiceViewController implements Initializable {
         String statusValue = statusFilter.getValue();
         String paymentMethodValue = paymentMethodFilter.getValue();
         
-        if (statusValue.equals("Tất cả") && paymentMethodValue.equals("Tất cả")) {
+        if (statusValue == null || statusValue.equals("Tất cả") && 
+            (paymentMethodValue == null || paymentMethodValue.equals("Tất cả"))) {
             invoiceTable.setItems(invoiceList);
             updateSummaryLabels();
             return;
@@ -840,11 +1156,11 @@ public class InvoiceViewController implements Initializable {
         ObservableList<Invoice> filteredList = FXCollections.observableArrayList();
         
         for (Invoice invoice : invoiceList) {
-            boolean statusMatch = statusValue.equals("Tất cả") || 
+            boolean statusMatch = statusValue == null || statusValue.equals("Tất cả") || 
                     (invoice.getStatus() != null && 
                             invoice.getStatus().name().equals(statusValue));
             
-            boolean paymentMethodMatch = paymentMethodValue.equals("Tất cả") || 
+            boolean paymentMethodMatch = paymentMethodValue == null || paymentMethodValue.equals("Tất cả") || 
                     (invoice.getPaymentMethod() != null && 
                             invoice.getPaymentMethod().name().equals(paymentMethodValue));
             
@@ -860,30 +1176,31 @@ public class InvoiceViewController implements Initializable {
     private void updateSummaryLabels() {
         updateSummaryLabels(invoiceTable.getItems());
     }
-    
+
     private void updateSummaryLabels(ObservableList<Invoice> invoices) {
         int totalCount = invoices.size();
         int paidCount = 0;
         int pendingCount = 0;
         double totalRevenue = 0;
-        
+
         for (Invoice invoice : invoices) {
-            if (StatusEnum.PAID.equals(invoice.getStatus())) {
+            if (StatusEnum.COMPLETED.equals(invoice.getStatus())) {
                 paidCount++;
                 if (invoice.getTotal() != null) {
                     totalRevenue += invoice.getTotal().doubleValue();
                 }
-            } else if (StatusEnum.PENDING.equals(invoice.getStatus())) {
+            } else if (StatusEnum.PENDING.equals(invoice.getStatus()) || StatusEnum.CANCELLED.equals(invoice.getStatus())) {
                 pendingCount++;
             }
         }
-        
+
         totalInvoicesLabel.setText(String.valueOf(totalCount));
         paidInvoicesLabel.setText(String.valueOf(paidCount));
         pendingInvoicesLabel.setText(String.valueOf(pendingCount));
-        totalRevenueLabel.setText(String.format("%,.0f VND", totalRevenue));
+        totalRevenueLabel.setText(String.format("%,.0f VND", totalRevenue)); 
     }
 
+    @FXML
     private void searchInvoices() {
         if (fromDatePicker.getValue() == null || toDatePicker.getValue() == null) {
             showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", 
@@ -924,7 +1241,6 @@ public class InvoiceViewController implements Initializable {
         updateSummaryLabels(filteredList);
         statusMessageLabel.setText("Tìm thấy " + filteredList.size() + " kết quả");
     }
-
     @FXML
     private void searchCustomer() {
         String searchQuery = customerSearchField.getText().trim();
@@ -936,23 +1252,45 @@ public class InvoiceViewController implements Initializable {
         }
         
         try {
-            Customer customer = customerRepository.findByPhone(searchQuery);
-            
-            if (customer != null) {
-                customerIdField.setText("KH-" + String.format("%05d", customer.getId()));
-                customerNameField.setText(customer.getFullName());
-                customerPhoneField.setText(customer.getPhone());
-                customerEmailField.setText(customer.getEmail());
-                customerPointsLabel.setText(String.valueOf(customer.getPoint()));
-            } else {
-                showAlert(AlertType.INFORMATION, "Thông báo", "Không tìm thấy", 
-                        "Không tìm thấy khách hàng với số điện thoại " + searchQuery);
+            String sql = "SELECT c.customer_id, c.point, p.full_name, p.phone, p.email " +
+                        "FROM customer c JOIN person p ON c.customer_id = p.person_id " +
+                        "WHERE p.phone = ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, searchQuery);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        int customerId = rs.getInt("customer_id");
+                        customerIdField.setText("KH-" + String.format("%05d", customerId));
+                        customerNameField.setText(rs.getString("full_name"));
+                        customerPhoneField.setText(rs.getString("phone"));
+                        customerPointsLabel.setText(String.valueOf(rs.getInt("point")));
+                        
+                        // Cập nhật currentCustomerId và tải dịch vụ của khách hàng
+                        currentCustomerId = customerId;
+                        loadCustomerServices(customerId);
+                    } else {
+                        showAlert(AlertType.INFORMATION, "Thông báo", "Không tìm thấy", 
+                                "Không tìm thấy khách hàng với số điện thoại " + searchQuery);
+                    }
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể tìm kiếm khách hàng", e.getMessage());
         }
     }
-    
+
+    // Tải danh sách dịch vụ của khách hàng từ Map
+    private void loadCustomerServices(int customerId) {
+        invoiceItems.clear();
+        ObservableList<InvoiceItem> customerItems = customerServicesMap.get(customerId);
+        if (customerItems != null) {
+            invoiceItems.addAll(customerItems);
+        }
+        invoiceItemsTable.setItems(invoiceItems);
+        updateInvoiceSummary();
+    }
+
     @FXML
     private void onSearchButtonClick() {
         searchInvoices();
@@ -974,10 +1312,27 @@ public class InvoiceViewController implements Initializable {
             Label titleLabel = new Label("Chi tiết hóa đơn #" + selectedInvoice.getInvoiceId());
             titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16;");
             
-            Label customerLabel = new Label("Khách hàng: " + 
-                    (selectedInvoice.getOrder() != null && 
-                            selectedInvoice.getOrder().getCustomer() != null ? 
-                            selectedInvoice.getOrder().getCustomer().getFullName() : "N/A"));
+            String customerName = "N/A";
+            String customerPhone = "N/A";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT p.full_name, p.phone " +
+                     "FROM invoice i " +
+                     "JOIN `order` o ON i.order_id = o.order_id " +
+                     "JOIN customer c ON o.customer_id = c.customer_id " +
+                     "JOIN person p ON c.customer_id = p.person_id " +
+                     "WHERE i.invoice_id = ?")) {
+                stmt.setInt(1, selectedInvoice.getInvoiceId());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        customerName = rs.getString("full_name");
+                        customerPhone = rs.getString("phone");
+                    }
+                }
+            }
+            
+            Label customerLabel = new Label("Khách hàng: " + customerName);
+            Label phoneLabel = new Label("Số điện thoại: " + customerPhone);
             Label dateLabel = new Label("Ngày thanh toán: " + 
                     (selectedInvoice.getPaymentDate() != null ? 
                             selectedInvoice.getPaymentDate().toLocalDateTime().format(
@@ -985,15 +1340,37 @@ public class InvoiceViewController implements Initializable {
             Label totalLabel = new Label("Tổng tiền: " + 
                     String.format("%,.0f VND", selectedInvoice.getTotal() != null ? 
                             selectedInvoice.getTotal().doubleValue() : 0));
+            Label servicesLabel = new Label("Dịch vụ: ");
+            
+            StringBuilder servicesText = new StringBuilder();
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT s.name, od.quantity " +
+                     "FROM invoice i " +
+                     "JOIN `order` o ON i.order_id = o.order_id " +
+                     "JOIN order_detail od ON o.order_id = od.order_id " +
+                     "JOIN service s ON od.service_id = s.service_id " +
+                     "WHERE i.invoice_id = ?")) {
+                stmt.setInt(1, selectedInvoice.getInvoiceId());
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        servicesText.append(rs.getString("name"))
+                                   .append(" (SL: ").append(rs.getInt("quantity")).append("), ");
+                    }
+                }
+            }
+            Label servicesDetailLabel = new Label(servicesText.length() > 0 ? 
+                    servicesText.substring(0, servicesText.length() - 2) : "Không có dịch vụ");
             
             Button reprintButton = new Button("In lại");
             reprintButton.setOnAction(e -> reprintInvoice());
             
             HBox buttonBox = new HBox(10, reprintButton);
             
-            detailPane.getChildren().addAll(titleLabel, customerLabel, dateLabel, totalLabel, buttonBox);
+            detailPane.getChildren().addAll(titleLabel, customerLabel, phoneLabel, 
+                    dateLabel, totalLabel, servicesLabel, servicesDetailLabel, buttonBox);
             
-            Scene scene = new Scene(detailPane, 400, 200);
+            Scene scene = new Scene(detailPane, 400, 300);
             detailStage.setTitle("Chi tiết hóa đơn");
             detailStage.setScene(scene);
             detailStage.initModality(Modality.APPLICATION_MODAL);
@@ -1025,19 +1402,19 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void createNewInvoice() {
         resetInvoiceForm();
-        TabPane tabPane = (TabPane) invoiceTable.getScene().lookup("#tabPane");
         if (tabPane != null) {
             tabPane.getSelectionModel().select(1);
         }
     }
-    
+
     private void resetInvoiceForm() {
         customerIdField.clear();
         customerNameField.clear();
         customerPhoneField.clear();
-        customerEmailField.clear();
+       
         customerPointsLabel.setText("0");
         invoiceItems.clear();
+        currentCustomerId = null; // Reset customerId
         subtotalLabel.setText("0 VND");
         discountField.setText("0");
         discountAmountLabel.setText("0 VND");
@@ -1052,7 +1429,7 @@ public class InvoiceViewController implements Initializable {
         invoiceIdLabel.setText("HĐ-" + String.format("%05d", getNextInvoiceId()));
         invoiceDateLabel.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
-    
+
     @FXML
     private void applyDiscount() {
         if (selectedInvoice == null) {
@@ -1076,40 +1453,44 @@ public class InvoiceViewController implements Initializable {
                     return;
                 }
                 
-                applyDiscountToInvoice(selectedInvoice, discountPercent);
+                double subtotal;
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(
+                         "SELECT subtotal FROM invoice WHERE invoice_id = ?")) {
+                    stmt.setInt(1, selectedInvoice.getInvoiceId());
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            subtotal = rs.getDouble("subtotal");
+                        } else {
+                            throw new SQLException("Không tìm thấy hóa đơn: " + selectedInvoice.getInvoiceId());
+                        }
+                    }
+                }
                 
-            } catch (NumberFormatException e) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Giá trị không hợp lệ", 
-                        "Vui lòng nhập một số nguyên cho phần trăm khuyến mãi.");
-            }
-        });
-    }
-    
-    private void applyDiscountToInvoice(Invoice invoice, int discountPercent) {
-        try {
-            BigDecimal subtotal = invoice.getSubtotal() != null ? 
-                    invoice.getSubtotal() : BigDecimal.ZERO;
-            BigDecimal discountAmount = subtotal.multiply(
-                    BigDecimal.valueOf(discountPercent)).divide(BigDecimal.valueOf(100));
-            BigDecimal newTotal = subtotal.subtract(discountAmount);
-            
-            invoice.setDiscountPercent(BigDecimal.valueOf(discountPercent));
-            invoice.setDiscountAmount(discountAmount);
-            invoice.setTotal(newTotal);
-            
-            boolean success = invoiceRepository.update(invoice) > 0;
-            if (success) {
+                double discountAmount = subtotal * discountPercent / 100;
+                double newTotal = subtotal - discountAmount;
+                
+                String updateInvoiceSql = "UPDATE invoice SET discount_percent = ?, discount_amount = ?, total = ? WHERE invoice_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(updateInvoiceSql)) {
+                    stmt.setDouble(1, discountPercent);
+                    stmt.setDouble(2, discountAmount);
+                    stmt.setDouble(3, newTotal);
+                    stmt.setInt(4, selectedInvoice.getInvoiceId());
+                    stmt.executeUpdate();
+                }
+                
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã áp dụng khuyến mãi", 
                         "Đã áp dụng khuyến mãi " + discountPercent + "% vào hóa đơn.");
                 
                 loadInvoices();
-            } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng khuyến mãi", 
-                        "Đã xảy ra lỗi khi cập nhật hóa đơn.");
+            } catch (NumberFormatException e) {
+                showAlert(AlertType.WARNING, "Cảnh báo", "Giá trị không hợp lệ", 
+                        "Vui lòng nhập một số nguyên cho phần trăm khuyến mãi.");
+            } catch (SQLException e) {
+                showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng khuyến mãi", e.getMessage());
             }
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng khuyến mãi", e.getMessage());
-        }
+        });
     }
 
     @FXML
@@ -1120,7 +1501,7 @@ public class InvoiceViewController implements Initializable {
             return;
         }
         
-        if (selectedInvoice.getStatus() != StatusEnum.PAID) {
+        if (!StatusEnum.COMPLETED.equals(selectedInvoice.getStatus())) {
             showAlert(AlertType.WARNING, "Cảnh báo", "Hóa đơn chưa thanh toán", 
                     "Chỉ có thể hoàn tiền cho hóa đơn đã thanh toán.");
             return;
@@ -1135,42 +1516,147 @@ public class InvoiceViewController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                selectedInvoice.setStatus(StatusEnum.CANCELLED);
-                boolean success = invoiceRepository.update(selectedInvoice) > 0;
-                
-                if (success) {
-                    Order order = selectedInvoice.getOrder();
-                    order.setStatus(StatusEnum.CANCELLED);
-                    orderRepository.update(order);
-                    
-                    showAlert(AlertType.INFORMATION, "Thành công", "Đã hoàn tiền", 
-                            "Hóa đơn đã được đánh dấu là đã hoàn tiền.");
-                    
-                    loadInvoices();
-                } else {
-                    showAlert(AlertType.ERROR, "Lỗi", "Không thể hoàn tiền", 
-                            "Đã xảy ra lỗi khi cập nhật trạng thái hóa đơn.");
+                String updateInvoiceSql = "UPDATE invoice SET status = ? WHERE invoice_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(updateInvoiceSql)) {
+                    stmt.setString(1, StatusEnum.CANCELLED.name());
+                    stmt.setInt(2, selectedInvoice.getInvoiceId());
+                    stmt.executeUpdate();
                 }
-            } catch (Exception e) {
+                
+                String updateOrderSql = "UPDATE `order` SET status = ? WHERE order_id = ?";
+                try (Connection conn = DatabaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(updateOrderSql)) {
+                    stmt.setString(1, StatusEnum.CANCELLED.name());
+                    stmt.setInt(2, selectedInvoice.getOrder().getOrderId());
+                    stmt.executeUpdate();
+                }
+                
+                Integer pointsUsed = selectedInvoice.getPointsUsed();
+                if (pointsUsed != null && pointsUsed > 0) {
+                    String updatePointsSql = "UPDATE customer SET point = point + ? WHERE customer_id = ?";
+                    try (Connection conn = DatabaseConnection.getConnection();
+                         PreparedStatement stmt = conn.prepareStatement(updatePointsSql)) {
+                        stmt.setInt(1, pointsUsed);
+                        stmt.setInt(2, selectedInvoice.getOrder().getCustomer().getId());
+                        stmt.executeUpdate();
+                    }
+                }
+                
+                showAlert(AlertType.INFORMATION, "Thành công", "Đã hoàn tiền", 
+                        "Hóa đơn đã được đánh dấu là đã hoàn tiền.");
+                
+                loadInvoices();
+            } catch (SQLException e) {
                 showAlert(AlertType.ERROR, "Lỗi", "Không thể hoàn tiền", e.getMessage());
             }
         }
     }
-    
+
     @FXML
     private void addNewCustomer() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/customer/AddCustomerView.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Thêm khách hàng mới");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể mở form thêm khách hàng", e.getMessage());
+            Dialog<Customer> dialog = new Dialog<>();
+            dialog.setTitle("Thêm khách hàng mới");
+            dialog.setHeaderText("Nhập thông tin khách hàng mới");
+            
+            ButtonType saveButtonType = new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+            
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            
+            TextField nameField = new TextField();
+            nameField.setPromptText("Họ và tên");
+            TextField phoneField = new TextField();
+            phoneField.setPromptText("Số điện thoại");
+            
+            grid.add(new Label("Họ và tên:"), 0, 0);
+            grid.add(nameField, 1, 0);
+            grid.add(new Label("Số điện thoại:"), 0, 1);
+            grid.add(phoneField, 1, 1);
+            
+            Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
+            saveButton.setDisable(true);
+            
+            nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveButton.setDisable(newValue.trim().isEmpty() || phoneField.getText().trim().isEmpty());
+            });
+            
+            phoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveButton.setDisable(newValue.trim().isEmpty() || nameField.getText().trim().isEmpty());
+            });
+            
+            dialog.getDialogPane().setContent(grid);
+            
+            Platform.runLater(() -> nameField.requestFocus());
+            
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == saveButtonType) {
+                    try {
+                    	String sql = "INSERT INTO person (full_name, phone, address, email) VALUES (?, ?, NULL, NULL)";
+                        try (Connection conn = DatabaseConnection.getConnection();
+                             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                            stmt.setString(1, nameField.getText().trim());
+                            stmt.setString(2, phoneField.getText().trim());
+                            int affectedRows = stmt.executeUpdate();
+                            
+                            if (affectedRows > 0) {
+                                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                                    if (rs.next()) {
+                                        int personId = rs.getInt(1);
+                                        
+                                        String customerSql = "INSERT INTO customer (customer_id, point) VALUES (?, 0)";
+                                        try (PreparedStatement customerStmt = conn.prepareStatement(customerSql)) {
+                                            customerStmt.setInt(1, personId);
+                                            customerStmt.executeUpdate();
+                                            
+                                            Customer newCustomer = new Customer();
+                                            newCustomer.setId(personId);
+                                            newCustomer.setFullName(nameField.getText().trim());
+                                            newCustomer.setPhone(phoneField.getText().trim());
+                                            newCustomer.setPoint(0);
+                                            
+                                            return newCustomer;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        showAlert(AlertType.ERROR, "Lỗi", "Không thể thêm khách hàng", ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+                return null;
+            });
+            
+            Optional<Customer> result = dialog.showAndWait();
+            
+            result.ifPresent(customer -> {
+                customerIdField.setText("KH-" + String.format("%05d", customer.getId()));
+                customerNameField.setText(customer.getFullName());
+                customerPhoneField.setText(customer.getPhone());
+                customerPointsLabel.setText("0");
+                
+                customerSearchField.setText(customer.getPhone());
+                
+                // Cập nhật currentCustomerId và tải dịch vụ
+                currentCustomerId = customer.getId();
+                loadCustomerServices(currentCustomerId);
+                
+                showAlert(AlertType.INFORMATION, "Thành công", "Thêm khách hàng thành công", 
+                        "Đã thêm khách hàng " + customer.getFullName() + " vào hệ thống.");
+            });
+            
+        } catch (Exception e) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể hiển thị form thêm khách hàng", e.getMessage());
+            e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void applyPromotionCode() {
         String code = promotionCodeField.getText().trim();
@@ -1180,201 +1666,36 @@ public class InvoiceViewController implements Initializable {
             return;
         }
         
-        showAlert(AlertType.INFORMATION, "Thông báo", "Mã khuyến mãi", 
-                "Tính năng áp dụng mã khuyến mãi đang phát triển.");
+        try {
+            String sql = "SELECT discount_percent FROM promotion WHERE code = ? AND active = TRUE AND start_date <= ? AND end_date >= ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, code);
+                stmt.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        double promoPercent = rs.getInt("discount_percent");
+                        showAlert(AlertType.INFORMATION, "Thành công", "Áp dụng mã khuyến mãi", 
+                                "Mã " + code + " được áp dụng với giảm giá " + promoPercent + "%.");
+                        updateInvoiceSummary();
+                    } else {
+                        showAlert(AlertType.WARNING, "Cảnh báo", "Mã khuyến mãi không hợp lệ", 
+                                "Mã " + code + " không tồn tại hoặc đã hết hạn.");
+                        promotionCodeField.clear();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng mã khuyến mãi", e.getMessage());
+        }
     }
-    
+
     @FXML
     private void cancelInvoice() {
         resetInvoiceForm();
     }
 
-    @FXML
-    private void viewReport() {
-        if (reportFromDatePicker.getValue() == null || reportToDatePicker.getValue() == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", 
-                    "Vui lòng chọn khoảng thời gian.");
-            return;
-        }
-        
-        String reportType = reportTypeSelector.getValue();
-        LocalDate fromDate = reportFromDatePicker.getValue();
-        LocalDate toDate = reportToDatePicker.getValue();
-        
-        try {
-            switch (reportType) {
-                case "Doanh thu theo ngày":
-                    generateDailyRevenueReport(fromDate, toDate);
-                    break;
-                case "Doanh thu theo dịch vụ":
-                    generateServiceRevenueReport(fromDate, toDate);
-                    break;
-                case "Doanh thu theo phương thức thanh toán":
-                    generatePaymentMethodRevenueReport(fromDate, toDate);
-                    break;
-                default:
-                    showAlert(AlertType.WARNING, "Cảnh báo", "Loại báo cáo không hợp lệ", 
-                            "Vui lòng chọn loại báo cáo.");
-            }
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tạo báo cáo", e.getMessage());
-        }
-    }
-    
-    private void generateDailyRevenueReport(LocalDate fromDate, LocalDate toDate) throws SQLException {
-        revenueReports.clear();
-        
-        String sql = "SELECT DATE(payment_date) as date, " +
-                     "COUNT(*) as invoice_count, " +
-                     "SUM(subtotal) as subtotal, " +
-                     "SUM(discount_amount) as discount, " +
-                     "SUM(points_used * 1000) as points_value, " +
-                     "SUM(total) as total " +
-                     "FROM invoice " +
-                     "WHERE payment_date BETWEEN ? AND ? AND status = 'PAID' " +
-                     "GROUP BY DATE(payment_date) " +
-                     "ORDER BY date";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
-            stmt.setTimestamp(2, Timestamp.valueOf(toDate.plusDays(1).atStartOfDay()));
-            
-            double totalRevenue = 0;
-            int totalInvoices = 0;
-            double previousDayRevenue = 0;
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String date = rs.getDate("date").toLocalDate().format(
-                            DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    int invoiceCount = rs.getInt("invoice_count");
-                    double subtotal = rs.getDouble("subtotal");
-                    double discount = rs.getDouble("discount");
-                    double pointsValue = rs.getDouble("points_value");
-                    double netRevenue = rs.getDouble("total");
-                    
-                    String trend = "";
-                    if (previousDayRevenue > 0) {
-                        double percentChange = ((netRevenue - previousDayRevenue) / 
-                                previousDayRevenue) * 100;
-                        trend = String.format("%+.1f%%", percentChange);
-                    }
-                    
-                    revenueReports.add(new RevenueReport(
-                            date,
-                            invoiceCount,
-                            subtotal,
-                            discount,
-                            0,
-                            pointsValue,
-                            netRevenue,
-                            trend
-                    ));
-                    
-                    totalRevenue += netRevenue;
-                    totalInvoices += invoiceCount;
-                    previousDayRevenue = netRevenue;
-                }
-            }
-            
-            reportTotalRevenueLabel.setText(String.format("%,.0f VND", totalRevenue));
-            reportInvoiceCountLabel.setText(String.valueOf(totalInvoices));
-            double averageValue = totalInvoices > 0 ? totalRevenue / totalInvoices : 0;
-            reportAverageValueLabel.setText(String.format("%,.0f VND", averageValue));
-            
-            String topServiceSql = "SELECT s.name, SUM(od.quantity) as total_quantity " +
-                                  "FROM invoice i " +
-                                  "JOIN `order` o ON i.order_id = o.order_id " +
-                                  "JOIN order_detail od ON o.order_id = od.order_id " +
-                                  "JOIN service s ON od.service_id = s.service_id " +
-                                  "WHERE i.payment_date BETWEEN ? AND ? AND i.status = 'PAID' " +
-                                  "GROUP BY s.service_id " +
-                                  "ORDER BY total_quantity DESC " +
-                                  "LIMIT 1";
-            
-            try (PreparedStatement stmtTop = conn.prepareStatement(topServiceSql)) {
-                stmtTop.setTimestamp(1, Timestamp.valueOf(fromDate.atStartOfDay()));
-                stmtTop.setTimestamp(2, Timestamp.valueOf(toDate.plusDays(1).atStartOfDay()));
-                try (ResultSet rsTop = stmtTop.executeQuery()) {
-                    if (rsTop.next()) {
-                        String topServiceName = rsTop.getString("name");
-                        reportTopServiceLabel.setText(topServiceName);
-                    } else {
-                        reportTopServiceLabel.setText("N/A");
-                    }
-                }
-            }
-
-            revenueReportTable.setItems(revenueReports);
-            statusMessageLabel.setText("Đã tạo báo cáo doanh thu theo ngày thành công");
-        } catch (SQLException e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tạo báo cáo doanh thu theo ngày", 
-                    e.getMessage());
-            statusMessageLabel.setText("Lỗi: " + e.getMessage());
-        }
-    }
-    
-    private void generateServiceRevenueReport(LocalDate fromDate, LocalDate toDate) {
-        showAlert(AlertType.INFORMATION, "Thông báo", "Đang phát triển", 
-                "Tính năng báo cáo doanh thu theo dịch vụ đang được phát triển.");
-    }
-    
-    private void generatePaymentMethodRevenueReport(LocalDate fromDate, LocalDate toDate) {
-        showAlert(AlertType.INFORMATION, "Thông báo", "Đang phát triển", 
-                "Tính năng báo cáo doanh thu theo phương thức thanh toán đang được phát triển.");
-    }
-    
-    @FXML
-    private void exportToExcel() {
-        if (revenueReports.isEmpty()) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có dữ liệu", 
-                    "Vui lòng tạo báo cáo trước khi xuất Excel.");
-            return;
-        }
-        
-        try {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Lưu báo cáo Excel");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-            fileChooser.setInitialFileName("revenue_report.csv");
-            
-            File file = fileChooser.showSaveDialog(null);
-            if (file != null) {
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.append("Ngày,Số hóa đơn,Doanh thu,Giảm giá,Khuyến mãi,Điểm tích lũy," +
-                            "Doanh thu thuần,Xu hướng\n");
-                    
-                    for (RevenueReport report : revenueReports) {
-                        writer.append(String.format("%s,%d,%,.0f,%,.0f,%,.0f,%,.0f,%,.0f,%s\n",
-                                report.getDate(),
-                                report.getInvoiceCount(),
-                                report.getRevenue(),
-                                report.getDiscount(),
-                                report.getPromotion(),
-                                report.getPoints(),
-                                report.getNetRevenue(),
-                                report.getTrend()
-                        ));
-                    }
-                    
-                    showAlert(AlertType.INFORMATION, "Thành công", "Đã xuất báo cáo", 
-                            "Báo cáo đã được lưu thành công tại:\n" + file.getAbsolutePath());
-                }
-            }
-        } catch (IOException e) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể xuất báo cáo", e.getMessage());
-        }
-    }
-    
-    @FXML
-    private void printReport() {
-        showAlert(AlertType.INFORMATION, "Thông báo", "Đang phát triển", 
-                "Tính năng in báo cáo đang được phát triển.");
-    }
-    
     @FXML
     private void resetFilter() {
         fromDatePicker.setValue(LocalDate.now().minusDays(30));
@@ -1384,31 +1705,58 @@ public class InvoiceViewController implements Initializable {
         searchField.clear();
         loadInvoices();
     }
-    
+
     @FXML
     private void showHelp() {
-        showAlert(AlertType.INFORMATION, "Trợ giúp", "Hướng dẫn sử dụng",
-                "Liên hệ quản trị viên để được hỗ trợ thêm.");
+        Alert helpAlert = new Alert(AlertType.INFORMATION);
+        helpAlert.setTitle("Trợ giúp");
+        helpAlert.setHeaderText("Hướng dẫn sử dụng màn hình Quản lý hóa đơn");
+
+        String helpContent =
+                "1. Xem danh sách hóa đơn: Chọn khoảng thời gian và nhấn 'Tìm kiếm' để xem danh sách hóa đơn.\n\n" +
+                "2. Tìm kiếm hóa đơn: Nhập mã hóa đơn, mã đơn hàng, tên khách hàng hoặc số điện thoại vào ô tìm kiếm.\n\n" +
+                "3. Lọc hóa đơn: Sử dụng bộ lọc trạng thái và phương thức thanh toán để thu hẹp danh sách.\n\n" +
+                "4. Tạo hóa đơn mới: Nhấn 'Tạo hóa đơn mới' để chuyển sang tab tạo hóa đơn.\n\n" +
+                "5. Tìm khách hàng: Nhập số điện thoại vào ô tìm kiếm khách hàng trong tab 'Tạo hóa đơn mới'.\n\n" +
+                "6. Thêm dịch vụ: Chọn dịch vụ, nhập số lượng và nhấn 'Thêm' để thêm vào hóa đơn.\n\n" +
+                "7. Áp dụng khuyến mãi: Nhập mã khuyến mãi hoặc phần trăm giảm giá và áp dụng.\n\n" +
+                "8. Thanh toán: Nhập số tiền khách trả, chọn phương thức thanh toán và nhấn 'Thanh toán' hoặc 'Thanh toán và in'.\n\n" +
+                "9. Hoàn tiền: Chọn hóa đơn đã thanh toán và nhấn 'Hoàn tiền' để thực hiện hoàn tiền.\n\n" +
+                "10. Xem chi tiết: Nhấn 'Xem chi tiết' để xem thông tin chi tiết của hóa đơn và in lại nếu cần.\n\n" +
+                "Để được hỗ trợ thêm, vui lòng liên hệ quản trị viên.";
+        
+        helpAlert.setContentText(helpContent);
+        helpAlert.showAndWait();
     }
-    
+
     @FXML
     private void exitApplication() {
-        Stage stage = (Stage) invoiceTable.getScene().getWindow();
-        stage.close();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Staff/MainStaffView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) searchButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
+            
+            Stage stage = (Stage) searchButton.getScene().getWindow();
+            stage.close();
+        }
     }
+
+    @FXML
+    private void goToHome() {
+        	SceneSwitcher.switchScene("staff/staff_home.fxml");
+        }
     
-    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+    private void showAlert(AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
-    }
-    
-    @FXML
-    private void processPayment() {
-        showAlert(AlertType.INFORMATION, "Thông báo", "Đang phát triển", 
-                "Tính năng xử lý thanh toán đang được phát triển.");
     }
 
     public static class InvoiceItem {
@@ -1417,7 +1765,7 @@ public class InvoiceViewController implements Initializable {
         private int quantity;
         private final double unitPrice;
         private double total;
-        
+
         public InvoiceItem(int index, String serviceName, int quantity, double unitPrice, double total) {
             this.index = index;
             this.serviceName = serviceName;
@@ -1425,7 +1773,7 @@ public class InvoiceViewController implements Initializable {
             this.unitPrice = unitPrice;
             this.total = total;
         }
-        
+
         public int getIndex() { return index; }
         public String getServiceName() { return serviceName; }
         public int getQuantity() { return quantity; }
@@ -1433,37 +1781,5 @@ public class InvoiceViewController implements Initializable {
         public double getUnitPrice() { return unitPrice; }
         public double getTotal() { return total; }
         public void setTotal(double total) { this.total = total; }
-    }
-    
-    public static class RevenueReport {
-        private final String date;
-        private final int invoiceCount;
-        private final double revenue;
-        private final double discount;
-        private final double promotion;
-        private final double points;
-        private final double netRevenue;
-        private final String trend;
-        
-        public RevenueReport(String date, int invoiceCount, double revenue, double discount, 
-                             double promotion, double points, double netRevenue, String trend) {
-            this.date = date;
-            this.invoiceCount = invoiceCount;
-            this.revenue = revenue;
-            this.discount = discount;
-            this.promotion = promotion;
-            this.points = points;
-            this.netRevenue = netRevenue;
-            this.trend = trend;
-        }
-        
-        public String getDate() { return date; }
-        public int getInvoiceCount() { return invoiceCount; }
-        public double getRevenue() { return revenue; }
-        public double getDiscount() { return discount; }
-        public double getPromotion() { return promotion; }
-        public double getPoints() { return points; }
-        public double getNetRevenue() { return netRevenue; }
-        public String getTrend() { return trend; }
     }
 }

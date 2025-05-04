@@ -2,478 +2,508 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="controllers.Staff.InvoiceViewController"
-            stylesheets="@/styles/staff.css">
+<BorderPane prefHeight="600" prefWidth="1000"
+	stylesheets="@/styles/staff.css"
+	xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="controllers.Staff.InvoiceViewController">
 
-   <top>
-      <VBox spacing="5">
-         <padding>
-            <Insets top="10" right="15" bottom="5" left="15"/>
-         </padding>
-         
-         <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="Quản lý hóa đơn" style="-fx-font-size: 22; -fx-font-weight: bold;">
-               <textFill>
-                  <Color red="0.847" green="0.557" blue="0.247" />
-               </textFill>
-            </Label>
-            
-            <Region HBox.hgrow="ALWAYS" />
-            
-            <Label fx:id="dateTimeLabel" text="28/04/2025 - 15:30" style="-fx-font-size: 14;" />
-            <Label fx:id="staffNameLabel" text="Thu ngân: Nguyễn Văn A" style="-fx-font-size: 14;" />
-         </HBox>
-         
-         <Separator />
-      </VBox>
-   </top>
-   
-   <center>
-      <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
-         <tabs>
-            <Tab text="Danh sách hóa đơn">
-               <content>
-                  <BorderPane>
-                     <top>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="10" right="15" bottom="10" left="15"/>
-                           </padding>
-                           
-                           <HBox spacing="15" alignment="CENTER_LEFT">
-                              <Label text="Từ ngày:" style="-fx-font-weight: bold;" />
-                              <DatePicker fx:id="fromDatePicker" />
-                              
-                              <Label text="Đến ngày:" style="-fx-font-weight: bold;" />
-                              <DatePicker fx:id="toDatePicker" />
-                              
-                              <Button fx:id="searchButton" text="Tìm kiếm" onAction="#onSearchButtonClick" 
-                                      style="-fx-background-color: #d88e3f; -fx-text-fill: white;" />
-                                      
-                              <Button text="Làm mới" onAction="#resetFilter" />
-                           </HBox>
-                           
-                           <HBox spacing="15" alignment="CENTER_LEFT">
-                              <TextField fx:id="searchField" promptText="Nhập mã HĐ/tên KH/SĐT" prefWidth="250" />
-                              <!-- Xóa nút Tìm thứ hai -->
-                              
-                              <Separator orientation="VERTICAL" />
-                              
-                              <Label text="Trạng thái:" />
-                              <ComboBox fx:id="statusFilter" promptText="Trạng thái" prefWidth="150" />
-                              
-                              <Label text="P.thức TT:" />
-                              <ComboBox fx:id="paymentMethodFilter" promptText="P.thức thanh toán" prefWidth="150" />
-                              
-                              <Region HBox.hgrow="ALWAYS" />
-                              
-                              <Button text="Tạo hóa đơn mới" onAction="#createNewInvoice"
-                                      style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
-                           </HBox>
-                           <Label text="Lưu ý: Nhấn 'Xem chi tiết' để in lại hoặc gửi email hóa đơn" style="-fx-font-style: italic;" />
-                        </VBox>
-                     </top>
-                     
-                     <center>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="0" right="15" bottom="10" left="15"/>
-                           </padding>
-                           
-                           <TableView fx:id="invoiceTable" VBox.vgrow="ALWAYS">
-                              <columns>
-                                 <TableColumn fx:id="idColumn" prefWidth="80" text="Mã HĐ" />
-                                 <TableColumn fx:id="orderIdColumn" prefWidth="80" text="Mã ĐH" />
-                                 <TableColumn fx:id="customerColumn" prefWidth="150" text="Khách hàng" />
-                                 <TableColumn fx:id="phoneColumn" prefWidth="120" text="Số điện thoại" />
-                                 <TableColumn fx:id="dateColumn" prefWidth="120" text="Ngày thanh toán" />
-                                 <TableColumn fx:id="serviceColumn" prefWidth="150" text="Dịch vụ" />
-                                 <TableColumn fx:id="totalColumn" prefWidth="120" text="Tổng tiền" />
-                                 <TableColumn fx:id="paymentMethodColumn" prefWidth="120" text="P.thức TT" />
-                                 <TableColumn fx:id="statusColumn" prefWidth="100" text="Trạng thái" />
-                              </columns>
-                           </TableView>
-                           
-                           <GridPane hgap="15" vgap="5">
-                              <columnConstraints>
-                                 <ColumnConstraints percentWidth="25" />
-                                 <ColumnConstraints percentWidth="25" />
-                                 <ColumnConstraints percentWidth="25" />
-                                 <ColumnConstraints percentWidth="25" />
-                              </columnConstraints>
-                              
-                              <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                 <Label text="Tổng số hóa đơn:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="totalInvoicesLabel" text="0" />
-                              </HBox>
-                              
-                              <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                 <Label text="Đã thanh toán:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="paidInvoicesLabel" text="0" style="-fx-text-fill: #4CAF50;" />
-                              </HBox>
-                              
-                              <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                                 <Label text="Chờ thanh toán:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="pendingInvoicesLabel" text="0" style="-fx-text-fill: #F57C00;" />
-                              </HBox>
-                              
-                              <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                                 <Label text="Tổng doanh thu:" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="totalRevenueLabel" text="0 VND" style="-fx-text-fill: #d88e3f; -fx-font-weight: bold;" />
-                              </HBox>
-                           </GridPane>
-                        </VBox>
-                     </center>
-                     
-                     <bottom>
-                        <HBox spacing="15" alignment="CENTER">
-                           <padding>
-                              <Insets top="5" right="15" bottom="15" left="15"/>
-                           </padding>
-                           
-                           <Button fx:id="viewDetailsButton" disable="true" text="Xem chi tiết" onAction="#viewDetails" 
-                                   minWidth="120" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-                                   
-                           <Button fx:id="processPaymentButton" disable="true" text="Thanh toán" 
-                                   minWidth="120" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
-                                   
-                           <Button fx:id="applyDiscountButton" disable="true" text="Áp dụng KM" onAction="#applyDiscount" 
-                                   minWidth="120" />
-                                   
-                           <Button fx:id="refundButton" disable="true" text="Hoàn tiền" onAction="#processRefund" 
-                                   minWidth="120" style="-fx-background-color: #F44336; -fx-text-fill: white;" />
-                        </HBox>
-                     </bottom>
-                  </BorderPane>
-               </content>
-            </Tab>
-            
-            <Tab text="Tạo hóa đơn mới">
-               <content>
-                  <BorderPane>
-                     <top>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="15" right="15" bottom="15" left="15"/>
-                           </padding>
-                           
-                           <Label text="Tạo hóa đơn mới" style="-fx-font-size: 16; -fx-font-weight: bold;" />
-                           <Separator />
-                        </VBox>
-                     </top>
-                     
-                     <center>
-                        <HBox spacing="20">
-                           <padding>
-                              <Insets top="0" right="15" bottom="15" left="15"/>
-                           </padding>
-                           
-                           <!-- Left column: Customer and Service selection -->
-                           <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="400">
-                              <VBox spacing="10" style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
-                                 <Label text="Thông tin khách hàng" style="-fx-font-weight: bold;" />
-                                 <Separator />
-                                 
-                                 <HBox spacing="10" alignment="CENTER_LEFT">
-                                    <TextField fx:id="customerSearchField" promptText="Tìm khách hàng (tên/SĐT)" HBox.hgrow="ALWAYS" />
-                                    <Button text="Tìm" onAction="#searchCustomer" />
-                                 </HBox>
-                                 
-                                 <GridPane hgap="10" vgap="10">
-                                    <columnConstraints>
-                                       <ColumnConstraints prefWidth="120" />
-                                       <ColumnConstraints prefWidth="180" />
-                                    </columnConstraints>
-                                    
-                                    <Label text="Mã hóa đơn:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                    <Label fx:id="invoiceIdLabel" text="HĐ-00001" style="-fx-font-weight: bold;" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                           
-                                    <Label text="Ngày tạo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                    <Label fx:id="invoiceDateLabel" text="28/04/2025" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                           
-                                    <Label text="Thu ngân:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                    <Label fx:id="cashierNameLabel" text="Nguyễn Văn A" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                           
-                                    <Label text="Tổng tiền hàng:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                    <Label fx:id="subtotalLabel" text="0 VND" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                           
-                                    <Label text="Giảm giá:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                    <HBox spacing="5" alignment="CENTER_LEFT" 
-                                          GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                       <TextField fx:id="discountField" prefWidth="80" promptText="'%'" />
-                                       <Label fx:id="discountAmountLabel" text="0 VND" />
-                                    </HBox>
-                                    
-                                    <Label text="Khuyến mãi:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                                    <HBox spacing="5" alignment="CENTER_LEFT" 
-                                          GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                       <TextField fx:id="promotionCodeField" promptText="Mã KM" />
-                                       <Button text="Áp dụng" onAction="#applyPromotionCode" />
-                                    </HBox>
-                                    
-                                    <Label text="Điểm sử dụng:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                                    <HBox spacing="5" alignment="CENTER_LEFT" 
-                                          GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                       <TextField fx:id="pointsUsedField" prefWidth="80" promptText="Điểm" />
-                                       <Label fx:id="pointsValueLabel" text="0 VND" />
-                                    </HBox>
-                                    
-                                    <Separator GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                                    
-                                    <Label text="Tổng thanh toán:" style="-fx-font-weight: bold;" 
-                                           GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                                    <Label fx:id="totalAmountLabel" text="0 VND" 
-                                           style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #d88e3f;" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                                 </GridPane>
-                              </VBox>
-                              
-                              <VBox spacing="10" style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
-                                 <Label text="Thanh toán" style="-fx-font-weight: bold;" />
-                                 <Separator />
-                                 
-                                 <GridPane hgap="10" vgap="10">
-                                    <columnConstraints>
-                                       <ColumnConstraints prefWidth="120" />
-                                       <ColumnConstraints prefWidth="180" />
-                                    </columnConstraints>
-                                    
-                                    <Label text="Phương thức TT:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                    <ComboBox fx:id="paymentMethodComboBox" prefWidth="180" 
-                                             GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                             
-                                    <Label text="Số tiền khách trả:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                    <TextField fx:id="amountPaidField" 
-                                              GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                              
-                                    <Label text="Tiền thối lại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                    <Label fx:id="changeAmountLabel" text="0 VND" style="-fx-font-weight: bold;" 
-                                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                 </GridPane>
-                                 
-                                 <TextArea fx:id="invoiceNoteField" promptText="Ghi chú hóa đơn" 
-                                          prefHeight="60" wrapText="true" />
-                              </VBox>
-                              
-                              <HBox spacing="10" alignment="CENTER">
-                                 <Button text="Thanh toán và in" onAction="#processPaymentAndPrint" 
-                                         style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" />
-                                         
-                                 <Button text="Hủy" onAction="#cancelInvoice" />
-                              </HBox>
-                              
-                              <VBox style="-fx-background-color: #fff3e0; -fx-padding: 10; -fx-background-radius: 5;">
-                                 <Label text="➤ Mẹo: Nhấn F2 để tìm kiếm nhanh khách hàng" style="-fx-font-style: italic;" />
-                                 <Label text="➤ Nhấn F4 để lưu hóa đơn tạm thời" style="-fx-font-style: italic;" />
-                              </VBox>
-                           </VBox>
-                           
-                           <!-- Right column: Invoice summary and payment -->
-                           <VBox spacing="15" minWidth="350" maxWidth="350">
-                              <VBox spacing="10" style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
-                                 <Label text="Thông tin hóa đơn" style="-fx-font-weight: bold;" />
-                                 <Separator />
-                                 
-                                 <GridPane hgap="10" vgap="10">
-                                    <columnConstraints>
-                                       <ColumnConstraints prefWidth="120" />
-                                       <ColumnConstraints prefWidth="180" />
-                                    </columnConstraints>
-                                    
-                                    <Label text="Mã KH:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                    <TextField fx:id="customerIdField" editable="false" 
-                                              GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                              
-                                    <Label text="Tên KH:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                    <TextField fx:id="customerNameField" editable="false" 
-                                              GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                              
-                                    <Label text="SĐT:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                    <TextField fx:id="customerPhoneField" editable="false" 
-                                              GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                              
-                                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                    <TextField fx:id="customerEmailField" editable="false" 
-                                              GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                              
-                                    <Label text="Điểm tích lũy:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                    <HBox spacing="10" alignment="CENTER_LEFT" 
-                                         GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                       <Label fx:id="customerPointsLabel" text="0" style="-fx-font-weight: bold;" />
-                                       <CheckBox fx:id="usePointsCheckbox" text="Sử dụng điểm" />
-                                    </HBox>
-                                 </GridPane>
-                                 
-                                 <Button text="Thêm khách hàng mới" onAction="#addNewCustomer" 
-                                        style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
-                              </VBox>
-                              
-                              <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
-                                 <Label text="Dịch vụ" style="-fx-font-weight: bold;" />
-                                 <Separator />
-                                 
-                                 <HBox spacing="10" alignment="CENTER_LEFT">
-                                    <ComboBox fx:id="serviceSelector" promptText="Chọn dịch vụ" HBox.hgrow="ALWAYS" prefWidth="200" />
-                                    <TextField fx:id="quantityField" promptText="SL" prefWidth="60" />
-                                    <Button text="Thêm" onAction="#onAddServiceButtonClick" />
-                                 </HBox>
-                                 
-                                 <TableView fx:id="invoiceItemsTable" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                       <TableColumn prefWidth="50" text="STT" />
-                                       <TableColumn prefWidth="200" text="Dịch vụ" />
-                                       <TableColumn prefWidth="60" text="SL" />
-                                       <TableColumn prefWidth="120" text="Đơn giá" />
-                                       <TableColumn prefWidth="120" text="Thành tiền" />
-                                       <TableColumn prefWidth="60" text="Xóa" />
-                                    </columns>
-                                 </TableView>
-                              </VBox>
-                           </VBox>
-                        </HBox>
-                     </center>
-                  </BorderPane>
-               </content>
-            </Tab>
-            
-            <Tab text="Báo cáo doanh thu">
-               <content>
-                  <BorderPane>
-                     <top>
-                        <VBox spacing="10">
-                           <padding>
-                              <Insets top="15" right="15" bottom="15" left="15"/>
-                           </padding>
-                           
-                           <HBox spacing="15" alignment="CENTER_LEFT">
-                              <Label text="Xem báo cáo:" style="-fx-font-weight: bold;" />
-                              <ComboBox fx:id="reportTypeSelector" prefWidth="150" 
-                                      promptText="Loại báo cáo" />
-                              
-                              <Label text="Từ ngày:" />
-                              <DatePicker fx:id="reportFromDatePicker" />
-                              
-                              <Label text="Đến ngày:" />
-                              <DatePicker fx:id="reportToDatePicker" />
-                              
-                              <Button text="Xem báo cáo" onAction="#viewReport" 
-                                      style="-fx-background-color: #d88e3f; -fx-text-fill: white;" />
-                                      
-                              <Region HBox.hgrow="ALWAYS" />
-                              
-                              <Button text="Xuất Excel" onAction="#exportToExcel" />
-                              <Button text="In báo cáo" onAction="#printReport" />
-                           </HBox>
-                           
-                           <Separator />
-                        </VBox>
-                     </top>
-                     
-                     <center>
-                        <VBox spacing="20">
-                           <padding>
-                              <Insets top="0" right="15" bottom="10" left="15"/>
-                           </padding>
-                           
-                           <!-- Revenue summary cards -->
-                           <HBox spacing="20">
-                              <VBox style="-fx-background-color: #e8f5e9; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Tổng doanh thu" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="reportTotalRevenueLabel" text="15,250,000 VND" 
-                                        style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #388E3C;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #e3f2fd; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Số hóa đơn" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="reportInvoiceCountLabel" text="48" 
-                                        style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1976D2;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #fff8e1; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Giá trị trung bình" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="reportAverageValueLabel" text="317,708 VND" 
-                                        style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #F57C00;" />
-                              </VBox>
-                              
-                              <VBox style="-fx-background-color: #f3e5f5; -fx-padding: 15; -fx-background-radius: 5;"
-                                    HBox.hgrow="ALWAYS" alignment="CENTER">
-                                 <Label text="Dịch vụ nhiều nhất" style="-fx-font-weight: bold;" />
-                                 <Label fx:id="reportTopServiceLabel" text="Tắm spa" 
-                                        style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #7B1FA2;" />
-                              </VBox>
-                           </HBox>
-                           
-                           <!-- Revenue chart would go here (placeholder) -->
-                           <VBox style="-fx-background-color: #f5f5f5; -fx-padding: 15; -fx-background-radius: 5;" 
-                                 VBox.vgrow="ALWAYS">
-                              <Label text="Biểu đồ doanh thu" style="-fx-font-weight: bold;" />
-                              <Region VBox.vgrow="ALWAYS" minHeight="200" />
-                           </VBox>
-                           
-                           <!-- Detailed report table -->
-                           <TableView fx:id="revenueReportTable" prefHeight="200" VBox.vgrow="ALWAYS">
-                              <columns>
-                                 <TableColumn prefWidth="100" text="Ngày" />
-                                 <TableColumn prefWidth="100" text="Số hóa đơn" />
-                                 <TableColumn prefWidth="150" text="Doanh thu" />
-                                 <TableColumn prefWidth="120" text="Giảm giá" />
-                                 <TableColumn prefWidth="120" text="Khuyến mãi" />
-                                 <TableColumn prefWidth="120" text="Điểm tích lũy" />
-                                 <TableColumn prefWidth="120" text="Doanh thu thuần" />
-                                 <TableColumn prefWidth="150" text="So với ngày trước" />
-                              </columns>
-                           </TableView>
-                        </VBox>
-                     </center>
-                  </BorderPane>
-               </content>
-            </Tab>
-         </tabs>
-      </TabPane>
-   </center>
-   
-   <bottom>
-      <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-background-color: #f0f0f0;">
-         <padding>
-            <Insets top="10" right="15" bottom="10" left="15"/>
-         </padding>
-         
-         <ProgressBar fx:id="progressBar" visible="false" prefWidth="200" />
-         <Label fx:id="statusMessageLabel" text="Sẵn sàng" />
-         <Region HBox.hgrow="ALWAYS" />
-         <Button text="Trợ giúp" onAction="#showHelp" />
-         <Button text="Thoát" onAction="#exitApplication" />
-      </HBox>
-   </bottom>
-   
+	<top>
+		<VBox maxHeight="80" minHeight="80" spacing="5">
+			<padding>
+				<Insets bottom="5" left="15" right="15" top="10" />
+			</padding>
+
+			<HBox alignment="CENTER_LEFT" spacing="15">
+				<Label style="-fx-font-size: 22; -fx-font-weight: bold;"
+					text="Quản lý hóa đơn">
+					<textFill>
+						<Color red="0.847" green="0.557" blue="0.247" />
+					</textFill>
+				</Label>
+
+				<Region HBox.hgrow="ALWAYS" />
+
+				<Label fx:id="dateTimeLabel" style="-fx-font-size: 14;"
+					text="28/04/2025 - 15:30" />
+				<Label fx:id="staffNameLabel" style="-fx-font-size: 14;"
+					text="Thu ngân: Nguyễn Văn A" />
+			</HBox>
+
+			<Separator />
+		</VBox>
+	</top>
+
+	<center>
+		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE"
+			BorderPane.alignment="CENTER">
+			<tabs>
+				<Tab text="Danh sách hóa đơn">
+					<content>
+						<BorderPane>
+							<top>
+								<VBox maxHeight="140" minHeight="120" prefHeight="140"
+									spacing="10" style="-fx-background-color: #f5f5f5;">
+									<padding>
+										<Insets bottom="10" left="15" right="15" top="10" />
+									</padding>
+
+									<HBox alignment="CENTER_LEFT" spacing="15">
+										<Label style="-fx-font-weight: bold;" text="Từ ngày:" />
+										<DatePicker fx:id="fromDatePicker" prefWidth="150" />
+
+										<Label style="-fx-font-weight: bold;" text="Đến ngày:" />
+										<DatePicker fx:id="toDatePicker" prefWidth="150" />
+
+										<Button fx:id="searchButton"
+											onAction="#onSearchButtonClick"
+											style="-fx-background-color: #d88e3f; -fx-text-fill: white;"
+											text="Tìm kiếm" minWidth="100" />
+
+										<Button onAction="#resetFilter" text="Làm mới"
+											minWidth="100" />
+									</HBox>
+
+									<HBox alignment="CENTER_LEFT" spacing="15">
+										<TextField fx:id="searchField" prefWidth="250"
+											promptText="Nhập mã HĐ/tên KH/SĐT" />
+
+										<Separator orientation="VERTICAL" prefHeight="25" />
+
+										<Label text="Trạng thái:" />
+										<ComboBox fx:id="statusFilter" prefWidth="150"
+											promptText="Trạng thái" style="-fx-font-size: 12;" />
+
+										<Label text="P.thức TT:" />
+										<ComboBox fx:id="paymentMethodFilter" prefWidth="150"
+											promptText="P.thức thanh toán" style="-fx-font-size: 12;" />
+
+										<Region HBox.hgrow="ALWAYS" />
+
+										<Button fx:id="createNewInvoiceButton"
+											onAction="#createNewInvoice"
+											style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+											text="Tạo mới" minWidth="120" />
+									</HBox>
+									<Label
+										style="-fx-font-style: italic; -fx-text-fill: #666;"
+										text="Lưu ý: Nhấn 'Xem chi tiết' để in lại hoặc gửi email hóa đơn" />
+								</VBox>
+							</top>
+
+							<center>
+								<ScrollPane fitToWidth="true"
+									style="-fx-background: white;">
+									<VBox spacing="10">
+										<padding>
+											<Insets bottom="10" left="15" right="15" top="0" />
+										</padding>
+
+										<TableView fx:id="invoiceTable" VBox.vgrow="ALWAYS"
+											style="-fx-font-size: 13;">
+											<columns>
+												<TableColumn fx:id="idColumn" prefWidth="90"
+													text="Mã HĐ" />
+												<TableColumn fx:id="orderIdColumn"
+													prefWidth="90" text="Mã ĐH" />
+												<TableColumn fx:id="customerColumn"
+													prefWidth="180" text="Khách hàng" />
+												<TableColumn fx:id="phoneColumn" prefWidth="130"
+													text="Số điện thoại" />
+												<TableColumn fx:id="dateColumn" prefWidth="140"
+													text="Ngày thanh toán" />
+												<TableColumn fx:id="serviceColumn"
+													prefWidth="180" text="Dịch vụ" />
+												<TableColumn fx:id="totalColumn" prefWidth="130"
+													text="Tổng tiền" style="-fx-alignment: CENTER_RIGHT;" />
+												<TableColumn fx:id="paymentMethodColumn"
+													prefWidth="130" text="P.thức TT" />
+												<TableColumn fx:id="statusColumn"
+													prefWidth="110" text="Trạng thái"
+													style="-fx-alignment: CENTER;" />
+											</columns>
+										</TableView>
+
+										<GridPane hgap="15" vgap="10"
+											style="-fx-padding: 5 0 5 0;">
+											<columnConstraints>
+												<ColumnConstraints percentWidth="25"
+													halignment="CENTER" />
+												<ColumnConstraints percentWidth="25"
+													halignment="CENTER" />
+												<ColumnConstraints percentWidth="25"
+													halignment="CENTER" />
+												<ColumnConstraints percentWidth="25"
+													halignment="CENTER" />
+											</columnConstraints>
+
+											<HBox alignment="CENTER_LEFT" spacing="5"
+												GridPane.columnIndex="0" GridPane.rowIndex="0">
+												<Label style="-fx-font-weight: bold;" text="Tổng số:" />
+												<Label fx:id="totalInvoicesLabel" text="0"
+													style="-fx-font-weight: bold;" />
+											</HBox>
+
+											<HBox alignment="CENTER_LEFT" spacing="5"
+												GridPane.columnIndex="1" GridPane.rowIndex="0">
+												<Label style="-fx-font-weight: bold;"
+													text="Đã thanh toán:" />
+												<Label fx:id="paidInvoicesLabel"
+													style="-fx-text-fill: #4CAF50; -fx-font-weight: bold;"
+													text="0" />
+											</HBox>
+
+											<HBox alignment="CENTER_LEFT" spacing="5"
+												GridPane.columnIndex="2" GridPane.rowIndex="0">
+												<Label style="-fx-font-weight: bold;"
+													text="Chờ thanh toán:" />
+												<Label fx:id="pendingInvoicesLabel"
+													style="-fx-text-fill: #F57C00; -fx-font-weight: bold;"
+													text="0" />
+											</HBox>
+
+											<HBox alignment="CENTER_LEFT" spacing="5"
+												GridPane.columnIndex="3" GridPane.rowIndex="0">
+												<Label style="-fx-font-weight: bold;"
+													text="Tổng doanh thu:" />
+												<Label fx:id="totalRevenueLabel"
+													style="-fx-text-fill: #d88e3f; -fx-font-weight: bold;"
+													text="0 VND" />
+											</HBox>
+										</GridPane>
+									</VBox>
+								</ScrollPane>
+							</center>
+
+							<bottom>
+								<HBox alignment="CENTER"
+									style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
+									<Button fx:id="viewDetailsButton" disable="true"
+										minWidth="120" onAction="#viewDetails"
+										style="-fx-background-color: #2196F3; -fx-text-fill: white;"
+										text="Xem chi tiết" />
+
+									<Button fx:id="processPaymentButton" disable="true"
+										minWidth="120" onAction="#processPayment"
+										style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+										text="Thanh toán" />
+
+									<Button fx:id="processPaymentAndPrintButton"
+										disable="true" minWidth="120"
+										onAction="#processPaymentAndPrint"
+										style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+										text="Thanh toán + In" />
+
+									<Button fx:id="applyDiscountButton" disable="true"
+										minWidth="120" onAction="#applyDiscount"
+										style="-fx-background-color: #FFC107; -fx-text-fill: white;"
+										text="Áp dụng KM" />
+
+									<Button fx:id="refundButton" disable="true"
+										minWidth="120" onAction="#processRefund"
+										style="-fx-background-color: #F44336; -fx-text-fill: white;"
+										text="Hoàn tiền" />
+								</HBox>
+							</bottom>
+						</BorderPane>
+					</content>
+				</Tab>
+
+				<Tab text="Tạo hóa đơn mới">
+					<content>
+						<ScrollPane fitToHeight="true" fitToWidth="true">
+							<BorderPane>
+								<top>
+									<VBox maxHeight="60" minHeight="60" spacing="10">
+										<padding>
+											<Insets bottom="15" left="15" right="15" top="15" />
+										</padding>
+
+										<Label style="-fx-font-size: 16; -fx-font-weight: bold;"
+											text="Tạo hóa đơn mới" />
+										<Separator />
+									</VBox>
+								</top>
+
+								<center>
+									<HBox spacing="20">
+										<padding>
+											<Insets bottom="15" left="15" right="15" top="0" />
+										</padding>
+
+										<!-- Left column: Customer and Payment -->
+										<VBox prefWidth="600" spacing="15" HBox.hgrow="ALWAYS">
+											<VBox spacing="10"
+												style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
+												<Label style="-fx-font-weight: bold;"
+													text="Thông tin khách hàng" />
+												<Separator />
+
+												<HBox alignment="CENTER_LEFT" spacing="10">
+													<TextField fx:id="customerSearchField"
+														promptText="Tìm khách hàng (tên/SĐT)" HBox.hgrow="ALWAYS" />
+													<Button onAction="#searchCustomer" text="Tìm" />
+												</HBox>
+
+												<GridPane hgap="10" vgap="10">
+													<columnConstraints>
+														<ColumnConstraints prefWidth="120" />
+														<ColumnConstraints prefWidth="180" />
+													</columnConstraints>
+
+													<Label text="Mã hóa đơn:" GridPane.columnIndex="0"
+														GridPane.rowIndex="0" />
+													<Label fx:id="invoiceIdLabel"
+														style="-fx-font-weight: bold;" text="HĐ-00001"
+														GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+													<Label text="Ngày tạo:" GridPane.columnIndex="0"
+														GridPane.rowIndex="1" />
+													<Label fx:id="invoiceDateLabel" text="28/04/2025"
+														GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+													<Label text="Thu ngân:" GridPane.columnIndex="0"
+														GridPane.rowIndex="2" />
+													<Label fx:id="cashierNameLabel" text="Nguyễn Văn A"
+														GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+													<Label text="Tổng tiền hàng:"
+														GridPane.columnIndex="0" GridPane.rowIndex="3" />
+													<Label fx:id="subtotalLabel" text="0 VND"
+														GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+													<Label text="Giảm giá:" GridPane.columnIndex="0"
+														GridPane.rowIndex="4" />
+													<HBox alignment="CENTER_LEFT" spacing="5"
+														GridPane.columnIndex="1" GridPane.rowIndex="4">
+														<TextField fx:id="discountField" prefWidth="80"
+															promptText="'%'" />
+														<Label fx:id="discountAmountLabel" text="0 VND" />
+													</HBox>
+
+													<Label text="Khuyến mãi:" GridPane.columnIndex="0"
+														GridPane.rowIndex="5" />
+													<HBox alignment="CENTER_LEFT" spacing="5"
+														GridPane.columnIndex="1" GridPane.rowIndex="5">
+														<TextField fx:id="promotionCodeField"
+															promptText="Mã KM" />
+														<Button onAction="#applyPromotionCode"
+															text="Áp dụng" />
+													</HBox>
+
+													<Label text="Điểm sử dụng:" GridPane.columnIndex="0"
+														GridPane.rowIndex="6" />
+													<HBox alignment="CENTER_LEFT" spacing="5"
+														GridPane.columnIndex="1" GridPane.rowIndex="6">
+														<TextField fx:id="pointsUsedField"
+															prefWidth="80" promptText="Điểm" />
+														<Label fx:id="pointsValueLabel" text="0 VND" />
+													</HBox>
+
+													<Separator GridPane.columnSpan="2"
+														GridPane.rowIndex="7" />
+
+													<Label style="-fx-font-weight: bold;"
+														text="Tổng thanh toán:" GridPane.columnIndex="0"
+														GridPane.rowIndex="8" />
+													<Label fx:id="totalAmountLabel"
+														style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #d88e3f;"
+														text="0 VND" GridPane.columnIndex="1"
+														GridPane.rowIndex="8" />
+													<rowConstraints>
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+													</rowConstraints>
+												</GridPane>
+											</VBox>
+
+											<VBox spacing="10"
+												style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
+												<Label style="-fx-font-weight: bold;"
+													text="Thanh toán" />
+												<Separator />
+
+												<GridPane hgap="10" vgap="10">
+													<columnConstraints>
+														<ColumnConstraints prefWidth="120" />
+														<ColumnConstraints prefWidth="180" />
+													</columnConstraints>
+
+													<Label text="Phương thức TT:"
+														GridPane.columnIndex="0" GridPane.rowIndex="0" />
+													<ComboBox fx:id="paymentMethodComboBox"
+														prefWidth="180" GridPane.columnIndex="1"
+														GridPane.rowIndex="0" />
+
+													<Label text="Số tiền khách trả:"
+														GridPane.columnIndex="0" GridPane.rowIndex="1" />
+													<TextField fx:id="amountPaidField"
+														GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+													<Label text="Tiền thối lại:" GridPane.columnIndex="0"
+														GridPane.rowIndex="2" />
+													<Label fx:id="changeAmountLabel"
+														style="-fx-font-weight: bold;" text="0 VND"
+														GridPane.columnIndex="1" GridPane.rowIndex="2" />
+													<rowConstraints>
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+													</rowConstraints>
+												</GridPane>
+
+												<TextArea fx:id="invoiceNoteField" prefHeight="60"
+													promptText="Ghi chú hóa đơn" wrapText="true" />
+											</VBox>
+
+											<VBox
+												style="-fx-background-color: #fff3e0; -fx-padding: 10; -fx-background-radius: 5;">
+												<Label style="-fx-font-style: italic;"
+													text="➤ Mẹo: Nhấn F2 để tìm kiếm nhanh khách hàng" />
+												<Label style="-fx-font-style: italic;"
+													text="➤ Nhấn F4 để lưu hóa đơn tạm thời" />
+											</VBox>
+										</VBox>
+
+										<!-- Right column: Combined Invoice and Services -->
+										<VBox prefWidth="400" spacing="15" HBox.hgrow="ALWAYS">
+											<VBox spacing="10"
+												style="-fx-background-color: #f9f9f9; -fx-padding: 15; -fx-background-radius: 5;">
+												<Label style="-fx-font-weight: bold;"
+													text="Thông tin hóa đơn" />
+												<Separator />
+
+												<GridPane hgap="10" vgap="10">
+													<columnConstraints>
+														<ColumnConstraints prefWidth="120" />
+														<ColumnConstraints prefWidth="180" />
+													</columnConstraints>
+
+													<Label text="Mã KH:" GridPane.columnIndex="0"
+														GridPane.rowIndex="0" />
+													<TextField fx:id="customerIdField"
+														editable="false" GridPane.columnIndex="1"
+														GridPane.rowIndex="0" />
+
+													<Label text="Tên KH:" GridPane.columnIndex="0"
+														GridPane.rowIndex="1" />
+													<TextField fx:id="customerNameField"
+														editable="false" GridPane.columnIndex="1"
+														GridPane.rowIndex="1" />
+
+													<Label text="SĐT:" GridPane.columnIndex="0"
+														GridPane.rowIndex="2" />
+													<TextField fx:id="customerPhoneField"
+														editable="false" GridPane.columnIndex="1"
+														GridPane.rowIndex="2" />
+													<rowConstraints>
+														<RowConstraints />
+														<RowConstraints />
+														<RowConstraints />
+													</rowConstraints>
+												</GridPane>
+
+												<!-- Dịch vụ được đặt ngay dưới SĐT -->
+												<HBox alignment="CENTER_LEFT" spacing="10">
+													<ComboBox fx:id="serviceSelector" prefWidth="200"
+														promptText="Chọn dịch vụ" HBox.hgrow="ALWAYS" />
+													<TextField fx:id="quantityField" prefWidth="60"
+														promptText="SL" />
+													<Button onAction="#addServiceToInvoice" text="Thêm" />
+												</HBox>
+
+												<TableView fx:id="invoiceItemsTable"
+													maxHeight="150" prefHeight="150">
+													<columns>
+														<TableColumn prefWidth="50" text="STT" />
+														<TableColumn prefWidth="200" text="Dịch vụ" />
+														<TableColumn prefWidth="60" text="SL" />
+														<TableColumn prefWidth="120" text="Đơn giá" />
+														<TableColumn prefWidth="120" text="Thành tiền" />
+														<TableColumn prefWidth="60" text="Xóa" />
+													</columns>
+												</TableView>
+
+												<GridPane hgap="10" vgap="10">
+													<columnConstraints>
+														<ColumnConstraints prefWidth="120" />
+														<ColumnConstraints prefWidth="180" />
+													</columnConstraints>
+
+													<Label text="Điểm tích lũy:" GridPane.columnIndex="0"
+														GridPane.rowIndex="0" />
+													<HBox alignment="CENTER_LEFT" spacing="10"
+														GridPane.columnIndex="1" GridPane.rowIndex="0">
+														<Label fx:id="customerPointsLabel"
+															style="-fx-font-weight: bold;" text="0" />
+														<CheckBox fx:id="usePointsCheckbox"
+															text="Sử dụng điểm" />
+													</HBox>
+													<rowConstraints>
+														<RowConstraints />
+													</rowConstraints>
+												</GridPane>
+
+												<Button onAction="#addNewCustomer"
+													style="-fx-background-color: #2196F3; -fx-text-fill: white;"
+													text="Thêm khách hàng mới" />
+											</VBox>
+										</VBox>
+									</HBox>
+								</center>
+							</BorderPane>
+						</ScrollPane>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
+	</center>
+
+	<bottom>
+		<HBox alignment="CENTER_RIGHT" maxHeight="50" minHeight="50"
+			spacing="10" style="-fx-background-color: #f0f0f0;">
+			<padding>
+				<Insets bottom="10" left="15" right="15" top="10" />
+			</padding>
+
+			<ProgressBar fx:id="progressBar" prefWidth="200"
+				visible="false" />
+			<Label fx:id="statusMessageLabel" text="Sẵn sàng" />
+			<Region HBox.hgrow="ALWAYS" />
+			<Button fx:id="homeButton" onAction="#goToHome"
+				style="-fx-background-color: #d88e3f; -fx-text-fill: white;"
+				text="Về trang chủ" />
+			<Button onAction="#showHelp" text="Trợ giúp" />
+			<Button onAction="#exitApplication" text="Thoát" />
+		</HBox>
+	</bottom>
 </BorderPane>

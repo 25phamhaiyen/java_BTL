@@ -180,7 +180,7 @@ public class PetRepository implements IRepository<Pet> {
 				PetTypeRepository petTypeRepository = new PetTypeRepository();
 				PetType petType = petTypeRepository.selectById(rs.getInt("type_id"));
 
-			    GenderEnum gender = GenderEnum.valueOf(rs.getString("gender"));
+			    GenderEnum gender = GenderEnum.valueOf(rs.getString("pet_gender"));
 
 				// Tạo đối tượng Pet với đúng constructor
 				ketQua = new Pet(

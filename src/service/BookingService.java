@@ -47,7 +47,7 @@ public class BookingService {
      * Lấy danh sách booking theo ID của nhân viên
      */
     public List<Booking> getBookingsByStaffId(int staffId) throws Exception {
-        String condition = "staff_id = ?";
+        String condition = "b.staff_id = ?";
         return bookingRepository.selectByCondition(condition, staffId);
     }
     
@@ -95,7 +95,7 @@ public class BookingService {
      * Lấy danh sách booking của một nhân viên trong ngày
      */
     public List<Booking> getBookingsByStaffAndDate(int staffId, LocalDate date) throws Exception {
-        String condition = "staff_id = ? AND DATE(booking_time) = ?";
+        String condition = "b.staff_id = ? AND DATE(booking_time) = ?";
         return bookingRepository.selectByCondition(condition, staffId, date);
     }
     
@@ -104,7 +104,7 @@ public class BookingService {
      * New method implementation (was missing)
      */
     public List<Booking> getBookingsByStaffAndDateRange(int staffId, LocalDate startDate, LocalDate endDate) throws Exception {
-        String condition = "staff_id = ? AND DATE(booking_time) BETWEEN ? AND ?";
+        String condition = "b.staff_id = ? AND DATE(booking_time) BETWEEN ? AND ?";
         return bookingRepository.selectByCondition(condition, staffId, startDate, endDate);
     }
     
