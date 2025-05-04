@@ -27,7 +27,7 @@ CREATE TABLE `person` (
     gender ENUM('MALE', 'FEMALE', 'OTHER') DEFAULT 'OTHER',
     `phone` VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
     `address` TEXT COLLATE 'utf8mb4_unicode_ci', -- Bỏ NOT NULL để cho phép giá trị NULL
-    `email` TEXT NOT NULL COLLATE 'utf8mb4_unicode_ci',
+    `email` TEXT  COLLATE 'utf8mb4_unicode_ci',
     PRIMARY KEY (`person_id`) USING BTREE,
     UNIQUE INDEX `Person_Phone` (`phone`) USING BTREE,
     CONSTRAINT `CkPerson_phone` CHECK ((length(`phone`) = 10))
@@ -247,20 +247,36 @@ END;
 DELIMITER ;
 
 -- Trigger cập nhật trạng thái đơn hàng khi hóa đơn thanh toán xong
-DELIMITER //
-CREATE TRIGGER trg_invoice_paid_update_order
+-- Cập nhật trigger tích điểm
+DELIMITER $$
+DROP TRIGGER IF EXISTS trg_update_point_after_invoice;
+CREATE TRIGGER trg_update_point_after_invoice
 AFTER UPDATE ON invoice
 FOR EACH ROW
 BEGIN
-    IF NEW.status = 'COMPLETED' THEN
-        UPDATE `order`
-        SET status = 'COMPLETED'
-        WHERE order_id = NEW.order_id;
-    END IF;
-END;
-//
-DELIMITER ;
+    DECLARE v_customer_id INT;
+    DECLARE v_points_earned INT;
+    DECLARE v_points_used INT;
 
+    IF NEW.status = 'COMPLETED' AND OLD.status != 'COMPLETED' THEN
+        -- Lấy customer_id từ order
+        SELECT customer_id INTO v_customer_id
+        FROM `order`
+        WHERE order_id = NEW.order_id;
+
+        -- Tính điểm tích lũy (1 điểm cho mỗi 1000 VND)
+        SET v_points_earned = FLOOR(NEW.total / 1000);
+        
+        -- Lấy số điểm đã sử dụng (nếu có)
+        SET v_points_used = COALESCE(NEW.points_used, 0);
+
+        -- Cập nhật điểm cho khách hàng
+        UPDATE customer
+        SET point = point + v_points_earned - v_points_used
+        WHERE customer_id = v_customer_id;
+    END IF;
+END$$
+DELIMITER ;
 -- Trigger cập nhật total_amount nếu sửa order_detail
 DELIMITER //
 CREATE TRIGGER trg_update_order_total_after_update

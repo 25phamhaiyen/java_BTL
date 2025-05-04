@@ -166,6 +166,50 @@ public class InvoiceRepository implements IRepository<Invoice> {
         return list;
     }
 
+    /**
+     * Cập nhật thông tin khuyến mãi cho hóa đơn
+     */
+    public void updateInvoiceDiscount(int invoiceId, String promotionCode, 
+                                     double discountPercent, double discountAmount, 
+                                     double newTotal) throws SQLException {
+        String sql = "UPDATE invoice SET promotion_code = ?, discount_percent = ?, " +
+                     "discount_amount = ?, total = ? WHERE invoice_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, promotionCode);
+            stmt.setDouble(2, discountPercent);
+            stmt.setDouble(3, discountAmount);
+            stmt.setDouble(4, newTotal);
+            stmt.setInt(5, invoiceId);
+            
+            int result = stmt.executeUpdate();
+            if (result != 1) {
+                throw new SQLException("Không thể cập nhật thông tin khuyến mãi cho hóa đơn #" + invoiceId);
+            }
+        }
+    }
+
+    /**
+     * Cập nhật thông tin sử dụng điểm cho hóa đơn
+     */
+    public void updateInvoicePoints(int invoiceId, int pointsUsed, double newTotal) throws SQLException {
+        String sql = "UPDATE invoice SET points_used = ?, total = ? WHERE invoice_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, pointsUsed);
+            stmt.setDouble(2, newTotal);
+            stmt.setInt(3, invoiceId);
+            
+            int result = stmt.executeUpdate();
+            if (result != 1) {
+                throw new SQLException("Không thể cập nhật thông tin điểm cho hóa đơn #" + invoiceId);
+            }
+        }
+    }
+    
+    
     private Invoice mapResultSetToInvoice(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setOrderId(rs.getInt("order_id"));

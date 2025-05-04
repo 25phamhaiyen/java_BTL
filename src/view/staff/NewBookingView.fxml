@@ -1,48 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controllers.Staff.BookingViewController"
-      spacing="10" alignment="CENTER" style="-fx-background-color: #f4f4f4;">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controllers.Staff.NewBookingController"
+            prefWidth="600" prefHeight="580" style="-fx-background-color: white;">
+    <top>
+        <VBox spacing="5" style="-fx-background-color: #f0f0f0;">
+            <padding>
+                <Insets top="15" right="15" bottom="10" left="15"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Đặt lịch hẹn mới" style="-fx-font-size: 24; -fx-font-weight: bold;">
+                    <textFill>
+                        <javafx.scene.paint.Color red="0.847" green="0.557" blue="0.247" />
+                    </textFill>
+                </Label>
+            </HBox>
+            
+            <Separator />
+        </VBox>
+    </top>
     
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-
-    <Label text="Tạo lịch hẹn mới" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-    <!-- Thông tin khách hàng -->
-    <Label text="Số điện thoại khách hàng"/>
-    <TextField fx:id="phoneField" promptText="Nhập số điện thoại"/>
-
-    <Label text="Tên khách hàng"/>
-    <TextField fx:id="customerNameField" promptText="Tên khách hàng" disable="true"/>
-
-    <!-- Thú cưng -->
-    <Label text="Thú cưng"/>
-    <ComboBox fx:id="petComboBox" promptText="Chọn thú cưng" style="-fx-pref-width: 200px;"/>
-
-    <!-- Dịch vụ -->
-    <Label text="Dịch vụ"/>
-    <ComboBox fx:id="serviceComboBox" promptText="Chọn dịch vụ" style="-fx-pref-width: 200px;"/>
-
-    <!-- Ngày và giờ -->
-    <Label text="Ngày đặt lịch"/>
-    <DatePicker fx:id="bookingDatePicker" style="-fx-pref-width: 200px;"/>
-
-    <Label text="Giờ đặt lịch"/>
-    <TextField fx:id="bookingTimeField" promptText="HH:mm (VD: 14:30)" style="-fx-pref-width: 200px;"/>
-
-    <!-- Ghi chú -->
-    <Label text="Ghi chú"/>
-    <TextArea fx:id="notesAreaNewBooking" promptText="Nhập ghi chú (nếu có)" wrapText="true" style="-fx-pref-height: 80px;"/>
-
-    <!-- Nút hành động -->
-    <HBox spacing="10" alignment="CENTER">
-        <Button fx:id="saveButton" text="Lưu" onAction="#saveBooking" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        <Button fx:id="cancelButton" text="Hủy" onAction="#cancelNewBooking" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
-    </HBox>
-</VBox>
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <GridPane hgap="15" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="120" prefWidth="140" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="300" prefWidth="400" />
+                </columnConstraints>
+                
+                <!-- Thông tin khách hàng -->
+                <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="0" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="phoneField" promptText="Nhập số điện thoại khách hàng" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                
+                <Label text="Tên khách hàng:" GridPane.columnIndex="0" GridPane.rowIndex="1" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="customerNameField" promptText="Tên khách hàng sẽ tự động hiển thị hoặc nhập mới" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                
+                <!-- Thông tin thú cưng -->
+                <Label text="Thú cưng:" GridPane.columnIndex="0" GridPane.rowIndex="2" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="petNameField" promptText="Nhập tên thú cưng" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="400" />
+                
+                <!-- Thông tin lịch hẹn -->
+                <Label text="Chọn dịch vụ:" GridPane.columnIndex="0" GridPane.rowIndex="3" 
+                       style="-fx-font-weight: bold;" />
+                <ComboBox fx:id="serviceComboBox" promptText="Chọn dịch vụ cho thú cưng" 
+                          GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="400" />
+                
+                <Label text="Ngày hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="4" 
+                       style="-fx-font-weight: bold;" />
+                <DatePicker fx:id="bookingDatePicker" promptText="Chọn ngày đặt lịch" 
+                            GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="400" />
+                
+                <Label text="Giờ hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="5" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="bookingTimeField" promptText="HH:mm (Ví dụ: 14:30)" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                
+                <Label text="Ghi chú:" GridPane.columnIndex="0" GridPane.rowIndex="6" 
+                       style="-fx-font-weight: bold;" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets top="5" />
+                    </GridPane.margin>
+                </Label>
+                <TextArea fx:id="notesAreaNewBooking" promptText="Nhập ghi chú về lịch hẹn (nếu cần)" 
+                          GridPane.columnIndex="1" GridPane.rowIndex="6" prefHeight="80" wrapText="true" />
+            </GridPane>
+            
+            <Separator>
+                <VBox.margin>
+                    <Insets top="10" bottom="10" />
+                </VBox.margin>
+            </Separator>
+            
+            <VBox spacing="5" style="-fx-background-color: #FFF8E7; -fx-padding: 15; -fx-background-radius: 5;">
+                <Label text="Hướng dẫn:" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                <Label text="• Nhập số điện thoại để tự động tìm khách hàng trong hệ thống" 
+                       wrapText="true" />
+                <Label text="• Nếu khách hàng chưa có trong hệ thống, điền đầy đủ tên để tạo mới" 
+                       wrapText="true" />
+                <Label text="• Nhập tên thú cưng để tạo mới hoặc sử dụng thông tin hiện có" 
+                       wrapText="true" />
+                <Label text="• Thời gian đặt lịch phải ở tương lai và theo định dạng HH:mm" 
+                       wrapText="true" />
+                <Label text="• Đảm bảo chọn dịch vụ phù hợp với nhu cầu của khách hàng" 
+                       wrapText="true" />
+            </VBox>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 15; -fx-background-color: #f0f0f0;">
+            <Button fx:id="saveButton" text="Lưu lịch hẹn" onAction="#saveBooking" 
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" 
+                    prefWidth="120" prefHeight="35" />
+            <Button fx:id="cancelButton" text="Hủy bỏ" onAction="#cancelNewBooking" 
+                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-weight: bold;" 
+                    prefWidth="100" prefHeight="35" />
+        </HBox>
+    </bottom>
+</BorderPane>

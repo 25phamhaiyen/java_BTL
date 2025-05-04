@@ -241,12 +241,15 @@
                            </padding>
                            
                            <Label text="Ngày làm việc:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                           <DatePicker fx:id="registrationDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                           <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                              <DatePicker fx:id="registrationDatePicker" />
+                              <Button fx:id="selectScheduleButton" text="Lựa chọn" onAction="#selectSchedule" />
+                           </HBox>
                            
                            <Label text="Ca làm việc:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                            <ComboBox fx:id="shiftSelector" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            
-                           <Label text="Vị trí làm việc:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                           <Label text="Store:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                            <ComboBox fx:id="locationSelector" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            
                            <Label text="Ghi chú:" GridPane.columnIndex="0" GridPane.rowIndex="3" />

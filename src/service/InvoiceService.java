@@ -6,20 +6,23 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import controllers.Staff.InvoiceViewController.RevenueReport;
-import javafx.collections.ObservableList;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import utils.DatabaseConnection;
 import enums.PaymentMethodEnum;
 import enums.StatusEnum;
 import model.Invoice;
@@ -34,6 +37,7 @@ import repository.OrderRepository;
 import utils.Session;
 
 public class InvoiceService {
+
     private final InvoiceRepository invoiceRepository;
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
@@ -45,7 +49,6 @@ public class InvoiceService {
         this.orderDetailRepository = OrderDetailRepository.getInstance();
         this.bookingRepository = BookingRepository.getInstance();
     }
-
     /**
      * Lấy tất cả hóa đơn
      */
@@ -133,69 +136,190 @@ public class InvoiceService {
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
-            
+
+            // Tải font hỗ trợ tiếng Việt
+            BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/times.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font vietnameseFont = new Font(baseFont, 12);
+            Font titleFont = new Font(baseFont, 16, Font.BOLD);
+            Font headerFont = new Font(baseFont, 12, Font.BOLD);
+
+            // Lấy đầy đủ thông tin từ database
+            String sql = "SELECT i.invoice_id, i.payment_date, i.subtotal, i.discount_amount, " +
+                         "i.points_used, i.total, i.amount_paid, i.payment_method, " +
+                         "c.customer_id, p.full_name AS customer_name, p.phone, " +
+                         "s.staff_id, sp.full_name AS staff_name " +
+                         "FROM invoice i " +
+                         "JOIN `order` o ON i.order_id = o.order_id " +
+                         "JOIN customer c ON o.customer_id = c.customer_id " +
+                         "JOIN person p ON c.customer_id = p.person_id " +
+                         "JOIN staff s ON i.staff_id = s.staff_id " +
+                         "JOIN person sp ON s.staff_id = sp.person_id " +
+                         "WHERE o.order_id = ?";
+
+            String customerName = "Không có";
+            String customerPhone = "Không có";
+            String customerCode = "KH-00000";
+            String staffName = "Không có";
+            LocalDateTime paymentDate = LocalDateTime.now();
+            int invoiceId = 0;
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, orderId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        invoiceId = rs.getInt("invoice_id");
+                        customerName = rs.getString("customer_name") != null ? rs.getString("customer_name") : "Không có";
+                        customerPhone = rs.getString("phone") != null ? rs.getString("phone") : "Không có";
+                        customerCode = "KH-" + String.format("%05d", rs.getInt("customer_id"));
+                        staffName = rs.getString("staff_name") != null ? rs.getString("staff_name") : "Không có";
+                        paymentDate = rs.getTimestamp("payment_date").toLocalDateTime();
+                    }
+                }
+            }
+
             // Tiêu đề hóa đơn
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Paragraph title = new Paragraph("Hóa đơn #" + orderId, titleFont);
+            Paragraph storeTitle = new Paragraph("PET CARE CENTER", titleFont);
+            storeTitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(storeTitle);
+            
+            Paragraph storeAddress = new Paragraph("Địa chỉ: 123 Đường ABC, Quận XYZ, TP. HCM", vietnameseFont);
+            storeAddress.setAlignment(Element.ALIGN_CENTER);
+            document.add(storeAddress);
+            
+            Paragraph storePhone = new Paragraph("Điện thoại: (028) 1234 5678", vietnameseFont);
+            storePhone.setAlignment(Element.ALIGN_CENTER);
+            document.add(storePhone);
+            
+            document.add(new Paragraph("\n", vietnameseFont));
+            
+            Paragraph title = new Paragraph("HÓA ĐƠN BÁN HÀNG", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            document.add(new Paragraph("\n"));
-            
-            // Lấy thông tin đơn hàng
-            Order order = orderRepository.selectById(orderId);
-            if (order == null) {
-                throw new IllegalArgumentException("Đơn hàng không tồn tại");
-            }
-            
-            // Thông tin khách hàng
-            document.add(new Paragraph("Khách hàng: " + 
-                    (order.getCustomer() != null ? order.getCustomer().getFullName() : "N/A")));
-            document.add(new Paragraph("Số điện thoại: " + 
-                    (order.getCustomer() != null ? order.getCustomer().getPhone() : "N/A")));
-            document.add(new Paragraph("Ngày: " + LocalDateTime.now().format(
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-            document.add(new Paragraph("\n"));
-            
+            document.add(new Paragraph("\n", vietnameseFont));
+
+            // Thông tin khách hàng và nhân viên
+            document.add(new Paragraph("Số hóa đơn: #" + invoiceId, vietnameseFont));
+            document.add(new Paragraph("Khách hàng: " + customerName, vietnameseFont));
+            document.add(new Paragraph("Số điện thoại: " + customerPhone, vietnameseFont));
+            document.add(new Paragraph("Mã KH: " + customerCode, vietnameseFont));
+            document.add(new Paragraph("Thu ngân: " + staffName, vietnameseFont));
+            document.add(new Paragraph("Ngày: " + paymentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")), vietnameseFont));
+            document.add(new Paragraph("\n", vietnameseFont));
+
             // Tạo bảng chi tiết dịch vụ
             PdfPTable table = new PdfPTable(5);
             table.setWidthPercentage(100);
             table.setWidths(new float[]{10, 50, 10, 15, 15});
-            
+
             // Tiêu đề bảng
-            table.addCell(new PdfPCell(new Phrase("STT")));
-            table.addCell(new PdfPCell(new Phrase("Dịch vụ")));
-            table.addCell(new PdfPCell(new Phrase("SL")));
-            table.addCell(new PdfPCell(new Phrase("Đơn giá")));
-            table.addCell(new PdfPCell(new Phrase("Thành tiền")));
-            
+            PdfPCell cell;
+            cell = new PdfPCell(new Phrase("STT", headerFont));
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase("Dịch vụ", headerFont));
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase("SL", headerFont));
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase("Đơn giá", headerFont));
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase("Thành tiền", headerFont));
+            table.addCell(cell);
+
             // Dữ liệu bảng
             List<OrderDetail> orderDetails = orderDetailRepository.selectByCondition("order_id = ?", orderId);
             int index = 1;
+            double subtotal = 0;
             for (OrderDetail detail : orderDetails) {
-                Service service = detail.getService();
-                if (service != null) {
-                    table.addCell(String.valueOf(index++));
-                    table.addCell(service.getName());
-                    table.addCell(String.valueOf(detail.getQuantity()));
-                    table.addCell(String.format("%,.0f VND", detail.getPrice().doubleValue()));
-                    table.addCell(String.format("%,.0f VND", 
-                            detail.getPrice().doubleValue() * detail.getQuantity()));
+                if (detail.getService() != null) {
+                    Service service = detail.getService();
+                    double lineTotal = detail.getPrice().doubleValue() * detail.getQuantity();
+                    subtotal += lineTotal;
+                    
+                    table.addCell(new PdfPCell(new Phrase(String.valueOf(index++), vietnameseFont)));
+                    table.addCell(new PdfPCell(new Phrase(service.getName(), vietnameseFont)));
+                    table.addCell(new PdfPCell(new Phrase(String.valueOf(detail.getQuantity()), vietnameseFont)));
+                    table.addCell(new PdfPCell(new Phrase(String.format("%,.0f VND", detail.getPrice().doubleValue()), vietnameseFont)));
+                    table.addCell(new PdfPCell(new Phrase(String.format("%,.0f VND", lineTotal), vietnameseFont)));
                 }
             }
-            
+
             document.add(table);
+            document.add(new Paragraph("\n", vietnameseFont));
+
+            // Tổng tiền và các thông tin thanh toán khác
+            // Subtotal
+            Paragraph subtotalText = new Paragraph("Tổng tiền hàng: " + String.format("%,.0f VND", subtotal), vietnameseFont);
+            subtotalText.setAlignment(Element.ALIGN_RIGHT);
+            document.add(subtotalText);
             
-            // Tổng tiền
-            Paragraph total = new Paragraph("Tổng tiền: " + String.format("%,.0f VND", order.getTotalAmount()));
-            total.setAlignment(Element.ALIGN_RIGHT);
-            document.add(total);
+            // Giảm giá
+            double discount = 0;
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT discount_amount FROM invoice WHERE order_id = ?")) {
+                stmt.setInt(1, orderId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next() && rs.getBigDecimal("discount_amount") != null) {
+                        discount = rs.getBigDecimal("discount_amount").doubleValue();
+                    }
+                }
+            }
+            Paragraph discountText = new Paragraph("Giảm giá: " + String.format("%,.0f VND", discount), vietnameseFont);
+            discountText.setAlignment(Element.ALIGN_RIGHT);
+            document.add(discountText);
             
+            // Điểm quy đổi
+            int points = 0;
+            double pointValue = 0;
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT points_used FROM invoice WHERE order_id = ?")) {
+                stmt.setInt(1, orderId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next() && rs.getObject("points_used") != null) {
+                        points = rs.getInt("points_used");
+                        pointValue = points * 1000; // Giả sử 1 điểm = 1000 VND
+                    }
+                }
+            }
+            Paragraph pointsText = new Paragraph("Điểm quy đổi: " + String.format("%,d điểm (%,.0f VND)", points, pointValue), vietnameseFont);
+            pointsText.setAlignment(Element.ALIGN_RIGHT);
+            document.add(pointsText);
+            
+            // Tổng cộng
+            double grandTotal = subtotal - discount - pointValue;
+            if (grandTotal < 0) grandTotal = 0;
+            Paragraph totalText = new Paragraph("Tổng cộng: " + String.format("%,.0f VND", grandTotal), headerFont);
+            totalText.setAlignment(Element.ALIGN_RIGHT);
+            document.add(totalText);
+            
+            // Phương thức thanh toán
+            String paymentMethod = "CASH";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement("SELECT payment_method FROM invoice WHERE order_id = ?")) {
+                stmt.setInt(1, orderId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next() && rs.getString("payment_method") != null) {
+                        paymentMethod = rs.getString("payment_method");
+                    }
+                }
+            }
+            Paragraph paymentMethodText = new Paragraph("Phương thức thanh toán: " + paymentMethod, vietnameseFont);
+            paymentMethodText.setAlignment(Element.ALIGN_RIGHT);
+            document.add(paymentMethodText);
+            
+            document.add(new Paragraph("\n", vietnameseFont));
+            
+            // Cảm ơn
+            Paragraph thanksText = new Paragraph("Cảm ơn quý khách đã sử dụng dịch vụ!", vietnameseFont);
+            thanksText.setAlignment(Element.ALIGN_CENTER);
+            document.add(thanksText);
+
             document.close();
         } catch (DocumentException | IOException e) {
             throw new RuntimeException("Lỗi khi tạo PDF hóa đơn: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi không xác định khi tạo PDF: " + e.getMessage());
         }
     }
-
     /**
      * Cập nhật trạng thái hóa đơn
      */
@@ -255,66 +379,5 @@ public class InvoiceService {
     public List<Invoice> getUnpaidInvoices() {
         String condition = "status != ?";
         return invoiceRepository.selectByCondition(condition, StatusEnum.COMPLETED.name());
-    }
-
-    /**
-     * Tạo file PDF báo cáo doanh thu
-     */
-    public void generateReportPDF(ObservableList<RevenueReport> reports, String reportType, String fileName) throws IOException {
-        try {
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(fileName));
-            document.open();
-            
-            // Tiêu đề báo cáo
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
-            Paragraph title = new Paragraph("Báo cáo " + reportType, titleFont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            document.add(title);
-            document.add(new Paragraph("Từ ngày: " + LocalDate.now().minusDays(30).format(
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-            document.add(new Paragraph("Đến ngày: " + LocalDate.now().format(
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-            document.add(new Paragraph("\n"));
-            
-            // Tạo bảng báo cáo
-            PdfPTable table = new PdfPTable(reportType.equals("Doanh thu theo ngày") ? 8 : 7);
-            table.setWidthPercentage(100);
-            table.setWidths(reportType.equals("Doanh thu theo ngày") ? 
-                    new float[]{15, 10, 15, 15, 15, 15, 15, 15} : 
-                    new float[]{20, 10, 15, 15, 15, 15, 15});
-            
-            // Tiêu đề bảng
-            table.addCell(new PdfPCell(new Phrase(reportType.equals("Doanh thu theo ngày") ? "Ngày" : 
-                    (reportType.equals("Doanh thu theo dịch vụ") ? "Dịch vụ" : "Phương thức TT"))));
-            table.addCell(new PdfPCell(new Phrase("Số hóa đơn")));
-            table.addCell(new PdfPCell(new Phrase("Doanh thu")));
-            table.addCell(new PdfPCell(new Phrase("Giảm giá")));
-            table.addCell(new PdfPCell(new Phrase("Khuyến mãi")));
-            table.addCell(new PdfPCell(new Phrase("Điểm tích lũy")));
-            table.addCell(new PdfPCell(new Phrase("Doanh thu thuần")));
-            if (reportType.equals("Doanh thu theo ngày")) {
-                table.addCell(new PdfPCell(new Phrase("Xu hướng")));
-            }
-            
-            // Dữ liệu bảng
-            for (RevenueReport report : reports) {
-                table.addCell(report.getDate());
-                table.addCell(String.valueOf(report.getInvoiceCount()));
-                table.addCell(String.format("%,.0f", report.getRevenue()));
-                table.addCell(String.format("%,.0f", report.getDiscount()));
-                table.addCell(String.format("%,.0f", report.getPromotion()));
-                table.addCell(String.format("%,.0f", report.getPoints()));
-                table.addCell(String.format("%,.0f", report.getNetRevenue()));
-                if (reportType.equals("Doanh thu theo ngày")) {
-                    table.addCell(report.getTrend());
-                }
-            }
-            
-            document.add(table);
-            document.close();
-        } catch (DocumentException | IOException e) {
-            throw new IOException("Lỗi khi tạo PDF báo cáo: " + e.getMessage());
-        }
     }
 }
