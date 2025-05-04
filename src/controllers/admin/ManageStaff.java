@@ -109,221 +109,221 @@ private Button terminateButton;
 
 	@FXML
 	private void handleAddStaff() {
-		// Tạo dialog để nhập thông tin nhân viên
-		Dialog<Staff> dialog = new Dialog<>();
-		dialog.setTitle("Thêm nhân viên mới");
-		dialog.setHeaderText("Nhập thông tin nhân viên");
+	    // Tạo dialog để nhập thông tin nhân viên
+	    Dialog<Staff> dialog = new Dialog<>();
+	    dialog.setTitle("Thêm nhân viên mới");
+	    dialog.setHeaderText("Nhập thông tin nhân viên");
 
-		// Tạo các trường nhập liệu
-		TextField txtFullName = new TextField();
-		txtFullName.setPromptText("Họ và tên");
+	    // Tạo các trường nhập liệu
+	    TextField txtFullName = new TextField();
+	    txtFullName.setPromptText("Họ và tên");
 
-		ToggleGroup genderGroup = new ToggleGroup();
-		RadioButton rbMale = new RadioButton("MALE");
-		RadioButton rbFemale = new RadioButton("FEMALE");
-		RadioButton rbOther = new RadioButton("OTHER");
-		rbMale.setToggleGroup(genderGroup);
-		rbFemale.setToggleGroup(genderGroup);
-		rbOther.setToggleGroup(genderGroup);
+	    ToggleGroup genderGroup = new ToggleGroup();
+	    RadioButton rbMale = new RadioButton("MALE");
+	    RadioButton rbFemale = new RadioButton("FEMALE");
+	    RadioButton rbOther = new RadioButton("OTHER");
+	    rbMale.setToggleGroup(genderGroup);
+	    rbFemale.setToggleGroup(genderGroup);
+	    rbOther.setToggleGroup(genderGroup);
 
-		TextField txtPhone = new TextField();
-		txtPhone.setPromptText("Số điện thoại");
+	    TextField txtPhone = new TextField();
+	    txtPhone.setPromptText("Số điện thoại");
 
-		TextField txtAddress = new TextField();
-		txtAddress.setPromptText("Địa chỉ");
+	    TextField txtAddress = new TextField();
+	    txtAddress.setPromptText("Địa chỉ");
 
-		TextField txtEmail = new TextField();
-		txtEmail.setPromptText("Email");
+	    TextField txtEmail = new TextField();
+	    txtEmail.setPromptText("Email");
 
-		DatePicker dpDob = new DatePicker();
-		dpDob.setPromptText("Ngày sinh (YYYY-MM-DD)");
-		dpDob.setDayCellFactory(picker -> new DateCell() {
-			@Override
-			public void updateItem(LocalDate item, boolean empty) {
-				super.updateItem(item, empty);
-				if (item != null && item.isAfter(LocalDate.now())) {
-					setDisable(true);
-					setStyle("-fx-background-color: #ffc0cb;");
-				}
-			}
-		});
+	    DatePicker dpDob = new DatePicker();
+	    dpDob.setPromptText("Ngày sinh (YYYY-MM-DD)");
+	    dpDob.setDayCellFactory(picker -> new DateCell() {
+	        @Override
+	        public void updateItem(LocalDate item, boolean empty) {
+	            super.updateItem(item, empty);
+	            if (item != null && item.isAfter(LocalDate.now())) {
+	                setDisable(true);
+	                setStyle("-fx-background-color: #ffc0cb;");
+	            }
+	        }
+	    });
 
-		ComboBox<String> cbRole = new ComboBox<>();
-		cbRole.getItems().addAll("STAFF_RECEPTION", "STAFF_CASHIER", "STAFF_CARE", "ADMIN");
-		cbRole.setPromptText("Vai trò");
+	    ComboBox<String> cbRole = new ComboBox<>();
+	    cbRole.getItems().addAll("STAFF_RECEPTION", "STAFF_CASHIER", "STAFF_CARE", "ADMIN");
+	    cbRole.setPromptText("Vai trò");
 
-		DatePicker dpStartDate = new DatePicker(LocalDate.now());
-		dpStartDate.setPromptText("Ngày bắt đầu (YYYY-MM-DD)");
+	    DatePicker dpStartDate = new DatePicker(LocalDate.now());
+	    dpStartDate.setPromptText("Ngày bắt đầu (YYYY-MM-DD)");
 
-		TextField txtSalary = new TextField();
-		txtSalary.setPromptText("Lương (VD: 10000000)");
-		txtSalary.setTextFormatter(new TextFormatter<>(change -> {
-			String newText = change.getControlNewText();
-			return newText.matches("\\d*") ? change : null;
-		}));
+	    TextField txtSalary = new TextField();
+	    txtSalary.setPromptText("Lương (VD: 10000000)");
+	    txtSalary.setTextFormatter(new TextFormatter<>(change -> {
+	        String newText = change.getControlNewText();
+	        return newText.matches("\\d*") ? change : null;
+	    }));
 
-		// Sắp xếp các trường nhập liệu trong GridPane
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 150, 10, 10));
-		grid.add(new Label("Họ và tên:"), 0, 0);
-		grid.add(txtFullName, 1, 0);
-		grid.add(new Label("Giới tính:"), 0, 1);
-		grid.add(rbMale, 1, 1);
-		grid.add(rbFemale, 2, 1);
-		grid.add(rbOther, 3, 1);
-		grid.add(new Label("Số điện thoại:"), 0, 2);
-		grid.add(txtPhone, 1, 2);
-		grid.add(new Label("Địa chỉ:"), 0, 3);
-		grid.add(txtAddress, 1, 3);
-		grid.add(new Label("Email:"), 0, 4);
-		grid.add(txtEmail, 1, 4);
-		grid.add(new Label("Ngày sinh:"), 0, 5);
-		grid.add(dpDob, 1, 5);
-		grid.add(new Label("Vai trò:"), 0, 6);
-		grid.add(cbRole, 1, 6);
-		grid.add(new Label("Ngày bắt đầu:"), 0, 7);
-		grid.add(dpStartDate, 1, 7);
-		grid.add(new Label("Lương:"), 0, 8);
-		grid.add(txtSalary, 1, 8);
+	    // Sắp xếp các trường nhập liệu trong GridPane
+	    GridPane grid = new GridPane();
+	    grid.setHgap(10);
+	    grid.setVgap(10);
+	    grid.setPadding(new Insets(20, 150, 10, 10));
+	    grid.add(new Label("Họ và tên:"), 0, 0);
+	    grid.add(txtFullName, 1, 0);
+	    grid.add(new Label("Giới tính:"), 0, 1);
+	    grid.add(rbMale, 1, 1);
+	    grid.add(rbFemale, 2, 1);
+	    grid.add(rbOther, 3, 1);
+	    grid.add(new Label("Số điện thoại:"), 0, 2);
+	    grid.add(txtPhone, 1, 2);
+	    grid.add(new Label("Địa chỉ:"), 0, 3);
+	    grid.add(txtAddress, 1, 3);
+	    grid.add(new Label("Email:"), 0, 4);
+	    grid.add(txtEmail, 1, 4);
+	    grid.add(new Label("Ngày sinh:"), 0, 5);
+	    grid.add(dpDob, 1, 5);
+	    grid.add(new Label("Vai trò:"), 0, 6);
+	    grid.add(cbRole, 1, 6);
+	    grid.add(new Label("Ngày bắt đầu:"), 0, 7);
+	    grid.add(dpStartDate, 1, 7);
+	    grid.add(new Label("Lương:"), 0, 8);
+	    grid.add(txtSalary, 1, 8);
 
-		dialog.getDialogPane().setContent(grid);
+	    dialog.getDialogPane().setContent(grid);
 
-		// Thêm nút OK và Cancel
-		ButtonType btnOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-		ButtonType btnCancel = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
-		dialog.getDialogPane().getButtonTypes().addAll(btnOk, btnCancel);
+	    // Thêm nút OK và Cancel
+	    ButtonType btnOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+	    ButtonType btnCancel = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+	    dialog.getDialogPane().getButtonTypes().addAll(btnOk, btnCancel);
 
-// Lấy nút OK từ dialog
-		Node okButton = dialog.getDialogPane().lookupButton(btnOk);
+	    // Lấy nút OK từ dialog
+	    Node okButton = dialog.getDialogPane().lookupButton(btnOk);
 
-// Thêm bộ lọc sự kiện cho nút OK
-		okButton.addEventFilter(ActionEvent.ACTION, event -> {
-			try {
-				// Lấy thông tin từ các trường nhập liệu
-				String fullName = txtFullName.getText().trim();
-				String phone = txtPhone.getText().trim();
-				String address = txtAddress.getText().trim();
-				String email = txtEmail.getText().trim();
-				LocalDate dob = dpDob.getValue();
-				String roleName = cbRole.getValue();
+	    // Thêm bộ lọc sự kiện cho nút OK
+	    okButton.addEventFilter(ActionEvent.ACTION, event -> {
+	        try {
+	            // Lấy thông tin từ các trường nhập liệu
+	            String fullName = txtFullName.getText().trim();
+	            String phone = txtPhone.getText().trim();
+	            String address = txtAddress.getText().trim();
+	            String email = txtEmail.getText().trim();
+	            LocalDate dob = dpDob.getValue();
+	            String roleName = cbRole.getValue();
 
-				// Kiểm tra dữ liệu nhập
-				if (fullName.isEmpty()) {
-					throw new IllegalArgumentException("Họ và tên không được để trống.");
-				}
-				if (!phone.matches("^[0-9]{10}$")) {
-					throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
-				}
-				if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-					throw new IllegalArgumentException("Email không hợp lệ.");
-				}
-				if (dob == null || dob.isAfter(LocalDate.now())) {
-					throw new IllegalArgumentException("Ngày sinh không hợp lệ. Vui lòng chọn ngày sinh hợp lệ.");
-				}
-				int age = Period.between(dob, LocalDate.now()).getYears();
-				if (age < 18) {
-					throw new IllegalArgumentException("Nhân viên phải đủ 18 tuổi trở lên.");
-				}
-				if (address == null || address.trim().isEmpty()) {
-					throw new IllegalArgumentException("Địa chỉ không được để trống.");
-				}
-				if (roleName == null || roleName.isEmpty()) {
-					throw new IllegalArgumentException("Vai trò không được để trống.");
-				}
-				double salary = Double.parseDouble(txtSalary.getText().trim());
-				if (salary < 0 || salary > 99999999.99) {
-					throw new IllegalArgumentException("Lương không hợp lệ.");
-				}
+	            // Kiểm tra dữ liệu nhập
+	            if (fullName.isEmpty()) {
+	                throw new IllegalArgumentException("Họ và tên không được để trống.");
+	            }
+	            if (!phone.matches("^[0-9]{10}$")) {
+	                throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
+	            }
+	            if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+	                throw new IllegalArgumentException("Email không hợp lệ.");
+	            }
+	            if (dob == null || dob.isAfter(LocalDate.now())) {
+	                throw new IllegalArgumentException("Ngày sinh không hợp lệ. Vui lòng chọn ngày sinh hợp lệ.");
+	            }
+	            int age = Period.between(dob, LocalDate.now()).getYears();
+	            if (age < 18) {
+	                throw new IllegalArgumentException("Nhân viên phải đủ 18 tuổi trở lên.");
+	            }
+	            if (address == null || address.trim().isEmpty()) {
+	                throw new IllegalArgumentException("Địa chỉ không được để trống.");
+	            }
+	            if (roleName == null || roleName.isEmpty()) {
+	                throw new IllegalArgumentException("Vai trò không được để trống.");
+	            }
+	            double salary = Double.parseDouble(txtSalary.getText().trim());
+	            if (salary < 0 || salary > 99999999.99) {
+	                throw new IllegalArgumentException("Lương không hợp lệ.");
+	            }
 
-				// Nếu tất cả thông tin hợp lệ, cho phép dialog đóng
-			} catch (IllegalArgumentException e) {
-				// Hiển thị thông báo lỗi và ngăn dialog đóng
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Thông tin không hợp lệ");
-				alert.setContentText(e.getMessage());
-				alert.showAndWait();
-				event.consume(); // Ngăn dialog đóng
-			} catch (Exception e) {
-				// Hiển thị thông báo lỗi chung và ngăn dialog đóng
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Đã xảy ra lỗi");
-				alert.setContentText("Vui lòng kiểm tra lại thông tin đã nhập.\nLỗi: " + e.getMessage());
-				alert.showAndWait();
-				event.consume();
-			}
-		});
+	            // Nếu tất cả thông tin hợp lệ, cho phép dialog đóng
+	        } catch (IllegalArgumentException e) {
+	            // Hiển thị thông báo lỗi và ngăn dialog đóng
+	            Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Lỗi");
+	            alert.setHeaderText("Thông tin không hợp lệ");
+	            alert.setContentText(e.getMessage());
+	            alert.showAndWait();
+	            event.consume(); // Ngăn dialog đóng
+	        } catch (Exception e) {
+	            // Hiển thị thông báo lỗi chung và ngăn dialog đóng
+	            Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Lỗi");
+	            alert.setHeaderText("Đã xảy ra lỗi");
+	            alert.setContentText("Vui lòng kiểm tra lại thông tin đã nhập.\nLỗi: " + e.getMessage());
+	            alert.showAndWait();
+	            event.consume();
+	        }
+	    });
 
-// Xử lý khi nhấn nút OK
-		dialog.setResultConverter(dialogButton -> {
-			if (dialogButton == btnOk) {
-				try {
-					// Lấy thông tin từ các trường nhập liệu
-					String fullName = txtFullName.getText().trim();
-					String gender = ((RadioButton) genderGroup.getSelectedToggle()).getText().trim();
-					String phone = txtPhone.getText().trim();
-					String address = txtAddress.getText().trim();
-					String email = txtEmail.getText().trim();
-					LocalDate dob = dpDob.getValue();
-					String roleName = cbRole.getValue();
-					double salary = Double.parseDouble(txtSalary.getText().trim());
-					LocalDate startDate = dpStartDate.getValue();
+	    // Xử lý khi nhấn nút OK
+	    dialog.setResultConverter(dialogButton -> {
+	        if (dialogButton == btnOk) {
+	            try {
+	                // Lấy thông tin từ các trường nhập liệu
+	                String fullName = txtFullName.getText().trim();
+	                String gender = ((RadioButton) genderGroup.getSelectedToggle()).getText().trim();
+	                String phone = txtPhone.getText().trim();
+	                String address = txtAddress.getText().trim();
+	                String email = txtEmail.getText().trim();
+	                LocalDate dob = dpDob.getValue();
+	                String roleName = cbRole.getValue();
+	                double salary = Double.parseDouble(txtSalary.getText().trim());
+	                LocalDate startDate = dpStartDate.getValue();
 
-					int roleId = roleService.getRoleIdByRoleName(roleName);
-					Role role = new Role(roleId, roleName);
+	                int roleId = roleService.getRoleIdByRoleName(roleName);
+	                Role role = new Role(roleId, roleName);
 
-					// Tạo tài khoản mặc định
-					String accountName = roleName.toLowerCase().replace("staff_", "")
-							+ String.format("%02d", staffList.size() + 1);
-					Account account = new Account();
-					account.setUserName(accountName);
-					account.setPassword("123456789"); // Mật khẩu mặc định
+	             // Tạo tài khoản mặc định
+	                String accountName = roleName.toLowerCase().replace("staff_", "")
+	                        + String.format("%02d", staffList.size() + 1);
+	                
+	                accountService.register(accountName, "123456789", role); // Thêm tài khoản vào DB.
+	                Account account = accountService.getAccountByUsername(accountName);
 
-					// Tạo đối tượng Staff mới
-					Staff newStaff = new Staff();
-					newStaff.setFullName(fullName);
-					newStaff.setGender(GenderEnum.valueOf(gender));
-					newStaff.setPhone(phone);
-					newStaff.setAddress(address);
-					newStaff.setEmail(email);
-					newStaff.setDob(Date.valueOf(dob));
-					newStaff.setRole(role);
-					newStaff.setHire_date(Date.valueOf(startDate));
-					newStaff.setSalary(salary);
-					newStaff.setAccount(account);
+	                // Create the new Staff object
+	                Staff newStaff = new Staff();
+	                newStaff.setFullName(fullName);
+	                newStaff.setGender(GenderEnum.valueOf(gender));
+	                newStaff.setPhone(phone);
+	                newStaff.setAddress(address);
+	                newStaff.setEmail(email);
+	                newStaff.setDob(Date.valueOf(dob));
+	                newStaff.setRole(role);
+	                newStaff.setHire_date(Date.valueOf(startDate));
+	                newStaff.setSalary(salary);
+	                newStaff.setAccount(account); // Link with Account
+	                
+	                return newStaff;
+	            } catch (Exception e) {
+	                return null;
+	            }
+	        }
+	        return null;
+	    });
 
-					return newStaff;
-				} catch (Exception e) {
-					return null;
-				}
-			}
-			return null;
-		});
+	    // Lấy kết quả từ dialog
+	    Optional<Staff> result = dialog.showAndWait();
+	    result.ifPresent(newStaff -> {
+	        // Gọi StaffService để thêm nhân viên vào cơ sở dữ liệu
+	        boolean isAdded = staffService.addStaff(newStaff);
 
-		// Lấy kết quả từ dialog
-		Optional<Staff> result = dialog.showAndWait();
-		result.ifPresent(newStaff -> {
-			// Gọi StaffService để thêm nhân viên vào cơ sở dữ liệu
-			boolean isAdded = staffService.addStaff(newStaff);
-
-			if (isAdded) {
-				loadData(); // Làm mới danh sách nhân viên
-				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Thành công");
-				alert.setHeaderText("Thêm nhân viên thành công");
-				alert.setContentText("Nhân viên " + newStaff.getFullName() + " đã được thêm.");
-				alert.showAndWait();
-			} else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Thêm nhân viên thất bại");
-				alert.setContentText("Đã xảy ra lỗi khi thêm nhân viên. Vui lòng thử lại.");
-				alert.showAndWait();
-			}
-		});
+	        if (isAdded) {
+	            loadData(); // Làm mới danh sách nhân viên
+	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	            alert.setTitle("Thành công");
+	            alert.setHeaderText("Thêm nhân viên thành công");
+	            alert.setContentText("Nhân viên " + newStaff.getFullName() + " đã được thêm.");
+	            alert.showAndWait();
+	        } else {
+	            Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Lỗi");
+	            alert.setHeaderText("Thêm nhân viên thất bại");
+	            alert.setContentText("Đã xảy ra lỗi khi thêm nhân viên. Vui lòng thử lại.");
+	            alert.showAndWait();
+	        }
+	    });
 	}
 
 	@FXML

@@ -3,20 +3,18 @@ package frontend;
 
 import controllers.SceneSwitcher;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage) {
-        SceneSwitcher.setMainStage(primaryStage);
-        
-        // Instead of loading the home.fxml, load the booking view
-        SceneSwitcher.switchScene("home.fxml");
-        //SceneSwitcher.switchScene("staff/invoice_view.fxml");
-       // SceneSwitcher.switchScene("staff/booking_view.fxml");
-  
-     
-    }
+
+	@Override
+	public void start(Stage primaryStage) {
+		SceneSwitcher.setMainStage(primaryStage);
+		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+		SceneSwitcher.switchScene("home.fxml");
+	}
+
 
     public static void main(String[] args) {
         launch(args);

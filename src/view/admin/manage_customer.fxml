@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Alert?>
+<?import javafx.scene.control.Alert.AlertType?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.admin.ManageCustomerController"
+      stylesheets="@/styles/manage_customer.css"
+      spacing="20" alignment="CENTER" prefWidth="1450" prefHeight="700">
+
+    <!-- Tiêu đề -->
+    <Label text="QUẢN LÝ KHÁCH HÀNG VÀ THÚ CƯNG" styleClass="header-label" />
+
+    <!-- Khu vực chuyển đổi giữa bảng và form -->
+    <StackPane fx:id="contentPane">
+        <!-- Bảng và nút chức năng -->
+        <VBox fx:id="mainContentBox" spacing="20" alignment="CENTER">
+            <!-- Tìm kiếm -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="searchTextField" promptText="Nhập số điện thoại khách hàng..." prefWidth="350"/>
+                <Button text="Tìm kiếm" onAction="#handleSearchCustomer"/>
+            </HBox>
+
+            <!-- Bảng -->
+            <TableView fx:id="customerTable" prefHeight="400" prefWidth="900">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="fullNameColumn" text="Họ tên" prefWidth="270"/>
+                    <TableColumn fx:id="genderColumn" text="Giới tính" prefWidth="100"/>
+                    <TableColumn fx:id="phoneColumn" text="SĐT" prefWidth="150"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="300"/>
+                    <TableColumn fx:id="petColumn" text="Thú cưng" prefWidth="220"/>
+                    <TableColumn fx:id="loyaltyPointsColumn" text="Điểm TL" prefWidth="150"/>
+                    <TableColumn fx:id="serviceHistoryColumn" text="Số lượng đơn hàng" prefWidth="200"/>
+                </columns>
+            </TableView>
+
+            <!-- Nút -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Thêm khách hàng" onAction="#handleAddCustomer"/>
+                <Button text="Sửa khách hàng" onAction="#handleEditCustomer"/>
+            </HBox>
+        </VBox>
+
+        <!-- Form nhập liệu -->
+        <VBox fx:id="formBox" spacing="15" visible="false" managed="false" alignment="CENTER">
+            <Label text="Thông tin khách hàng" styleClass="form-title"/>
+
+            <!-- Các trường nhập liệu -->
+            <HBox spacing="10"><Label text="Họ tên:"/><TextField fx:id="txtFullName" promptText="Họ tên" prefWidth="250"/></HBox>
+            <HBox spacing="10"><Label text="Giới tính:"/><ComboBox fx:id="cmbGender" promptText="Giới tính" prefWidth="120"/></HBox>
+            <HBox spacing="10"><Label text="SĐT:"/><TextField fx:id="txtPhone" promptText="SĐT" prefWidth="250"/></HBox>
+            <HBox spacing="10"><Label text="Địa chỉ:"/><TextField fx:id="txtAddress" promptText="Địa chỉ" prefWidth="250"/></HBox>
+            <HBox spacing="10"><Label text="Email:"/><TextField fx:id="txtEmail" promptText="Email" prefWidth="250"/></HBox>
+            <HBox spacing="10"><Label text="Điểm TL:"/><TextField fx:id="txtLoyaltyPoints" promptText="Điểm" prefWidth="120"/></HBox>
+
+            <!-- Thú cưng -->
+            <TextField fx:id="txtPetName" promptText="Tên thú cưng" prefWidth="250"/>
+            <ComboBox fx:id="cmbPetGender" promptText="Giới tính" prefWidth="120"/>
+            <ComboBox fx:id="cmbPetType" promptText="Giống loài" prefWidth="120"/>
+            <DatePicker fx:id="dpPetDob" promptText="Ngày sinh" prefWidth="250"/>
+            <TextField fx:id="txtPetWeight" promptText="Cân nặng (kg)" prefWidth="250"/>
+            <TextField fx:id="txtPetNote" promptText="Ghi chú" prefWidth="250"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="saveButton" text="Lưu" onAction="#handleSaveCustomer"/>
+                <Button fx:id="btnCancel" text="Hủy" onAction="#handleCancel"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+</VBox>   

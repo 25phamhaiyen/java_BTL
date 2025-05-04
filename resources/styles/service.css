@@ -1,30 +1,57 @@
-/* Thiết lập kiểu chữ cho các thành phần */
+/* NỀN CHUNG */
 .root {
-    -fx-font-family: "Arial";
+    -fx-background-color: linear-gradient(to bottom right, #F5FFF0, #DDEDAA);
+    -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
 }
 
-.text-field, .button {
-    -fx-font-size: 14px;
-}
-
-.table-view {
-    -fx-font-size: 14px;
-}
-
-.button {
-    -fx-background-color: #4CAF50;
-    -fx-text-fill: white;
-}
-
-.button:hover {
-    -fx-background-color: #45a049;
-}
-
-.table-view .table-column {
+/* NÂNG KÍCH CỠ VÀ MÀU CHỮ */
+.label, .text-field, .combo-box, .button, .table-view {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2E4E1E; /* xanh đậm */
     -fx-font-weight: bold;
 }
 
+/* BUTTON */
+.button {
+    -fx-background-color: #A9C87C;
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+}
+
+.button:hover {
+    -fx-background-color: #8BBF50;
+    -fx-effect: dropshadow(gaussian, #7BAE3F, 5, 0.3, 0, 2);
+}
+
+/* TABLEVIEW CHUNG */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #B7E472;
+    -fx-table-cell-border-color: #E6F6C5;
+    -fx-font-size: 14px;
+}
+
+/* HEADER CỦA BẢNG */
+.table-view .column-header {
+    -fx-background-color: #CDEB9E;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3E5F1D;
+}
+
+/* HIỆU ỨNG HOVER CHO HÀNG */
+.table-row-cell:hover {
+    -fx-background-color: #E4F6C2;
+    -fx-cursor: hand;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #C0E68B;
+    -fx-text-fill: black;
+}
 .table-view .table-row-cell:empty {
     -fx-background-color: transparent;
 }

@@ -1,60 +1,125 @@
 package repository;
 
-import utils.DatabaseConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.chart.XYChart;
+import model.RevenueReport;
+import utils.DatabaseConnection;
 
 public class RevenueRepository {
 
-	public double getMonthlyRevenue() {
-		String query = "SELECT SUM(total) AS total_revenue " + "FROM invoice "
-				+ "WHERE MONTH(payment_date) = MONTH(CURRENT_DATE) " + "AND YEAR(payment_date) = YEAR(CURRENT_DATE) "
-				+ "AND `status` = 'COMPLETED'";
-		try (Connection connection = DatabaseConnection.getConnection();
-				PreparedStatement statement = connection.prepareStatement(query);
-				ResultSet resultSet = statement.executeQuery()) {
+	public XYChart.Series<String, Number> getRevenueData(String timeUnit) {
+	    XYChart.Series<String, Number> series = new XYChart.Series<>();
+	    String sql = "";
 
-			if (resultSet.next()) {
-				return resultSet.getDouble("total_revenue");
-			}
+	    switch (timeUnit.toUpperCase()) {
+	        case "WEEK":
+	            sql = """
+	                SELECT
+	                    CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK), '%d/%m'),
+	                           ' - ',
+	                           DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK) + INTERVAL 6 DAY, '%d/%m')) AS label,
+	                    COALESCE(SUM(i.total), 0) AS revenue
+	                FROM (
+	                    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+	                ) AS weeks
+	                LEFT JOIN invoice i ON i.status = 'COMPLETED'
+	                    AND i.payment_date >= DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK)
+	                    AND i.payment_date < DATE_SUB(CURDATE(), INTERVAL (weeks.n - 2) WEEK)
+	                GROUP BY label
+	                ORDER BY MIN(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK))
+	                """;
+	            break;
+
+	        case "MONTH":
+//	            sql = """
+//	                SELECT
+//	                    DATE_FORMAT(payment_date, '%m/%Y') AS label,
+//	                    SUM(total) AS revenue
+//	                FROM invoice
+//	                WHERE status = 'COMPLETED'
+//	                    AND YEAR(payment_date) = YEAR(CURDATE())
+//	                GROUP BY label
+//	                ORDER BY STR_TO_DATE(label, '%m/%Y') 
+//	                """;
+	        	sql = """
+                SELECT
+                    DATE_FORMAT(payment_date, '%m/%Y') AS label,
+                    SUM(total) AS revenue,
+                    payment_date AS order_date  -- Thêm cột này để sắp xếp
+                FROM invoice
+                WHERE status = 'COMPLETED'
+                    AND payment_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+                    AND payment_date <= CURDATE()
+                GROUP BY label, payment_date
+                ORDER BY order_date ASC
+                """;
+	            break;
+
+	        case "YEAR":
+	            sql = """
+	                SELECT
+	                    YEAR(payment_date) AS label,
+	                    SUM(total) AS revenue
+	                FROM invoice
+	                WHERE status = 'COMPLETED'
+	                    AND YEAR(payment_date) >= YEAR(CURDATE()) - 3
+	                GROUP BY label
+	                ORDER BY label
+	                """;
+	            break;
+
+	        default:
+	            return series;
+	    }
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+	        while (rs.next()) {
+	            String label = rs.getString("label");
+	            double revenue = rs.getDouble("revenue");
+	            series.getData().add(new XYChart.Data<>(label, revenue));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return series;
+	}
+
+
+	public double getRevenueTotal(String timeUnit) {
+		String sql = switch (timeUnit.toUpperCase()) {
+		case "WEEK" -> """
+				    SELECT SUM(total) FROM invoice
+				    WHERE YEARWEEK(payment_date, 1) = YEARWEEK(CURDATE(), 1)
+				    AND status = 'COMPLETED'
+				""";
+		case "MONTH" -> """
+				    SELECT SUM(total) FROM invoice
+				    WHERE YEAR(payment_date) = YEAR(CURDATE()) AND MONTH(payment_date) = MONTH(CURDATE())
+				    AND status = 'COMPLETED'
+				""";
+		case "YEAR" -> """
+				    SELECT SUM(total) FROM invoice
+				    WHERE YEAR(payment_date) = YEAR(CURDATE())
+				    AND status = 'COMPLETED'
+				""";
+		default -> "";
+		};
+
+		try (Connection conn = DatabaseConnection.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery()) {
+			if (rs.next())
+				return rs.getDouble(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0.0; // Return 0 if no data is found or an error occurs
-	}public XYChart.Series<String, Number> getRevenueData(String timeUnit) {
-        String query = "";
-        if (timeUnit.equals("WEEK")) {
-            query = "SELECT WEEK(payment_date) AS time, SUM(total) AS revenue " +
-                    "FROM invoice WHERE `status` = 'COMPLETED' " +
-                    "GROUP BY WEEK(payment_date)";
-        } else if (timeUnit.equals("MONTH")) {
-            query = "SELECT MONTH(payment_date) AS time, SUM(total) AS revenue " +
-                    "FROM invoice WHERE `status` = 'COMPLETED' " +
-                    "GROUP BY MONTH(payment_date)";
-        } else if (timeUnit.equals("YEAR")) {
-            query = "SELECT YEAR(payment_date) AS time, SUM(total) AS revenue " +
-                    "FROM invoice WHERE `status` = 'COMPLETED' " +
-                    "GROUP BY YEAR(payment_date)";
-        }
 
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next()) {
-                String time = resultSet.getString("time");
-                double revenue = resultSet.getDouble("revenue");
-                series.getData().add(new XYChart.Data<>(time, revenue));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return series;
-    }
+		return 0.0;
+	}
 }

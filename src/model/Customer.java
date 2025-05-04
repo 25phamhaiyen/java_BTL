@@ -20,6 +20,15 @@ public class Customer extends Person {
 	}
 
 
+	public Customer(int id, String fullName, GenderEnum gender, String phone, String email, String address, int points) {
+		super(id, fullName, gender, phone, address, email);
+		this.point = points;
+	}
+
+	public Customer(int id) {
+		super(id);
+	}
+
 	public int getPoint() {
 		return point;
 	}
