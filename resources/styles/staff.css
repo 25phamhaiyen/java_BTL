@@ -3,19 +3,19 @@
 
 /* Các biến màu sắc */
 * {
-    -primary-color: #1976D2;
-    -primary-dark: #1565C0;
-    -primary-light: #BBDEFB;
-    -secondary-color: #D88E3F;
-    -secondary-dark: #C17737;
-    -secondary-light: #F9D9B9;
-    -success-color: #4CAF50;
-    -warning-color: #FF9800;
-    -error-color: #F44336;
-    -neutral-bg: #F5F5F5;
-    -text-color: #333333;
-    -text-light: #757575;
-    -divider-color: #EEEEEE;
+    -primary-color: #1976D2;      /* Xanh dương chính - giữ nguyên */
+    -primary-dark: #1565C0;       /* Xanh dương đậm - giữ nguyên */
+    -primary-light: #BBDEFB;      /* Xanh dương nhạt - giữ nguyên (trạng thái WORKING) */
+    -secondary-color: #D88E3F;    /* Cam chính - giữ nguyên (header/action panel) */
+    -secondary-dark: #C17737;     /* Cam đậm - giữ nguyên (nút Về trang chủ) */
+    -secondary-light: #F9D9B9;    /* Cam nhạt - giữ nguyên (footer) */
+    -success-color: #4CAF50;      /* Xanh lá - giữ nguyên */
+    -warning-color: #FF9800;      /* Vàng cam - giữ nguyên (nút Đợi ca) */
+    -error-color: #F44336;        /* Đỏ - giữ nguyên */
+    -neutral-bg: #FFF5E6;         /* Trắng nhạt - cập nhật (stat-box, hàng lẻ) */
+    -text-color: #000000;         /* Đen - cập nhật (văn bản chính) */
+    -text-light: #757575;         /* Xám - giữ nguyên (văn bản nhạt) */
+    -divider-color: #E8ECEF;      /* Xám nhạt - cập nhật (tab header background) */
 }
 
 /* Kiểu dáng chung */
@@ -27,7 +27,7 @@
 
 /* Header */
 .header-label {
-    -fx-text-fill: -primary-color;
+    -fx-text-fill: -text-color;  /* Cập nhật thành đen */
 }
 
 .separator-header {
@@ -41,11 +41,11 @@
 
 /* TabPane */
 .main-tab-pane .tab-header-area .tab-header-background {
-    -fx-background-color: -primary-light;
+    -fx-background-color: -divider-color;  /* Cập nhật thành #E8ECEF */
 }
 
 .main-tab-pane .tab {
-    -fx-background-color: #DDDDDD;
+    -fx-background-color: #D3D3D3;  /* Cập nhật thành màu trong ảnh */
     -fx-background-radius: 5 5 0 0;
     -fx-padding: 8 15;
 }
@@ -158,14 +158,22 @@
 }
 
 .footer-button {
-    -fx-background-color: #DDDDDD;
+    -fx-background-color: #FFC107;  /* Cập nhật thành vàng (Làm mới, Trợ giúp, Thoát) */
     -fx-text-fill: -text-color;
     -fx-background-radius: 4;
     -fx-padding: 8 15;
 }
 
+.footer-button.request-leave {  /* Thêm class cho nút Yêu cầu nghỉ phép */
+    -fx-background-color: #808080;  /* Xám */
+}
+
 .footer-button:hover {
-    -fx-background-color: #BBBBBB;
+    -fx-background-color: #FFB300;  /* Vàng đậm hơn khi hover */
+}
+
+.footer-button.request-leave:hover {
+    -fx-background-color: #6B6B6B;  /* Xám đậm hơn khi hover */
 }
 
 .exit-button {
@@ -236,7 +244,7 @@
 }
 
 .booking-table .table-row-cell:odd {
-    -fx-background-color: #F9F9F9;
+    -fx-background-color: -neutral-bg;  /* Cập nhật thành #FFF5E6 */
 }
 
 .booking-table .table-row-cell:selected {
@@ -262,7 +270,7 @@
 
 /* Statistics Panel */
 .stat-box {
-    -fx-background-color: -neutral-bg;
+    -fx-background-color: -neutral-bg;  /* Cập nhật thành #FFF5E6 */
     -fx-background-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 0);
 }
@@ -283,7 +291,7 @@
 .stat-value-secondary {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: -secondary-color;
+    -fx-text-fill: -text-color;  /* Cập nhật thành đen */
     -fx-padding: 5 0 5 0;
 }
 
@@ -334,7 +342,7 @@
 
 /* Action Panel */
 .action-panel {
-    -fx-background-color: -neutral-bg;
+    -fx-background-color: -secondary-color;  /* Cập nhật thành #D88E3F */
     -fx-background-radius: 8 8 0 0;
     -fx-border-color: -divider-color;
     -fx-border-width: 1 0 0 0;
@@ -342,7 +350,7 @@
 
 /* Footer */
 .footer {
-    -fx-background-color: -primary-light;
+    -fx-background-color: -secondary-light;  /* Cập nhật thành #F9D9B9 */
     -fx-border-color: -primary-color;
     -fx-border-width: 1 0 0 0;
 }

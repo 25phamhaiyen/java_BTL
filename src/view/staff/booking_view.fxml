@@ -166,9 +166,7 @@
                                  </font>
                               </Button>
                                       
-                              <Button fx:id="printInvoiceButton" disable="true" maxWidth="Infinity" 
-                                      text="Tạo hóa đơn" onAction="#printInvoice"
-                                      style="-fx-background-color: #9C27B0; -fx-text-fill: white;" />
+                            
                            </VBox>
                         </HBox>
                      </bottom>

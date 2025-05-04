@@ -52,6 +52,7 @@ public class RoleChecker {
                                 permissionCode.equals("VIEW_INVOICE") ||
                                 permissionCode.equals("MANAGE_PAYMENT") ||
                                 permissionCode.equals("PRINT_RECEIPT") ||
+                                permissionCode.equals("CREATE_BOOKING") ||
                                 permissionCode.equals("APPLY_PROMOTION");
                 break;
             case "STAFF_RECEPTION":
