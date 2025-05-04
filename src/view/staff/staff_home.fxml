@@ -63,7 +63,7 @@
 					<ListView fx:id="todayAppointmentListView" maxWidth="Infinity" prefHeight="300" VBox.vgrow="ALWAYS" />
 					<VBox alignment="CENTER" maxWidth="Infinity" spacing="5">
 						<Button fx:id="invoiceViewButton" maxWidth="200" onAction="#showInvoiceView" text="Hóa đơn" />
-						
+						<Button fx:id="okila" maxWidth="200" text="" />
 					</VBox>
 				</VBox>
 			</HBox>

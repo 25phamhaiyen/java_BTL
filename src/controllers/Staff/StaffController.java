@@ -49,6 +49,9 @@ public class StaffController implements Initializable {
 
     @FXML
     private Button bookingViewButton;
+    
+    @FXML
+    private Button okila;
 
     @FXML
     private Button invoiceViewButton;
@@ -206,6 +209,7 @@ public class StaffController implements Initializable {
 	private void setupButtonVisibility() {
 		// Các nút mặc định hiển thị cho tất cả nhân viên
 		editProfileButton.setVisible(true);
+		okila.setVisible(false);
 
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
