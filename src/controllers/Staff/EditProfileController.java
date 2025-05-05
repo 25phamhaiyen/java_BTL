@@ -74,11 +74,19 @@ public class EditProfileController implements Initializable {
         
         // Phương pháp 2: Áp dụng class dựa trên kích thước màn hình khi khởi tạo
         // Lưu ý: Phương pháp này chỉ chạy một lần khi khởi tạo và không đáp ứng với thay đổi kích thước
+<<<<<<< HEAD
         mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 applyResponsiveLayout();
             }
         });
+=======
+//        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+//            if (newScene != null) {
+//                applyResponsiveLayout();
+//            }
+//        });
+>>>>>>> 2773cf554f3c3fbab619538b0c2a2f408bb79b30
     }
     
     /**
@@ -225,7 +233,10 @@ public class EditProfileController implements Initializable {
 
     @FXML
     private void handleBack(ActionEvent event) {
-        SceneSwitcher.switchScene("staff/staff_home.fxml");
+    	if(Session.getCurrentAccount().getRole().getRoleName().equals("ADMIN")) {
+    		SceneSwitcher.switchScene("admin/admin_home.fxml");
+    	}
+    	else {SceneSwitcher.switchScene("staff/staff_home.fxml");}
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

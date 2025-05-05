@@ -523,25 +523,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Trigger cập nhật điểm thưởng của khách hàng khi thanh toán hóa đơn
-DELIMITER $$
-CREATE TRIGGER trg_update_point_after_invoice
-AFTER UPDATE ON invoice
-FOR EACH ROW
-BEGIN
-    DECLARE v_customer_id INT;
-
-    IF NEW.status = 'COMPLETED' AND OLD.status != 'COMPLETED' THEN
-        SELECT customer_id INTO v_customer_id
-        FROM `order`
-        WHERE order_id = NEW.order_id;
-
-        UPDATE customer
-        SET point = point + FLOOR(NEW.total / 1000)
-        WHERE customer_id = v_customer_id;
-    END IF;
-END$$
-DELIMITER ;
 -- Tổng doanh thu
 DELIMITER $$
 CREATE PROCEDURE sp_get_total_revenue_week()

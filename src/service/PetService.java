@@ -15,6 +15,7 @@ import java.time.LocalDate; // Thêm import này
 import java.util.List;
 
 import enums.GenderEnum;
+import javafx.util.Callback;
 
 public class PetService {
 
@@ -141,8 +142,17 @@ public class PetService {
         PetTypeRepository petTypeRepo = new PetTypeRepository();
         return petTypeRepo.selectAll(); 
     }
+<<<<<<< HEAD
     
     public Pet getPetByCustomerId(int customerId) {
         return petRepository.getPetByCustomerId(customerId);
     }
 }
+=======
+    public List<Pet> findPetsByCustomerId(int customerId) {
+        return petRepository.getPetsByCustomerId(customerId);
+    }
+
+
+}
+>>>>>>> 2773cf554f3c3fbab619538b0c2a2f408bb79b30

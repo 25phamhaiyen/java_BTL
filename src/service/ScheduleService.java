@@ -421,6 +421,7 @@ public class ScheduleService {
         List<WorkSchedule> results = scheduleRepository.selectByCondition(whereClause, staffId, workDate, shift);
         return !results.isEmpty();
     }
+<<<<<<< HEAD
 
     /**
      * Kiểm tra ngày có thể đăng ký được không
@@ -440,4 +441,58 @@ public class ScheduleService {
         
         return true;
     }
+=======
+    
+
+    public void updateSchedule(int scheduleID, String name, String newNote) {
+        WorkScheduleRepository repository = WorkScheduleRepository.getInstance();
+        WorkSchedule schedule = repository.selectById(scheduleID);
+
+        if (schedule != null) {
+            schedule.setNote(newNote);
+            int result = repository.update(schedule);
+            if (result > 0) {
+                System.out.println("Cập nhật lịch thành công.");
+            } else {
+                System.err.println("Cập nhật lịch thất bại.");
+            }
+        } else {
+            System.err.println("Không tìm thấy lịch làm việc với ID: " + scheduleID);
+        }
+    }
+    public void addSchedule(WorkSchedule newSchedule) {
+        int result = WorkScheduleRepository.getInstance().insert(newSchedule);
+        if (result > 0) {
+            System.out.println("Thêm lịch làm việc thành công.");
+        } else {
+            System.err.println("Thêm lịch làm việc thất bại.");
+        }
+    }
+    public void deleteSchedule(int scheduleID) {
+        WorkScheduleRepository repository = WorkScheduleRepository.getInstance();
+        WorkSchedule schedule = repository.selectById(scheduleID);
+        if (schedule != null) {
+            int result = repository.delete(schedule);
+            if (result > 0) {
+                System.out.println("Xóa lịch làm việc thành công.");
+            } else {
+                System.err.println("Xóa lịch làm việc thất bại.");
+            }
+        } else {
+            System.err.println("Không tìm thấy lịch làm việc với ID: " + scheduleID);
+        }
+    }
+    public List<WorkSchedule> getWorkSchedulesByWeek(LocalDate startDate, LocalDate endDate) {
+        try {
+            // Gọi repository để lấy danh sách lịch làm việc trong khoảng thời gian từ startDate đến endDate
+            List<WorkSchedule> workSchedules = scheduleRepository.selectByDateRange(startDate, endDate);
+            System.err.println("Lấy lịch làm việc cho tuần từ " + startDate + " đến " + endDate + " thành công. Số lượng: " + workSchedules.size());
+            return workSchedules;
+        } catch (Exception e) {
+        	System.err.println("Lỗi khi lấy lịch làm việc theo tuần: " + e.getMessage());
+            return List.of(); // Trả về danh sách rỗng nếu có lỗi
+        }
+    }
+
+>>>>>>> 2773cf554f3c3fbab619538b0c2a2f408bb79b30
 }

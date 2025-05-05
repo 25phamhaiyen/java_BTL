@@ -14,6 +14,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ScrollPane?>
+
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="controllers.admin.ManageCustomerController"
@@ -67,12 +69,25 @@
             <HBox spacing="10"><Label text="Điểm TL:"/><TextField fx:id="txtLoyaltyPoints" promptText="Điểm" prefWidth="120"/></HBox>
 
             <!-- Thú cưng -->
-            <TextField fx:id="txtPetName" promptText="Tên thú cưng" prefWidth="250"/>
-            <ComboBox fx:id="cmbPetGender" promptText="Giới tính" prefWidth="120"/>
-            <ComboBox fx:id="cmbPetType" promptText="Giống loài" prefWidth="120"/>
-            <DatePicker fx:id="dpPetDob" promptText="Ngày sinh" prefWidth="250"/>
-            <TextField fx:id="txtPetWeight" promptText="Cân nặng (kg)" prefWidth="250"/>
-            <TextField fx:id="txtPetNote" promptText="Ghi chú" prefWidth="250"/>
+            <Label text="Danh sách thú cưng" styleClass="form-title" />
+	        <TableView fx:id="petTable" prefHeight="400" prefWidth="900">
+	            <columns>
+	                <TableColumn fx:id="petIdColumn" text="ID" visible="false" />
+	                <TableColumn fx:id="petNameColumn" text="Tên" prefWidth="200"/>
+	                <TableColumn fx:id="petGenderColumn" text="Giới tính" prefWidth="100"/>
+	                <TableColumn fx:id="petTypeColumn" text="Giống loài" prefWidth="300"/>
+	                <TableColumn fx:id="petDobColumn" text="Ngày sinh" prefWidth="300"/>
+	                <TableColumn fx:id="petWeightColumn" text="Cân nặng" prefWidth="100"/>
+	            </columns>
+	        </TableView>
+
+
+			<HBox spacing="10" alignment="CENTER">
+				<Button text="Thêm thú cưng" onAction="#handleShowPetForm" />
+				<Button text="Sửa thú cưng" onAction="#handleEditPet" />
+				<Button text="Xóa thú cưng" onAction="#handleDeletePet" />
+			</HBox>
+			
 
             <HBox spacing="10" alignment="CENTER">
                 <Button fx:id="saveButton" text="Lưu" onAction="#handleSaveCustomer"/>

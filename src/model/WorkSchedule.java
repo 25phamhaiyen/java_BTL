@@ -35,7 +35,22 @@ public class WorkSchedule {
         this.note = note;
     }
 
-    // Getters and Setters
+    public WorkSchedule(Staff staff, LocalDate workDate, Shift shift, String note) {
+    	this.staff = staff;
+        this.workDate = workDate;
+        this.shift = shift;
+        this.note = note;
+	}
+
+	public WorkSchedule(int scheduleID, Staff staff, LocalDate workDate, Shift shift, String note) {
+		this.scheduleID = scheduleID;
+		this.staff = staff;
+        this.workDate = workDate;
+        this.shift = shift;
+        this.note = note;
+	}
+
+	// Getters and Setters
     public int getScheduleID() {
         return scheduleID;
     }

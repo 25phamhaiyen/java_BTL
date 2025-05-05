@@ -96,6 +96,7 @@ public class MyScheduleController implements Initializable {
         }
 
         currentStaffId = currentStaff.getId();
+        dateLabel.setText("Lịch Làm Việc Của Bạn");
         staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
         positionLabel.setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
 

@@ -50,6 +50,7 @@ public class RoleChecker {
                                 permissionCode.equals("REGISTER_SHIFT") ||
                                 permissionCode.equals("REQUEST_LEAVE") ||
                                 permissionCode.equals("VIEW_INVOICE") ||
+                                permissionCode.equals("VIEW_BOOKING_ASSIGNED") ||
                                 permissionCode.equals("MANAGE_PAYMENT") ||
                                 permissionCode.equals("PRINT_RECEIPT") ||
                                 permissionCode.equals("CREATE_BOOKING") ||
