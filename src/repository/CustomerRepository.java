@@ -346,11 +346,29 @@ public class CustomerRepository implements IRepository<Customer> {
         return new Customer(personID, fullName, gender, phoneNumber, address, email, point, created_at);
     }
 
-    public int getMonthlyNewCustomers() {
-        String query = "SELECT COUNT(*) AS total_new_customers " +
-                       "FROM customer " +
-                       "WHERE MONTH(created_at) = MONTH(CURRENT_DATE) " +
-                       "AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+ // Lấy tổng số khách hàng mới theo từng đơn vị thời gian (WEEK, MONTH, YEAR)
+    public int getTotalNewCustomers(String timeUnit) {
+        String query = "";
+        
+        if (timeUnit.equals("WEEK")) {
+            // Truy vấn cho WEEK
+            query = "SELECT COUNT(*) AS total_new_customers " +
+                    "FROM customer " +
+                    "WHERE WEEK(created_at) = WEEK(CURRENT_DATE) " +
+                    "AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+        } else if (timeUnit.equals("MONTH")) {
+            // Truy vấn cho MONTH
+            query = "SELECT COUNT(*) AS total_new_customers " +
+                    "FROM customer " +
+                    "WHERE MONTH(created_at) = MONTH(CURRENT_DATE) " +
+                    "AND YEAR(created_at) = YEAR(CURRENT_DATE)";
+        } else if (timeUnit.equals("YEAR")) {
+            // Truy vấn cho YEAR
+            query = "SELECT COUNT(*) AS total_new_customers " +
+                    "FROM customer " +
+                    "WHERE YEAR(created_at) = YEAR(CURRENT_DATE)";
+        }
+
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -364,20 +382,42 @@ public class CustomerRepository implements IRepository<Customer> {
         return 0;
     }
 
+
+ // Lấy dữ liệu khách hàng theo từng đơn vị thời gian (WEEK, MONTH, YEAR)
+ // Lấy dữ liệu khách hàng theo từng đơn vị thời gian (WEEK, MONTH, YEAR)
     public XYChart.Series<String, Number> getCustomerData(String timeUnit) {
         String query = "";
+
         if (timeUnit.equals("WEEK")) {
-            query = "SELECT WEEK(created_at) AS time, COUNT(*) AS total_customers " +
+            // Lấy 4 tuần gần nhất
+            query = "SELECT"
+                    + "    CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK), '%d/%m'), ' - ', "
+                    + "           DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK) + INTERVAL 6 DAY, '%d/%m')) AS label, "
+                    + "    COUNT(c.customer_id) AS total_customers \r\n"
+                    + "FROM \r\n"
+                    + "    (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) AS weeks \r\n"
+                    + "LEFT JOIN  \r\n"
+                    + "    customer c \r\n"
+                    + "ON \r\n"
+                    + "    YEARWEEK(c.created_at, 1) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK), 1) \r\n"
+                    + "GROUP BY label \r\n"
+                    + "ORDER BY MIN(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK))\r\n";
+        }
+        else if (timeUnit.equals("MONTH")) {
+            // Lấy tháng từ 1 đến tháng hiện tại của năm hiện tại
+            query = "SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, COUNT(*) AS total_customers " +
                     "FROM customer " +
-                    "GROUP BY WEEK(created_at)";
-        } else if (timeUnit.equals("MONTH")) {
-            query = "SELECT MONTH(created_at) AS time, COUNT(*) AS total_customers " +
-                    "FROM customer " +
-                    "GROUP BY MONTH(created_at)";
+                    "WHERE YEAR(created_at) = YEAR(CURRENT_DATE) " +
+                    "GROUP BY YEAR(created_at), MONTH(created_at) " +
+                    "ORDER BY YEAR(created_at), MONTH(created_at)";
+
         } else if (timeUnit.equals("YEAR")) {
-            query = "SELECT YEAR(created_at) AS time, COUNT(*) AS total_customers " +
+            // Lấy 4 năm gần nhất
+            query = "SELECT YEAR(created_at) AS year, COUNT(*) AS total_customers " +
                     "FROM customer " +
-                    "GROUP BY YEAR(created_at)";
+                    "WHERE YEAR(created_at) >= YEAR(CURRENT_DATE) - 4 " +
+                    "GROUP BY YEAR(created_at) " +
+                    "ORDER BY YEAR(created_at)";
         }
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -386,8 +426,18 @@ public class CustomerRepository implements IRepository<Customer> {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                String time = resultSet.getString("time");
+                String time = "";
                 int totalCustomers = resultSet.getInt("total_customers");
+
+                if (timeUnit.equals("WEEK")) {
+                    time = resultSet.getString("label");
+                } else if (timeUnit.equals("MONTH")) {
+                    int year = resultSet.getInt("year");
+                    int month = resultSet.getInt("month");
+                    time = String.format("%02d/%d", month, year);
+                } else if (timeUnit.equals("YEAR")) {
+                    time = String.valueOf(resultSet.getInt("year"));
+                }
                 series.getData().add(new XYChart.Data<>(time, totalCustomers));
             }
         } catch (SQLException e) {
@@ -395,4 +445,47 @@ public class CustomerRepository implements IRepository<Customer> {
         }
         return series;
     }
+
+    public int getOrderCountByCustomerId(int customerId) {
+        String sql = "SELECT COUNT(*) FROM `order` WHERE customer_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);  // Trả về số lượng đơn hàng
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;  // Nếu không tìm thấy, trả về 0
+    }
+
+    // Lấy tổng số khách hàng theo từng đơn vị thời gian (WEEK, MONTH, YEAR)
+    public int getTotalCustomers(String timeUnit) {
+        String procedureName = switch (timeUnit) {
+            case "WEEK" -> "sp_get_total_customers_week";
+            case "MONTH" -> "sp_get_total_customers_month";
+            case "YEAR" -> "sp_get_total_customers_year";
+            default -> null;
+        };
+
+        if (procedureName == null) return 0;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL " + procedureName + "()}");
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+
 }

@@ -16,7 +16,7 @@
                 <ImageView fitWidth="40" fitHeight="40">
                     <Image url="@/images/logo.png"/>
                 </ImageView>
-                <Label fx:id="lblLogo" text="BestPet" styleClass="logo-text"/>
+                <Label fx:id="lblLogo" text="BestPets" styleClass="logo-text"/>
             </HBox>
 
             <HBox fx:id="btnAccountManagement" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
@@ -31,6 +31,13 @@
                     <Image url="@/images/employee.png"/>
                 </ImageView>
                 <Label text="Quản lý nhân viên"/>
+            </HBox>
+            
+            <HBox fx:id="btnCustomerManagement" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitWidth="24" fitHeight="24">
+                    <Image url="@/images/customer.png"/>
+                </ImageView>
+                <Label text="Quản lý khách hàng"/>
             </HBox>
 
             <HBox fx:id="btnCreateWorkSchedule" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
@@ -51,7 +58,21 @@
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/dashboard.png"/>
                 </ImageView>
-                <Label text="Dashboard chi tiết"/>
+                <Label text="Thống kê chung"/>
+            </HBox>
+            
+            <HBox fx:id="btnEditProfile" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitWidth="24" fitHeight="24">
+                    <Image url="@/images/profile.png"/>
+                </ImageView>
+                <Label text="Hồ sơ cá nhân"/>
+            </HBox>
+            
+            <HBox fx:id="btnLogout" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitWidth="24" fitHeight="24">
+                    <Image url="@/images/logout.png"/>
+                </ImageView>
+                <Label text="Đăng xuất"/>
             </HBox>
         </VBox>
     </left>

@@ -1,0 +1,87 @@
+/* Đặt toàn bộ bố cục căn giữa */
+VBox {
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+/* Tiêu đề */
+.header-label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d9822b; /* cam đậm */
+}
+
+/* Ô tìm kiếm */
+TextField {
+    -fx-pref-width: 350;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #f2a541;
+    -fx-border-width: 1.5;
+    -fx-background-color: #fffaf2;
+}
+
+/* Nút chung */
+Button {
+    -fx-background-color: #f2a541;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.2), 2, 0, 1, 1);
+}
+
+/* Nút hover */
+Button:hover {
+    -fx-background-color: #ffbf47;
+}
+
+/* Nút khi được nhấn */
+Button:pressed {
+    -fx-background-color: #e69500;
+}
+
+/* Bảng danh sách nhân viên */
+TableView {
+    -fx-border-color: #f2a541;
+    -fx-border-radius: 5;
+    -fx-table-cell-border-color: #f2f2f2;
+    -fx-background-color: #fffaf2;
+}
+
+/* Cột bảng */
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+/* Dòng bảng: màu xen kẽ */
+.table-row-cell:odd {
+    -fx-background-color: #fff5e6;
+}
+.table-row-cell:even {
+    -fx-background-color: #fffaf2;
+}
+
+/* Khi hover vào dòng */
+.table-row-cell:hover {
+    -fx-background-color: #ffe3b3;
+}
+
+/* Khi chọn dòng */
+.table-row-cell:filled:selected {
+    -fx-background-color: #ffd580;
+    -fx-text-fill: black;
+}
+
+/* Label mặc định */
+Label {
+    -fx-font-size: 14px;
+}
+
+/* Căn giữa các cột */
+.table-cell {
+    -fx-alignment: center;
+}

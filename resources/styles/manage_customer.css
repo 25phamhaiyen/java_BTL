@@ -1,0 +1,150 @@
+/* General styling for the entire VBox */
+.vbox {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 20;
+}
+
+/* Title */
+.header-label {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6f00;  /* Orange color */
+    -fx-padding: 10;
+}
+
+/* TableView styling */
+.table-view {
+    -fx-background-color: #fff;
+    -fx-border-color: #ff6f00; /* Border color */
+    -fx-border-width: 2px;
+    -fx-alignment: center;
+    -fx-selection-bar: #ff6f00; /* Highlight color when selecting a row */
+}
+
+.table-view .table-column {
+    -fx-alignment: center;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+
+/* Row highlighting on hover */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #ffedcc; /* Light orange when hovered */
+}
+
+/* Table header style */
+.table-view .column-header {
+    -fx-background-color: #ff6f00;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #ff6f00; /* Orange color */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #ff8f1a; /* Darker orange on hover */
+}
+
+.button:pressed {
+    -fx-background-color: #ff3d00; /* Even darker on click */
+}
+
+/* Input fields (TextFields, ComboBoxes, etc.) */
+.text-field, .combo-box, .date-picker {
+    -fx-background-color: #fff;
+    -fx-border-color: #ff6f00;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 250px;
+    -fx-cursor: text;
+}
+
+/* Focused input fields */
+.text-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #ff6f00;
+}
+
+/* Search TextField */
+#searchTextField {
+    -fx-background-color: #fff;
+    -fx-border-color: #ff6f00;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 350px;
+}
+
+/* StackPane settings for switching between form and table */
+.stack-pane {
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+/* Form Box */
+#formBox {
+    -fx-background-color: #f1f1f1;
+    -fx-border-radius: 10px;
+    -fx-border-color: #ff6f00;
+    -fx-border-width: 2px;
+    -fx-padding: 20;
+}
+
+#formBox .form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6f00;
+}
+
+/* Form Fields */
+#formBox .text-field, #formBox .combo-box, #formBox .date-picker {
+    -fx-font-size: 14px;
+    -fx-pref-width: 250px;
+    -fx-padding: 10px;
+    -fx-background-color: #fff;
+    -fx-border-color: #ff6f00;
+    -fx-border-width: 2px;
+}
+
+/* HBox container for form buttons */
+#formBox .button {
+    -fx-padding: 10px 20px;
+    -fx-background-color: #ff6f00;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+
+/* Cancel button */
+#btnCancel {
+    -fx-background-color: #ff3d00;
+}
+
+/* HBox spacing */
+.hbox {
+    -fx-spacing: 10;
+}
+
+/* Additional styling for combo boxes and date pickers */
+.combo-box, .date-picker {
+    -fx-background-color: #fff;
+    -fx-border-color: #ff6f00;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+/* Hover effect on TableView row */
+.table-view .table-row-cell:hover {
+    -fx-background-color: #ffedcc; /* Light orange color when hover over row */
+}
+

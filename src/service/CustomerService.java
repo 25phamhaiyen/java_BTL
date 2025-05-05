@@ -116,5 +116,14 @@ public class CustomerService {
 			throw new BusinessException("Lỗi khi xóa tất cả khách hàng: " + e.getMessage(), e);
 		}
 	}
+	
+	public int getOrderCountByCustomerId(int customerId) {
+		Customer customer = customerRepository.selectById(customerId);
+		if (customer == null) {
+			throw new BusinessException("Không tìm thấy khách hàng với ID: " + customerId);
+		}
+		return customerRepository.getOrderCountByCustomerId(customerId);
+	}
+
 
 }

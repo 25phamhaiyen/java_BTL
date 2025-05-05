@@ -782,7 +782,7 @@ public class InvoiceViewController implements Initializable {
             TextField amountPaidField = new TextField();
             amountPaidField.setText(String.format("%,.0f", amountPaid[0]));
             amountPaidField.setPrefWidth(120);
-
+			amountPaidField.setPromptText("Nhập tiền khách trả");
             // Chỉ cho phép nhập khi thanh toán CASH và đang ở trạng thái PENDING
             boolean isCash = "CASH".equals(paymentMethod[0]);
             boolean isPending = invoice.getStatus() == StatusEnum.PENDING;

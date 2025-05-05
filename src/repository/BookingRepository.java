@@ -1,5 +1,6 @@
 package repository;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -308,34 +309,95 @@ public class BookingRepository implements IRepository<Booking> {
     }
 
     public XYChart.Series<String, Number> getBookingData(String timeUnit) {
-        String query = "";
-        if (timeUnit.equals("WEEK")) {
-            query = "SELECT WEEK(booking_time) AS time, COUNT(*) AS total_bookings " +
-                    "FROM booking " +
-                    "GROUP BY WEEK(booking_time)";
-        } else if (timeUnit.equals("MONTH")) {
-            query = "SELECT MONTH(booking_time) AS time, COUNT(*) AS total_bookings " +
-                    "FROM booking " +
-                    "GROUP BY MONTH(booking_time)";
-        } else if (timeUnit.equals("YEAR")) {
-            query = "SELECT YEAR(booking_time) AS time, COUNT(*) AS total_bookings " +
-                    "FROM booking " +
-                    "GROUP BY YEAR(booking_time)";
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        String sql = "";
+
+        switch (timeUnit.toUpperCase()) {
+            case "WEEK":
+                sql = """
+                    SELECT
+                        CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK), '%d/%m'),
+                               ' - ',
+                               DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK) + INTERVAL 6 DAY, '%d/%m')) AS label,
+                        COUNT(b.booking_id) AS total_bookings
+                    FROM (
+                        SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+                    ) AS weeks
+                    LEFT JOIN booking b
+                        ON b.booking_time >= DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK)
+                        AND b.booking_time < DATE_SUB(CURDATE(), INTERVAL (weeks.n - 2) WEEK)
+                    GROUP BY label
+                    ORDER BY MIN(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK))
+                    """;
+                break;
+
+            case "MONTH":
+                sql = """
+                    SELECT
+                        DATE_FORMAT(booking_time, '%m/%Y') AS label,
+                        COUNT(*) AS total_bookings
+                    FROM booking
+                    WHERE YEAR(booking_time) = YEAR(CURDATE())
+                    GROUP BY label
+                    ORDER BY STR_TO_DATE(label, '%m/%Y')
+                    """;
+                break;
+
+            case "YEAR":
+                sql = """
+                    SELECT
+                        YEAR(booking_time) AS label,
+                        COUNT(*) AS total_bookings
+                    FROM booking
+                    WHERE YEAR(booking_time) >= YEAR(CURDATE()) - 3
+                    GROUP BY label
+                    ORDER BY label
+                    """;
+                break;
+
+            default:
+                return series;
         }
 
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
         try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                String time = resultSet.getString("time");
+                String label = resultSet.getString("label");
                 int totalBookings = resultSet.getInt("total_bookings");
-                series.getData().add(new XYChart.Data<>(time, totalBookings));
+                series.getData().add(new XYChart.Data<>(label, totalBookings));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return series;
+    }
+
+    
+    public int getTotalBookings(String timeUnit) {
+        String procedureName = switch (timeUnit) {
+            case "WEEK" -> "sp_get_total_bookings_week";
+            case "MONTH" -> "sp_get_total_bookings_month";
+            case "YEAR" -> "sp_get_total_bookings_year";
+            default -> null;
+        };
+
+        if (procedureName == null) return 0;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             CallableStatement stmt = conn.prepareCall("{CALL " + procedureName + "()}");
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }
