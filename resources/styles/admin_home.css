@@ -39,3 +39,6 @@
     -fx-font-size: 24px;
     -fx-text-fill: #333;
 }
+.sidebar-active {
+    -fx-background-color: linear-gradient(to bottom, #FF5722, #FF9800); 
+}

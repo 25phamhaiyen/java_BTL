@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="acaf5310-8073-4af9-a851-3f4f422f6c38" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/CashierDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/CashierDashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/InvoiceDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/InvoiceDetailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/SceneSwitcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/SceneSwitcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/admin/ServiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/admin/ServiceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/admin/StaffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/admin/StaffController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/customer/BookAppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/customer/BookAppointmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/customer/CustomerDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/customer/CustomerDashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/customer/ViewProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/customer/ViewProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/enums/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums/TypeOrder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exception/AccountException.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/exception/AccountException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exception/BusinessException.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/exception/BusinessException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frontend/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/frontend/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Invoice.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Invoice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/OrderDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/OrderDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/InvoiceDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/OrderDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/OrderDetailDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/ServiceDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/TypeServiceDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/BookingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/InvoiceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/InvoiceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/OrderDetailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/OrderDetailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/TestInvoiceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/TestInvoiceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testAccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testAccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testCustomerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testCustomerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testHappenStatusDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testHappenStatusDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testJDBC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testJDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testJDBC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testOrderDetailDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testOrderDetailDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testOrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testOrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testPaymentStatusRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testPaymentStatusRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testPetRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testPetRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testRoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testRoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testServiceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testServiceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testStaffRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testStaffRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testTypePetRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testTypePetRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/testTypeServiceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/testTypeServiceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/DatabaseConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/DatabaseConnection.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2wMednWQTmBSFxQxe8eIE736rgM" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;staff__home__Khang&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/BTL_JAVA/java_BTL&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\BTL_JAVA\java_BTL\src\view" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="frontend.Main" />
+      <module name="java_BTL" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="acaf5310-8073-4af9-a851-3f4f422f6c38" name="Changes" comment="" />
+      <created>1745855994117</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745855994117</updated>
+    </task>
+    <servers />
+  </component>
+</project>

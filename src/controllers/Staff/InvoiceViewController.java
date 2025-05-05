@@ -1244,15 +1244,15 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void goToHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/staff_home.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) homeButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+            System.err.println("Lỗi khi chuyển về trang chủ: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể trở về trang chủ",
                     "Đã xảy ra lỗi: " + e.getMessage());
         }
     }

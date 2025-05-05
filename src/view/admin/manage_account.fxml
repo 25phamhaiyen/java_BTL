@@ -32,9 +32,9 @@
                 <columns>
                     <TableColumn fx:id="colAccountId" prefWidth="100" text="Account ID" />
                     <TableColumn fx:id="colUsername" prefWidth="150" text="Username" />
-                    <TableColumn fx:id="colRole" prefWidth="150" text="Role" />
-                    <TableColumn fx:id="colActive" prefWidth="150" text="Active" />
-                    <TableColumn fx:id="colPermissions" prefWidth="750" text="Quyền" />
+                    <TableColumn fx:id="colRole" prefWidth="180" text="Role" />
+                    <TableColumn fx:id="colActive" prefWidth="170" text="Active" />
+                    <TableColumn fx:id="colPermissions" prefWidth="850" text="Quyền" />
                 </columns>
             </TableView>
         </VBox>

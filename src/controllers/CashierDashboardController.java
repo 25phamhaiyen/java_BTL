@@ -1,4 +1,4 @@
-// src/frontend1/controller/CashierDashboardController.java
+
 package controllers;
 
 import java.time.LocalDateTime;
@@ -53,14 +53,6 @@ public class CashierDashboardController {
         System.out.println("Mở tra cứu khách hàng...");
     }
 
-    @FXML
-    private void handleBook() {
-        // Mở popup đặt lịch
-        QuickBookingDialogg dialog = new QuickBookingDialogg();
-        dialog.show();
-        // Tải lại danh sách lịch hẹn sau khi đặt lịch
-        loadBookings();
-    }
 
     @FXML
     private void handlePay() {
@@ -89,3 +81,4 @@ public class CashierDashboardController {
         return "Nguyen Van A";
     }
 }
+

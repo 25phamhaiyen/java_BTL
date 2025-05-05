@@ -84,13 +84,9 @@ public class LoginController {
                 SceneSwitcher.switchScene("admin/admin_home.fxml");
                 break;
             case "STAFF_CARE":
-                SceneSwitcher.switchScene("staff/my_schedule.fxml");
-                break;
             case "STAFF_CASHIER":
-                SceneSwitcher.switchScene("staff/invoice_view.fxml");
-                break;
             case "STAFF_RECEPTION":
-                SceneSwitcher.switchScene("staff/booking_view.fxml");
+                SceneSwitcher.switchScene("staff/staff_home.fxml");
                 break;
             default:
                 // Default route to dashboard for unknown roles

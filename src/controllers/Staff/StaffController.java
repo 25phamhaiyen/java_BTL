@@ -203,117 +203,117 @@ public class StaffController implements Initializable {
         }
     }
 
-    private void setupButtonVisibility() {
-        // Các nút mặc định hiển thị cho tất cả nhân viên
-        editProfileButton.setVisible(true);
+	private void setupButtonVisibility() {
+		// Các nút mặc định hiển thị cho tất cả nhân viên
+		editProfileButton.setVisible(true);
 
-        // Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
-        myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
-        bookingViewButton.setVisible(
-                RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED") || RoleChecker.hasPermission("CREATE_BOOKING"));
-        invoiceViewButton
-                .setVisible(RoleChecker.hasPermission("VIEW_INVOICE") || RoleChecker.hasPermission("MANAGE_PAYMENT"));
-        promotionButton.setVisible(RoleChecker.hasPermission("APPLY_PROMOTION"));
-    }
+		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
+		myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
+		bookingViewButton.setVisible(
+				RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED"));
+		invoiceViewButton
+				.setVisible(RoleChecker.hasPermission("VIEW_INVOICE"));
+	}
 
-    @FXML
-    private void showMySchedule(ActionEvent event) {
-        try {
-            if (!RoleChecker.hasPermission("VIEW_SCHEDULE")) {
-                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-                        "Bạn không có quyền xem lịch làm việc.");
-                return;
-            }
+	@FXML
+	private void showMySchedule(ActionEvent event) {
+		try {
+			if (!RoleChecker.hasPermission("VIEW_SCHEDULE")) {
+				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
+						"Bạn không có quyền xem lịch làm việc.");
+				return;
+			}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/my_schedule.fxml"));
-            Parent view = loader.load();
-            mainContainer.setCenter(view);
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình lịch làm việc", e.getMessage());
-        }
-    }
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/my_schedule.fxml"));
+			Parent view = loader.load();
+			mainContainer.setCenter(view);
+		} catch (IOException e) {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình lịch làm việc", e.getMessage());
+		}
+	}
 
-    @FXML
-    private void showBookingView(ActionEvent event) {
-        try {
-            if (!RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED") && !RoleChecker.hasPermission("CREATE_BOOKING")) {
-                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-                        "Bạn không có quyền xem danh sách đặt lịch.");
-                return;
-            }
+	@FXML
+	private void showBookingView(ActionEvent event) {
+		try {
+			if (!RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED") ) {
+				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
+						"Bạn không có quyền xem danh sách đặt lịch.");
+				return;
+			}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/booking_view.fxml"));
-            Parent view = loader.load();
-            mainContainer.setCenter(view);
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình đặt lịch", e.getMessage());
-        }
-    }
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/booking_view.fxml"));
+			Parent view = loader.load();
+			mainContainer.setCenter(view);
+		} catch (IOException e) {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình đặt lịch", e.getMessage());
+		}
+	}
 
-    @FXML
-    private void showInvoiceView(ActionEvent event) {
-        try {
-            if (!RoleChecker.hasPermission("VIEW_INVOICE") && !RoleChecker.hasPermission("MANAGE_PAYMENT")) {
-                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền", "Bạn không có quyền xem hóa đơn.");
-                return;
-            }
+	@FXML
+	private void showInvoiceView(ActionEvent event) {
+		try {
+			if (!RoleChecker.hasPermission("VIEW_INVOICE")) {
+				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền", "Bạn không có quyền xem hóa đơn.");
+				return;
+			}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/invoice_view.fxml"));
-            Parent view = loader.load();
-            mainContainer.setCenter(view);
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình hóa đơn", e.getMessage());
-        }
-    }
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/invoice_view.fxml"));
+			Parent view = loader.load();
+			mainContainer.setCenter(view);
+		} catch (IOException e) {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình hóa đơn", e.getMessage());
+		}
+	}
 
-    @FXML
-    private void showPromotionView(ActionEvent event) {
-        try {
-            if (!RoleChecker.hasPermission("APPLY_PROMOTION")) {
-                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-                        "Bạn không có quyền áp dụng khuyến mãi.");
-                return;
-            }
+// k sử dụng nữa, đã gộp dô thanh toán
+//	@FXML
+//	private void showPromotionView(ActionEvent event) {
+//		try {
+//			if (!RoleChecker.hasPermission("APPLY_PROMOTION")) {
+//				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
+//						"Bạn không có quyền áp dụng khuyến mãi.");
+//				return;
+//			}
+//
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/promotion_apply.fxml"));
+//			Parent view = loader.load();
+//			mainContainer.setCenter(view);
+//		} catch (IOException e) {
+//			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình khuyến mãi", e.getMessage());
+//		}
+//	}
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/promotion_apply.fxml"));
-            Parent view = loader.load();
-            mainContainer.setCenter(view);
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình khuyến mãi", e.getMessage());
-        }
-    }
+	@FXML
+	private void showEditProfile(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/edit_profile.fxml"));
+			Parent view = loader.load();
+			mainContainer.setCenter(view);
+		} catch (IOException e) {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chỉnh sửa hồ sơ", e.getMessage());
+		}
+	}
 
-    @FXML
-    private void showEditProfile(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/edit_profile.fxml"));
-            Parent view = loader.load();
-            mainContainer.setCenter(view);
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chỉnh sửa hồ sơ", e.getMessage());
-        }
-    }
+	@FXML
+	private void logout(ActionEvent event) {
+		try {
+			// Xóa thông tin phiên đăng nhập
+			Session.clearSession();
 
-    @FXML
-    private void logout(ActionEvent event) {
-        try {
-            // Xóa thông tin phiên đăng nhập
-            Session.clearSession();
+			// Chuyển về màn hình đăng nhập
+			Stage currentStage = (Stage) logoutButton.getScene().getWindow();
+			SceneSwitcher.switchToLoginScene(currentStage);
 
-            // Chuyển về màn hình đăng nhập
-            Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-            SceneSwitcher.switchToLoginScene(currentStage);
+		} catch (Exception e) {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đăng xuất", e.getMessage());
+		}
+	}
 
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đăng xuất", e.getMessage());
-        }
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+	private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait();
+	}
 }

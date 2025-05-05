@@ -29,15 +29,19 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-	        //  Lấy giá từ bảng service
+	        // Lấy giá và trạng thái từ bảng service
 	        ServiceRepository serviceRepository = ServiceRepository.getInstance();
 	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceId());
 	        if (service == null) {
-	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
+	            System.err.println("Lỗi: Không tìm thấy dịch vụ!");
+	            return 0;
+	        }
+	        // Kiểm tra trạng thái active
+	        if (!service.isActive()) {
+	            System.err.println("Lỗi: Dịch vụ " + service.getName() + " đã ngừng hoạt động!");
 	            return 0;
 	        }
 	        BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
-
 
 	        pstmt.setInt(1, orderDetail.getOrder().getOrderId());
 	        pstmt.setInt(2, orderDetail.getService().getServiceId());
@@ -64,23 +68,28 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
     @Override
     public int update(OrderDetail orderDetail) {
         String sql = "UPDATE order_detail SET service_id=?, quantity=?, price=? WHERE order_detail_id=?";
-        
+
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-        //  Lấy giá từ bảng service
-	        ServiceRepository serviceRepository = ServiceRepository.getInstance();
-	        Service service = serviceRepository.selectById(orderDetail.getService().getServiceId());
-	        if (service == null) {
-	            System.err.println(" Lỗi: Không tìm thấy dịch vụ!");
-	            return 0;
-	        }
-	        BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
+            // Lấy giá và trạng thái từ bảng service
+            ServiceRepository serviceRepository = ServiceRepository.getInstance();
+            Service service = serviceRepository.selectById(orderDetail.getService().getServiceId());
+            if (service == null) {
+                System.err.println("Lỗi: Không tìm thấy dịch vụ!");
+                return 0;
+            }
+            // Kiểm tra trạng thái active
+            if (!service.isActive()) {
+                System.err.println("Lỗi: Dịch vụ " + service.getName() + " đã ngừng hoạt động!");
+                return 0;
+            }
+            BigDecimal unitPrice = BigDecimal.valueOf(service.getPrice());
 
-	        pstmt.setInt(1, orderDetail.getService().getServiceId());
+            pstmt.setInt(1, orderDetail.getService().getServiceId());
             pstmt.setInt(2, orderDetail.getQuantity());
             pstmt.setBigDecimal(3, unitPrice);
             pstmt.setInt(4, orderDetail.getOrderDetailId());
-            
+
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 // Cập nhật tổng tiền đơn hàng sau khi sửa
@@ -92,8 +101,6 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
             return 0;
         }
     }
-
-
     @Override
     public int delete(OrderDetail orderDetail) {
         String sql = "DELETE FROM order_detail WHERE order_detail_id=?";
@@ -208,8 +215,8 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
         List<Service> services = new ArrayList<>();
         String sql = "SELECT s.* FROM service s " +
                      "JOIN order_detail od ON s.service_id = od.service_id " +
-                     "WHERE od.order_id = ?";
-        
+                     "WHERE od.order_id = ? AND s.active = true";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, orderId);
@@ -228,10 +235,9 @@ public class OrderDetailRepository implements IRepository<OrderDetail> {
         } catch (SQLException e) {
             System.err.println("Lỗi khi lấy danh sách dịch vụ theo mã đơn hàng: " + e.getMessage());
         }
-        
+
         return services;
     }
-
     /**
      * Calcula el precio total de los servicios de un pedido
      * @param orderId El ID del pedido

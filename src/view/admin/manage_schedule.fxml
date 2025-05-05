@@ -77,4 +77,7 @@ stylesheets="@/styles/style.css">
          </padding>
       </GridPane>
    </center>
+   <bottom>
+   	<Button fx:id="exportPdfButton" text="Xuất PDF" onAction="#exportScheduleToPdf" />
+   </bottom>
 </BorderPane>

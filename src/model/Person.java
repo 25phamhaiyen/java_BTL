@@ -11,6 +11,11 @@ public class Person {
     protected String email; 
 
 	public Person() {}
+	public Person(int id) {
+		super();
+		this.id = id;
+		
+	}
 
     
 	public Person(int id, String fullName, GenderEnum gender, String phone, String address, String email) {

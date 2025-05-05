@@ -3,15 +3,15 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="lib"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-22">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/itextpdf-5.5.13.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/jbcrypt-0.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Admin/jfoenix-9.0.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
+	<classpathentry kind="lib" path="D:/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

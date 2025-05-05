@@ -7,10 +7,14 @@ import controllers.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import model.Account;
 import model.Staff;
 import service.AuthService;
@@ -19,123 +23,216 @@ import utils.Session;
 
 public class EditProfileController implements Initializable {
 
-	@FXML
-	private TextField fullNameField;
+    @FXML private TextField fullNameField;
+    @FXML private TextField emailField;
+    @FXML private TextField phoneField;
+    @FXML private TextField addressField;
+    
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmPasswordField;
+    
+    @FXML private Button updateProfileBtn;
+    @FXML private Button backButton;
+    @FXML private Button changePasswordBtn;
+    @FXML private Button backToProfileBtn;
+    
+    @FXML private VBox profileForm;
+    @FXML private VBox passwordForm;
+    @FXML private VBox mainContainer;
 
-	@FXML
-	private TextField emailField;
+    private StaffService staffService;
+    private AuthService authService;
 
-	@FXML
-	private TextField phoneField;
+    public EditProfileController() {
+        staffService = new StaffService();
+        authService = new AuthService();
+    }
 
-	@FXML
-	private PasswordField passwordField;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Tải thông tin hồ sơ từ cơ sở dữ liệu
+        loadProfile();
+        
+        // Thiết lập responsive design
+        setupResponsive();
+    }
 
-	@FXML
-	private PasswordField confirmPasswordField;
+    /**
+     * Thiết lập responsive cho giao diện
+     */
+    private void setupResponsive() {
+        // Phương pháp 1: Lắng nghe sự thay đổi kích thước scene
+        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.widthProperty().addListener((obs2, oldWidth, newWidth) -> {
+                    updateResponsiveClasses(newScene);
+                });
+                updateResponsiveClasses(newScene);
+            }
+        });
+        
+        // Phương pháp 2: Áp dụng class dựa trên kích thước màn hình khi khởi tạo
+        // Lưu ý: Phương pháp này chỉ chạy một lần khi khởi tạo và không đáp ứng với thay đổi kích thước
+        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                applyResponsiveLayout();
+            }
+        });
+    }
+    
+    /**
+     * Áp dụng bố cục đáp ứng dựa trên kích thước màn hình
+     */
+    private void applyResponsiveLayout() {
+        // Lấy kích thước màn hình
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        
+        // Lấy root scene để áp dụng style class
+        Parent root = mainContainer.getScene().getRoot();
+        
+        // Xóa class cũ
+        root.getStyleClass().removeAll("small-screen", "large-screen");
+        
+        // Áp dụng class dựa trên kích thước màn hình
+        if (screenWidth < 1024) {
+            root.getStyleClass().add("small-screen");
+        } else if (screenWidth >= 1920) {
+            root.getStyleClass().add("large-screen");
+        }
+    }
+    
+    /**
+     * Cập nhật các class responsive theo kích thước scene
+     */
+    private void updateResponsiveClasses(Scene scene) {
+        double width = scene.getWidth();
+        Parent root = scene.getRoot();
+        
+        // Xóa class cũ
+        root.getStyleClass().removeAll("small-screen", "large-screen");
+        
+        // Thêm class mới dựa trên kích thước
+        if (width < 800) {
+            root.getStyleClass().add("small-screen");
+        } else if (width >= 1600) {
+            root.getStyleClass().add("large-screen");
+        }
+    }
 
-	@FXML
-	private Button updateProfileBtn;
-	
-	@FXML
-	private Button backButton;
-	
-	@FXML
-	private Button changePasswordBtn;
+    /**
+     * Tải thông tin hồ sơ từ cơ sở dữ liệu
+     */
+    private void loadProfile() {
+        Session.getInstance();
+        Account account = Session.getCurrentAccount();
+        if (account != null) {
+            Staff staff = staffService.getStaffByAccountID(account.getAccountID());
+            if (staff != null) {
+                fullNameField.setText(staff.getFullName());
+                emailField.setText(staff.getEmail());
+                phoneField.setText(staff.getPhone());
+                addressField.setText(staff.getAddress());
+            }
+        }
+    }
 
-	private StaffService staffService;
-	private AuthService authService;
+    @FXML
+    private void handleUpdateProfile(ActionEvent event) {
+        try {
+            Session.getInstance();
+            Account account = Session.getCurrentAccount();
+            Staff staff = staffService.getStaffByAccountID(account.getAccountID());
 
-	public EditProfileController() {
-		staffService = new StaffService();
-		authService = new AuthService();
-	}
+            // Set updated values
+            staff.setFullName(fullNameField.getText());
+            staff.setEmail(emailField.getText());
+            staff.setPhone(phoneField.getText());
+            staff.setAddress(addressField.getText());
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		loadProfile();
-	}
+            // Validate input before updating
+            staffService.validatePerson(staff);
 
-	private void loadProfile() {
-		Session.getInstance();
-		Account account = Session.getCurrentAccount();
-		if (account != null) {
-			Staff staff = staffService.getStaffByAccountID(account.getAccountID());
-			if (staff != null) {
-				fullNameField.setText(staff.getFullName());
-				emailField.setText(staff.getEmail());
-				phoneField.setText(staff.getPhone());
-			}
-		}
-	}
+            // Update staff
+            boolean success = staffService.updateStaff(staff);
 
-	// Update handleUpdateProfile() method to properly set fields
-	@FXML
-	private void handleUpdateProfile(ActionEvent event) {
-		try {
-			Session.getInstance();
-			Account account = Session.getCurrentAccount();
-			Staff staff = staffService.getStaffByAccountID(account.getAccountID());
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Cập nhật hồ sơ thành công!");
+            } else {
+                throw new Exception("Cập nhật không thành công");
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Cập nhật thất bại: " + e.getMessage());
+        }
+    }
 
-			// Set updated values
-			staff.setFullName(fullNameField.getText());
-			staff.setEmail(emailField.getText());
-			staff.setPhone(phoneField.getText());
+    @FXML
+    private void handleChangePasswordForm(ActionEvent event) {
+        profileForm.setVisible(false);
+        profileForm.setManaged(false);
+        passwordForm.setVisible(true);
+        passwordForm.setManaged(true);
+        
+        // Clear các field mật khẩu
+        currentPasswordField.clear();
+        newPasswordField.clear();
+        confirmPasswordField.clear();
+    }
 
-			// Validate input before updating
-			staffService.validatePerson(staff);
+    @FXML
+    private void handleBackToProfile(ActionEvent event) {
+        passwordForm.setVisible(false);
+        passwordForm.setManaged(false);
+        profileForm.setVisible(true);
+        profileForm.setManaged(true);
+    }
 
-			// Update staff
-			boolean success = staffService.updateStaff(staff);
+    @FXML
+    private void handleChangePassword(ActionEvent event) {
+        String currentPassword = currentPasswordField.getText();
+        String newPassword = newPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
 
-			if (success) {
-				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Thành công");
-				alert.setContentText("Cập nhật hồ sơ thành công!");
-				alert.showAndWait();
-			} else {
-				throw new Exception("Cập nhật không thành công");
-			}
-		} catch (Exception e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Lỗi");
-			alert.setContentText("Cập nhật thất bại: " + e.getMessage());
-			alert.showAndWait();
-		}
-	}
+        // Kiểm tra mật khẩu mới và xác nhận có khớp không
+        if (!newPassword.equals(confirmPassword)) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu xác nhận không khớp!");
+            return;
+        }
 
-	@FXML
-	private void handleChangePassword(ActionEvent event) {
-		String password = passwordField.getText();
-		String confirmPassword = confirmPasswordField.getText();
+        try {
+            Session.getInstance();
+            Account account = Session.getCurrentAccount();
+            
+            // Kiểm tra mật khẩu hiện tại
+            if (!authService.verifyPassword(account.getAccountID(), currentPassword)) {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu hiện tại không đúng!");
+                return;
+            }
 
-		if (!password.equals(confirmPassword)) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Lỗi");
-			alert.setContentText("Mật khẩu xác nhận không khớp!");
-			alert.showAndWait();
-			return;
-		}
+            // Đổi mật khẩu
+            boolean success = authService.changePassword(account.getAccountID(), newPassword);
 
-		try {
-			Session.getInstance();
-			Account account = Session.getCurrentAccount();
-			authService.changePassword(account.getAccountID(), password);
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi mật khẩu thành công!");
+                handleBackToProfile(null); // Quay lại form profile
+            } else {
+                throw new Exception("Đổi mật khẩu thất bại");
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Đổi mật khẩu thất bại: " + e.getMessage());
+        }
+    }
 
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Thành công");
-			alert.setContentText("Đổi mật khẩu thành công!");
-			alert.showAndWait();
-		} catch (Exception e) {
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Lỗi");
-			alert.setContentText("Đổi mật khẩu thất bại: " + e.getMessage());
-			alert.showAndWait();
-		}
-	}
-	@FXML
-	private void handleBack(ActionEvent event) {
-	    // Quay lại màn trước, ví dụ như:
-	    SceneSwitcher.switchScene("staff/staff_home.fxml");
-	}
+    @FXML
+    private void handleBack(ActionEvent event) {
+        SceneSwitcher.switchScene("staff/staff_home.fxml");
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

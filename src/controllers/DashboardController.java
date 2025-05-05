@@ -66,37 +66,6 @@ public class DashboardController {
     }
 
 
-    // Chuyển đến trang Employee dựa trên vai trò
-//     @FXML
-//     private void handleEmployeePanel() {
-//         if (Session.getCurrentAccount() != null && Session.getCurrentAccount().getRole() != null) {
-//             String roleName = Session.getCurrentAccount().getRole().getRoleName().toUpperCase();
-//             switch (roleName) {
-//                 case "STAFF_CARE":
-//                     SceneSwitcher.switchScene("staff/booking_view.fxml");
-//                     break;
-//                 case "STAFF_CASHIER":
-//                     SceneSwitcher.switchScene("staff/invoice_view.fxml");
-//                     break;
-//                 case "STAFF_RECEPTION":
-//                     SceneSwitcher.switchScene("staff/my_schedule.fxml");
-//                     break;
-//                 default:
-//                     SceneSwitcher.switchScene("staff/staff_home.fxml");
-//                     break;
-//             }
-//         } else {
-//             SceneSwitcher.switchScene("staff/staff_home.fxml");
-//         }
-//     }
-
-//     // Đăng xuất
-//     @FXML
-//     private void handleLogout() {
-//         Session.logout();
-//         SceneSwitcher.switchScene("login.fxml");
-//     }
-
 	// Chuyển đến trang Employee
 	@FXML
 	private void handleEmployeePanel() {

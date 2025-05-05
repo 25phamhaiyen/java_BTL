@@ -34,7 +34,6 @@ import repository.InvoiceRepository;
 import repository.OrderDetailRepository;
 import model.Invoice;
 import repository.OrderRepository;
-import service.OrderService;
 
 public class PromotionApplyController implements Initializable {
 
