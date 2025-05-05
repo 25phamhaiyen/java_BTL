@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate; // Thêm import này
 import java.util.List;
 
 import enums.GenderEnum;
@@ -24,24 +25,81 @@ public class PetService {
         petRepository = PetRepository.getInstance();
     }
 
+    // Validation method
+    private void validatePet(Pet pet) {
+        if (pet == null) {
+            throw new IllegalArgumentException("Thú cưng không được null.");
+        }
+        
+        // Kiểm tra tên thú cưng
+        if (pet.getName() == null || pet.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên thú cưng không được để trống.");
+        }
+        if (pet.getName().length() > 50) {
+            throw new IllegalArgumentException("Tên thú cưng không được quá 50 ký tự.");
+        }
+        if (!pet.getName().matches("^[a-zA-ZÀ-ỹ0-9\\s]+$")) {
+            throw new IllegalArgumentException("Tên thú cưng chỉ được chứa chữ cái, số và khoảng trắng.");
+        }
+        
+        // Kiểm tra loại thú cưng
+        if (pet.getTypePet() == null || pet.getTypePet().getTypePetID() <= 0) {
+            throw new IllegalArgumentException("Loại thú cưng không hợp lệ.");
+        }
+        
+        // Kiểm tra giới tính
+        if (pet.getGender() == null) {
+            throw new IllegalArgumentException("Giới tính thú cưng không được để trống.");
+        }
+        
+        // Kiểm tra ngày sinh
+        if (pet.getDob() == null) {
+            throw new IllegalArgumentException("Ngày sinh thú cưng không được để trống.");
+        }
+        if (pet.getDob().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Ngày sinh không thể là ngày trong tương lai.");
+        }
+        if (pet.getDob().isBefore(LocalDate.of(1900, 1, 1))) {
+            throw new IllegalArgumentException("Ngày sinh không hợp lệ (quá xa).");
+        }
+        
+        // Kiểm tra cân nặng
+        if (pet.getWeight() <= 0) {
+            throw new IllegalArgumentException("Cân nặng phải lớn hơn 0.");
+        }
+        if (pet.getWeight() > 200) {
+            throw new IllegalArgumentException("Cân nặng không hợp lệ (quá lớn).");
+        }
+        
+        // Kiểm tra chủ sở hữu
+        if (pet.getOwner() == null || pet.getOwner().getId() <= 0) {
+            throw new IllegalArgumentException("Chủ sở hữu không hợp lệ.");
+        }
+        
+        // Kiểm tra ghi chú (nếu có)
+        if (pet.getNote() != null && pet.getNote().length() > 500) {
+            throw new IllegalArgumentException("Ghi chú không được quá 500 ký tự.");
+        }
+    }
+
     // Thêm thú cưng
     public int addPet(Pet pet) {
         // Kiểm tra dữ liệu trước khi thêm
-        if (pet == null || pet.getName().isEmpty() || pet.getWeight() <= 0) {
-            System.out.println("Dữ liệu không hợp lệ.");
-            return 0;
-        }
+        validatePet(pet);
+        
         // Thực hiện thêm thú cưng vào DB thông qua PetRepository
         return petRepository.insert(pet);
     }
 
-    // Cập nhật thông tin thú cưng
+    // Cập nhật thông tin thú cưng (chỉ 1 method này)
     public int updatePet(Pet pet) {
         // Kiểm tra dữ liệu trước khi cập nhật
-        if (pet == null || pet.getPetId()<= 0 || pet.getName().isEmpty()) {
-            System.out.println("Dữ liệu không hợp lệ.");
-            return 0;
+        if (pet == null || pet.getPetId() <= 0) {
+            throw new IllegalArgumentException("ID thú cưng không hợp lệ.");
         }
+        
+        validatePet(pet);
+        
         // Thực hiện cập nhật thú cưng vào DB thông qua PetRepository
         return petRepository.update(pet);
     }
@@ -74,19 +132,27 @@ public class PetService {
     public List<Pet> getPetsByCondition(String condition, Object... params) {
         return petRepository.selectByCondition(condition, params);
     }
+    
     public String getPetNamesByCustomerId(int customerId) {
         List<String> petNames = petRepository.getPetNamesByCustomerId(customerId);
         return String.join(", ", petNames);
     }
     
- // Trong PetService.java
     public List<PetType> getAllPetTypes() {
         PetTypeRepository petTypeRepo = new PetTypeRepository();
         return petTypeRepo.selectAll(); 
     }
+<<<<<<< HEAD
+    
+    public Pet getPetByCustomerId(int customerId) {
+        return petRepository.getPetByCustomerId(customerId);
+    }
+}
+=======
     public List<Pet> findPetsByCustomerId(int customerId) {
         return petRepository.getPetsByCustomerId(customerId);
     }
 
 
 }
+>>>>>>> 2773cf554f3c3fbab619538b0c2a2f408bb79b30

@@ -1251,8 +1251,8 @@ public class InvoiceViewController implements Initializable {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+            System.err.println("Lỗi khi chuyển về trang chủ: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể trở về trang chủ",
                     "Đã xảy ra lỗi: " + e.getMessage());
         }
     }

@@ -31,22 +31,53 @@ public class CustomerService {
 	}
 
 	// Kiểm tra dữ liệu khách hàng trước khi thêm hoặc cập nhật
+	// Cập nhật method validateCustomer trong CustomerService.java
 	private void validateCustomer(Customer customer) {
-		if (customer == null) {
-			throw new BusinessException("Khách hàng không được null.");
-		}
-		if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
-			throw new BusinessException("Tên khách hàng không được để trống.");
-		}
-		if (!customer.getPhone().matches("\\d{10}")) {
-			throw new BusinessException("Số điện thoại phải gồm 10 chữ số.");
-		}
-		if (customer.getAddress() == null || customer.getAddress().trim().isEmpty()) {
-			throw new BusinessException("Địa chỉ không được để trống.");
-		}
-		if (customer.getEmail() == null || !EMAIL_PATTERN.matcher(customer.getEmail()).matches()) {
-            throw new BusinessException("Email không hợp lệ!");
-        }
+	    if (customer == null) {
+	        throw new BusinessException("Khách hàng không được null.");
+	    }
+	    
+	    // Kiểm tra tên
+	    if (customer.getFullName() == null || customer.getFullName().trim().isEmpty()) {
+	        throw new BusinessException("Tên khách hàng không được để trống.");
+	    }
+	    if (customer.getFullName().length() > 100) {
+	        throw new BusinessException("Tên khách hàng không được quá 100 ký tự.");
+	    }
+	    if (!customer.getFullName().matches("^[a-zA-ZÀ-ỹ\\s]+$")) {
+	        throw new BusinessException("Tên khách hàng chỉ được chứa chữ cái và khoảng trắng.");
+	    }
+	    
+	    // Kiểm tra số điện thoại
+	    if (customer.getPhone() == null || !customer.getPhone().matches("^0\\d{9}$")) {
+	        throw new BusinessException("Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số.");
+	    }
+	    
+	    // Kiểm tra địa chỉ
+	    if (customer.getAddress() == null || customer.getAddress().trim().isEmpty()) {
+	        throw new BusinessException("Địa chỉ không được để trống.");
+	    }
+	    if (customer.getAddress().length() > 200) {
+	        throw new BusinessException("Địa chỉ không được quá 200 ký tự.");
+	    }
+	    
+	    // Kiểm tra email
+	    if (customer.getEmail() == null || !EMAIL_PATTERN.matcher(customer.getEmail()).matches()) {
+	        throw new BusinessException("Email không hợp lệ!");
+	    }
+	    if (customer.getEmail().length() > 100) {
+	        throw new BusinessException("Email không được quá 100 ký tự.");
+	    }
+	    
+	    // Kiểm tra giới tính
+	    if (customer.getGender() == null) {
+	        throw new BusinessException("Giới tính không được để trống.");
+	    }
+	    
+	    // Kiểm tra điểm (nếu được cập nhật)
+	    if (customer.getPoint() < 0) {
+	        throw new BusinessException("Điểm không thể âm.");
+	    }
 	}
 
 	// Thêm khách hàng mới

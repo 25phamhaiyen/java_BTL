@@ -87,39 +87,37 @@ public class OrderRepository implements IRepository<Order> {
         }
         return 0;
     }
-
     @Override
     public int update(Order order) {
         String sql = "UPDATE `order` SET customer_id=?, staff_id=?, order_date=?, voucher_code=?, total_amount=?, status=? WHERE order_id=?";
-        
+
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            
-			 pstmt.setInt(1, order.getCustomer().getId());
-			 if (order.getStaff() != null)
-			     pstmt.setInt(2, order.getStaff().getId());
-			 else
-			     pstmt.setNull(2, Types.INTEGER);
-			
-			 pstmt.setTimestamp(3, order.getOrderDate());
-			 if (order.getVoucher() != null)
-				    pstmt.setString(4, order.getVoucher().getDescription());
-				else
-				    pstmt.setNull(4, Types.VARCHAR);
-			 pstmt.setDouble(5, 0.0); // total_amount ban đầu
-			 pstmt.setString(6, order.getStatus().name());
-             pstmt.setInt(7, order.getOrderId());
-            
+
+            pstmt.setInt(1, order.getCustomer().getId());
+            if (order.getStaff() != null)
+                pstmt.setInt(2, order.getStaff().getId());
+            else
+                pstmt.setNull(2, Types.INTEGER);
+
+            pstmt.setTimestamp(3, order.getOrderDate());
+            if (order.getVoucher() != null)
+                pstmt.setString(4, order.getVoucher().getDescription());
+            else
+                pstmt.setNull(4, Types.VARCHAR);
+            pstmt.setDouble(5, order.getTotalAmount()); // Giữ nguyên total_amount
+            pstmt.setString(6, order.getStatus().name());
+            pstmt.setInt(7, order.getOrderId());
+
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println(" Cập nhật đơn hàng thành công! OrderID = " + order.getOrderId());
-                
+                System.out.println("Cập nhật đơn hàng thành công! OrderID = " + order.getOrderId());
                 // Cập nhật lại tổng tiền của đơn hàng sau khi update
                 updateTotalPrice(order.getOrderId());
             }
             return affectedRows;
         } catch (SQLException e) {
-            System.err.println(" Lỗi khi cập nhật đơn hàng: " + e.getMessage());
+            System.err.println("Lỗi khi cập nhật đơn hàng: " + e.getMessage());
             return 0;
         }
     }

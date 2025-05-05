@@ -111,10 +111,21 @@ public class BookingService {
     /**
      * Tạo booking mới
      */
+ // Cập nhật phương thức createBooking trong BookingService.java
+
+    /**
+     * Tạo booking mới với logic kiểm tra ngày và trạng thái
+     */
     public Booking createBooking(int customerId, int petId, int staffId, LocalDateTime bookingTime, String note) throws Exception {
         // Kiểm tra dữ liệu đầu vào
         if (customerId <= 0 || petId <= 0 || bookingTime == null) {
             throw new Exception("Dữ liệu không hợp lệ");
+        }
+        
+        // THÊM: Kiểm tra booking chỉ được tạo từ ngày hiện tại trở đi
+        LocalDateTime now = LocalDateTime.now();
+        if (bookingTime.isBefore(now.withHour(0).withMinute(0).withSecond(0).withNano(0))) {
+            throw new Exception("Không thể đặt lịch cho ngày trước ngày hiện tại");
         }
         
         // Kiểm tra khách hàng
@@ -143,18 +154,22 @@ public class BookingService {
             }
         }
         
-        // Kiểm tra thời gian
-        if (bookingTime.isBefore(LocalDateTime.now())) {
-            throw new Exception("Thời gian đặt lịch phải là thời gian trong tương lai");
-        }
-        
         // Tạo booking mới
         Booking booking = new Booking();
         booking.setCustomer(customer);
         booking.setPet(pet);
         booking.setStaff(staff);
         booking.setBookingTime(bookingTime);
-        booking.setStatus(StatusEnum.PENDING);
+        
+        // THÊM: Xét trạng thái booking dựa trên thời gian
+        if (bookingTime.toLocalDate().isEqual(now.toLocalDate())) {
+            // Nếu booking là ngày hôm nay -> PENDING
+            booking.setStatus(StatusEnum.PENDING);
+        } else {
+            // Nếu booking là ngày tương lai -> PENDING
+            booking.setStatus(StatusEnum.PENDING);
+        }
+        
         booking.setNote(note);
         
         // Lưu vào cơ sở dữ liệu
@@ -162,7 +177,6 @@ public class BookingService {
         
         return booking;
     }
-    
     /**
      * Cập nhật booking
      */

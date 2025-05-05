@@ -8,9 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.scene.layout.GridPane;
 import enums.Shift;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,8 +35,7 @@ import utils.Session;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import java.util.Map;
-import java.util.HashMap;
+import javafx.geometry.Insets;
 
 public class MyScheduleController implements Initializable {
 
@@ -91,7 +92,6 @@ public class MyScheduleController implements Initializable {
                     "Bạn không có quyền truy cập vào màn hình lịch làm việc.");
             Stage stage = (Stage) dateLabel.getScene().getWindow();
             stage.close();
-
             return;
         }
 
@@ -110,7 +110,7 @@ public class MyScheduleController implements Initializable {
         initializeDatePickers();
         
         // Load schedule for a date that has data (e.g., 2025-05-10)
-        loadScheduleByDate(LocalDate.now());
+        loadScheduleByDate(LocalDate.of(2025, 5, 10));
         
         // Add selection listener for schedule table
         scheduleTable.getSelectionModel().selectedItemProperty().addListener(
@@ -204,7 +204,7 @@ public class MyScheduleController implements Initializable {
             }
         });
         
-        // Location selector (đổi thành danh sách store)
+        // Location selector
         locationSelector.getItems().addAll("Store 1", "Store 2", "Store 3");
         
         // View mode selector
@@ -231,7 +231,7 @@ public class MyScheduleController implements Initializable {
         registrationDatePicker.setConverter(converter);
         
         // Set default values
-        LocalDate defaultDate = LocalDate.now(); // Ngày có dữ liệu
+        LocalDate defaultDate = LocalDate.of(2025, 5, 10); // Ngày có dữ liệu
         datePicker.setValue(defaultDate);
         registrationDatePicker.setValue(defaultDate);
         
@@ -245,7 +245,7 @@ public class MyScheduleController implements Initializable {
 
     private void handleViewModeChange() {
         String mode = viewModeSelector.getValue();
-        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
         
         switch (mode) {
             case "Hôm nay":
@@ -286,7 +286,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadWeekSchedule() {
         try {
-            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
             LocalDate endOfWeek = startOfWeek.plusDays(6);
             
@@ -325,7 +325,7 @@ public class MyScheduleController implements Initializable {
 
     private void loadMonthSchedule() {
         try {
-            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
+            LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
             LocalDate startOfMonth = date.withDayOfMonth(1);
             LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
             
@@ -536,11 +536,22 @@ public class MyScheduleController implements Initializable {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 150, 10, 10));
         
-        DatePicker leaveDatePicker = new DatePicker(LocalDate.now());
+        DatePicker leaveDatePicker = new DatePicker(LocalDate.now().plusDays(1));
+        leaveDatePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty() ? LocalDate.parse(string, dateFormatter) : null;
+            }
+        });
         TextArea reasonTextArea = new TextArea();
         reasonTextArea.setPromptText("Nhập lý do nghỉ phép");
+        reasonTextArea.setPrefRowCount(3);
         
         grid.add(new Label("Ngày nghỉ:"), 0, 0);
         grid.add(leaveDatePicker, 1, 0);
@@ -551,9 +562,9 @@ public class MyScheduleController implements Initializable {
         
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == requestButtonType) {
-                Map<String, Object> result = new java.util.HashMap<>();
+                Map<String, Object> result = new HashMap<>();
                 result.put("date", leaveDatePicker.getValue());
-                result.put("reason", reasonTextArea.getText());
+                result.put("reason", reasonTextArea.getText().trim());
                 return result;
             }
             return null;
@@ -571,7 +582,7 @@ public class MyScheduleController implements Initializable {
                 return;
             }
             
-            if (reason == null || reason.trim().isEmpty()) {
+            if (reason == null || reason.isEmpty()) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Thiếu thông tin", 
                           "Vui lòng nhập lý do nghỉ phép.");
                 return;
@@ -581,11 +592,13 @@ public class MyScheduleController implements Initializable {
             
             if (success) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã gửi yêu cầu nghỉ phép", 
-                          "Yêu cầu nghỉ phép của bạn đã được gửi và đang chờ xét duyệt.");
+                          "Yêu cầu nghỉ phép ngày " + leaveDate.format(dateFormatter) + 
+                          " đã được gửi và đang chờ xét duyệt.");
                 statusLabel.setText("Trạng thái: Đã gửi yêu cầu nghỉ phép");
             } else {
                 showAlert(AlertType.ERROR, "Lỗi", "Không thể gửi yêu cầu", 
-                          "Đã xảy ra lỗi khi gửi yêu cầu nghỉ phép. Vui lòng thử lại sau.");
+                          "Không thể gửi yêu cầu nghỉ phép. Có thể ngày này đã có lịch làm việc hoặc yêu cầu khác đang chờ xử lý.");
+                statusLabel.setText("Trạng thái: Lỗi khi gửi yêu cầu nghỉ phép");
             }
         });
     }
@@ -602,9 +615,20 @@ public class MyScheduleController implements Initializable {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+        grid.setPadding(new Insets(20, 150, 10, 10));
         
-        DatePicker currentDatePicker = new DatePicker(LocalDate.now());
+        DatePicker currentDatePicker = new DatePicker(LocalDate.now().plusDays(1));
+        currentDatePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty() ? LocalDate.parse(string, dateFormatter) : null;
+            }
+        });
+        
         ComboBox<Shift> currentShiftComboBox = new ComboBox<>();
         currentShiftComboBox.getItems().addAll(Shift.MORNING, Shift.AFTERNOON, Shift.EVENING);
         currentShiftComboBox.setConverter(new StringConverter<Shift>() {
@@ -618,20 +642,31 @@ public class MyScheduleController implements Initializable {
                     default: return shift.name();
                 }
             }
-            
             @Override
             public Shift fromString(String string) {
                 return null;
             }
         });
         
-        DatePicker desiredDatePicker = new DatePicker(LocalDate.now().plusDays(1));
+        DatePicker desiredDatePicker = new DatePicker(LocalDate.now().plusDays(2));
+        desiredDatePicker.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return date != null ? dateFormatter.format(date) : "";
+            }
+            @Override
+            public LocalDate fromString(String string) {
+                return string != null && !string.isEmpty() ? LocalDate.parse(string, dateFormatter) : null;
+            }
+        });
+        
         ComboBox<Shift> desiredShiftComboBox = new ComboBox<>();
         desiredShiftComboBox.getItems().addAll(Shift.MORNING, Shift.AFTERNOON, Shift.EVENING);
         desiredShiftComboBox.setConverter(currentShiftComboBox.getConverter());
         
         TextArea reasonTextArea = new TextArea();
         reasonTextArea.setPromptText("Nhập lý do đổi ca");
+        reasonTextArea.setPrefRowCount(3);
         
         grid.add(new Label("Ngày hiện tại:"), 0, 0);
         grid.add(currentDatePicker, 1, 0);
@@ -648,12 +683,12 @@ public class MyScheduleController implements Initializable {
         
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == requestButtonType) {
-                Map<String, Object> result = new java.util.HashMap<>();
+                Map<String, Object> result = new HashMap<>();
                 result.put("currentDate", currentDatePicker.getValue());
                 result.put("currentShift", currentShiftComboBox.getValue());
                 result.put("desiredDate", desiredDatePicker.getValue());
                 result.put("desiredShift", desiredShiftComboBox.getValue());
-                result.put("reason", reasonTextArea.getText());
+                result.put("reason", reasonTextArea.getText().trim());
                 return result;
             }
             return null;
@@ -675,7 +710,7 @@ public class MyScheduleController implements Initializable {
                 return;
             }
             
-            if (reason == null || reason.trim().isEmpty()) {
+            if (reason == null || reason.isEmpty()) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Thiếu thông tin", 
                           "Vui lòng nhập lý do đổi ca.");
                 return;
@@ -686,11 +721,14 @@ public class MyScheduleController implements Initializable {
             
             if (success) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã gửi yêu cầu đổi ca",
-                        "Yêu cầu đổi ca đã được gửi và đang chờ xét duyệt.");
+                        "Yêu cầu đổi từ ca " + currentShift + " ngày " + currentDate.format(dateFormatter) +
+                        " sang ca " + desiredShift + " ngày " + desiredDate.format(dateFormatter) +
+                        " đã được gửi và đang chờ xét duyệt.");
                 statusLabel.setText("Trạng thái: Đã gửi yêu cầu đổi ca");
             } else {
                 showAlert(AlertType.ERROR, "Lỗi", "Không thể gửi yêu cầu đổi ca",
-                        "Ca hiện tại không tồn tại hoặc ca mong muốn đã được đăng ký.");
+                        "Ca hiện tại không tồn tại, ca mong muốn đã được đăng ký, hoặc có yêu cầu đổi ca đang chờ xử lý.");
+                statusLabel.setText("Trạng thái: Lỗi khi gửi yêu cầu đổi ca");
             }
         });
     }
@@ -772,6 +810,7 @@ public class MyScheduleController implements Initializable {
             registrationDatePicker.setValue(schedule.getWorkDate());
             shiftSelector.setValue(schedule.getShift());
             locationSelector.setValue(schedule.getLocation());
+            registrationNotes.setText(schedule.getNote() != null ? schedule.getNote() : "");
             statusLabel.setText("Trạng thái: Đã chọn ca làm việc ngày " + schedule.getWorkDate().format(dateFormatter));
         });
     }
@@ -795,6 +834,12 @@ public class MyScheduleController implements Initializable {
 
     @FXML
     private void registerShift() {
+        if (!RoleChecker.hasPermission("REGISTER_SHIFT")) {
+            showAlert(AlertType.ERROR, "Lỗi", "Không có quyền",
+                    "Bạn không có quyền đăng ký ca làm việc.");
+            return;
+        }
+
         LocalDate date = registrationDatePicker.getValue();
         Shift shift = shiftSelector.getValue();
         String location = locationSelector.getValue();
@@ -812,10 +857,10 @@ public class MyScheduleController implements Initializable {
             
             if (success) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã đăng ký ca làm",
-                        "Ca làm đã được đăng ký: " + shift.name() + " ngày " + 
-                        date.format(dateFormatter));
+                        "Ca làm " + shift.name() + " ngày " + date.format(dateFormatter) + 
+                        " tại " + location + " đã được đăng ký.");
                 
-                registrationDatePicker.setValue(LocalDate.now());
+                registrationDatePicker.setValue(LocalDate.now().plusDays(1));
                 shiftSelector.setValue(null);
                 locationSelector.setValue(null);
                 registrationNotes.clear();
@@ -827,16 +872,18 @@ public class MyScheduleController implements Initializable {
                 }
             } else {
                 showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm",
-                        "Có thể ca làm này đã được đăng ký hoặc có xung đột lịch. Vui lòng kiểm tra lại.");
+                        "Ca làm này đã được đăng ký, ngày không hợp lệ, hoặc có lỗi khác. Vui lòng kiểm tra lại.");
+                statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm");
             }
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", e.getMessage());
+            statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm: " + e.getMessage());
         }
     }
 
     @FXML
     private void cancelRegistration() {
-        registrationDatePicker.setValue(LocalDate.now());
+        registrationDatePicker.setValue(LocalDate.now().plusDays(1));
         shiftSelector.setValue(null);
         locationSelector.setValue(null);
         registrationNotes.clear();
@@ -863,10 +910,7 @@ public class MyScheduleController implements Initializable {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
-            
-            // Hiển thị thông báo lỗi
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể trở về trang chủ",
                     "Đã xảy ra lỗi: " + e.getMessage());
         }
     }

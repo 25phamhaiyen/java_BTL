@@ -166,6 +166,8 @@ public class BookingViewController implements Initializable {
     /**
      * Thiết lập định dạng cho cột trạng thái để hiển thị màu sắc
      */
+ // Cập nhật setupStatusColumnFormatter trong BookingViewController
+
     private void setupStatusColumnFormatter() {
         statusColumn.setCellFactory(column -> new TableCell<Booking, String>() {
             @Override
@@ -178,33 +180,39 @@ public class BookingViewController implements Initializable {
                     return;
                 }
 
-                setText(status);
-
-                // Thiết lập màu sắc dựa trên trạng thái
+                // Hiển thị trạng thái bằng tiếng Việt
+                String statusText;
+                String styleClass;
+                
                 switch (status) {
                     case "PENDING":
-                        setText("Chờ xác nhận");
-                        setStyle("-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-padding: 3 8;");
+                        statusText = "Chờ xác nhận";
+                        styleClass = "-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-padding: 3 8;";
                         break;
                     case "CONFIRMED":
-                        setText("Đã xác nhận");
-                        setStyle("-fx-background-color: #C8E6C9; -fx-text-fill: #2E7D32; -fx-padding: 3 8;");
+                        statusText = "Đã xác nhận";
+                        styleClass = "-fx-background-color: #C8E6C9; -fx-text-fill: #2E7D32; -fx-padding: 3 8;";
                         break;
                     case "COMPLETED":
-                        setText("Hoàn thành");
-                        setStyle("-fx-background-color: #BBDEFB; -fx-text-fill: #1565C0; -fx-padding: 3 8;");
+                        statusText = "Hoàn thành";
+                        styleClass = "-fx-background-color: #BBDEFB; -fx-text-fill: #1565C0; -fx-padding: 3 8;";
                         break;
                     case "CANCELLED":
-                        setText("Đã hủy");
-                        setStyle("-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-padding: 3 8;");
+                        statusText = "Đã hủy";
+                        styleClass = "-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-padding: 3 8;";
                         break;
                     default:
-                        setStyle("");
+                        statusText = status;
+                        styleClass = "";
                         break;
                 }
+                
+                setText(statusText);
+                setStyle(styleClass);
             }
         });
 
+        // Tương tự cho upcomingStatusColumn
         upcomingStatusColumn.setCellFactory(column -> new TableCell<Booking, String>() {
             @Override
             protected void updateItem(String status, boolean empty) {
@@ -216,30 +224,35 @@ public class BookingViewController implements Initializable {
                     return;
                 }
 
-                setText(status);
-
-                // Thiết lập màu sắc dựa trên trạng thái
+                // Hiển thị trạng thái bằng tiếng Việt
+                String statusText;
+                String styleClass;
+                
                 switch (status) {
                     case "PENDING":
-                        setText("Chờ xác nhận");
-                        setStyle("-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-padding: 3 8;");
+                        statusText = "Chờ xác nhận";
+                        styleClass = "-fx-background-color: #FFF9C4; -fx-text-fill: #F57F17; -fx-padding: 3 8;";
                         break;
                     case "CONFIRMED":
-                        setText("Đã xác nhận");
-                        setStyle("-fx-background-color: #C8E6C9; -fx-text-fill: #2E7D32; -fx-padding: 3 8;");
+                        statusText = "Đã xác nhận";
+                        styleClass = "-fx-background-color: #C8E6C9; -fx-text-fill: #2E7D32; -fx-padding: 3 8;";
                         break;
                     case "COMPLETED":
-                        setText("Hoàn thành");
-                        setStyle("-fx-background-color: #BBDEFB; -fx-text-fill: #1565C0; -fx-padding: 3 8;");
+                        statusText = "Hoàn thành";
+                        styleClass = "-fx-background-color: #BBDEFB; -fx-text-fill: #1565C0; -fx-padding: 3 8;";
                         break;
                     case "CANCELLED":
-                        setText("Đã hủy");
-                        setStyle("-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-padding: 3 8;");
+                        statusText = "Đã hủy";
+                        styleClass = "-fx-background-color: #FFCDD2; -fx-text-fill: #B71C1C; -fx-padding: 3 8;";
                         break;
                     default:
-                        setStyle("");
+                        statusText = status;
+                        styleClass = "";
                         break;
                 }
+                
+                setText(statusText);
+                setStyle(styleClass);
             }
         });
     }
@@ -1093,10 +1106,10 @@ public class BookingViewController implements Initializable {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Lỗi khi chuyển về màn hình chính: " + e.getMessage());
+            System.err.println("Lỗi khi chuyển về trang chủ: " + e.getMessage());
             
             // Hiển thị thông báo lỗi
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể chuyển về trang chủ",
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể trở về trang chủ",
                     "Đã xảy ra lỗi: " + e.getMessage());
         }
     }
