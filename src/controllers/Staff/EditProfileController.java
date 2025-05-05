@@ -74,11 +74,11 @@ public class EditProfileController implements Initializable {
         
         // Phương pháp 2: Áp dụng class dựa trên kích thước màn hình khi khởi tạo
         // Lưu ý: Phương pháp này chỉ chạy một lần khi khởi tạo và không đáp ứng với thay đổi kích thước
-        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                applyResponsiveLayout();
-            }
-        });
+//        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+//            if (newScene != null) {
+//                applyResponsiveLayout();
+//            }
+//        });
     }
     
     /**

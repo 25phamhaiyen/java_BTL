@@ -10,9 +10,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX24"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/iText"/>
-	<classpathentry kind="lib" path="C:/Users/PHY/Downloads/slf4j-api-2.0.12.jar"/>
-
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX 24"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/pdf"/>
+	<classpathentry kind="lib" path="D:/BTL_JAVA/java_BTL/lib/slf4j-api-2.0.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
