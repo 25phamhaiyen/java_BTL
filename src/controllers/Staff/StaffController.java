@@ -49,6 +49,9 @@ public class StaffController implements Initializable {
 
     @FXML
     private Button bookingViewButton;
+    
+    @FXML
+    private Button okila;
 
     @FXML
     private Button invoiceViewButton;
@@ -206,6 +209,7 @@ public class StaffController implements Initializable {
 	private void setupButtonVisibility() {
 		// Các nút mặc định hiển thị cho tất cả nhân viên
 		editProfileButton.setVisible(true);
+		okila.setVisible(false);
 
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
@@ -217,52 +221,18 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private void showMySchedule(ActionEvent event) {
-		try {
-			if (!RoleChecker.hasPermission("VIEW_SCHEDULE")) {
-				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-						"Bạn không có quyền xem lịch làm việc.");
-				return;
-			}
-
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/my_schedule.fxml"));
-			Parent view = loader.load();
-			mainContainer.setCenter(view);
-		} catch (IOException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình lịch làm việc", e.getMessage());
-		}
+		SceneSwitcher.switchScene("staff/my_schedule.fxml");
 	}
 
 	@FXML
 	private void showBookingView(ActionEvent event) {
-		try {
-			if (!RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED") ) {
-				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-						"Bạn không có quyền xem danh sách đặt lịch.");
-				return;
-			}
-
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/booking_view.fxml"));
-			Parent view = loader.load();
-			mainContainer.setCenter(view);
-		} catch (IOException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình đặt lịch", e.getMessage());
-		}
+		SceneSwitcher.switchScene("staff/booking_view.fxml");
+	
 	}
 
 	@FXML
 	private void showInvoiceView(ActionEvent event) {
-		try {
-			if (!RoleChecker.hasPermission("VIEW_INVOICE")) {
-				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền", "Bạn không có quyền xem hóa đơn.");
-				return;
-			}
-
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/invoice_view.fxml"));
-			Parent view = loader.load();
-			mainContainer.setCenter(view);
-		} catch (IOException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình hóa đơn", e.getMessage());
-		}
+		SceneSwitcher.switchScene("staff/invoice_view.fxml");
 	}
 
 // k sử dụng nữa, đã gộp dô thanh toán
@@ -285,14 +255,7 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private void showEditProfile(ActionEvent event) {
-//		try {
 			SceneSwitcher.switchScene("staff/edit_profile.fxml");
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/edit_profile.fxml"));
-//			Parent view = loader.load();
-//			mainContainer.setCenter(view);
-//		} catch (IOException e) {
-//			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chỉnh sửa hồ sơ", e.getMessage());
-//		}
 	}
 
 	@FXML
