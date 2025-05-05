@@ -1,22 +1,3 @@
-DROP TABLE IF EXISTS account_permission;
-DROP TABLE IF EXISTS booking_detail;
-DROP TABLE IF EXISTS order_detail;
-DROP TABLE IF EXISTS invoice;
-DROP TABLE IF EXISTS booking;
-DROP TABLE IF EXISTS pet;
-DROP TABLE IF EXISTS `order`;
-DROP TABLE IF EXISTS work_schedule;
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS customer;
-DROP TABLE IF EXISTS account;
-
--- Sau đó xóa các bảng không phụ thuộc hoặc bảng cha
-DROP TABLE IF EXISTS pet_type;
-DROP TABLE IF EXISTS service;
-DROP TABLE IF EXISTS promotion;
-DROP TABLE IF EXISTS permission;
-DROP TABLE IF EXISTS role;
-DROP TABLE IF EXISTS person;
 
 
 INSERT INTO role (role_name) VALUES 
@@ -268,67 +249,59 @@ INSERT INTO booking_detail (booking_id, service_id, quantity, price) VALUES
 (43, 1, 1, 100000), -- booking_id 43: Tắm
 (44, 5, 1, 50000), -- booking_id 44: Gửi trông
 (45, 2, 1, 150000), (45, 3, 1, 200000), -- booking_id 45: Cắt lông + Khám sức khỏe
-(46, 5, 3, 50000), -- booking_id 46: Gửi trông (3 lần)
+(46, 5, 3, 50000); -- booking_id 46: Gửi trông (3 lần)
 
-INSERT INTO `order` (order_id, customer_id, order_date, total_amount, status, voucher_code) VALUES
+INSERT INTO `order` (customer_id, order_date, total_amount, status, voucher_code) VALUES
 -- Ngày 1/5/2025
-(6, 15, '2025-05-01 10:00:00', 300000, 'COMPLETED', NULL),
-(7, 20, '2025-05-01 16:00:00', 250000, 'COMPLETED', 'KM1'),
-(8, 13, '2025-05-01 19:00:00', 400000, 'COMPLETED', NULL),
+(15, '2025-05-01 10:00:00', 300000, 'COMPLETED', NULL),
+(20, '2025-05-01 16:00:00', 250000, 'COMPLETED', 'KM1'),
+(13, '2025-05-01 19:00:00', 400000, 'COMPLETED', NULL),
 -- Ngày 2/5/2025
-(9, 17, '2025-05-02 10:00:00', 200000, 'COMPLETED', NULL),
-(10, 22, '2025-05-02 16:00:00', 150000, 'COMPLETED', 'KM2'),
-(11, 13, '2025-05-02 19:00:00', 250000, 'COMPLETED', NULL),
+(17, '2025-05-02 10:00:00', 200000, 'COMPLETED', NULL),
+(22, '2025-05-02 16:00:00', 150000, 'COMPLETED', 'KM2'),
+(13, '2025-05-02 19:00:00', 250000, 'COMPLETED', NULL),
 -- Ngày 3/5/2025
-(12, 19, '2025-05-03 10:00:00', 300000, 'COMPLETED', NULL),
-(13, 14, '2025-05-03 16:00:00', 400000, 'COMPLETED', 'KM4'),
-(14, 15, '2025-05-03 19:00:00', 350000, 'COMPLETED', NULL),
+(19, '2025-05-03 10:00:00', 300000, 'COMPLETED', NULL),
+(14, '2025-05-03 16:00:00', 400000, 'COMPLETED', 'KM4'),
+(15, '2025-05-03 19:00:00', 350000, 'COMPLETED', NULL),
 -- Ngày 4/5/2025
-(15, 21, '2025-05-04 10:00:00', 200000, 'COMPLETED', NULL),
-(16, 16, '2025-05-04 16:00:00', 250000, 'COMPLETED', NULL),
-(17, 19, '2025-05-04 19:00:00', 350000, 'COMPLETED', 'KM1');
-INSERT INTO order_detail (order_detail_id, order_id, service_id, quantity, price) VALUES
+(21, '2025-05-04 10:00:00', 200000, 'COMPLETED', NULL),
+(16, '2025-05-04 16:00:00', 250000, 'COMPLETED', NULL),
+(19, '2025-05-04 19:00:00', 350000, 'COMPLETED', 'KM1');
+INSERT INTO order_detail (order_id, service_id, quantity, price) VALUES
 -- Ngày 1/5/2025 (đã sửa số cột và giá)
-(7, 6, 3, 1, 200000),
-(8, 6, 1, 1, 100000),
-(9, 7, 4, 1, 250000),
-(10, 8, 2, 1, 150000),
-(11, 8, 4, 1, 250000),
+(11, 3, 1, 200000),
+(12, 1, 1, 100000),
+(13, 4, 1, 250000),
+(14, 2, 1, 150000),
+(15, 4, 1, 250000),
 -- Ngày 2/5/2025
-(12, 9, 3, 1, 200000),
-(13, 10, 2, 1, 150000),
-(14, 11, 1, 1, 100000),
-(15, 11, 2, 1, 150000),
+(16, 3, 1, 200000),
+(17, 2, 1, 150000),
+(18, 1, 1, 100000),
+(19, 2, 1, 150000),
 -- Ngày 3/5/2025
-(16, 12, 3, 1, 200000),
-(17, 12, 1, 1, 100000),
-(18, 13, 4, 1, 250000),
-(19, 13, 2, 1, 150000),
-(20, 14, 2, 1, 150000),
-(21, 14, 3, 1, 200000),
--- Ngày 4/5/2025
-(22, 15, 3, 1, 200000),
-(23, 16, 4, 1, 250000),
-(24, 17, 2, 1, 150000),
-(25, 17, 3, 1, 200000);
+(20, 3, 1, 200000),
+(21, 1, 1, 100000),
+(22, 4, 1, 250000);
 
 INSERT INTO invoice (order_id, payment_date, subtotal, discount_percent, discount_amount, points_used, promotion_code, total, amount_paid, payment_method, status, staff_id, note) VALUES
 -- Ngày 1/5/2025 (status set to PENDING)
-(6, '2025-05-01 10:15:00', 300000, 0, 0, 0, NULL, 300000, 300000, 'CASH', 'PENDING', 10, NULL),
-(7, '2025-05-01 16:15:00', 250000, 10, 25000, 0, 'KM1', 225000, 225000, 'CARD', 'PENDING', 9, NULL),
-(8, '2025-05-01 19:15:00', 400000, 0, 0, 0, NULL, 400000, 400000, 'MOMO', 'PENDING', 10, NULL),
+(11, '2025-05-01 10:15:00', 300000, 0, 0, 0, NULL, 300000, 300000, 'CASH', 'PENDING', 10, NULL),
+(12, '2025-05-01 16:15:00', 250000, 10, 25000, 0, 'KM1', 225000, 225000, 'CARD', 'PENDING', 9, NULL),
+(13, '2025-05-01 19:15:00', 400000, 0, 0, 0, NULL, 400000, 400000, 'MOMO', 'PENDING', 10, NULL),
 -- Ngày 2/5/2025 (status set to PENDING)
-(9, '2025-05-02 10:15:00', 200000, 0, 0, 0, NULL, 200000, 200000, 'BANKING', 'PENDING', 9, NULL),
-(10, '2025-05-02 16:15:00', 150000, 20, 30000, 0, 'KM2', 120000, 120000, 'CASH', 'PENDING', 10, NULL),
-(11, '2025-05-02 19:15:00', 250000, 0, 0, 0, NULL, 250000, 250000, 'CARD', 'PENDING', 9, NULL),
+(14, '2025-05-02 10:15:00', 200000, 0, 0, 0, NULL, 200000, 200000, 'BANKING', 'PENDING', 9, NULL),
+(15, '2025-05-02 16:15:00', 150000, 20, 30000, 0, 'KM2', 120000, 120000, 'CASH', 'PENDING', 10, NULL),
+(16, '2025-05-02 19:15:00', 250000, 0, 0, 0, NULL, 250000, 250000, 'CARD', 'PENDING', 9, NULL),
 -- Ngày 3/5/2025 (status set to PENDING)
-(12, '2025-05-03 10:15:00', 300000, 0, 0, 0, NULL, 300000, 300000, 'MOMO', 'PENDING', 10, NULL),
-(13, '2025-05-03 16:15:00', 400000, 0, 0, 0, NULL, 400000, 400000, 'BANKING', 'PENDING', 9, 'KM4 không hiệu lực'),
-(14, '2025-05-03 19:15:00', 350000, 0, 0, 0, NULL, 350000, 350000, 'CASH', 'PENDING', 10, NULL),
+(17, '2025-05-03 10:15:00', 300000, 0, 0, 0, NULL, 300000, 300000, 'MOMO', 'PENDING', 10, NULL),
+(18, '2025-05-03 16:15:00', 400000, 0, 0, 0, NULL, 400000, 400000, 'BANKING', 'PENDING', 9, 'KM4 không hiệu lực'),
+(19, '2025-05-03 19:15:00', 350000, 0, 0, 0, NULL, 350000, 350000, 'CASH', 'PENDING', 10, NULL),
 -- Ngày 4/5/2025 (status set to PENDING)
-(15, '2025-05-04 10:15:00', 200000, 0, 0, 0, NULL, 200000, 200000, 'CARD', 'PENDING', 9, NULL),
-(16, '2025-05-04 16:15:00', 250000, 0, 0, 0, NULL, 250000, 250000, 'MOMO', 'PENDING', 10, NULL),
-(17, '2025-05-04 19:15:00', 350000, 10, 35000, 0, 'KM1', 315000, 315000, 'BANKING', 'PENDING', 9, NULL);
+(20, '2025-05-04 10:15:00', 200000, 0, 0, 0, NULL, 200000, 200000, 'CARD', 'PENDING', 9, NULL),
+(21, '2025-05-04 16:15:00', 250000, 0, 0, 0, NULL, 250000, 250000, 'MOMO', 'PENDING', 10, NULL),
+(22, '2025-05-04 19:15:00', 350000, 10, 35000, 0, 'KM1', 315000, 315000, 'BANKING', 'PENDING', 9, NULL);
 INSERT INTO work_schedule (staff_id, work_date, shift, note, start_time, end_time, location, task) VALUES
 -- Dữ liệu hiện có
 (2, '2025-04-08', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),

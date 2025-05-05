@@ -29,6 +29,27 @@ public class Pet {
 		this.owner = owner;
 	}
 
+	public Pet(String name, GenderEnum gender, PetType petType, LocalDate dob, double weight, String note) {
+		super();
+		this.name = name;
+		this.petType = petType;
+		this.gender = gender;
+		this.dob = dob;
+		this.weight = weight;
+		this.note = note;
+	}
+
+
+	public Pet(String name, GenderEnum gender, PetType petType, LocalDate dob, double weight) {
+		super();
+		this.name = name;
+		this.petType = petType;
+		this.gender = gender;
+		this.dob = dob;
+		this.weight = weight;
+	}
+
+
 	public int getPetId() {
 		return petId;
 	}

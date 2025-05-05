@@ -285,13 +285,14 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private void showEditProfile(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/edit_profile.fxml"));
-			Parent view = loader.load();
-			mainContainer.setCenter(view);
-		} catch (IOException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chỉnh sửa hồ sơ", e.getMessage());
-		}
+//		try {
+			SceneSwitcher.switchScene("staff/edit_profile.fxml");
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/edit_profile.fxml"));
+//			Parent view = loader.load();
+//			mainContainer.setCenter(view);
+//		} catch (IOException e) {
+//			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình chỉnh sửa hồ sơ", e.getMessage());
+//		}
 	}
 
 	@FXML
