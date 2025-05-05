@@ -276,50 +276,49 @@ public class PetRepository implements IRepository<Pet> {
 	    }
 	    return petNames;
 	}
-	public Pet getPetByCustomerId(int customerId) {
-	    Pet pet = null;
+	public List<Pet> getPetsByCustomerId(int customerId) {
+	    List<Pet> pets = new ArrayList<>();
 	    String query = "SELECT * FROM pet "
-	    		+ "JOIN pet_type ON pet.type_id = pet_type.type_id "
-	    		+ "WHERE customer_id = ?";
-	    
+	                 + "JOIN pet_type ON pet.type_id = pet_type.type_id "
+	                 + "WHERE customer_id = ?";
+
 	    try (Connection conn = DatabaseConnection.getConnection();
 	         PreparedStatement stmt = conn.prepareStatement(query)) {
-	        
+
 	        stmt.setInt(1, customerId);
 	        ResultSet rs = stmt.executeQuery();
-	        
-	        if (rs.next()) {
-	            // Get customer details
-	            Customer customer = new Customer(
-	                    rs.getInt("customer_id")
-	            );
 
-	            // Get pet type details
+	        while (rs.next()) {
+	            Customer customer = new Customer(rs.getInt("customer_id"));
+
 	            PetType petType = new PetType(
-	                    rs.getInt("type_id"),
-	                    rs.getString("species"),
-	                    rs.getString("breed")
+	                rs.getInt("type_id"),
+	                rs.getString("species"),
+	                rs.getString("breed")
 	            );
 
-	            // Get pet details, including pet gender
 	            GenderEnum petGender = GenderEnum.valueOf(rs.getString("pet_gender"));
-	            pet = new Pet(
-	                    rs.getInt("pet_id"),
-	                    rs.getString("name"),
-	                    petType,
-	                    petGender,
-	                    rs.getDate("dob").toLocalDate(),
-	                    rs.getDouble("weight"),
-	                    rs.getString("note"),
-	                    customer
+
+	            Pet pet = new Pet(
+	                rs.getInt("pet_id"),
+	                rs.getString("name"),
+	                petType,
+	                petGender,
+	                rs.getDate("dob").toLocalDate(),
+	                rs.getDouble("weight"),
+	                rs.getString("note"),
+	                customer
 	            );
+
+	            pets.add(pet);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    
-	    return pet;
+
+	    return pets;
 	}
+
 
 
 

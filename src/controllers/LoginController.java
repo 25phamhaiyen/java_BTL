@@ -30,6 +30,7 @@ public class LoginController {
 
     private final AccountService accountService = new AccountService();
     private int failedLoginAttempts = 0; // Biến đếm số lần đăng nhập thất bại
+    private String lastFailedUsername = null; // Lưu lại username đăng nhập thất bại gần nhất
 
     @FXML
     public void initialize() {
@@ -45,27 +46,41 @@ public class LoginController {
                 : passwordTextField.getText().trim();
 
         try {
-            if (failedLoginAttempts >= 5) {
-                messageLabel.setText("Tài khoản đã bị khóa tạm thời sau 5 lần sai mật khẩu!");
-                messageLabel.setStyle("-fx-text-fill: red;");
-                return;
-            }
-
             Optional<Account> user = accountService.login(username, password);
             Account account = user.orElseThrow(() -> new BusinessException("Sai tên đăng nhập hoặc mật khẩu"));
+
+            // Reset số lần đăng nhập thất bại nếu đăng nhập thành công
+            failedLoginAttempts = 0;
+            lastFailedUsername = null;
+
+            // Kiểm tra trạng thái active của tài khoản (vẫn giữ nguyên)
+            if (!account.isActive()) {
+                throw new BusinessException("Tài khoản này hiện đang bị khóa!");
+            }
 
             messageLabel.setText("Đăng nhập thành công!");
             messageLabel.setStyle("-fx-text-fill: green;");
             Session.setCurrentAccount(account);
 
-            failedLoginAttempts = 0; // Reset lại số lần login fail
-            
             // Route to appropriate view based on role
             routeBasedOnRole(account.getRole());
+
         } catch (BusinessException e) {
             failedLoginAttempts++;
             messageLabel.setText(e.getMessage());
             messageLabel.setStyle("-fx-text-fill: red;");
+
+            // Kiểm tra nếu đạt đến ngưỡng đăng nhập thất bại
+            if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
+                // Gọi service để khóa tài khoản
+                accountService.lockAccount(username);
+                messageLabel.setText("Tài khoản " + username + " đã bị khóa sau 5 lần đăng nhập sai!");
+                messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                failedLoginAttempts = 0; // Reset lại sau khi khóa
+                lastFailedUsername = null;
+            } else {
+                lastFailedUsername = username; // Cập nhật username thất bại gần nhất
+            }
         }
     }
 
@@ -88,9 +103,9 @@ public class LoginController {
             case "STAFF_RECEPTION":
                 SceneSwitcher.switchScene("staff/staff_home.fxml");
                 break;
-            default:
-                // Default route to dashboard for unknown roles
-                SceneSwitcher.switchScene("staff/staff_home.fxml");
+            case "OUT":
+            	throw new BusinessException("Tài khoản này nhân viên đã nghỉ việc!");
+		default:
                 break;
         }
     }

@@ -177,5 +177,13 @@ public class AccountService {
 	public Account getAccountByUsername(String username) {
 		return accountRepository.getAccountByUsername(username);
 	}
+	
+	public void lockAccount(String username) {
+		Account account = accountRepository.getAccountByUsername(username);
+	    if (account != null) { 
+	        account.setActive(false);
+	        accountRepository.update(account);
+	    }
+	}
 
 }

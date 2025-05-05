@@ -180,7 +180,10 @@ public class EditProfileController implements Initializable {
 
     @FXML
     private void handleBack(ActionEvent event) {
-        SceneSwitcher.switchScene("staff/staff_home.fxml");
+    	if(Session.getCurrentAccount().getRole().getRoleName().equals("ADMIN")) {
+    		SceneSwitcher.switchScene("admin/admin_home.fxml");
+    	}
+    	else {SceneSwitcher.switchScene("staff/staff_home.fxml");}
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
