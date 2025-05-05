@@ -1,13 +1,9 @@
-/* Màu sắc chủ đạo - Tông cam dịu */
+/* staff_editpro5.css - Fixed Version */
+
+/* Define colors using JavaFX's color literals instead of CSS variables */
 .root {
     -fx-font-family: "Segoe UI", sans-serif;
-}
-
-/* Màu chính */
-.primary-color {
-    -primary-orange: #FFA07A;       /* Cam nhạt */
-    -primary-orange-dark: #E9967A;  /* Cam đậm hơn */
-    -primary-orange-light: #FFB6C1; /* Cam hồng nhạt */
+    -fx-font-size: 14px;
 }
 
 /* Header */
@@ -15,18 +11,25 @@
     -fx-background-color: #FFA07A; /* Màu cam chủ đạo */
     -fx-padding: 15;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    -fx-alignment: center;
+    -fx-max-width: Infinity;
 }
 
 .header-title {
     -fx-text-fill: white;
-    -fx-font-size: 20px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
 }
 
 /* Main Container */
 .main-container {
     -fx-background-color: #FFF5EE; /* Màu nền kem nhạt */
     -fx-padding: 20;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-fill-width: true;
+    -fx-fill-height: true;
 }
 
 /* Form Cards */
@@ -35,20 +38,23 @@
     -fx-background-radius: 5;
     -fx-padding: 25;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
-    -fx-min-width: 400;
-    -fx-max-width: 600;
+    -fx-max-width: Infinity;
 }
 
 .form-title {
     -fx-text-fill: #FF8C69; /* Cam đậm hơn một chút */
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-padding: 0 0 10 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 0, 0, 1);
 }
 
 /* Form Grid */
 .form-grid {
     -fx-padding: 10 0;
+    -fx-fill-width: true;
+    -fx-fill-height: true;
+    -fx-max-width: Infinity;
 }
 
 .field-label {
@@ -64,6 +70,7 @@
     -fx-border-radius: 5;
     -fx-border-color: #E0C9B9; /* Viền màu be nhạt */
     -fx-border-width: 1;
+    -fx-max-width: Infinity;
 }
 
 .field-input:focused {
@@ -73,18 +80,23 @@
 
 /* Buttons */
 .button-group {
-	-fx-background-color: #ffe0b3;
-    -fx-padding: 15 50 15 120;
-	-fx-background-radius: 5;
+    -fx-background-color: #ffe0b3;
+    -fx-padding: 15 20;
+    -fx-background-radius: 5;
+    -fx-max-width: Infinity;
+    -fx-alignment: center;
 }
 
 .btn-primary {
     -fx-background-color: #FFA07A; /* Cam chủ đạo */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-max-width: Infinity;
 }
 
 .btn-primary:hover {
@@ -95,9 +107,12 @@
     -fx-background-color: #A2D9A6; /* Xanh lá dịu */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-max-width: Infinity;
 }
 
 .btn-success:hover {
@@ -108,9 +123,12 @@
     -fx-background-color: #FF7F7F; /* Đỏ cam nhạt */
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-max-width: Infinity;
 }
 
 .btn-danger:hover {
@@ -118,12 +136,15 @@
 }
 
 .btn-secondary {
-   -fx-background-color: #A2D9A6; 
+    -fx-background-color: #A2D9A6; 
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-max-width: Infinity;
 }
 
 .btn-secondary:hover {
@@ -136,9 +157,11 @@
     -fx-border-color: #FFA07A; /* Cam chủ đạo */
     -fx-border-width: 1;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-background-radius: 5;
     -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-max-width: Infinity;
 }
 
 .btn-neutral:hover {
@@ -149,12 +172,16 @@
 .avatar-section {
     -fx-padding: 20;
     -fx-alignment: center;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-max-width: Infinity;
 }
 
 .avatar-image {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
-    -fx-background-radius: 60;
-    -fx-border-radius: 60;
+    -fx-background-radius: 75;
+    -fx-border-radius: 75;
     -fx-border-width: 3;
     -fx-border-color: #FFA07A; /* Cam chủ đạo */
 }
@@ -165,30 +192,27 @@
     -fx-border-color: #E0C9B9; /* Viền màu be nhạt */
     -fx-border-width: 1 0 0 0;
     -fx-padding: 15;
-}
-/* Làm nổi bật tiêu đề */
-.header-title {
-    -fx-font-size: 24px; /* Tăng kích thước */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
+    -fx-max-width: Infinity;
 }
 
-/* Làm nổi bật nút bấm */
-.btn-primary, .btn-success, .btn-danger, .btn-secondary {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
-    -fx-padding: 10 25; /* Tăng padding */
+/* Đảm bảo ScrollPane có nội dung lấp đầy không gian có sẵn */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
 }
 
-/* Form title nổi bật hơn */
-.form-title {
-    -fx-font-size: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 0, 0, 1);
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-pref-width: 1;
+    -fx-pref-height: 1;
 }
 
-/* Responsive Adjustments */
+/* Alternative settings for different screen sizes - JavaFX doesn't support @media queries */
+/* Instead define additional style classes you can apply programmatically */
+
+/* Small screen styles */
 .small-screen .form-card {
-    -fx-min-width: 300;
     -fx-padding: 15;
 }
 
@@ -204,4 +228,39 @@
 .small-screen .field-input {
     -fx-font-size: 13px;
     -fx-padding: 6;
+}
+
+.small-screen .button-group {
+    -fx-padding: 10 15;
+}
+
+.small-screen .btn-primary, 
+.small-screen .btn-success, 
+.small-screen .btn-danger, 
+.small-screen .btn-secondary, 
+.small-screen .btn-neutral {
+    -fx-padding: 8 20;
+    -fx-font-size: 12px;
+}
+
+/* Large screen styles */
+.large-screen .root {
+    -fx-font-size: 16px;
+}
+
+/* Đảm bảo tất cả các container chính đều mở rộng đúng cách */
+HBox, VBox, GridPane {
+    -fx-fill-width: true;
+    -fx-fill-height: true;
+}
+
+/* Đảm bảo các đối tượng input mở rộng đầy đủ */
+.text-field, .password-field, .text-area {
+    -fx-max-width: Infinity;
+}
+
+/* Đảm bảo các nút trong HBox mở rộng đúng cách */
+.button-group .button {
+    -fx-max-width: Infinity;
+    -fx-hgrow: always;
 }

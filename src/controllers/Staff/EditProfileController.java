@@ -7,12 +7,14 @@ import controllers.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import model.Account;
 import model.Staff;
 import service.AuthService;
@@ -37,6 +39,7 @@ public class EditProfileController implements Initializable {
     
     @FXML private VBox profileForm;
     @FXML private VBox passwordForm;
+    @FXML private VBox mainContainer;
 
     private StaffService staffService;
     private AuthService authService;
@@ -46,16 +49,20 @@ public class EditProfileController implements Initializable {
         authService = new AuthService();
     }
 
-    @FXML private VBox mainContainer;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Tải thông tin hồ sơ từ cơ sở dữ liệu
         loadProfile();
+        
+        // Thiết lập responsive design
         setupResponsive();
     }
 
+    /**
+     * Thiết lập responsive cho giao diện
+     */
     private void setupResponsive() {
-        // Lắng nghe thay đổi kích thước scene
+        // Phương pháp 1: Lắng nghe sự thay đổi kích thước scene
         mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.widthProperty().addListener((obs2, oldWidth, newWidth) -> {
@@ -64,20 +71,58 @@ public class EditProfileController implements Initializable {
                 updateResponsiveClasses(newScene);
             }
         });
+        
+        // Phương pháp 2: Áp dụng class dựa trên kích thước màn hình khi khởi tạo
+        // Lưu ý: Phương pháp này chỉ chạy một lần khi khởi tạo và không đáp ứng với thay đổi kích thước
+        mainContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                applyResponsiveLayout();
+            }
+        });
     }
-
-    private void updateResponsiveClasses(Scene scene) {
-        double width = scene.getWidth();
+    
+    /**
+     * Áp dụng bố cục đáp ứng dựa trên kích thước màn hình
+     */
+    private void applyResponsiveLayout() {
+        // Lấy kích thước màn hình
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        
+        // Lấy root scene để áp dụng style class
+        Parent root = mainContainer.getScene().getRoot();
         
         // Xóa class cũ
-        mainContainer.getStyleClass().remove("small-screen");
+        root.getStyleClass().removeAll("small-screen", "large-screen");
         
-        // Thêm class mới nếu cần
-        if (width < 600) {
-            mainContainer.getStyleClass().add("small-screen");
+        // Áp dụng class dựa trên kích thước màn hình
+        if (screenWidth < 1024) {
+            root.getStyleClass().add("small-screen");
+        } else if (screenWidth >= 1920) {
+            root.getStyleClass().add("large-screen");
+        }
+    }
+    
+    /**
+     * Cập nhật các class responsive theo kích thước scene
+     */
+    private void updateResponsiveClasses(Scene scene) {
+        double width = scene.getWidth();
+        Parent root = scene.getRoot();
+        
+        // Xóa class cũ
+        root.getStyleClass().removeAll("small-screen", "large-screen");
+        
+        // Thêm class mới dựa trên kích thước
+        if (width < 800) {
+            root.getStyleClass().add("small-screen");
+        } else if (width >= 1600) {
+            root.getStyleClass().add("large-screen");
         }
     }
 
+    /**
+     * Tải thông tin hồ sơ từ cơ sở dữ liệu
+     */
     private void loadProfile() {
         Session.getInstance();
         Account account = Session.getCurrentAccount();
@@ -186,6 +231,7 @@ public class EditProfileController implements Initializable {
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
