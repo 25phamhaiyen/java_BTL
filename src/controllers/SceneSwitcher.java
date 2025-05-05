@@ -2,11 +2,14 @@ package controllers;
 
 import java.io.IOException;
 
+import controllers.Staff.CreateInvoiceController;
 import controllers.Staff.InvoiceViewController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Booking;
+import service.BookingService;
 
 /**
  * Lớp tiện ích dùng để chuyển đổi giữa các màn hình (scene) trong ứng dụng
@@ -136,8 +139,15 @@ public class SceneSwitcher {
 
 			// Truyền bookingId cho controller
 			CreateInvoiceController controller = loader.getController();
-			controller.initData(bookingId);
-
+			BookingService bookingService = new BookingService();
+			Booking booking;
+			try {
+				booking = bookingService.getBookingById(bookingId);
+				controller.initData(booking);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			Scene scene = new Scene(root);
 			currentStage.setScene(scene);
 			currentStage.setTitle("Tạo hóa đơn cho đặt lịch #" + bookingId);

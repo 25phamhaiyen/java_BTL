@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import enums.GenderEnum;
+import javafx.util.Callback;
 
 public class PetService {
 
@@ -83,8 +84,9 @@ public class PetService {
         PetTypeRepository petTypeRepo = new PetTypeRepository();
         return petTypeRepo.selectAll(); 
     }
-    public Pet getPetByCustomerId(int customerId) {
-	    return petRepository.getPetByCustomerId(customerId);
-	}
+    public List<Pet> findPetsByCustomerId(int customerId) {
+        return petRepository.getPetsByCustomerId(customerId);
+    }
+
 
 }

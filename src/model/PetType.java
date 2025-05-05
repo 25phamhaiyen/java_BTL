@@ -40,7 +40,7 @@ public class PetType {
 
 	@Override
 	public String toString() {
-		return "TypePet [typePetID=" + typePetID + ", species=" + species + ", breed=" + breed + "]";
+	    return species + " - " + breed;
 	}
 
     
