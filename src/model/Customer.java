@@ -1,6 +1,5 @@
 package model;
 
-
 import java.sql.Timestamp;
 
 import enums.GenderEnum;
@@ -13,14 +12,15 @@ public class Customer extends Person {
 		super();
 	}
 
-	public Customer(int id, String fullName, GenderEnum gender, String phone, String address, String email, int point, Timestamp created_at) {
+	public Customer(int id, String fullName, GenderEnum gender, String phone, String address, String email, int point,
+			Timestamp created_at) {
 		super(id, fullName, gender, phone, address, email);
 		this.point = point;
 		this.created_at = created_at;
 	}
 
-
-	public Customer(int id, String fullName, GenderEnum gender, String phone, String email, String address, int points) {
+	public Customer(int id, String fullName, GenderEnum gender, String phone, String email, String address,
+			int points) {
 		super(id, fullName, gender, phone, address, email);
 		this.point = points;
 	}
@@ -49,6 +49,5 @@ public class Customer extends Person {
 	public String toString() {
 		return "Customer [point=" + point + ", created_at=" + created_at + "]";
 	}
-	
 
 }

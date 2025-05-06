@@ -1,11 +1,12 @@
 package model;
 
 public class PetType {
-    private int typePetID;
-    private String species;
-    private String breed;
+	private int typePetID;
+	private String species;
+	private String breed;
 
-    public PetType() {}
+	public PetType() {
+	}
 
 	public PetType(int typePetID, String species, String breed) {
 		super();
@@ -40,8 +41,7 @@ public class PetType {
 
 	@Override
 	public String toString() {
-	    return species + " - " + breed;
+		return species + " - " + breed;
 	}
 
-    
 }

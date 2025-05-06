@@ -23,381 +23,359 @@ import utils.DatabaseConnection;
 
 public class BookingRepository implements IRepository<Booking> {
 
-    private static BookingRepository instance;
+	private static BookingRepository instance;
 
-    public static BookingRepository getInstance() {
-        if (instance == null) {
-            instance = new BookingRepository();
-        }
-        return instance;
-    }
+	public static BookingRepository getInstance() {
+		if (instance == null) {
+			instance = new BookingRepository();
+		}
+		return instance;
+	}
 
-    /**
-     * Lấy danh sách booking theo ngày
-     * @param date Ngày cần lấy booking
-     * @return Danh sách booking trong ngày
-     */
-    public List<Booking> getBookingsByDate(LocalDate date) {
-        String condition = "DATE(booking_time) = ?";
-        return selectByCondition(condition, java.sql.Date.valueOf(date));
-    }
-    
-    /**
-     * Lấy danh sách booking trong khoảng thời gian
-     * @param startDate Ngày bắt đầu
-     * @param endDate Ngày kết thúc
-     * @return Danh sách booking trong khoảng thời gian
-     */
-    public List<Booking> getBookingsByDateRange(LocalDate startDate, LocalDate endDate) {
-        String condition = "DATE(booking_time) BETWEEN ? AND ?";
-        return selectByCondition(condition, java.sql.Date.valueOf(startDate), java.sql.Date.valueOf(endDate));
-    }
-    
-    /**
-     * Tìm kiếm booking theo số điện thoại khách hàng
-     * @param phone Số điện thoại cần tìm
-     * @return Danh sách booking có số điện thoại trùng khớp
-     */
-    public List<Booking> searchBookingsByPhone(String phone) {
-        String condition = "cp.phone LIKE ?";
-        return selectByCondition(condition, "%" + phone + "%");
-    }
+	/**
+	 * Lấy danh sách booking theo ngày
+	 * 
+	 * @param date Ngày cần lấy booking
+	 * @return Danh sách booking trong ngày
+	 */
+	public List<Booking> getBookingsByDate(LocalDate date) {
+		String condition = "DATE(booking_time) = ?";
+		return selectByCondition(condition, java.sql.Date.valueOf(date));
+	}
 
-    // Các phương thức đã tồn tại
-    @Override
-    public int insert(Booking t) {
-        int ketQua = 0;
-        String sql = "INSERT INTO booking (customer_id, pet_id, staff_id, booking_time, status, note) VALUES (?, ?, ?, ?, ?, ?)";
+	/**
+	 * Lấy danh sách booking trong khoảng thời gian
+	 * 
+	 * @param startDate Ngày bắt đầu
+	 * @param endDate   Ngày kết thúc
+	 * @return Danh sách booking trong khoảng thời gian
+	 */
+	public List<Booking> getBookingsByDateRange(LocalDate startDate, LocalDate endDate) {
+		String condition = "DATE(booking_time) BETWEEN ? AND ?";
+		return selectByCondition(condition, java.sql.Date.valueOf(startDate), java.sql.Date.valueOf(endDate));
+	}
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
+	/**
+	 * Tìm kiếm booking theo số điện thoại khách hàng
+	 * 
+	 * @param phone Số điện thoại cần tìm
+	 * @return Danh sách booking có số điện thoại trùng khớp
+	 */
+	public List<Booking> searchBookingsByPhone(String phone) {
+		String condition = "cp.phone LIKE ?";
+		return selectByCondition(condition, "%" + phone + "%");
+	}
 
-        try {
-            con = DatabaseConnection.getConnection();
-            pstmt = con.prepareStatement(sql);
+	// Các phương thức đã tồn tại
+	@Override
+	public int insert(Booking t) {
+		int ketQua = 0;
+		String sql = "INSERT INTO booking (customer_id, pet_id, staff_id, booking_time, status, note) VALUES (?, ?, ?, ?, ?, ?)";
 
-            pstmt.setInt(1, t.getCustomer().getId());
-            pstmt.setInt(2, t.getPet().getPetId());
-            pstmt.setInt(3, t.getStaff() != null ? t.getStaff().getId() : Types.NULL);  // Cho phép NULL
-            pstmt.setTimestamp(4, Timestamp.valueOf(t.getBookingTime()));
-            pstmt.setString(5, t.getStatus().name());
-            pstmt.setString(6, t.getNote());
+		Connection con = null;
+		PreparedStatement pstmt = null;
 
-            ketQua = pstmt.executeUpdate();
-            System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
+		try {
+			con = DatabaseConnection.getConnection();
+			pstmt = con.prepareStatement(sql);
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi thêm booking: " + e.getMessage());
-        } finally {
-            DBUtil.closeResources(con, pstmt);
-        }
-        return ketQua;
-    }
+			pstmt.setInt(1, t.getCustomer().getId());
+			pstmt.setInt(2, t.getPet().getPetId());
+			pstmt.setInt(3, t.getStaff() != null ? t.getStaff().getId() : Types.NULL); // Cho phép NULL
+			pstmt.setTimestamp(4, Timestamp.valueOf(t.getBookingTime()));
+			pstmt.setString(5, t.getStatus().name());
+			pstmt.setString(6, t.getNote());
 
-    @Override
-    public int update(Booking t) {
-        int ketQua = 0;
-        String sql = "UPDATE booking SET staff_id = ?, booking_time = ?, status = ?, note = ? WHERE booking_id = ?";
+			ketQua = pstmt.executeUpdate();
+			System.out.println("INSERT thành công, " + ketQua + " dòng bị thay đổi.");
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi thêm booking: " + e.getMessage());
+		} finally {
+			DBUtil.closeResources(con, pstmt);
+		}
+		return ketQua;
+	}
 
-        try {
-            con = DatabaseConnection.getConnection();
-            pstmt = con.prepareStatement(sql);
+	@Override
+	public int update(Booking t) {
+		int ketQua = 0;
+		String sql = "UPDATE booking SET staff_id = ?, booking_time = ?, status = ?, note = ? WHERE booking_id = ?";
 
-            pstmt.setInt(1, t.getStaff() != null ? t.getStaff().getId() : Types.NULL);
-            pstmt.setTimestamp(2, Timestamp.valueOf(t.getBookingTime()));
-            pstmt.setString(3, t.getStatus().name());
-            pstmt.setString(4, t.getNote());
-            pstmt.setInt(5, t.getBookingId());
+		Connection con = null;
+		PreparedStatement pstmt = null;
 
-            ketQua = pstmt.executeUpdate();
-            System.out.println("UPDATE thành công, " + ketQua + " dòng bị thay đổi.");
+		try {
+			con = DatabaseConnection.getConnection();
+			pstmt = con.prepareStatement(sql);
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi cập nhật booking: " + e.getMessage());
-        } finally {
-            DBUtil.closeResources(con, pstmt);
-        }
-        return ketQua;
-    }
+			pstmt.setInt(1, t.getStaff() != null ? t.getStaff().getId() : Types.NULL);
+			pstmt.setTimestamp(2, Timestamp.valueOf(t.getBookingTime()));
+			pstmt.setString(3, t.getStatus().name());
+			pstmt.setString(4, t.getNote());
+			pstmt.setInt(5, t.getBookingId());
 
+			ketQua = pstmt.executeUpdate();
+			System.out.println("UPDATE thành công, " + ketQua + " dòng bị thay đổi.");
 
-    @Override
-    public int delete(Booking t) {
-        int ketQua = 0;
-        String sql = "DELETE FROM booking WHERE booking_id = ?";
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi cập nhật booking: " + e.getMessage());
+		} finally {
+			DBUtil.closeResources(con, pstmt);
+		}
+		return ketQua;
+	}
 
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
+	@Override
+	public int delete(Booking t) {
+		int ketQua = 0;
+		String sql = "DELETE FROM booking WHERE booking_id = ?";
 
-            pstmt.setInt(1, t.getBookingId());
-            ketQua = pstmt.executeUpdate();
-            System.out.println("DELETE thành công, " + ketQua + " dòng bị xóa.");
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi xóa booking: " + e.getMessage());
-        }
-        return ketQua;
-    }
+			pstmt.setInt(1, t.getBookingId());
+			ketQua = pstmt.executeUpdate();
+			System.out.println("DELETE thành công, " + ketQua + " dòng bị xóa.");
 
-    @Override
-    public List<Booking> selectAll() {
-        List<Booking> list = new ArrayList<>();
-        String sql = "SELECT * FROM booking";
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi xóa booking: " + e.getMessage());
+		}
+		return ketQua;
+	}
 
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+	@Override
+	public List<Booking> selectAll() {
+		List<Booking> list = new ArrayList<>();
+		String sql = "SELECT * FROM booking";
 
-        try {
-            con = DatabaseConnection.getConnection();
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
-            CustomerRepository customerRepo = new CustomerRepository();
-            PetRepository petRepo = new PetRepository();
-            StaffRepository staffRepo = new StaffRepository();
+		try {
+			con = DatabaseConnection.getConnection();
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                Customer customer = customerRepo.selectById(rs.getInt("customer_id"));
-                Pet pet = petRepo.selectById(rs.getInt("pet_id"));
-                Staff staff = rs.getObject("staff_id") != null ? staffRepo.selectById(rs.getInt("staff_id")) : null;
+			CustomerRepository customerRepo = new CustomerRepository();
+			PetRepository petRepo = new PetRepository();
+			StaffRepository staffRepo = new StaffRepository();
 
-                Booking booking = new Booking(
-                        rs.getInt("booking_id"),
-                        customer,
-                        pet,
-                        staff,
-                        rs.getTimestamp("booking_time").toLocalDateTime(),
-                        StatusEnum.valueOf(rs.getString("status")),
-                        rs.getString("note")
-                );
+			while (rs.next()) {
+				Customer customer = customerRepo.selectById(rs.getInt("customer_id"));
+				Pet pet = petRepo.selectById(rs.getInt("pet_id"));
+				Staff staff = rs.getObject("staff_id") != null ? staffRepo.selectById(rs.getInt("staff_id")) : null;
 
-                list.add(booking);
-            }
+				Booking booking = new Booking(rs.getInt("booking_id"), customer, pet, staff,
+						rs.getTimestamp("booking_time").toLocalDateTime(), StatusEnum.valueOf(rs.getString("status")),
+						rs.getString("note"));
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách booking: " + e.getMessage());
-        } finally {
-            DBUtil.closeResources(con, pstmt, rs);
-        }
+				list.add(booking);
+			}
 
-        return list;
-    }
-    public Booking getNewestBookingByPhone(String phone) {
-        String condition = "cp.phone = ? ORDER BY b.booking_id DESC LIMIT 1";
-        List<Booking> bookings = selectByCondition(condition, phone);
-        return bookings.isEmpty() ? null : bookings.get(0);
-    }
-    public Booking selectById(int bookingID) {
-        Booking ketQua = null;
-        String sql = "SELECT b.booking_id, b.booking_time, b.status, b.note, " +
-                     "c.customer_id, cp.full_name AS customer_name, cp.phone AS customer_phone, cp.email AS customer_email, " +
-                     "p.pet_id, p.name AS pet_name, pt.species AS pet_species, pt.breed AS pet_breed, " +
-                     "s.staff_id, sp.full_name AS staff_name, sp.phone AS staff_phone " +
-                     "FROM booking b " +
-                     "JOIN customer c ON b.customer_id = c.customer_id " +
-                     "JOIN person cp ON c.customer_id = cp.person_id " +
-                     "JOIN pet p ON b.pet_id = p.pet_id " +
-                     "JOIN pet_type pt ON p.type_id = pt.type_id " +
-                     "LEFT JOIN staff s ON b.staff_id = s.staff_id " +
-                     "LEFT JOIN person sp ON s.staff_id = sp.person_id " +
-                     "WHERE b.booking_id = ?";
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi lấy danh sách booking: " + e.getMessage());
+		} finally {
+			DBUtil.closeResources(con, pstmt, rs);
+		}
 
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(sql)) {
+		return list;
+	}
 
-            pstmt.setInt(1, bookingID);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    Customer customer = new CustomerRepository().selectById(rs.getInt("customer_id"));
-                    Pet pet = new PetRepository().selectById(rs.getInt("pet_id"));
-                    Staff staff = rs.getObject("staff_id") != null ? new StaffRepository().selectById(rs.getInt("staff_id")) : null;
+	public Booking getNewestBookingByPhone(String phone) {
+		String condition = "cp.phone = ? ORDER BY b.booking_id DESC LIMIT 1";
+		List<Booking> bookings = selectByCondition(condition, phone);
+		return bookings.isEmpty() ? null : bookings.get(0);
+	}
 
-                    ketQua = new Booking(
-                            rs.getInt("booking_id"),
-                            customer,
-                            pet,
-                            staff,
-                            rs.getTimestamp("booking_time").toLocalDateTime(),
-                            StatusEnum.valueOf(rs.getString("status")),
-                            rs.getString("note")
-                    );
-                }
-            }
+	public Booking selectById(int bookingID) {
+		Booking ketQua = null;
+		String sql = "SELECT b.booking_id, b.booking_time, b.status, b.note, "
+				+ "c.customer_id, cp.full_name AS customer_name, cp.phone AS customer_phone, cp.email AS customer_email, "
+				+ "p.pet_id, p.name AS pet_name, pt.species AS pet_species, pt.breed AS pet_breed, "
+				+ "s.staff_id, sp.full_name AS staff_name, sp.phone AS staff_phone " + "FROM booking b "
+				+ "JOIN customer c ON b.customer_id = c.customer_id "
+				+ "JOIN person cp ON c.customer_id = cp.person_id " + "JOIN pet p ON b.pet_id = p.pet_id "
+				+ "JOIN pet_type pt ON p.type_id = pt.type_id " + "LEFT JOIN staff s ON b.staff_id = s.staff_id "
+				+ "LEFT JOIN person sp ON s.staff_id = sp.person_id " + "WHERE b.booking_id = ?";
 
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi tìm booking: " + e.getMessage());
-        }
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-        return ketQua;
-    }
+			pstmt.setInt(1, bookingID);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					Customer customer = new CustomerRepository().selectById(rs.getInt("customer_id"));
+					Pet pet = new PetRepository().selectById(rs.getInt("pet_id"));
+					Staff staff = rs.getObject("staff_id") != null
+							? new StaffRepository().selectById(rs.getInt("staff_id"))
+							: null;
 
-    @Override
-    public Booking selectById(Booking t) {
-        return selectById(t.getBookingId());
-    }
+					ketQua = new Booking(rs.getInt("booking_id"), customer, pet, staff,
+							rs.getTimestamp("booking_time").toLocalDateTime(),
+							StatusEnum.valueOf(rs.getString("status")), rs.getString("note"));
+				}
+			}
 
-    @Override
-    public List<Booking> selectByCondition(String condition, Object... params) {
-        List<Booking> bookings = new ArrayList<>();
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi tìm booking: " + e.getMessage());
+		}
 
-        if (condition == null || condition.trim().isEmpty()) {
-            throw new IllegalArgumentException("Điều kiện truy vấn không hợp lệ.");
-        }
+		return ketQua;
+	}
 
-        String sql = "SELECT b.booking_id, b.booking_time, b.status, b.note, " +
-                     "c.customer_id, cp.full_name AS customer_name, cp.phone AS customer_phone, cp.email AS customer_email, " +
-                     "p.pet_id, p.name AS pet_name, pt.species AS pet_species, pt.breed AS pet_breed, " +
-                     "s.staff_id, sp.full_name AS staff_name, sp.phone AS staff_phone " +
-                     "FROM booking b " +
-                     "JOIN customer c ON b.customer_id = c.customer_id " +
-                     "JOIN person cp ON c.customer_id = cp.person_id " +
-                     "JOIN pet p ON b.pet_id = p.pet_id " +
-                     "JOIN pet_type pt ON p.type_id = pt.type_id " +
-                     "LEFT JOIN staff s ON b.staff_id = s.staff_id " +
-                     "LEFT JOIN person sp ON s.staff_id = sp.person_id " +
-                     "WHERE " + condition;
+	@Override
+	public Booking selectById(Booking t) {
+		return selectById(t.getBookingId());
+	}
 
-        try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+	@Override
+	public List<Booking> selectByCondition(String condition, Object... params) {
+		List<Booking> bookings = new ArrayList<>();
 
-            for (int i = 0; i < params.length; i++) {
-                pstmt.setObject(i + 1, params[i]);
-            }
+		if (condition == null || condition.trim().isEmpty()) {
+			throw new IllegalArgumentException("Điều kiện truy vấn không hợp lệ.");
+		}
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Customer customer = new CustomerRepository().selectById(rs.getInt("customer_id"));
-                    Pet pet = new PetRepository().selectById(rs.getInt("pet_id"));
-                    Staff staff = rs.getObject("staff_id") != null ? new StaffRepository().selectById(rs.getInt("staff_id")) : null;
+		String sql = "SELECT b.booking_id, b.booking_time, b.status, b.note, "
+				+ "c.customer_id, cp.full_name AS customer_name, cp.phone AS customer_phone, cp.email AS customer_email, "
+				+ "p.pet_id, p.name AS pet_name, pt.species AS pet_species, pt.breed AS pet_breed, "
+				+ "s.staff_id, sp.full_name AS staff_name, sp.phone AS staff_phone " + "FROM booking b "
+				+ "JOIN customer c ON b.customer_id = c.customer_id "
+				+ "JOIN person cp ON c.customer_id = cp.person_id " + "JOIN pet p ON b.pet_id = p.pet_id "
+				+ "JOIN pet_type pt ON p.type_id = pt.type_id " + "LEFT JOIN staff s ON b.staff_id = s.staff_id "
+				+ "LEFT JOIN person sp ON s.staff_id = sp.person_id " + "WHERE " + condition;
 
-                    bookings.add(new Booking(
-                            rs.getInt("booking_id"),
-                            customer,
-                            pet,
-                            staff,
-                            rs.getTimestamp("booking_time").toLocalDateTime(),
-                            StatusEnum.valueOf(rs.getString("status")),
-                            rs.getString("note")
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi truy vấn booking theo điều kiện: " + e.getMessage());
-        }
-        return bookings;
-    }
+		try (Connection con = DatabaseConnection.getConnection(); PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-    public int getMonthlyBookings() {
-        String query = "SELECT COUNT(*) AS total_bookings " +
-                       "FROM booking " +
-                       "WHERE MONTH(booking_time) = MONTH(CURRENT_DATE) " +
-                       "AND YEAR(booking_time) = YEAR(CURRENT_DATE)";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+			for (int i = 0; i < params.length; i++) {
+				pstmt.setObject(i + 1, params[i]);
+			}
 
-            if (resultSet.next()) {
-                return resultSet.getInt("total_bookings");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0; // Return 0 if no data is found or an error occurs
-    }
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					Customer customer = new CustomerRepository().selectById(rs.getInt("customer_id"));
+					Pet pet = new PetRepository().selectById(rs.getInt("pet_id"));
+					Staff staff = rs.getObject("staff_id") != null
+							? new StaffRepository().selectById(rs.getInt("staff_id"))
+							: null;
 
-    public XYChart.Series<String, Number> getBookingData(String timeUnit) {
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        String sql = "";
+					bookings.add(new Booking(rs.getInt("booking_id"), customer, pet, staff,
+							rs.getTimestamp("booking_time").toLocalDateTime(),
+							StatusEnum.valueOf(rs.getString("status")), rs.getString("note")));
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi truy vấn booking theo điều kiện: " + e.getMessage());
+		}
+		return bookings;
+	}
 
-        switch (timeUnit.toUpperCase()) {
-            case "WEEK":
-                sql = """
-                    SELECT
-                        CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK), '%d/%m'),
-                               ' - ',
-                               DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK) + INTERVAL 6 DAY, '%d/%m')) AS label,
-                        COUNT(b.booking_id) AS total_bookings
-                    FROM (
-                        SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-                    ) AS weeks
-                    LEFT JOIN booking b
-                        ON b.booking_time >= DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK)
-                        AND b.booking_time < DATE_SUB(CURDATE(), INTERVAL (weeks.n - 2) WEEK)
-                    GROUP BY label
-                    ORDER BY MIN(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK))
-                    """;
-                break;
+	public int getMonthlyBookings() {
+		String query = "SELECT COUNT(*) AS total_bookings " + "FROM booking "
+				+ "WHERE MONTH(booking_time) = MONTH(CURRENT_DATE) " + "AND YEAR(booking_time) = YEAR(CURRENT_DATE)";
+		try (Connection connection = DatabaseConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(query);
+				ResultSet resultSet = statement.executeQuery()) {
 
-            case "MONTH":
-                sql = """
-                    SELECT
-                        DATE_FORMAT(booking_time, '%m/%Y') AS label,
-                        COUNT(*) AS total_bookings
-                    FROM booking
-                    WHERE YEAR(booking_time) = YEAR(CURDATE())
-                    GROUP BY label
-                    ORDER BY STR_TO_DATE(label, '%m/%Y')
-                    """;
-                break;
+			if (resultSet.next()) {
+				return resultSet.getInt("total_bookings");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0; // Return 0 if no data is found or an error occurs
+	}
 
-            case "YEAR":
-                sql = """
-                    SELECT
-                        YEAR(booking_time) AS label,
-                        COUNT(*) AS total_bookings
-                    FROM booking
-                    WHERE YEAR(booking_time) >= YEAR(CURDATE()) - 3
-                    GROUP BY label
-                    ORDER BY label
-                    """;
-                break;
+	public XYChart.Series<String, Number> getBookingData(String timeUnit) {
+		XYChart.Series<String, Number> series = new XYChart.Series<>();
+		String sql = "";
 
-            default:
-                return series;
-        }
+		switch (timeUnit.toUpperCase()) {
+		case "WEEK":
+			sql = """
+					SELECT
+					    CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK), '%d/%m'),
+					           ' - ',
+					           DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL (n - 1) WEEK) + INTERVAL 6 DAY, '%d/%m')) AS label,
+					    COUNT(b.booking_id) AS total_bookings
+					FROM (
+					    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+					) AS weeks
+					LEFT JOIN booking b
+					    ON b.booking_time >= DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK)
+					    AND b.booking_time < DATE_SUB(CURDATE(), INTERVAL (weeks.n - 2) WEEK)
+					GROUP BY label
+					ORDER BY MIN(DATE_SUB(CURDATE(), INTERVAL (weeks.n - 1) WEEK))
+					""";
+			break;
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+		case "MONTH":
+			sql = """
+					SELECT
+					    DATE_FORMAT(booking_time, '%m/%Y') AS label,
+					    COUNT(*) AS total_bookings
+					FROM booking
+					WHERE YEAR(booking_time) = YEAR(CURDATE())
+					GROUP BY label
+					ORDER BY STR_TO_DATE(label, '%m/%Y')
+					""";
+			break;
 
-            while (resultSet.next()) {
-                String label = resultSet.getString("label");
-                int totalBookings = resultSet.getInt("total_bookings");
-                series.getData().add(new XYChart.Data<>(label, totalBookings));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		case "YEAR":
+			sql = """
+					SELECT
+					    YEAR(booking_time) AS label,
+					    COUNT(*) AS total_bookings
+					FROM booking
+					WHERE YEAR(booking_time) >= YEAR(CURDATE()) - 3
+					GROUP BY label
+					ORDER BY label
+					""";
+			break;
 
-        return series;
-    }
+		default:
+			return series;
+		}
 
-    
-    public int getTotalBookings(String timeUnit) {
-        String procedureName = switch (timeUnit) {
-            case "WEEK" -> "sp_get_total_bookings_week";
-            case "MONTH" -> "sp_get_total_bookings_month";
-            case "YEAR" -> "sp_get_total_bookings_year";
-            default -> null;
-        };
+		try (Connection connection = DatabaseConnection.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql);
+				ResultSet resultSet = statement.executeQuery()) {
 
-        if (procedureName == null) return 0;
+			while (resultSet.next()) {
+				String label = resultSet.getString("label");
+				int totalBookings = resultSet.getInt("total_bookings");
+				series.getData().add(new XYChart.Data<>(label, totalBookings));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             CallableStatement stmt = conn.prepareCall("{CALL " + procedureName + "()}");
-             ResultSet rs = stmt.executeQuery()) {
+		return series;
+	}
 
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+	public int getTotalBookings(String timeUnit) {
+		String procedureName = switch (timeUnit) {
+		case "WEEK" -> "sp_get_total_bookings_week";
+		case "MONTH" -> "sp_get_total_bookings_month";
+		case "YEAR" -> "sp_get_total_bookings_year";
+		default -> null;
+		};
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		if (procedureName == null)
+			return 0;
 
-        return 0;
-    }
+		try (Connection conn = DatabaseConnection.getConnection();
+				CallableStatement stmt = conn.prepareCall("{CALL " + procedureName + "()}");
+				ResultSet rs = stmt.executeQuery()) {
+
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
 }

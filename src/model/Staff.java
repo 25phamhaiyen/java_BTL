@@ -9,17 +9,15 @@ public class Staff extends Person {
 	private double salary;
 	private Date hire_date;
 	private Account account;
-    private Role role;
-    private String position;
+	private Role role;
+	private String position;
 
-    public Staff() {
-        super();
-    }
-    
-    
+	public Staff() {
+		super();
+	}
 
-
-	public Staff(int id, String fullName, GenderEnum gender, String phone, String address, String email, Date dob, double salary, Date hire_date, Account account, Role role) {
+	public Staff(int id, String fullName, GenderEnum gender, String phone, String address, String email, Date dob,
+			double salary, Date hire_date, Account account, Role role) {
 		super(id, fullName, gender, phone, address, email);
 		this.dob = dob;
 		this.salary = salary;
@@ -31,13 +29,14 @@ public class Staff extends Person {
 	public Account getAccount() {
 		return account;
 	}
-	 public String getRoleName() {
-	        return role != null ? role.getRoleName() : "N/A";
-	 }
 
-	    public String getAccountName() {
-	        return account != null ? account.getUserName() : "N/A";
-	    }
+	public String getRoleName() {
+		return role != null ? role.getRoleName() : "N/A";
+	}
+
+	public String getAccountName() {
+		return account != null ? account.getUserName() : "N/A";
+	}
 
 	public void setAccount(Account account) {
 		this.account = account;
@@ -50,7 +49,6 @@ public class Staff extends Person {
 	public void setRole(Role role) {
 		this.role = role;
 	}
-
 
 	public double getSalary() {
 		return salary;
@@ -77,19 +75,17 @@ public class Staff extends Person {
 	}
 
 	public String getPosition() {
-        return position;
-    }
+		return position;
+	}
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
 	@Override
 	public String toString() {
 		return "Staff [dob=" + dob + ", salary=" + salary + ", hire_date=" + hire_date + ", account=" + account
 				+ ", role=" + role + "]";
 	}
-
-	
-
 
 }

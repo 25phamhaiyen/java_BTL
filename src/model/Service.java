@@ -1,17 +1,16 @@
 package model;
 
-
 public class Service {
 	private int serviceId;
-    private String name;
-    private String description;
-    private double price;
-    private int durationMinutes;
-    private boolean active;
+	private String name;
+	private String description;
+	private double price;
+	private int durationMinutes;
+	private boolean active;
 
-    public Service() {
-        super();
-    }
+	public Service() {
+		super();
+	}
 
 	public Service(int serviceId, String name, String description, double price, int durationMinutes, boolean active) {
 		super();
