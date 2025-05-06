@@ -35,176 +35,178 @@ import utils.Session;
 
 public class StaffController implements Initializable {
 
-    @FXML
-    private BorderPane mainContainer;
+	@FXML
+	private BorderPane mainContainer;
 
-    @FXML
-    private Label staffNameLabel;
+	@FXML
+	private Label staffNameLabel;
 
-    @FXML
-    private Label staffRoleLabel;
-    
-    @FXML
-    private Button myScheduleButton;
+	@FXML
+	private Label staffRoleLabel;
 
-    @FXML
-    private Button bookingViewButton;
-    
-    @FXML
-    private Button okila;
+	@FXML
+	private Button myScheduleButton;
 
-    @FXML
-    private Button invoiceViewButton;
+	@FXML
+	private Button bookingViewButton;
 
-    @FXML
-    private Button promotionButton;
+	@FXML
+	private Button okila;
 
-    @FXML
-    private Button editProfileButton;
+	@FXML
+	private Button invoiceViewButton;
 
-    @FXML
-    private Button logoutButton;
-    
-    @FXML
-    private ListView<WorkSchedule> todayScheduleListView;
+	@FXML
+	private Button promotionButton;
 
-    private final ScheduleService scheduleService = new ScheduleService();
+	@FXML
+	private Button editProfileButton;
 
-    private Staff currentStaff;
-    
-    @FXML
-    private Label welcomeLabel;
-    
-    @FXML
-    private ListView<String> todayAppointmentListView;
-    
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        new StaffService();
+	@FXML
+	private Button logoutButton;
 
-        // Lấy thông tin nhân viên hiện tại từ Session
-        currentStaff = Session.getCurrentStaff();
+	@FXML
+	private ListView<WorkSchedule> todayScheduleListView;
 
-        // Hiển thị thông tin nhân viên trên giao diện
-        if (currentStaff != null) {
-            staffNameLabel.setText(currentStaff.getFullName());
-            staffRoleLabel.setText(currentStaff.getRole().getRoleName());
-        }
-        
-        // Cập nhật tên giao diện
-        welcomeLabel.setText("Chào mừng " + (currentStaff != null ? currentStaff.getFullName() : "Nhân viên") + 
-                             ", " + (currentStaff != null && currentStaff.getRole() != null ? 
-                                    currentStaff.getRole().getRoleName() : "Nhân viên"));
-        
-        // Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
-        setupButtonVisibility();
-        
-        // Cấu hình nút dựa trên vai trò
-        setupRoleBasedFocus();
+	private final ScheduleService scheduleService = new ScheduleService();
 
-        todayScheduleListView.setCellFactory(lv -> new ListCell<WorkSchedule>() {
-            @Override
-            protected void updateItem(WorkSchedule item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getShift() + (item.getWorkDate()==null ? "": " - " + item.getWorkDate()));
-                }
-            }
-        });
+	private Staff currentStaff;
 
-        loadTodaySchedule();
-        loadTodayAppointments();
-    }
-    
-    /**
-     * Configure role-based button focus and styling
-     */
-    private void setupRoleBasedFocus() {
-        if (currentStaff == null || currentStaff.getRole() == null) return;
-        
-        String roleName = currentStaff.getRole().getRoleName().toUpperCase();
-        // Ở đây bạn có thể thêm code để đặt focus hoặc style cho các nút dựa trên vai trò
-        // Ví dụ: Đặt style đặc biệt cho nút tương ứng với vai trò của nhân viên
-    }
-    
-    private void loadTodaySchedule() {
-        try {
-            currentStaff = Session.getCurrentStaff(); // Kiểm tra lại thông tin nhân viên từ session
-            if (currentStaff == null) {
-                System.out.println("Không thể xác định nhân viên hiện tại");
-                todayScheduleListView.getItems().clear();
-                return;
-            }
+	@FXML
+	private Label welcomeLabel;
 
-            LocalDate today = LocalDate.now();
-            List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
+	@FXML
+	private ListView<String> todayAppointmentListView;
 
-            // Log để kiểm tra dữ liệu
-            if (schedules != null && !schedules.isEmpty()) {
-                System.out.println("Dữ liệu lịch làm việc: ");
-                for (WorkSchedule schedule : schedules) {
-                    System.out.println(schedule); // In ra thông tin của mỗi lịch làm việc
-                }
-                // Đổ vào ListView nếu có lịch
-                todayScheduleListView.getItems().setAll(schedules);
-            } else {
-                System.out.println("Không có lịch làm việc cho hôm nay.");
-                
-                // Sử dụng thông báo đơn giản thay vì đối tượng WorkSchedule
-                todayScheduleListView.getItems().clear();
-                // Nếu bạn vẫn muốn hiển thị thông báo, có thể sử dụng một Label khác
-            }
-        } catch (Exception e) {
-            System.out.println("Lỗi trong loadTodaySchedule: " + e.getMessage());
-            e.printStackTrace();
-            todayScheduleListView.getItems().clear();
-        }
-    }
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		new StaffService();
 
-    private void loadTodayAppointments() {
-        ObservableList<String> appointments = FXCollections.observableArrayList();
-        BookingService bookingService = new BookingService();
+		// Lấy thông tin nhân viên hiện tại từ Session
+		currentStaff = Session.getCurrentStaff();
 
-        try {
-            currentStaff = Session.getCurrentStaff(); // Đảm bảo có thông tin nhân viên
-            if (currentStaff == null) {
-                appointments.add("Không thể xác định nhân viên.");
-                todayAppointmentListView.setItems(appointments);
-                return;
-            }
+		// Hiển thị thông tin nhân viên trên giao diện
+		if (currentStaff != null) {
+			staffNameLabel.setText(currentStaff.getFullName());
+			staffRoleLabel.setText(currentStaff.getRole().getRoleName());
+		}
 
-            List<Booking> bookings = bookingService.getBookingsByStaffId(currentStaff.getId());
-            LocalDate today = LocalDate.now();
+		// Cập nhật tên giao diện
+		welcomeLabel.setText("Chào mừng " + (currentStaff != null ? currentStaff.getFullName() : "Nhân viên") + ", "
+				+ (currentStaff != null && currentStaff.getRole() != null ? currentStaff.getRole().getRoleName()
+						: "Nhân viên"));
 
-            for (Booking booking : bookings) {
-                if (booking.getBookingTime().toLocalDate().equals(today)) {
-                    Pet pet = booking.getPet();
-                    Customer customer = booking.getCustomer();
+		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
+		setupButtonVisibility();
 
-                    String time = booking.getBookingTime().toLocalTime().toString();
-                    String petName = (pet != null) ? pet.getName() : "Không rõ";
-                    String customerName = (customer != null) ? customer.getFullName() : "Không rõ";
+		// Cấu hình nút dựa trên vai trò
+		setupRoleBasedFocus();
 
-                    String displayText = time + " - " + petName + " (" + customerName + ")";
-                    appointments.add(displayText);
-                }
-            }
+		todayScheduleListView.setCellFactory(lv -> new ListCell<WorkSchedule>() {
+			@Override
+			protected void updateItem(WorkSchedule item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty || item == null) {
+					setText(null);
+				} else {
+					setText(item.getShift() + (item.getWorkDate() == null ? "" : " - " + item.getWorkDate()));
+				}
+			}
+		});
 
-            if (appointments.isEmpty()) {
-                appointments.add("Không có lịch hẹn nào hôm nay.");
-            }
+		loadTodaySchedule();
+		loadTodayAppointments();
+	}
 
-            todayAppointmentListView.setItems(appointments);
+	/**
+	 * Configure role-based button focus and styling
+	 */
+	private void setupRoleBasedFocus() {
+		if (currentStaff == null || currentStaff.getRole() == null)
+			return;
 
-        } catch (Exception e) {
-            appointments.clear();
-            appointments.add("Lỗi khi tải lịch hẹn hôm nay: " + e.getMessage());
-            todayAppointmentListView.setItems(appointments);
-            e.printStackTrace();
-        }
-    }
+		String roleName = currentStaff.getRole().getRoleName().toUpperCase();
+		// Ở đây bạn có thể thêm code để đặt focus hoặc style cho các nút dựa trên vai
+		// trò
+		// Ví dụ: Đặt style đặc biệt cho nút tương ứng với vai trò của nhân viên
+	}
+
+	private void loadTodaySchedule() {
+		try {
+			currentStaff = Session.getCurrentStaff(); // Kiểm tra lại thông tin nhân viên từ session
+			if (currentStaff == null) {
+				System.out.println("Không thể xác định nhân viên hiện tại");
+				todayScheduleListView.getItems().clear();
+				return;
+			}
+
+			LocalDate today = LocalDate.now();
+			List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
+
+			// Log để kiểm tra dữ liệu
+			if (schedules != null && !schedules.isEmpty()) {
+				System.out.println("Dữ liệu lịch làm việc: ");
+				for (WorkSchedule schedule : schedules) {
+					System.out.println(schedule); // In ra thông tin của mỗi lịch làm việc
+				}
+				// Đổ vào ListView nếu có lịch
+				todayScheduleListView.getItems().setAll(schedules);
+			} else {
+				System.out.println("Không có lịch làm việc cho hôm nay.");
+
+				// Sử dụng thông báo đơn giản thay vì đối tượng WorkSchedule
+				todayScheduleListView.getItems().clear();
+				// Nếu bạn vẫn muốn hiển thị thông báo, có thể sử dụng một Label khác
+			}
+		} catch (Exception e) {
+			System.out.println("Lỗi trong loadTodaySchedule: " + e.getMessage());
+			e.printStackTrace();
+			todayScheduleListView.getItems().clear();
+		}
+	}
+
+	private void loadTodayAppointments() {
+		ObservableList<String> appointments = FXCollections.observableArrayList();
+		BookingService bookingService = new BookingService();
+
+		try {
+			currentStaff = Session.getCurrentStaff(); // Đảm bảo có thông tin nhân viên
+			if (currentStaff == null) {
+				appointments.add("Không thể xác định nhân viên.");
+				todayAppointmentListView.setItems(appointments);
+				return;
+			}
+
+			List<Booking> bookings = bookingService.getBookingsByStaffId(currentStaff.getId());
+			LocalDate today = LocalDate.now();
+
+			for (Booking booking : bookings) {
+				if (booking.getBookingTime().toLocalDate().equals(today)) {
+					Pet pet = booking.getPet();
+					Customer customer = booking.getCustomer();
+
+					String time = booking.getBookingTime().toLocalTime().toString();
+					String petName = (pet != null) ? pet.getName() : "Không rõ";
+					String customerName = (customer != null) ? customer.getFullName() : "Không rõ";
+
+					String displayText = time + " - " + petName + " (" + customerName + ")";
+					appointments.add(displayText);
+				}
+			}
+
+			if (appointments.isEmpty()) {
+				appointments.add("Không có lịch hẹn nào hôm nay.");
+			}
+
+			todayAppointmentListView.setItems(appointments);
+
+		} catch (Exception e) {
+			appointments.clear();
+			appointments.add("Lỗi khi tải lịch hẹn hôm nay: " + e.getMessage());
+			todayAppointmentListView.setItems(appointments);
+			e.printStackTrace();
+		}
+	}
 
 	private void setupButtonVisibility() {
 		// Các nút mặc định hiển thị cho tất cả nhân viên
@@ -213,10 +215,8 @@ public class StaffController implements Initializable {
 
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		myScheduleButton.setVisible(RoleChecker.hasPermission("VIEW_SCHEDULE"));
-		bookingViewButton.setVisible(
-				RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED"));
-		invoiceViewButton
-				.setVisible(RoleChecker.hasPermission("VIEW_INVOICE"));
+		bookingViewButton.setVisible(RoleChecker.hasPermission("VIEW_BOOKING_ASSIGNED"));
+		invoiceViewButton.setVisible(RoleChecker.hasPermission("VIEW_INVOICE"));
 	}
 
 	@FXML
@@ -227,7 +227,7 @@ public class StaffController implements Initializable {
 	@FXML
 	private void showBookingView(ActionEvent event) {
 		SceneSwitcher.switchScene("staff/booking_view.fxml");
-	
+
 	}
 
 	@FXML
@@ -255,7 +255,7 @@ public class StaffController implements Initializable {
 
 	@FXML
 	private void showEditProfile(ActionEvent event) {
-			SceneSwitcher.switchScene("staff/edit_profile.fxml");
+		SceneSwitcher.switchScene("staff/edit_profile.fxml");
 	}
 
 	@FXML

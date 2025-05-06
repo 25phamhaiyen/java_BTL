@@ -3,21 +3,22 @@ package model;
 import enums.GenderEnum;
 
 public class Person {
-    protected int id;
-    protected String fullName;
-    protected GenderEnum gender;
-    protected String phone;
-    protected String address;
-    protected String email; 
+	protected int id;
+	protected String fullName;
+	protected GenderEnum gender;
+	protected String phone;
+	protected String address;
+	protected String email;
 
-	public Person() {}
+	public Person() {
+	}
+
 	public Person(int id) {
 		super();
 		this.id = id;
-		
+
 	}
 
-    
 	public Person(int id, String fullName, GenderEnum gender, String phone, String address, String email) {
 		super();
 		this.id = id;
@@ -27,7 +28,6 @@ public class Person {
 		this.address = address;
 		this.email = email;
 	}
-
 
 	public String getEmail() {
 		return email;
@@ -53,7 +53,6 @@ public class Person {
 		this.gender = gender;
 	}
 
-
 	public String getAddress() {
 		return address;
 	}
@@ -62,31 +61,21 @@ public class Person {
 		this.address = address;
 	}
 
-
-
 	public String getFullName() {
 		return fullName;
 	}
-
-
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 
-
-
 	public String getPhone() {
 		return phone;
 	}
 
-
-
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
-
 
 	@Override
 	public String toString() {
@@ -94,6 +83,4 @@ public class Person {
 				+ address + ", email=" + email + "]";
 	}
 
-
-    
 }

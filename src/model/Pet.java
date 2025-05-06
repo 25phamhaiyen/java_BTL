@@ -6,15 +6,16 @@ import enums.GenderEnum;
 
 public class Pet {
 	private int petId;
-    private String name;
-    private PetType petType; 
-    private GenderEnum gender;
-    private LocalDate dob;
-    private double weight;
-    private String note;
-    private Customer owner;
+	private String name;
+	private PetType petType;
+	private GenderEnum gender;
+	private LocalDate dob;
+	private double weight;
+	private String note;
+	private Customer owner;
 
-    public Pet() {}
+	public Pet() {
+	}
 
 	public Pet(int petId, String name, PetType petType, GenderEnum gender, LocalDate dob, double weight, String note,
 			Customer owner) {
@@ -39,7 +40,6 @@ public class Pet {
 		this.note = note;
 	}
 
-
 	public Pet(String name, GenderEnum gender, PetType petType, LocalDate dob, double weight) {
 		super();
 		this.name = name;
@@ -48,7 +48,6 @@ public class Pet {
 		this.dob = dob;
 		this.weight = weight;
 	}
-
 
 	public int getPetId() {
 		return petId;
@@ -120,5 +119,4 @@ public class Pet {
 				+ ", weight=" + weight + ", note=" + note + ", owner=" + owner + "]";
 	}
 
-    
 }

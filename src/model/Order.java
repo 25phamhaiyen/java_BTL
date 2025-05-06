@@ -6,14 +6,15 @@ import enums.StatusEnum;
 
 public class Order {
 	private int orderId;
-    private Customer customer;
-    private Staff staff;
-    private Timestamp orderDate;
-    private Promotion voucher;
-    private double totalAmount;
-    private StatusEnum status;
-    
-    public Order() {}
+	private Customer customer;
+	private Staff staff;
+	private Timestamp orderDate;
+	private Promotion voucher;
+	private double totalAmount;
+	private StatusEnum status;
+
+	public Order() {
+	}
 
 	public Order(int orderId, Customer customer, Staff staff, Timestamp orderDate, Promotion voucher,
 			double totalAmount, StatusEnum status) {
@@ -88,6 +89,5 @@ public class Order {
 		return "Order [orderId=" + orderId + ", customer=" + customer + ", staff=" + staff + ", orderDate=" + orderDate
 				+ ", voucher=" + voucher + ", totalAmount=" + totalAmount + ", status=" + status + "]";
 	}
-    
-    
+
 }

@@ -15,175 +15,178 @@ import model.Role;
 import repository.AccountRepository;
 
 public class AccountService {
-    
-    private static final Pattern PASSWORD_PATTERN =
-            Pattern.compile("^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
-    private final AccountRepository accountRepository;
+	private static final Pattern PASSWORD_PATTERN = Pattern
+			.compile("^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
-    public AccountService() {
-        this.accountRepository = AccountRepository.getInstance();
-    }
+	private final AccountRepository accountRepository;
 
-    /**
-     * Đăng ký tài khoản mới
-     */
-    public boolean register(String username, String password, Role role) {
-        Account newAccount;
+	public AccountService() {
+		this.accountRepository = AccountRepository.getInstance();
+	}
+
+	/**
+	 * Đăng ký tài khoản mới
+	 */
+	public boolean register(String username, String password, Role role) {
+		Account newAccount;
 		try {
 			newAccount = new Account(0, username, password, role);
 			return accountRepository.insert(newAccount) > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
-	        return false;
+			return false;
 		}
-        
-    }
 
-    /**
-     * Đăng nhập
-     */
-    public Optional<Account> login(String username, String password) {
-        Account account = accountRepository.getAccountByUsername(username);
+	}
 
-        if (account == null) {
-            System.out.println("Không tìm thấy tài khoản!");
-            return Optional.empty();
-        }
+	/**
+	 * Đăng nhập
+	 */
+	public Optional<Account> login(String username, String password) {
+		Account account = accountRepository.getAccountByUsername(username);
 
-        System.out.println("Stored password: " + account.getPassword());
-        System.out.println("Input password: " + password);
-        
-        // Kiểm tra mật khẩu thuần (tạm thời cho phát triển)
-        if (password.equals("123") && !username.equals("admin01")) {
-            System.out.println("Đăng nhập thành công với mật khẩu dự phòng!");
-            return Optional.of(account);
-        }
-        
-        if (password.equals("admin123") && username.equals("admin01")) {
-            System.out.println("Đăng nhập thành công với mật khẩu dự phòng admin!");
-            return Optional.of(account);
-        }
+		if (account == null) {
+			System.out.println("Không tìm thấy tài khoản!");
+			return Optional.empty();
+		}
 
-        try {
-            boolean passwordMatch = BCrypt.checkpw(password, account.getPassword());
-            if (passwordMatch) {
-                System.out.println("Đăng nhập thành công với BCrypt!");
-                return Optional.of(account);
-            } else {
-                System.out.println("Mật khẩu không đúng!");
-                return Optional.empty();
-            }
-        } catch (Exception e) {
-            System.err.println("Lỗi khi kiểm tra mật khẩu: " + e.getMessage());
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }    /**
-     * Cập nhật thông tin tài khoản
-     */
-    public boolean updateAccount(int accountID, String newUsername, String newPassword, Role role) {
-        validateAccountData(newUsername, newPassword);
+		System.out.println("Stored password: " + account.getPassword());
+		System.out.println("Input password: " + password);
 
-        Account existingAccount = accountRepository.selectById(accountID);
-        if (existingAccount == null) {
-            throw new AccountException("Tài khoản không tồn tại!");
-        }
+		// Kiểm tra mật khẩu thuần (tạm thời cho phát triển)
+		if (password.equals("123") && !username.equals("admin01")) {
+			System.out.println("Đăng nhập thành công với mật khẩu dự phòng!");
+			return Optional.of(account);
+		}
 
-        if (!existingAccount.getUserName().equals(newUsername) && accountRepository.isAccountExist(newUsername)) {
-            throw new AccountException("Tên đăng nhập mới đã được sử dụng!");
-        }
+		if (password.equals("admin123") && username.equals("admin01")) {
+			System.out.println("Đăng nhập thành công với mật khẩu dự phòng admin!");
+			return Optional.of(account);
+		}
 
-        existingAccount.setUserName(newUsername);
-        if (newPassword != null && !newPassword.trim().isEmpty()) {
-            existingAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt())); // 🔹 Hash mật khẩu mới
-        }
+		try {
+			boolean passwordMatch = BCrypt.checkpw(password, account.getPassword());
+			if (passwordMatch) {
+				System.out.println("Đăng nhập thành công với BCrypt!");
+				return Optional.of(account);
+			} else {
+				System.out.println("Mật khẩu không đúng!");
+				return Optional.empty();
+			}
+		} catch (Exception e) {
+			System.err.println("Lỗi khi kiểm tra mật khẩu: " + e.getMessage());
+			e.printStackTrace();
+			return Optional.empty();
+		}
+	}
 
-        existingAccount.setRole(role);
+	/**
+	 * Cập nhật thông tin tài khoản
+	 */
+	public boolean updateAccount(int accountID, String newUsername, String newPassword, Role role) {
+		validateAccountData(newUsername, newPassword);
 
-        return accountRepository.update(existingAccount) > 0;
-    }
-    public boolean updateAccount(Account account) {
-        return accountRepository.updateRoleAndActive(account) > 0;
-    }
+		Account existingAccount = accountRepository.selectById(accountID);
+		if (existingAccount == null) {
+			throw new AccountException("Tài khoản không tồn tại!");
+		}
 
-    public boolean updatePassword(int accountID, String newPassword) {
-        try {
-            return accountRepository.updatePassword(accountID, newPassword);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
+		if (!existingAccount.getUserName().equals(newUsername) && accountRepository.isAccountExist(newUsername)) {
+			throw new AccountException("Tên đăng nhập mới đã được sử dụng!");
+		}
 
-    /**
-     * Xóa tài khoản (Không xóa tài khoản admin mặc định)
-     */
-    public boolean deleteAccount(int accountID) {
-        Account account = accountRepository.selectById(accountID);
-        if (account == null) {
-            throw new AccountException("Tài khoản không tồn tại!");
-        }
+		existingAccount.setUserName(newUsername);
+		if (newPassword != null && !newPassword.trim().isEmpty()) {
+			existingAccount.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt())); // 🔹 Hash mật khẩu mới
+		}
 
-        if ("ADMIN".equalsIgnoreCase(account.getRole().getRoleName())) {
-            throw new AccountException("Không thể xóa tài khoản Admin!");
-        }
+		existingAccount.setRole(role);
 
-        return accountRepository.delete(account) > 0;
-    }
+		return accountRepository.update(existingAccount) > 0;
+	}
 
+	public boolean updateAccount(Account account) {
+		return accountRepository.updateRoleAndActive(account) > 0;
+	}
 
-    /**
-     * Lấy danh sách tất cả tài khoản
-     */
-    public List<Account> getAllAccounts() {
-        return accountRepository.selectAll();
-    }
+	public boolean updatePassword(int accountID, String newPassword) {
+		try {
+			return accountRepository.updatePassword(accountID, newPassword);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
-    /**
-     * Kiểm tra dữ liệu tài khoản
-     */
-    public String validateAccountData(String username, String password) {
-        
-    	if (username == null || username.trim().isEmpty()) {
-            return "Tên đăng nhập không được để trống!";
-        }
-    	if (accountRepository.isAccountExist(username)) {
-            return "Tên đăng nhập đã tồn tại!";
-        }
-        if (password == null || !PASSWORD_PATTERN.matcher(password).matches()) {
-            return "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!";
-        }
-        return null;
-        
-    }
-    public Map<Account, String> getAllAccountsWithPermissions() {
-        return accountRepository.getAllAccountsWithPermissions();
-    }
-    public boolean resetPassword(int accountID, String newPassword) {
-        return accountRepository.resetPassword(accountID, newPassword);
-    }
+	/**
+	 * Xóa tài khoản (Không xóa tài khoản admin mặc định)
+	 */
+	public boolean deleteAccount(int accountID) {
+		Account account = accountRepository.selectById(accountID);
+		if (account == null) {
+			throw new AccountException("Tài khoản không tồn tại!");
+		}
+
+		if ("ADMIN".equalsIgnoreCase(account.getRole().getRoleName())) {
+			throw new AccountException("Không thể xóa tài khoản Admin!");
+		}
+
+		return accountRepository.delete(account) > 0;
+	}
+
+	/**
+	 * Lấy danh sách tất cả tài khoản
+	 */
+	public List<Account> getAllAccounts() {
+		return accountRepository.selectAll();
+	}
+
+	/**
+	 * Kiểm tra dữ liệu tài khoản
+	 */
+	public String validateAccountData(String username, String password) {
+
+		if (username == null || username.trim().isEmpty()) {
+			return "Tên đăng nhập không được để trống!";
+		}
+		if (accountRepository.isAccountExist(username)) {
+			return "Tên đăng nhập đã tồn tại!";
+		}
+		if (password == null || !PASSWORD_PATTERN.matcher(password).matches()) {
+			return "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt!";
+		}
+		return null;
+
+	}
+
+	public Map<Account, String> getAllAccountsWithPermissions() {
+		return accountRepository.getAllAccountsWithPermissions();
+	}
+
+	public boolean resetPassword(int accountID, String newPassword) {
+		return accountRepository.resetPassword(accountID, newPassword);
+	}
 
 	public int getAccountIdByUsername(String username) {
-        try {
-            return accountRepository.getAccountIdByUsername(username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		try {
+			return accountRepository.getAccountIdByUsername(username);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
-	
+
 	public Account getAccountByUsername(String username) {
 		return accountRepository.getAccountByUsername(username);
 	}
-	
+
 	public void lockAccount(String username) {
 		Account account = accountRepository.getAccountByUsername(username);
-	    if (account != null) { 
-	        account.setActive(false);
-	        accountRepository.update(account);
-	    }
+		if (account != null) {
+			account.setActive(false);
+			accountRepository.update(account);
+		}
 	}
 
 }

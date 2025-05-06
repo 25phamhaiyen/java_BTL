@@ -5,16 +5,20 @@ public enum PaymentMethodEnum {
 
 	private final int code;
 
-	PaymentMethodEnum(int code) { this.code = code; }
+	PaymentMethodEnum(int code) {
+		this.code = code;
+	}
 
-    public int getCode() { return code; }
+	public int getCode() {
+		return code;
+	}
 
-    public static StatusEnum fromCode(int code) {
-        for (StatusEnum status : StatusEnum.values()) {
-            if (status.getCode() == code) {
-                return status;
-            }
-        }
-        throw new IllegalArgumentException("Invalid status code: " + code);
-    }
+	public static StatusEnum fromCode(int code) {
+		for (StatusEnum status : StatusEnum.values()) {
+			if (status.getCode() == code) {
+				return status;
+			}
+		}
+		throw new IllegalArgumentException("Invalid status code: " + code);
+	}
 }

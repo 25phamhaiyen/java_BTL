@@ -12,252 +12,245 @@ import service.ServiceService;
 
 public class ManageService {
 
-    @FXML
-    private TableView<Service> tableView;
+	@FXML
+	private TableView<Service> tableView;
 
-    @FXML
-    private TextField searchField;
+	@FXML
+	private TextField searchField;
 
-    @FXML
-    private TableColumn<Service, Integer> idColumn;
+	@FXML
+	private TableColumn<Service, Integer> idColumn;
 
-    @FXML
-    private TableColumn<Service, String> nameColumn;
+	@FXML
+	private TableColumn<Service, String> nameColumn;
 
-    @FXML
-    private TableColumn<Service, Double> priceColumn;
+	@FXML
+	private TableColumn<Service, Double> priceColumn;
 
-    @FXML
-    private TableColumn<Service, String> descriptionColumn;
+	@FXML
+	private TableColumn<Service, String> descriptionColumn;
 
-    @FXML
-    private TableColumn<Service, String> durationColumn;
-    
-    @FXML
-    private TableColumn<Service, Boolean> statusColumn;
+	@FXML
+	private TableColumn<Service, String> durationColumn;
 
-    @FXML
-    private Button addButton;
+	@FXML
+	private TableColumn<Service, Boolean> statusColumn;
 
-    @FXML
-    private Button editButton;
+	@FXML
+	private Button addButton;
 
-    @FXML
-    private Button deleteButton;
+	@FXML
+	private Button editButton;
 
-    private ObservableList<Service> serviceList;
-    private final ServiceService serviceService;
+	@FXML
+	private Button deleteButton;
 
-    public ManageService() {
-        this.serviceService = new ServiceService();
-    }
+	private ObservableList<Service> serviceList;
+	private final ServiceService serviceService;
 
-    @FXML
-    public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("serviceId"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        durationColumn.setCellValueFactory(new PropertyValueFactory<>("durationMinutes"));
+	public ManageService() {
+		this.serviceService = new ServiceService();
+	}
 
-        // Hiển thị trạng thái "Hoạt động" hoặc "Ngừng hoạt động"
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("active"));
-        statusColumn.setCellFactory(column -> new TableCell<Service, Boolean>() {
-            @Override
-            protected void updateItem(Boolean active, boolean empty) {
-                super.updateItem(active, empty);
-                if (empty || active == null) {
-                    setText(null);
-                } else {
-                    setText(active ? "Hoạt động" : "Ngừng hoạt động");
-                    setStyle(active ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
-                }
-            }
-        });
+	@FXML
+	public void initialize() {
+		idColumn.setCellValueFactory(new PropertyValueFactory<>("serviceId"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+		priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+		durationColumn.setCellValueFactory(new PropertyValueFactory<>("durationMinutes"));
 
-        // Lấy danh sách từ cơ sở dữ liệu
-        serviceList = FXCollections.observableArrayList(serviceService.getAllServices());
-        tableView.setItems(serviceList);
+		// Hiển thị trạng thái "Hoạt động" hoặc "Ngừng hoạt động"
+		statusColumn.setCellValueFactory(new PropertyValueFactory<>("active"));
+		statusColumn.setCellFactory(column -> new TableCell<Service, Boolean>() {
+			@Override
+			protected void updateItem(Boolean active, boolean empty) {
+				super.updateItem(active, empty);
+				if (empty || active == null) {
+					setText(null);
+				} else {
+					setText(active ? "Hoạt động" : "Ngừng hoạt động");
+					setStyle(active ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+				}
+			}
+		});
 
-        // Tìm kiếm theo thời gian thực
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterServices(newValue));
-    }
+		// Lấy danh sách từ cơ sở dữ liệu
+		serviceList = FXCollections.observableArrayList(serviceService.getAllServices());
+		tableView.setItems(serviceList);
 
-    private void filterServices(String keyword) {
-        ObservableList<Service> filteredList = FXCollections.observableArrayList();
+		// Tìm kiếm theo thời gian thực
+		searchField.textProperty().addListener((observable, oldValue, newValue) -> filterServices(newValue));
+	}
 
-        for (Service service : serviceList) {
-            if (service.getName().toLowerCase().contains(keyword.toLowerCase()) || 
-                service.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                filteredList.add(service);
-            }
-        }
+	private void filterServices(String keyword) {
+		ObservableList<Service> filteredList = FXCollections.observableArrayList();
 
-        tableView.setItems(filteredList);
-    }
+		for (Service service : serviceList) {
+			if (service.getName().toLowerCase().contains(keyword.toLowerCase())
+					|| service.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+				filteredList.add(service);
+			}
+		}
 
-    @FXML
-    private void handleAddService() {
-        Dialog<Service> dialog = new Dialog<>();
-        dialog.setTitle("Thêm dịch vụ");
+		tableView.setItems(filteredList);
+	}
 
-        // Tạo các trường nhập liệu
-        TextField nameField = new TextField();
-        nameField.setPromptText("Tên dịch vụ");
+	@FXML
+	private void handleAddService() {
+		Dialog<Service> dialog = new Dialog<>();
+		dialog.setTitle("Thêm dịch vụ");
 
-        TextField descriptionField = new TextField();
-        descriptionField.setPromptText("Mô tả dịch vụ");
+		// Tạo các trường nhập liệu
+		TextField nameField = new TextField();
+		nameField.setPromptText("Tên dịch vụ");
 
-        TextField priceField = new TextField();
-        priceField.setPromptText("Giá dịch vụ");
+		TextField descriptionField = new TextField();
+		descriptionField.setPromptText("Mô tả dịch vụ");
 
-        TextField durationField = new TextField();
-        durationField.setPromptText("Thời gian (phút)");
+		TextField priceField = new TextField();
+		priceField.setPromptText("Giá dịch vụ");
 
-        // Bố trí các trường nhập liệu
-        VBox content = new VBox(10, 
-            new HBox(10, new Label("Tên:"), nameField),
-            new HBox(10, new Label("Mô tả:"), descriptionField),
-            new HBox(10, new Label("Giá:"), priceField),
-            new HBox(10, new Label("Thời gian:"), durationField)
-        );
-        dialog.getDialogPane().setContent(content);
+		TextField durationField = new TextField();
+		durationField.setPromptText("Thời gian (phút)");
 
-        // Thêm các nút Thêm và Hủy
-        ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+		// Bố trí các trường nhập liệu
+		VBox content = new VBox(10, new HBox(10, new Label("Tên:"), nameField),
+				new HBox(10, new Label("Mô tả:"), descriptionField), new HBox(10, new Label("Giá:"), priceField),
+				new HBox(10, new Label("Thời gian:"), durationField));
+		dialog.getDialogPane().setContent(content);
 
-        // Xử lý khi nhấn nút Thêm
-        dialog.setResultConverter(button -> {
-            if (button == addButtonType) {
-                try {
-                    String name = nameField.getText();
-                    String description = descriptionField.getText();
-                    double price = Double.parseDouble(priceField.getText());
-                    int duration = Integer.parseInt(durationField.getText());
+		// Thêm các nút Thêm và Hủy
+		ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-                    // Tạo đối tượng Service mới
-                    Service newService = new Service(0, name, description, price, duration, true);
+		// Xử lý khi nhấn nút Thêm
+		dialog.setResultConverter(button -> {
+			if (button == addButtonType) {
+				try {
+					String name = nameField.getText();
+					String description = descriptionField.getText();
+					double price = Double.parseDouble(priceField.getText());
+					int duration = Integer.parseInt(durationField.getText());
 
-                    // Thêm dịch vụ vào cơ sở dữ liệu
-                    if (serviceService.addService(newService)) {
-                        loadServicesFromDatabase(); 
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ.");
-                    }
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
-                }
-            }
-            return null;
-        });
+					// Tạo đối tượng Service mới
+					Service newService = new Service(0, name, description, price, duration, true);
 
-        dialog.showAndWait();
-    }
+					// Thêm dịch vụ vào cơ sở dữ liệu
+					if (serviceService.addService(newService)) {
+						loadServicesFromDatabase();
+					} else {
+						showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ.");
+					}
+				} catch (NumberFormatException e) {
+					showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
+				}
+			}
+			return null;
+		});
 
-    private void loadServicesFromDatabase() {
-        serviceList = FXCollections.observableArrayList(serviceService.getAllServices());
-        tableView.setItems(serviceList);
-    }
+		dialog.showAndWait();
+	}
 
-    @FXML
-    private void handleEditService() {
-        Service selectedService = tableView.getSelectionModel().getSelectedItem();
-        if (selectedService == null) {
-            showAlert(Alert.AlertType.WARNING, "Chưa chọn dịch vụ", "Vui lòng chọn dịch vụ để sửa.");
-            return;
-        }
+	private void loadServicesFromDatabase() {
+		serviceList = FXCollections.observableArrayList(serviceService.getAllServices());
+		tableView.setItems(serviceList);
+	}
 
-        Dialog<Service> dialog = new Dialog<>();
-        dialog.setTitle("Sửa dịch vụ");
+	@FXML
+	private void handleEditService() {
+		Service selectedService = tableView.getSelectionModel().getSelectedItem();
+		if (selectedService == null) {
+			showAlert(Alert.AlertType.WARNING, "Chưa chọn dịch vụ", "Vui lòng chọn dịch vụ để sửa.");
+			return;
+		}
 
-        // Tạo các trường nhập liệu
-        TextField nameField = new TextField(selectedService.getName());
-        TextField descriptionField = new TextField(selectedService.getDescription());
-        TextField priceField = new TextField(String.valueOf(selectedService.getPrice()));
-        TextField durationField = new TextField(String.valueOf(selectedService.getDurationMinutes()));
+		Dialog<Service> dialog = new Dialog<>();
+		dialog.setTitle("Sửa dịch vụ");
 
-        // Tạo ComboBox để chọn trạng thái
-        ComboBox<String> statusComboBox = new ComboBox<>();
-        statusComboBox.getItems().addAll("Hoạt động", "Ngừng hoạt động");
-        statusComboBox.setValue(selectedService.isActive() ? "Hoạt động" : "Ngừng hoạt động");
+		// Tạo các trường nhập liệu
+		TextField nameField = new TextField(selectedService.getName());
+		TextField descriptionField = new TextField(selectedService.getDescription());
+		TextField priceField = new TextField(String.valueOf(selectedService.getPrice()));
+		TextField durationField = new TextField(String.valueOf(selectedService.getDurationMinutes()));
 
-        // Bố trí các trường nhập liệu
-        VBox content = new VBox(10, 
-            new HBox(10, new Label("Tên:"), nameField),
-            new HBox(10, new Label("Mô tả:"), descriptionField),
-            new HBox(10, new Label("Giá:"), priceField),
-            new HBox(10, new Label("Thời gian:"), durationField),
-            new HBox(10, new Label("Trạng thái:"), statusComboBox)
-        );
-        dialog.getDialogPane().setContent(content);
+		// Tạo ComboBox để chọn trạng thái
+		ComboBox<String> statusComboBox = new ComboBox<>();
+		statusComboBox.getItems().addAll("Hoạt động", "Ngừng hoạt động");
+		statusComboBox.setValue(selectedService.isActive() ? "Hoạt động" : "Ngừng hoạt động");
 
-        // Thêm các nút Sửa và Hủy
-        ButtonType editButtonType = new ButtonType("Sửa", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(editButtonType, ButtonType.CANCEL);
+		// Bố trí các trường nhập liệu
+		VBox content = new VBox(10, new HBox(10, new Label("Tên:"), nameField),
+				new HBox(10, new Label("Mô tả:"), descriptionField), new HBox(10, new Label("Giá:"), priceField),
+				new HBox(10, new Label("Thời gian:"), durationField),
+				new HBox(10, new Label("Trạng thái:"), statusComboBox));
+		dialog.getDialogPane().setContent(content);
 
-        // Xử lý khi nhấn nút Sửa
-        dialog.setResultConverter(button -> {
-            if (button == editButtonType) {
-                try {
-                    selectedService.setName(nameField.getText());
-                    selectedService.setDescription(descriptionField.getText());
-                    selectedService.setPrice(Double.parseDouble(priceField.getText()));
-                    selectedService.setDurationMinutes(Integer.parseInt(durationField.getText()));
-                    selectedService.setActive(statusComboBox.getValue().equals("Hoạt động"));
+		// Thêm các nút Sửa và Hủy
+		ButtonType editButtonType = new ButtonType("Sửa", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(editButtonType, ButtonType.CANCEL);
 
-                    // Cập nhật dịch vụ trong cơ sở dữ liệu
-                    if (serviceService.updateService(selectedService)) {
-                        loadServicesFromDatabase(); // Làm mới danh sách hiển thị
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể sửa dịch vụ.");
-                    }
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
-                }
-            }
-            return null;
-        });
+		// Xử lý khi nhấn nút Sửa
+		dialog.setResultConverter(button -> {
+			if (button == editButtonType) {
+				try {
+					selectedService.setName(nameField.getText());
+					selectedService.setDescription(descriptionField.getText());
+					selectedService.setPrice(Double.parseDouble(priceField.getText()));
+					selectedService.setDurationMinutes(Integer.parseInt(durationField.getText()));
+					selectedService.setActive(statusComboBox.getValue().equals("Hoạt động"));
 
-        dialog.showAndWait();
-    }
-    
-    @FXML
-    private void handleDeleteService() {
-        Service selectedService = tableView.getSelectionModel().getSelectedItem();
-        if (selectedService == null) {
-            showAlert(Alert.AlertType.WARNING, "Chưa chọn dịch vụ", "Vui lòng chọn dịch vụ để xóa.");
-            return;
-        }
+					// Cập nhật dịch vụ trong cơ sở dữ liệu
+					if (serviceService.updateService(selectedService)) {
+						loadServicesFromDatabase(); // Làm mới danh sách hiển thị
+					} else {
+						showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể sửa dịch vụ.");
+					}
+				} catch (NumberFormatException e) {
+					showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
+				}
+			}
+			return null;
+		});
 
-        if (serviceService.deleteService(selectedService)) {
-            loadServicesFromDatabase(); // Làm mới danh sách hiển thị
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa dịch vụ.");
-        }
-    }
+		dialog.showAndWait();
+	}
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+	@FXML
+	private void handleDeleteService() {
+		Service selectedService = tableView.getSelectionModel().getSelectedItem();
+		if (selectedService == null) {
+			showAlert(Alert.AlertType.WARNING, "Chưa chọn dịch vụ", "Vui lòng chọn dịch vụ để xóa.");
+			return;
+		}
 
-    @FXML
-    private void handleSearch() {
-        String searchText = searchField.getText().toLowerCase();
-        ObservableList<Service> filteredList = FXCollections.observableArrayList();
+		if (serviceService.deleteService(selectedService)) {
+			loadServicesFromDatabase(); // Làm mới danh sách hiển thị
+		} else {
+			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa dịch vụ.");
+		}
+	}
 
-        for (Service service : serviceList) {
-            if (service.getName().toLowerCase().contains(searchText) || 
-                service.getDescription().toLowerCase().contains(searchText)) {
-                filteredList.add(service);
-            }
-        }
+	private void showAlert(Alert.AlertType alertType, String title, String message) {
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
 
-        tableView.setItems(filteredList);
-    }
-    
-    
+	@FXML
+	private void handleSearch() {
+		String searchText = searchField.getText().toLowerCase();
+		ObservableList<Service> filteredList = FXCollections.observableArrayList();
+
+		for (Service service : serviceList) {
+			if (service.getName().toLowerCase().contains(searchText)
+					|| service.getDescription().toLowerCase().contains(searchText)) {
+				filteredList.add(service);
+			}
+		}
+
+		tableView.setItems(filteredList);
+	}
+
 }
