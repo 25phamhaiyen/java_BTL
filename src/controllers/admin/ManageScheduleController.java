@@ -2,6 +2,7 @@
 package controllers.admin;
 
 import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -33,20 +34,23 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.properties.UnitValue;
-import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.VerticalAlignment;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.geom.PageSize;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import enums.Shift;
 
 public class ManageScheduleController implements Initializable {
@@ -138,51 +142,49 @@ public class ManageScheduleController implements Initializable {
 	}
 
 	private void populateScheduleGrid(LocalDate startDate, LocalDate endDate) {
-	    // Xóa toàn bộ node cũ trong grid
-	    scheduleGrid.getChildren().clear();
-	    scheduleGrid.setHgap(10);
-	    scheduleGrid.setVgap(5);
+		// Xóa toàn bộ node cũ trong grid
+		scheduleGrid.getChildren().clear();
+		scheduleGrid.setHgap(10);
+		scheduleGrid.setVgap(5);
 
-	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE", new Locale("vi"));
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter dayOfWeekFormatter = DateTimeFormatter.ofPattern("EEEE", new Locale("vi"));
 
-	    // ===== Tiêu đề hàng (Ca làm) ở cột 0 =====
-	    for (int row = 1; row <= 3; row++) {
-	        Shift shift = Shift.values()[row - 1];
-	        Label shiftLabel = new Label(shift.toString());
-	        shiftLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
-	        shiftLabel.setWrapText(true);
-	        scheduleGrid.add(shiftLabel, 0, row);
-	    }
+		// ===== Tiêu đề hàng (Ca làm) ở cột 0 =====
+		for (int row = 1; row <= 3; row++) {
+			Shift shift = Shift.values()[row - 1];
+			Label shiftLabel = new Label(shift.toString());
+			shiftLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
+			shiftLabel.setWrapText(true);
+			scheduleGrid.add(shiftLabel, 0, row);
+		}
 
-	    // ===== Tiêu đề cột (Thứ + Ngày) và dữ liệu từng ô =====
-	    for (int day = 0; day < 7; day++) {
-	        LocalDate currentDate = startDate.plusDays(day);
-	        int columnIndex = day + 1;
+		// ===== Tiêu đề cột (Thứ + Ngày) và dữ liệu từng ô =====
+		for (int day = 0; day < 7; day++) {
+			LocalDate currentDate = startDate.plusDays(day);
+			int columnIndex = day + 1;
 
-	        // Tiêu đề cột: Thứ + Ngày
-	        String headerText = dayOfWeekFormatter.format(currentDate) + "\n" + dateFormatter.format(currentDate);
-	        Label dayLabel = new Label(headerText);
-	        dayLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
-	        dayLabel.setWrapText(true);
-	        scheduleGrid.add(dayLabel, columnIndex, 0);
+			// Tiêu đề cột: Thứ + Ngày
+			String headerText = dayOfWeekFormatter.format(currentDate) + "\n" + dateFormatter.format(currentDate);
+			Label dayLabel = new Label(headerText);
+			dayLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
+			dayLabel.setWrapText(true);
+			scheduleGrid.add(dayLabel, columnIndex, 0);
 
-	        // Các ca trong ngày
-	        for (int row = 1; row <= 3; row++) {
-	            Shift shift = Shift.values()[row - 1];
-	            List<WorkSchedule> schedulesInShift = weeklySchedule
-	                .getOrDefault(currentDate, new HashMap<>())
-	                .getOrDefault(shift, new ArrayList<>());
+			// Các ca trong ngày
+			for (int row = 1; row <= 3; row++) {
+				Shift shift = Shift.values()[row - 1];
+				List<WorkSchedule> schedulesInShift = weeklySchedule.getOrDefault(currentDate, new HashMap<>())
+						.getOrDefault(shift, new ArrayList<>());
 
-	            StackPane cellPane = createScheduleCell(currentDate, shift, schedulesInShift);
-	            scheduleGrid.add(cellPane, columnIndex, row);
-	        }
-	    }
+				StackPane cellPane = createScheduleCell(currentDate, shift, schedulesInShift);
+				scheduleGrid.add(cellPane, columnIndex, row);
+			}
+		}
 
-	    // Đánh dấu ô đã đủ nhân sự
-	    highlightFullRoles(startDate, endDate);
+		// Đánh dấu ô đã đủ nhân sự
+		highlightFullRoles(startDate, endDate);
 	}
-
 
 	private StackPane createScheduleCell(LocalDate date, Shift shift, List<WorkSchedule> schedules) {
 		StackPane cellPane = new StackPane();
@@ -518,95 +520,102 @@ public class ManageScheduleController implements Initializable {
 	}
 
 	@FXML
-    private void exportScheduleToPdf() {
-        LocalDate startDate = startDatePicker.getValue();
-        LocalDate endDate = endDatePicker.getValue();
+	private void exportScheduleToPdf() {
+		LocalDate startDate = startDatePicker.getValue();
+		LocalDate endDate = endDatePicker.getValue();
 
-        if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
-            showAlert("Lỗi", "Vui lòng chọn khoảng thời gian hợp lệ để xuất lịch.");
-            return;
-        }
+		if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
+			showAlert("Lỗi", "Vui lòng chọn khoảng thời gian hợp lệ để xuất lịch.");
+			return;
+		}
 
-        String filePath = "weekly_schedule_itext9_" +
-                startDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "_" +
-                endDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + ".pdf";
-        try {
-            PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
-            PdfDocument pdfDocument = new PdfDocument(writer);
-            Document document = new Document(pdfDocument, PageSize.A4.rotate());
-            document.setMargins(20, 20, 20, 20);
+		String filePath = "weekly_schedule_itext5_" + startDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "_"
+				+ endDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + ".pdf";
 
-         // Sử dụng font hỗ trợ tiếng Việt (ví dụ: Arial Unicode MS)
-            PdfFont fontHeader = PdfFontFactory.createFont("C:\\Windows\\Fonts\\Arial.ttf"); // Đường dẫn tới file font
-            PdfFont fontContent = PdfFontFactory.createFont("C:\\Windows\\Fonts\\Arial.ttf");
+		try {
+			// Tạo đối tượng Document với kích thước trang A4 ngang
+			Document document = new Document(PageSize.A4.rotate());
+			PdfWriter.getInstance(document, new FileOutputStream(filePath));
+			document.open();
 
-            Paragraph title = new Paragraph("Lịch trình tuần từ " +
-                    startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " đến " +
-                    endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                    .setFont(fontHeader)
-                    .setTextAlignment(TextAlignment.CENTER);
-            document.add(title);
+			// Sử dụng font hỗ trợ tiếng Việt (Arial)
+			Font fontHeader = FontFactory.getFont("Arial", 12, Font.BOLD);
+			Font fontContent = FontFactory.getFont("Arial", 10, Font.NORMAL);
 
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 2, 2, 2, 2, 2, 2, 2}));
-            table.setWidth(UnitValue.createPercentValue(100f));
+			// Thêm tiêu đề
+			Paragraph title = new Paragraph(
+					"Lịch trình tuần từ " + startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " đến "
+							+ endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+					fontHeader);
+			title.setAlignment(Paragraph.ALIGN_CENTER);
+			document.add(title);
+			document.add(new Paragraph(" ")); // Thêm khoảng trống
 
-            // Thêm header của bảng
-            table.addHeaderCell(createCell("Ca", fontHeader));
-            DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd/MM\nEEE");
-            for (int i = 0; i < 7; i++) {
-                LocalDate currentDate = startDate.plusDays(i);
-                table.addHeaderCell(createCell(currentDate.format(dayFormatter), fontHeader));
-            }
+			// Tạo bảng với 8 cột (1 cột cho ca, 7 cột cho ngày)
+			PdfPTable table = new PdfPTable(8);
+			table.setWidthPercentage(100);
+			table.setWidths(new float[] { 1, 2, 2, 2, 2, 2, 2, 2 }); // Tỷ lệ chiều rộng cột
 
-            // Thêm dữ liệu lịch trình
-            for (Shift shift : Shift.values()) {
-                if (shift != Shift.NOSHIFT) { 
-                    table.addCell(createCell(shift.name(), fontContent));
-                    for (int i = 0; i < 7; i++) {
-                        LocalDate currentDate = startDate.plusDays(i);
-                        List<WorkSchedule> schedulesForShift = weeklySchedule.getOrDefault(currentDate, new HashMap<>())
-                                .getOrDefault(shift, new ArrayList<>());
-                        StringBuilder employeeNames = new StringBuilder();
-                        for (WorkSchedule schedule : schedulesForShift) {
-                            employeeNames.append(schedule.getStaff().getFullName().toUpperCase());
-                            if (schedule.getNote() != null && !schedule.getNote().isEmpty()) {
-                                employeeNames.append(" (").append(schedule.getNote()).append(")");
-                            }
-                            employeeNames.append("\n");
-                        }
-                        table.addCell(createCell(employeeNames.toString().trim(), fontContent));
-                    }
-                }
-            }
+			// Thêm tiêu đề bảng
+			PdfPCell cell = new PdfPCell(new Phrase("Ca", fontHeader));
+			cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+			cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+			table.addCell(cell);
 
+			DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd/MM\nEEE");
+			for (int i = 0; i < 7; i++) {
+				LocalDate currentDate = startDate.plusDays(i);
+				cell = new PdfPCell(new Phrase(currentDate.format(dayFormatter), fontHeader));
+				cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+				cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+				table.addCell(cell);
+			}
 
-            document.add(table);
-            document.close();
-            showAlert("Thành công", "Đã xuất lịch trình tuần ra file PDF.");
+			// Thêm dữ liệu lịch trình
+			for (Shift shift : Shift.values()) {
+				if (shift != Shift.NOSHIFT) {
+					cell = new PdfPCell(new Phrase(shift.name(), fontContent));
+					cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+					cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+					table.addCell(cell);
 
-            // Mở file PDF sau khi xuất thành công
-            File pdfFile = new File(filePath);
-            if (pdfFile.exists()) {
-                Desktop.getDesktop().open(pdfFile);
-            } else {
-                showAlert("Lỗi", "Không tìm thấy file PDF vừa xuất.");
-            }
+					for (int i = 0; i < 7; i++) {
+						LocalDate currentDate = startDate.plusDays(i);
+						List<WorkSchedule> schedulesForShift = weeklySchedule.getOrDefault(currentDate, new HashMap<>())
+								.getOrDefault(shift, new ArrayList<>());
+						StringBuilder employeeNames = new StringBuilder();
+						for (WorkSchedule schedule : schedulesForShift) {
+							employeeNames.append(schedule.getStaff().getFullName().toUpperCase());
+							if (schedule.getNote() != null && !schedule.getNote().isEmpty()) {
+								employeeNames.append(" (").append(schedule.getNote()).append(")");
+							}
+							employeeNames.append("\n");
+						}
+						cell = new PdfPCell(new Phrase(employeeNames.toString().trim(), fontContent));
+						cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+						cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
+						table.addCell(cell);
+					}
+				}
+			}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Lỗi", "Không thể xuất lịch trình ra file PDF.");
-        }
-    }
+			document.add(table);
+			document.close();
 
-    // Helper method để tạo ô trong bảng PDF
-    private Cell createCell(String content, PdfFont font) {
-        return new Cell()
-                .add(new Paragraph(content).setFont(font))
-                .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE);
-    }
+			showAlert("Thành công", "Đã xuất lịch trình tuần ra file PDF.");
 
+			// Mở file PDF sau khi xuất thành công
+			File pdfFile = new File(filePath);
+			if (pdfFile.exists()) {
+				Desktop.getDesktop().open(pdfFile);
+			} else {
+				showAlert("Lỗi", "Không tìm thấy file PDF vừa xuất.");
+			}
 
-
+		} catch (DocumentException | IOException e) {
+			e.printStackTrace();
+			showAlert("Lỗi", "Không thể xuất lịch trình ra file PDF.");
+		}
+	}
 
 }

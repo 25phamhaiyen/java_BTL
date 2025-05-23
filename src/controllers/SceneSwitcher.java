@@ -26,7 +26,7 @@ public class SceneSwitcher {
 	public static void setMainStage(Stage stage) {
 		mainStage = stage;
 		mainStage.setTitle("Cửa hàng chăm sóc thú cưng BESTPETS");
-		
+
 	}
 
 	/**
@@ -100,7 +100,6 @@ public class SceneSwitcher {
 		}
 	}
 
-
 	/**
 	 * Chuyển đến màn hình chi tiết booking
 	 * 
@@ -147,7 +146,7 @@ public class SceneSwitcher {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			Scene scene = new Scene(root);
 			currentStage.setScene(scene);
 			currentStage.setTitle("Tạo hóa đơn cho đặt lịch #" + bookingId);
@@ -191,7 +190,7 @@ public class SceneSwitcher {
 	private static void showErrorDialog(String message) {
 		javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
 		alert.setTitle("Lỗi");
-	alert.setHeaderText("Đã xảy ra lỗi");
+		alert.setHeaderText("Đã xảy ra lỗi");
 		alert.setContentText(message);
 		alert.showAndWait();
 	}

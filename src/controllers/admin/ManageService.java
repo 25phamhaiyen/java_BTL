@@ -1,5 +1,7 @@
 package controllers.admin;
 
+import java.util.Optional;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -129,27 +131,45 @@ public class ManageService {
 
         // Xử lý khi nhấn nút Thêm
         dialog.setResultConverter(button -> {
-            if (button == addButtonType) {
-                try {
-                    String name = nameField.getText();
-                    String description = descriptionField.getText();
-                    double price = Double.parseDouble(priceField.getText());
-                    int duration = Integer.parseInt(durationField.getText());
+        	if (button == addButtonType) {
+        	    String name = nameField.getText().trim();
+        	    String description = descriptionField.getText().trim();
+        	    String priceText = priceField.getText().trim();
+        	    String durationText = durationField.getText().trim();
 
-                    // Tạo đối tượng Service mới
-                    Service newService = new Service(0, name, description, price, duration, true);
+        	    if (name.isEmpty()) {
+        	        showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên dịch vụ không được để trống.");
+        	        return null;
+        	    }
 
-                    // Thêm dịch vụ vào cơ sở dữ liệu
-                    if (serviceService.addService(newService)) {
-                        loadServicesFromDatabase(); 
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ.");
-                    }
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
-                }
-            }
-            return null;
+        	    if (serviceService.isServiceExists(name)) {
+        	        showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên dịch vụ đã tồn tại.");
+        	        return null;
+        	    }
+
+        	    try {
+        	        double price = Double.parseDouble(priceText);
+        	        int duration = Integer.parseInt(durationText);
+
+        	        if (price <= 10000 || duration <= 5) {
+        	            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Giá phải >=10k vnd và thời gian phải >=5 phút.");
+        	            return null;
+        	        }
+
+        	        Service newService = new Service(0, name, description, price, duration, true);
+
+        	        if (serviceService.addService(newService)) {
+        	            loadServicesFromDatabase();
+        	        } else {
+        	            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ.");
+        	        }
+
+        	    } catch (NumberFormatException e) {
+        	        showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá phải là số thực và thời gian phải là số nguyên.");
+        	    }
+        	}
+        	return null;
+
         });
 
         dialog.showAndWait();
@@ -230,12 +250,28 @@ public class ManageService {
             return;
         }
 
-        if (serviceService.deleteService(selectedService)) {
-            loadServicesFromDatabase(); // Làm mới danh sách hiển thị
+        // Tạo hộp thoại xác nhận xóa
+        Alert confirmDeleteAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDeleteAlert.setTitle("Xác nhận xóa");
+        confirmDeleteAlert.setHeaderText("Bạn có chắc chắn muốn xóa dịch vụ này?");
+        confirmDeleteAlert.setContentText("Dịch vụ: " + selectedService.getName());
+
+        // Hiển thị hộp thoại và chờ người dùng phản hồi
+        Optional<ButtonType> result = confirmDeleteAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Nếu người dùng nhấn "OK", thực hiện xóa
+            if (serviceService.deleteService(selectedService)) {
+                loadServicesFromDatabase(); // Làm mới danh sách hiển thị
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa dịch vụ.");
+            }
         } else {
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa dịch vụ.");
+            // Nếu người dùng nhấn "Cancel" hoặc đóng hộp thoại, không làm gì cả
+            return;
         }
     }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
@@ -259,5 +295,5 @@ public class ManageService {
         tableView.setItems(filteredList);
     }
     
-    
+
 }

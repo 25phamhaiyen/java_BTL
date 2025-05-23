@@ -44,11 +44,11 @@ public class ManageAccountController {
 	@FXML
 	private Button btnAssignPermission;
 
-
 	private final AccountService accountService = new AccountService();
 	private final RoleService roleService = new RoleService();
 
 	private ObservableList<Account> accountList = FXCollections.observableArrayList();
+
 	@FXML
 	public void initialize() {
 		// Initialize TableView columns
@@ -91,43 +91,43 @@ public class ManageAccountController {
 	}
 
 	private void loadAccounts() {
-	    Map<Account, String> accountPermissionsMap = accountService.getAllAccountsWithPermissions();
-	    List<Account> accounts = new ArrayList<>(accountPermissionsMap.keySet());
+		Map<Account, String> accountPermissionsMap = accountService.getAllAccountsWithPermissions();
+		List<Account> accounts = new ArrayList<>(accountPermissionsMap.keySet());
 
-	    // Gán dữ liệu vào accountList
-	    accountList.setAll(accounts);
+		// Gán dữ liệu vào accountList
+		accountList.setAll(accounts);
 
-	    // Gắn danh sách tài khoản vào bảng
-	    tblAccounts.setItems(accountList);
+		// Gắn danh sách tài khoản vào bảng
+		tblAccounts.setItems(accountList);
 
-	    // Gắn danh sách quyền vào cột "Quyền"
-	    colPermissions.setCellValueFactory(cellData -> {
-	        Account account = cellData.getValue();
-	        String permissions = accountPermissionsMap.get(account);
-	        return new SimpleStringProperty(permissions);
-	    });
+		// Gắn danh sách quyền vào cột "Quyền"
+		colPermissions.setCellValueFactory(cellData -> {
+			Account account = cellData.getValue();
+			String permissions = accountPermissionsMap.get(account);
+			return new SimpleStringProperty(permissions);
+		});
 	}
 
 	private void filterAccounts(String keyword) {
-	    if (accountList == null || accountList.isEmpty()) {
-	        System.err.println("Danh sách tài khoản trống hoặc chưa được khởi tạo.");
-	        return;
-	    }
+		if (accountList == null || accountList.isEmpty()) {
+			System.err.println("Danh sách tài khoản trống hoặc chưa được khởi tạo.");
+			return;
+		}
 
-	    if (keyword == null || keyword.isEmpty()) {
-	        tblAccounts.setItems(accountList); // Hiển thị toàn bộ danh sách nếu không có từ khóa
-	    } else {
-	        ObservableList<Account> filteredList = FXCollections.observableArrayList();
-	        for (Account account : accountList) {
-	            // Lọc theo username hoặc roleName
-	            if (account.getUserName().toLowerCase().contains(keyword.toLowerCase())
-	                    || (account.getRole() != null && account.getRole().getRoleName() != null
-	                        && account.getRole().getRoleName().toLowerCase().contains(keyword.toLowerCase()))) {
-	                filteredList.add(account);
-	            }
-	        }
-	        tblAccounts.setItems(filteredList); // Cập nhật danh sách hiển thị
-	    }
+		if (keyword == null || keyword.isEmpty()) {
+			tblAccounts.setItems(accountList); // Hiển thị toàn bộ danh sách nếu không có từ khóa
+		} else {
+			ObservableList<Account> filteredList = FXCollections.observableArrayList();
+			for (Account account : accountList) {
+				// Lọc theo username hoặc roleName
+				if (account.getUserName().toLowerCase().contains(keyword.toLowerCase())
+						|| (account.getRole() != null && account.getRole().getRoleName() != null
+								&& account.getRole().getRoleName().toLowerCase().contains(keyword.toLowerCase()))) {
+					filteredList.add(account);
+				}
+			}
+			tblAccounts.setItems(filteredList); // Cập nhật danh sách hiển thị
+		}
 	}
 
 //	@FXML
@@ -219,133 +219,128 @@ public class ManageAccountController {
 //	}
 
 	@FXML
-private void handleEditAccount() {
-    Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
-    if (selectedAccount != null) {
-        // Tạo dialog để chỉnh sửa tài khoản
-        Dialog<Account> dialog = new Dialog<>();
-        dialog.setTitle("Chỉnh sửa tài khoản");
-        dialog.setHeaderText("Chỉnh sửa vai trò và trạng thái hoạt động của tài khoản");
-        dialog.setResizable(true);
+	private void handleEditAccount() {
+		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
+		if (selectedAccount != null) {
+			// Tạo dialog để chỉnh sửa tài khoản
+			Dialog<Account> dialog = new Dialog<>();
+			dialog.setTitle("Chỉnh sửa tài khoản");
+			dialog.setHeaderText("Chỉnh sửa vai trò và trạng thái hoạt động của tài khoản");
+			dialog.setResizable(true);
 
-        // Tạo các trường nhập liệu
-        VBox vbox = new VBox(10);
+			// Tạo các trường nhập liệu
+			VBox vbox = new VBox(10);
 
-        // ComboBox để chọn vai trò
-        ComboBox<String> cbRole = new ComboBox<>();
-        cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
-        cbRole.getSelectionModel().select(selectedAccount.getRole().getRoleName());
-        cbRole.setPromptText("Chọn vai trò");
+			// ComboBox để chọn vai trò
+			ComboBox<String> cbRole = new ComboBox<>();
+			cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
+			cbRole.getSelectionModel().select(selectedAccount.getRole().getRoleName());
+			cbRole.setPromptText("Chọn vai trò");
 
-        // Nút để chỉnh sửa trạng thái hoạt động
-        ToggleGroup toggleGroup = new ToggleGroup();
-        RadioButton rbActive = new RadioButton("Mở (Đang hoạt động)");
-        RadioButton rbInactive = new RadioButton("Khóa (Bị khóa)");
-        rbActive.setToggleGroup(toggleGroup);
-        rbInactive.setToggleGroup(toggleGroup);
+			// Nút để chỉnh sửa trạng thái hoạt động
+			ToggleGroup toggleGroup = new ToggleGroup();
+			RadioButton rbActive = new RadioButton("Mở (Đang hoạt động)");
+			RadioButton rbInactive = new RadioButton("Khóa (Bị khóa)");
+			rbActive.setToggleGroup(toggleGroup);
+			rbInactive.setToggleGroup(toggleGroup);
 
-        // Đặt trạng thái ban đầu
-        if (selectedAccount.isActive()) {
-            rbActive.setSelected(true);
-        } else {
-            rbInactive.setSelected(true);
-        }
+			// Đặt trạng thái ban đầu
+			if (selectedAccount.isActive()) {
+				rbActive.setSelected(true);
+			} else {
+				rbInactive.setSelected(true);
+			}
 
-        // Thêm các thành phần vào VBox
-        vbox.getChildren().addAll(
-            new Label("Vai trò:"),
-            cbRole,
-            new Label("Trạng thái hoạt động:"),
-            rbActive,
-            rbInactive
-        );
+			// Thêm các thành phần vào VBox
+			vbox.getChildren().addAll(new Label("Vai trò:"), cbRole, new Label("Trạng thái hoạt động:"), rbActive,
+					rbInactive);
 
-        dialog.getDialogPane().setContent(vbox);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+			dialog.getDialogPane().setContent(vbox);
+			dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Xử lý kết quả khi nhấn OK
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-				String roleName = cbRole.getValue();
-                int roleId = roleService.getRoleIdByRoleName(roleName);
-				if (roleId == -1) {
+			// Xử lý kết quả khi nhấn OK
+			dialog.setResultConverter(dialogButton -> {
+				if (dialogButton == ButtonType.OK) {
+					String roleName = cbRole.getValue();
+					int roleId = roleService.getRoleIdByRoleName(roleName);
+					if (roleId == -1) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Lỗi");
+						alert.setHeaderText("Không thể cập nhật tài khoản");
+						alert.setContentText("Vai trò không hợp lệ.");
+						alert.showAndWait();
+						return null;
+					}
+
+					Account updatedAccount = new Account();
+					updatedAccount.setAccountID(selectedAccount.getAccountID());
+					updatedAccount.setUserName(selectedAccount.getUserName());
+					updatedAccount.setPassword(selectedAccount.getPassword());
+					updatedAccount.setRole(new Role(roleId, roleName)); // Gán role_id hợp lệ
+					boolean isActive = rbActive.isSelected();
+					updatedAccount.setActive(isActive);
+
+					return updatedAccount;
+				}
+				return null;
+			});
+
+			// Hiển thị dialog và xử lý kết quả
+			Optional<Account> result = dialog.showAndWait();
+			result.ifPresent(updatedAccount -> {
+				// Gọi service để cập nhật tài khoản
+				boolean success = accountService.updateAccount(updatedAccount);
+				if (success) {
+					Alert alert = new Alert(Alert.AlertType.INFORMATION);
+					alert.setTitle("Thành công");
+					alert.setHeaderText(null);
+					alert.setContentText("Tài khoản đã được cập nhật thành công.");
+					alert.showAndWait();
+					loadAccounts(); // Làm mới danh sách tài khoản
+				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Lỗi");
-					alert.setHeaderText("Không thể cập nhật tài khoản");
-					alert.setContentText("Vai trò không hợp lệ.");
+					alert.setHeaderText(null);
+					alert.setContentText("Không thể cập nhật tài khoản. Vui lòng thử lại.");
 					alert.showAndWait();
-					return null;
 				}
-
-				Account updatedAccount = new Account();
-				updatedAccount.setAccountID(selectedAccount.getAccountID());
-				updatedAccount.setUserName(selectedAccount.getUserName());
-				updatedAccount.setPassword(selectedAccount.getPassword());
-				updatedAccount.setRole(new Role(roleId, roleName)); // Gán role_id hợp lệ
-				boolean isActive = rbActive.isSelected(); 
-				updatedAccount.setActive(isActive);
-
-                return updatedAccount;
-            }
-            return null;
-        });
-
-        // Hiển thị dialog và xử lý kết quả
-        Optional<Account> result = dialog.showAndWait();
-        result.ifPresent(updatedAccount -> {
-            // Gọi service để cập nhật tài khoản
-            boolean success = accountService.updateAccount(updatedAccount);
-            if (success) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Thành công");
-                alert.setHeaderText(null);
-                alert.setContentText("Tài khoản đã được cập nhật thành công.");
-                alert.showAndWait();
-                loadAccounts(); // Làm mới danh sách tài khoản
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Lỗi");
-                alert.setHeaderText(null);
-                alert.setContentText("Không thể cập nhật tài khoản. Vui lòng thử lại.");
-                alert.showAndWait();
-            }
-        });
-    } else {
-        // Hiển thị cảnh báo nếu không có tài khoản nào được chọn
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Cảnh báo");
-        alert.setHeaderText(null);
-        alert.setContentText("Vui lòng chọn một tài khoản để chỉnh sửa.");
-        alert.showAndWait();
-    }
-}
+			});
+		} else {
+			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Cảnh báo");
+			alert.setHeaderText(null);
+			alert.setContentText("Vui lòng chọn một tài khoản để chỉnh sửa.");
+			alert.showAndWait();
+		}
+	}
 
 	@FXML
-private void handleDeleteAccount() {
-    Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
-    if (selectedAccount != null) {
-        // Hiển thị hộp thoại xác nhận
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn có chắc chắn muốn xóa tài khoản này?");
-        alert.setContentText("Tài khoản: " + selectedAccount.getUserName());
+	private void handleDeleteAccount() {
+		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
+		if (selectedAccount != null) {
+			// Hiển thị hộp thoại xác nhận
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Xác nhận xóa");
+			alert.setHeaderText("Bạn có chắc chắn muốn xóa tài khoản này?");
+			alert.setContentText("Tài khoản: " + selectedAccount.getUserName());
 
-        // Chờ người dùng chọn OK hoặc Cancel
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Nếu người dùng chọn OK, thực hiện xóa
-            accountService.deleteAccount(selectedAccount.getAccountID());
-            loadAccounts(); // Làm mới danh sách sau khi xóa
-        }
-    } else {
-        // Hiển thị cảnh báo nếu không có tài khoản nào được chọn
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Cảnh báo");
-        alert.setHeaderText(null);
-        alert.setContentText("Vui lòng chọn một tài khoản để xóa.");
-        alert.showAndWait();
-    }
-}
+			// Chờ người dùng chọn OK hoặc Cancel
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				// Nếu người dùng chọn OK, thực hiện xóa
+				accountService.deleteAccount(selectedAccount.getAccountID());
+				loadAccounts(); // Làm mới danh sách sau khi xóa
+			}
+		} else {
+			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("Cảnh báo");
+			alert.setHeaderText(null);
+			alert.setContentText("Vui lòng chọn một tài khoản để xóa.");
+			alert.showAndWait();
+		}
+	}
 
 	@FXML
 	private void handleAssignPermission() {
@@ -395,10 +390,12 @@ private void handleDeleteAccount() {
 			dialog.showAndWait().ifPresent(selectedPermissions -> {
 				// Cập nhật quyền trong cơ sở dữ liệu
 				for (Permission permission : allPermissions) {
-					if (selectedPermissions.contains(permission.getPermissionCode()) && !currentPermissions.contains(permission.getPermissionCode())) {
+					if (selectedPermissions.contains(permission.getPermissionCode())
+							&& !currentPermissions.contains(permission.getPermissionCode())) {
 						permissionService.assignPermissionToAccount(selectedAccount.getAccountID(),
 								permission.getPermissionCode());
-					} else if (!selectedPermissions.contains(permission.getPermissionCode()) && currentPermissions.contains(permission.getPermissionCode())) {
+					} else if (!selectedPermissions.contains(permission.getPermissionCode())
+							&& currentPermissions.contains(permission.getPermissionCode())) {
 						permissionService.removePermissionFromAccount(selectedAccount.getAccountID(),
 								permission.getPermissionCode());
 					}

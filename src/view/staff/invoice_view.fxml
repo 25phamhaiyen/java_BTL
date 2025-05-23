@@ -117,6 +117,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         
                         <Label fx:id="statusMessageLabel" text="Sẵn sàng" style="-fx-font-style: italic;" />
+
                      </HBox>
                      
                      <TableView fx:id="invoiceTable" VBox.vgrow="ALWAYS" style="-fx-border-color: #e0e0e0; -fx-border-radius: 5;" 
@@ -214,7 +215,7 @@
          <ProgressBar fx:id="progressBar" visible="false" prefWidth="200" />
          <Region HBox.hgrow="ALWAYS" />
          
-         <Button fx:id="homeButton" text="Về trang chủ" onAction="#goToHome"
+         <Button fx:id="homeButton" text="Trở về" onAction="#goToHome"
                 prefHeight="35"
                 style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
             <graphic>

@@ -17,7 +17,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="controllers.Staff.NewBookingController"
-            prefWidth="600" prefHeight="580" style="-fx-background-color: white;">
+            prefWidth="600" prefHeight="650" style="-fx-background-color: white;">
     <top>
         <VBox spacing="5" style="-fx-background-color: #f0f0f0;">
             <padding>
@@ -59,36 +59,46 @@
                 <TextField fx:id="customerNameField" promptText="Tên khách hàng sẽ tự động hiển thị hoặc nhập mới" 
                            GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 
+                <Label text="Địa chỉ:" GridPane.columnIndex="0" GridPane.rowIndex="2" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="addressField" promptText="Nhập địa chỉ khách hàng (tùy chọn)" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                
+                <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="3" 
+                       style="-fx-font-weight: bold;" />
+                <TextField fx:id="emailField" promptText="Nhập email khách hàng (tùy chọn)" 
+                           GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                
                 <!-- Thông tin thú cưng -->
-                <Label text="Thú cưng:" GridPane.columnIndex="0" GridPane.rowIndex="2" 
+                <Label text="Thú cưng:" GridPane.columnIndex="0" GridPane.rowIndex="4" 
                        style="-fx-font-weight: bold;" />
                 <TextField fx:id="petNameField" promptText="Nhập tên thú cưng" 
-                           GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="400" />
+                           GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="400" />
                 
                 <!-- Thông tin lịch hẹn -->
-                <Label text="Chọn dịch vụ:" GridPane.columnIndex="0" GridPane.rowIndex="3" 
+                <Label text="Chọn dịch vụ:" GridPane.columnIndex="0" GridPane.rowIndex="5" 
                        style="-fx-font-weight: bold;" />
                 <ComboBox fx:id="serviceComboBox" promptText="Chọn dịch vụ cho thú cưng" 
-                          GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="400" />
+                          GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="400" />
                 
-                <Label text="Ngày hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="4" 
+                <Label text="Ngày hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="6" 
                        style="-fx-font-weight: bold;" />
                 <DatePicker fx:id="bookingDatePicker" promptText="Chọn ngày đặt lịch" 
-                            GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="400" />
+                            GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="400" />
                 
-                <Label text="Giờ hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="5" 
+                <Label text="Giờ hẹn:" GridPane.columnIndex="0" GridPane.rowIndex="7" 
                        style="-fx-font-weight: bold;" />
                 <TextField fx:id="bookingTimeField" promptText="HH:mm (Ví dụ: 14:30)" 
-                           GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           GridPane.columnIndex="1" GridPane.rowIndex="7" />
                 
-                <Label text="Ghi chú:" GridPane.columnIndex="0" GridPane.rowIndex="6" 
+                <Label text="Ghi chú:" GridPane.columnIndex="0" GridPane.rowIndex="8" 
                        style="-fx-font-weight: bold;" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="5" />
                     </GridPane.margin>
                 </Label>
-                <TextArea fx:id="notesAreaNewBooking" promptText="Nhập ghi chú về lịch hẹn (nếu cần)" 
-                          GridPane.columnIndex="1" GridPane.rowIndex="6" prefHeight="80" wrapText="true" />
+                <TextArea fx:id="notesAreaNewBooking" promptText="Nhập ghi chú về lịch hẹn (tùy chọn)" 
+                          GridPane.columnIndex="1" GridPane.rowIndex="8" prefHeight="80" wrapText="true" />
             </GridPane>
             
             <Separator>
@@ -102,6 +112,8 @@
                 <Label text="• Nhập số điện thoại để tự động tìm khách hàng trong hệ thống" 
                        wrapText="true" />
                 <Label text="• Nếu khách hàng chưa có trong hệ thống, điền đầy đủ tên để tạo mới" 
+                       wrapText="true" />
+                <Label text="• Địa chỉ và email là tùy chọn, nhưng nên nhập để lưu thông tin đầy đủ" 
                        wrapText="true" />
                 <Label text="• Nhập tên thú cưng để tạo mới hoặc sử dụng thông tin hiện có" 
                        wrapText="true" />

@@ -25,6 +25,7 @@
     </top>
 
     <center>
+
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
             <VBox fx:id="mainContainer" alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" spacing="20" styleClass="main-container" VBox.vgrow="ALWAYS">
                 <padding>
@@ -32,6 +33,7 @@
                 </padding>
 
                 <!-- Avatar Section -->
+
                 <VBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" spacing="15" styleClass="avatar-section">
                     <StackPane>
                         <ImageView fitHeight="100.0" fitWidth="100.0" preserveRatio="true" styleClass="avatar-image">
@@ -40,6 +42,7 @@
                             </image>
                         </ImageView>
                     </StackPane>
+
                     <Button prefWidth="200" styleClass="btn-secondary" text="ĐỔI ẢNH ĐẠI DIỆN" />
                 </VBox>
 
@@ -75,10 +78,11 @@
                     <HBox alignment="CENTER" maxWidth="Infinity" spacing="20" styleClass="button-group">
                         <Button fx:id="changePasswordBtn" onAction="#handleChangePasswordForm" prefWidth="200" styleClass="btn-primary" text="ĐỔI MẬT KHẨU" />
                         <Button fx:id="updateProfileBtn" onAction="#handleUpdateProfile" prefWidth="200" styleClass="btn-success" text="CẬP NHẬT" />
+
                     </HBox>
                 </VBox>
 
-                <!-- Password Form -->
+
                 <VBox fx:id="passwordForm" alignment="CENTER" managed="false" maxWidth="Infinity" spacing="20" styleClass="form-card" visible="false" VBox.vgrow="ALWAYS">
                     <Label styleClass="form-title" text="ĐỔI MẬT KHẨU" />
 
@@ -106,6 +110,7 @@
                     <HBox alignment="CENTER" maxWidth="Infinity" spacing="20" styleClass="button-group">
                         <Button fx:id="backToProfileBtn" onAction="#handleBackToProfile" prefWidth="200" styleClass="btn-danger" text="QUAY LẠI" />
                         <Button fx:id="changePasswordConfirmBtn" onAction="#handleChangePassword" prefWidth="200" styleClass="btn-primary" text="ĐỔI MẬT KHẨU" />
+
                     </HBox>
                 </VBox>
               <HBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" styleClass="footer-box">
@@ -114,4 +119,6 @@
             </VBox>
         </ScrollPane>
     </center>
+
 </BorderPane>
+

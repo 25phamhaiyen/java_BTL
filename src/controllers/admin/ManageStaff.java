@@ -570,10 +570,10 @@ public class ManageStaff {
 		});
 	}
 
-	private void validateStaffData(String fullName, String phone, String email, LocalDate startDate, double salary, String address,
-			String roleName, String gender) { // Thêm tham số dob
+	private void validateStaffData(String fullName, String phone, String email, LocalDate startDate, double salary,
+			String address, String roleName, String gender) { // Thêm tham số dob
 		if (fullName == null || fullName.trim().isEmpty() || !Pattern.matches("^[\\p{L}\\s]+$", fullName.trim())) {
-		    throw new IllegalArgumentException("Họ và tên không hợp lệ.");
+			throw new IllegalArgumentException("Họ và tên không hợp lệ.");
 		}
 		if (phone == null || !phone.matches("^[0-9]{10}$")) {
 			throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
@@ -594,7 +594,7 @@ public class ManageStaff {
 			throw new IllegalArgumentException("Giới tính không được để trống");
 		}
 		if (startDate.isAfter(LocalDate.now())) {
-		    throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày hiện tại.");
+			throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày hiện tại.");
 		}
 	}
 

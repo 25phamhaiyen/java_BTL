@@ -11,78 +11,74 @@ import java.util.Properties;
 
 public class DatabaseConnection {
 
-
 	private static final Properties properties = new Properties();
 
-    private static String URL;
-    private static String USERNAME;
-    private static String PASSWORD;
-    private static String DRIVER;
-    
-    static {
+	private static String URL;
+	private static String USERNAME;
+	private static String PASSWORD;
+	private static String DRIVER;
 
-        try (FileInputStream fis = new FileInputStream("resources\\database.properties")) {
-            properties.load(fis);
-            URL = properties.getProperty("url");
-            USERNAME = properties.getProperty("username");
-            PASSWORD = properties.getProperty("password");
-            DRIVER = properties.getProperty("driver");
+	static {
 
-        } catch (IOException e) {
-            System.err.println("Lỗi khi đọc file cấu hình database: " + e.getMessage());
+		try (FileInputStream fis = new FileInputStream("resources\\database.properties")) {
+			properties.load(fis);
+			URL = properties.getProperty("url");
+			USERNAME = properties.getProperty("username");
+			PASSWORD = properties.getProperty("password");
+			DRIVER = properties.getProperty("driver");
 
-            e.printStackTrace();
-        }
-    }
+		} catch (IOException e) {
+			System.err.println("Lỗi khi đọc file cấu hình database: " + e.getMessage());
 
+			e.printStackTrace();
+		}
+	}
 
-    // Kết nối đến database
-    public static Connection getConnection() {
-        Connection conn = null;
-        try {
-            Class.forName(DRIVER);
-            // Tạo kết nối
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Lỗi: Không tìm thấy MySQL JDBC Driver!");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.err.println("Lỗi kết nối DB: " + e.getMessage());
+	// Kết nối đến database
+	public static Connection getConnection() {
+		Connection conn = null;
+		try {
+			Class.forName(DRIVER);
+			// Tạo kết nối
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		} catch (ClassNotFoundException e) {
+			System.err.println("Lỗi: Không tìm thấy MySQL JDBC Driver!");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.err.println("Lỗi kết nối DB: " + e.getMessage());
 
-        }
-        return conn;
-    }
+		}
+		return conn;
+	}
 
+	// Đóng kết nối
 
-    // Đóng kết nối
+	public static void closeConnection(Connection conn) {
+		if (conn != null) {
+			try {
+				conn.close();
 
-    public static void closeConnection(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
+				// Print database info
 
+				System.out.println("Đã đóng kết nối thành công.");
+			} catch (SQLException e) {
+				System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
+			}
+		}
+	}
 
-    // Print database info
+	// In thông tin database
 
-                System.out.println("Đã đóng kết nối thành công.");
-            } catch (SQLException e) {
-                System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
-            }
-        }
-    }
+	public static void printInfo(Connection conn) {
+		if (conn != null) {
+			try {
+				DatabaseMetaData metaData = conn.getMetaData();
+				System.out.println("Database: " + metaData.getDatabaseProductName());
+				System.out.println("Version: " + metaData.getDatabaseProductVersion());
+			} catch (SQLException e) {
 
-    // In thông tin database
-
-    public static void printInfo(Connection conn) {
-        if (conn != null) {
-            try {
-                DatabaseMetaData metaData = conn.getMetaData();
-                System.out.println("Database: " + metaData.getDatabaseProductName());
-                System.out.println("Version: " + metaData.getDatabaseProductVersion());
-            } catch (SQLException e) {
-
-                System.err.println("Lỗi khi lấy thông tin DB: " + e.getMessage());
-            }
-        }
-    }
+				System.err.println("Lỗi khi lấy thông tin DB: " + e.getMessage());
+			}
+		}
+	}
 }

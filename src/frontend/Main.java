@@ -15,8 +15,7 @@ public class Main extends Application {
 		SceneSwitcher.switchScene("home.fxml");
 	}
 
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 }

@@ -25,6 +25,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
+
 <ScrollPane fitToHeight="true" fitToWidth="true"
 	hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
 	xmlns="http://javafx.com/javafx/23.0.1"
@@ -505,4 +506,5 @@
 			</bottom>
 		</BorderPane>
 	</content>
+
 </ScrollPane>
