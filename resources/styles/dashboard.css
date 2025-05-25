@@ -32,6 +32,22 @@
     -fx-text-fill: white;
 }
 
+.language-button {
+    -fx-background-color: white;
+    -fx-text-fill: #f39c12;
+    -fx-border-color: #f39c12;
+    -fx-border-width: 2px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.language-button:hover {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
 /* Thông báo thông tin cửa hàng */
 .info-message {
     -fx-text-fill: #5d4037;
