@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
+import utils.LanguageManager;
 
 /**
  * Lớp tiện ích dùng để chuyển đổi giữa các màn hình (scene) trong ứng dụng
@@ -39,6 +40,9 @@ public class SceneSwitcher {
 			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/" + fxmlPath));
 			Scene scene = new Scene(root, 800, 700);
 			mainStage.setScene(scene);
+			// Set window title based on current language
+//            LanguageManager langManager = LanguageManager.getInstance();
+//            mainStage.setTitle(langManager.getString("app.title"));
 			mainStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
