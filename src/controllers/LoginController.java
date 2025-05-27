@@ -1,9 +1,11 @@
 package controllers;
 
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import exception.BusinessException;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,13 +14,14 @@ import javafx.scene.image.ImageView;
 import model.Account;
 import model.Role;
 import service.AccountService;
+import utils.LanguageChangeListener;
+import utils.LanguageManager;
 import utils.Session;
 
-public class LoginController {
-	@FXML
-	private TextField usernameField;
-	@FXML
-	private PasswordField passwordField;
+public class LoginController implements LanguageChangeListener{
+	@FXML private Label titleLabel;
+	@FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 	@FXML
 	private TextField passwordTextField; // TextField hiển thị mật khẩu
 	@FXML
@@ -27,6 +30,7 @@ public class LoginController {
 	private ImageView togglePasswordVisibilityIcon; // Icon con mắt
 	@FXML
 	private ImageView logoImage;
+	@FXML private Button loginButton;
 
 	private final AccountService accountService = new AccountService();
 	private int failedLoginAttempts = 0; // Biến đếm số lần đăng nhập thất bại
@@ -34,10 +38,20 @@ public class LoginController {
 
 	@FXML
 	public void initialize() {
+		LanguageManager.addListener(this); // Đăng ký lắng nghe nếu muốn thay đổi sau này
+        loadTexts();
 		// Tải logo vào ImageView
 		logoImage.setImage(new Image(getClass().getResourceAsStream("/images/logo.png")));
 		togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
 	}
+	private void loadTexts() {
+	    titleLabel.setText(LanguageManager.getString("login.title"));
+	    usernameField.setPromptText(LanguageManager.getString("username.prompt"));
+	    passwordField.setPromptText(LanguageManager.getString("password.prompt"));
+	    passwordTextField.setPromptText(LanguageManager.getString("password.prompt"));
+	    loginButton.setText(LanguageManager.getString("login.button"));
+	}
+
 
 	@FXML
 	public void handleLogin() {
@@ -47,7 +61,7 @@ public class LoginController {
 
 		try {
 			Optional<Account> user = accountService.login(username, password);
-			Account account = user.orElseThrow(() -> new BusinessException("Sai tên đăng nhập hoặc mật khẩu"));
+	        Account account = user.orElseThrow(() -> new BusinessException(LanguageManager.getString("login.error.invalid_credentials")));
 
 			// Reset số lần đăng nhập thất bại nếu đăng nhập thành công
 			failedLoginAttempts = 0;
@@ -55,10 +69,10 @@ public class LoginController {
 
 			// Kiểm tra trạng thái active của tài khoản (vẫn giữ nguyên)
 			if (!account.isActive()) {
-				throw new BusinessException("Tài khoản này hiện đang bị khóa!");
+				throw new BusinessException(LanguageManager.getString("login.error.locked_account"));
 			}
 
-			messageLabel.setText("Đăng nhập thành công!");
+			messageLabel.setText(LanguageManager.getString("login.success"));
 			messageLabel.setStyle("-fx-text-fill: green;");
 			Session.setCurrentAccount(account);
 
@@ -74,7 +88,7 @@ public class LoginController {
 			if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
 				// Gọi service để khóa tài khoản
 				accountService.lockAccount(username);
-				messageLabel.setText("Tài khoản " + username + " đã bị khóa sau 5 lần đăng nhập sai!");
+				messageLabel.setText(LanguageManager.getString("login.error.account_locked_after_attempts", username));
 				messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 				failedLoginAttempts = 0; // Reset lại sau khi khóa
 				lastFailedUsername = null;
@@ -105,7 +119,7 @@ public class LoginController {
 			SceneSwitcher.switchScene("staff/staff_home.fxml");
 			break;
 		case "OUT":
-			throw new BusinessException("Tài khoản này nhân viên đã nghỉ việc!");
+			throw new BusinessException(LanguageManager.getString("login.error.staff_quit"));
 		default:
 			break;
 		}
@@ -124,5 +138,10 @@ public class LoginController {
 			passwordField.setText(passwordTextField.getText());
 			togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
 		}
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
 	}
 }

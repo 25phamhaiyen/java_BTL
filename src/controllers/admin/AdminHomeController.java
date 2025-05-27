@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.LanguageManager;
 
 public class AdminHomeController {
 
@@ -22,6 +23,16 @@ public class AdminHomeController {
 	@FXML
 	private VBox sidebar;
 
+	@FXML private Label lblLogo;
+	@FXML private Label lblAccountManagement;
+	@FXML private Label lblStaffManagement;
+	@FXML private Label lblCustomerManagement;
+	@FXML private Label lblWorkSchedule;
+	@FXML private Label lblServices;
+	@FXML private Label lblDashboard;
+	@FXML private Label lblProfile;
+	@FXML private Label lblLogout;
+	@FXML private Label lblWelcome;
 	@FXML
 	private HBox btnAccountManagement, btnStaffManagement, btnCreateWorkSchedule, btnServices, btnDetailedDashboard,
 			btnEditProfile, btnCustomerManagement, btnLogout;
@@ -30,6 +41,17 @@ public class AdminHomeController {
 
 	@FXML
 	public void initialize() throws IOException {
+		lblLogo.setText(LanguageManager.getString("logo.text"));
+	    lblAccountManagement.setText(LanguageManager.getString("admin.account.management"));
+	    lblStaffManagement.setText(LanguageManager.getString("admin.staff.management"));
+	    lblCustomerManagement.setText(LanguageManager.getString("admin.customer.management"));
+	    lblWorkSchedule.setText(LanguageManager.getString("admin.schedule.create"));
+	    lblServices.setText(LanguageManager.getString("admin.services"));
+	    lblDashboard.setText(LanguageManager.getString("admin.dashboard"));
+	    lblProfile.setText(LanguageManager.getString("admin.profile"));
+	    lblLogout.setText(LanguageManager.getString("admin.logout"));
+	    lblWelcome.setText(LanguageManager.getString("admin.welcome"));
+		    
 		Platform.runLater(() -> {
 			// Sự kiện di chuột vào sidebar để mở rộng
 			sidebar.setOnMouseEntered(e -> {
@@ -55,9 +77,9 @@ public class AdminHomeController {
 			setupButtonAction(btnEditProfile, "/view/staff/edit_profile.fxml");
 			btnLogout.setOnMouseClicked(e -> {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-				alert.setTitle("Xác nhận đăng xuất");
+				alert.setTitle(LanguageManager.getString("logout.confirm.title"));
 				alert.setHeaderText(null);
-				alert.setContentText("Bạn có chắc chắn muốn đăng xuất?");
+				alert.setContentText(LanguageManager.getString("logout.confirm.message"));
 
 				alert.showAndWait().ifPresent(response -> {
 					if (response == ButtonType.OK) {

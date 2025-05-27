@@ -2,44 +2,56 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import utils.LanguageChangeListener;
+import utils.LanguageManager;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
-public class HomeController {
+public class HomeController implements LanguageChangeListener {
 
-	@FXML
-	private Label title;
-	@FXML
-	private Button btnLogin, btnLanguage;
-	private boolean isEnglish = false;
+	@FXML private Label lblTitle;
+	@FXML private Button btnLogin;
+	@FXML private ComboBox<String> languageCombo;
 
 	@FXML
 	public void initialize() {
-		updateLanguage();
+		LanguageManager.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
+		
+		languageCombo.getItems().addAll("Tiếng Việt", "English");
+        languageCombo.setValue("Tiếng Việt");
+        languageCombo.setOnAction(e -> {
+            String lang = languageCombo.getValue();
+            if (lang.equals("English")) {
+                LanguageManager.setLocale(new Locale("en", "US"));
+            } else {
+                LanguageManager.setLocale(new Locale("vi", "VN"));
+            }
+        });
+
+        loadTexts(); // Gọi khi khởi tạo
+        
 		btnLogin.setOnAction(this::handleLogin);
-		btnLanguage.setOnAction(this::toggleLanguage);
 	}
 
 	private void handleLogin(ActionEvent event) {
 		SceneSwitcher.switchScene("login.fxml");
 	}
 
-	private void toggleLanguage(ActionEvent event) {
-		isEnglish = !isEnglish;
-		updateLanguage();
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+	}
+	private void loadTexts() {
+	    lblTitle.setText(LanguageManager.getString("title"));
+	    btnLogin.setText(LanguageManager.getString("btn.login"));
 	}
 
-	private void updateLanguage() {
-		if (isEnglish) {
-			title.setText("PET CARE");
-			btnLogin.setText("Login");
-			btnLanguage.setText("EN|VN");
-		} else {
-			title.setText("CHĂM SÓC THÚ CƯNG CỦA BẠN");
-			btnLogin.setText("Đăng nhập");
-			btnLanguage.setText("VN|GB");
-		}
-	}
+
 }
