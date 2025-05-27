@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import utils.LanguageManager;
+import utils.LanguageManagerAd;
 
 public class AdminHomeController {
 
@@ -41,16 +41,16 @@ public class AdminHomeController {
 
 	@FXML
 	public void initialize() throws IOException {
-		lblLogo.setText(LanguageManager.getString("logo.text"));
-	    lblAccountManagement.setText(LanguageManager.getString("admin.account.management"));
-	    lblStaffManagement.setText(LanguageManager.getString("admin.staff.management"));
-	    lblCustomerManagement.setText(LanguageManager.getString("admin.customer.management"));
-	    lblWorkSchedule.setText(LanguageManager.getString("admin.schedule.create"));
-	    lblServices.setText(LanguageManager.getString("admin.services"));
-	    lblDashboard.setText(LanguageManager.getString("admin.dashboard"));
-	    lblProfile.setText(LanguageManager.getString("admin.profile"));
-	    lblLogout.setText(LanguageManager.getString("admin.logout"));
-	    lblWelcome.setText(LanguageManager.getString("admin.welcome"));
+		lblLogo.setText(LanguageManagerAd.getString("logo.text"));
+	    lblAccountManagement.setText(LanguageManagerAd.getString("admin.account.management"));
+	    lblStaffManagement.setText(LanguageManagerAd.getString("admin.staff.management"));
+	    lblCustomerManagement.setText(LanguageManagerAd.getString("admin.customer.management"));
+	    lblWorkSchedule.setText(LanguageManagerAd.getString("admin.schedule.create"));
+	    lblServices.setText(LanguageManagerAd.getString("admin.services"));
+	    lblDashboard.setText(LanguageManagerAd.getString("admin.dashboard"));
+	    lblProfile.setText(LanguageManagerAd.getString("admin.profile"));
+	    lblLogout.setText(LanguageManagerAd.getString("admin.logout"));
+	    lblWelcome.setText(LanguageManagerAd.getString("admin.welcome"));
 		    
 		Platform.runLater(() -> {
 			// Sự kiện di chuột vào sidebar để mở rộng
@@ -77,9 +77,9 @@ public class AdminHomeController {
 			setupButtonAction(btnEditProfile, "/view/staff/edit_profile.fxml");
 			btnLogout.setOnMouseClicked(e -> {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-				alert.setTitle(LanguageManager.getString("logout.confirm.title"));
+				alert.setTitle(LanguageManagerAd.getString("logout.confirm.title"));
 				alert.setHeaderText(null);
-				alert.setContentText(LanguageManager.getString("logout.confirm.message"));
+				alert.setContentText(LanguageManagerAd.getString("logout.confirm.message"));
 
 				alert.showAndWait().ifPresent(response -> {
 					if (response == ButtonType.OK) {

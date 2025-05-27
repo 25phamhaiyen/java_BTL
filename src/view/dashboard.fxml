@@ -6,9 +6,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DashboardController"
-            stylesheets="@/styles/dashboard.css">
+stylesheets="@/styles/dashboard.css">
 
     <!-- Thanh top menu -->
     <top>
@@ -16,8 +15,9 @@
             <padding>
                 <Insets top="0" right="20" bottom="0" left="0"/>
             </padding>
-            <Label fx:id="lblWelcome" text="Chào mừng, [Tên người dùng]" styleClass="welcome-label"/>
-            <Button fx:id="btnLogout" text="Đăng xuất" styleClass="logout-button"/>
+            <Label fx:id="lblWelcome" styleClass="welcome-label"/>
+            <Button fx:id="btnLanguage" styleClass="language-button"/>
+            <Button fx:id="btnLogout" styleClass="logout-button"/>
         </HBox>
     </top>
 
@@ -29,9 +29,9 @@
                     <Image url="/images/logo.png" />
                 </image>
             </ImageView>
-            <Label fx:id="lblMessage" text="BestPet - Cửa Hàng Chăm Sóc Thú Cưng số một thế giới ảo." styleClass="info-message"/>
-            <Button fx:id="btnAdminPanel" text="Tiếp tục" onAction="#handleAdminPanel" visible="false " styleClass="continue-button" /> 
-   			<Button fx:id="btnEmployeePanel" text="Tiếp tục" onAction="#handleEmployeePanel" visible="false " styleClass="continue-button" /> 
+            <Label fx:id="lblMessage" styleClass="info-message"/>
+            <Button fx:id="btnAdminPanel" onAction="#handleAdminPanel" visible="false" styleClass="continue-button" />
+            <Button fx:id="btnEmployeePanel" onAction="#handleEmployeePanel" visible="false" styleClass="continue-button" />
         </VBox>
     </center>
 </BorderPane>

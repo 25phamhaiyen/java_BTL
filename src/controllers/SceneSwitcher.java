@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
-import utils.LanguageManager;
+import utils.LanguageManagerAd;
 
 /**
  * Lớp tiện ích dùng để chuyển đổi giữa các màn hình (scene) trong ứng dụng
@@ -23,13 +23,12 @@ public class SceneSwitcher {
 	/**
 	 * Thiết lập stage chính của ứng dụng
 	 * 
-	 * @param stage Stage chính
 	 */
 	public static void setMainStage(Stage stage) {
 	    mainStage = stage;
 	    
-	    LanguageManager.addListener(() -> {
-	        String title = LanguageManager.getString("title");
+	    LanguageManagerAd.addListener(() -> {
+	        String title = LanguageManagerAd.getString("title");
 	        
 	        if (mainStage != null) {
 	            mainStage.setTitle(title);
@@ -38,7 +37,7 @@ public class SceneSwitcher {
 	    
 	    // Thiết lập luôn title ngay lần đầu, tránh trường hợp Stage set xong mà chưa có title
 	    if (mainStage != null) {
-	        mainStage.setTitle(LanguageManager.getString("title"));
+	        mainStage.setTitle(LanguageManagerAd.getString("title"));
 	    }
 	}
 
@@ -51,11 +50,14 @@ public class SceneSwitcher {
 	public static void switchScene(String fxmlPath) {
 		try {
 			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/" + fxmlPath));
-			loader.setResources(ResourceBundle.getBundle("lang.messages", LanguageManager.getCurrentLocale()));
+			loader.setResources(ResourceBundle.getBundle("lang.messages", LanguageManagerAd.getCurrentLocale()));
 			Parent root = loader.load();
 			
 			Scene scene = new Scene(root, 800, 700);
 			mainStage.setScene(scene);
+			// Set window title based on current language
+//            LanguageManagerAd langManager = LanguageManagerAd.getInstance();
+//            mainStage.setTitle(langManager.getString("app.title"));
 			mainStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -213,3 +215,4 @@ public class SceneSwitcher {
 		alert.showAndWait();
 	}
 }
+

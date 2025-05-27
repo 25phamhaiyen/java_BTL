@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceRepository implements IRepository<Service> {
+
 	public static ServiceRepository getInstance() {
 		return new ServiceRepository();
 	}

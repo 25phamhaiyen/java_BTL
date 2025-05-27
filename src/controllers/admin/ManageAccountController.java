@@ -21,7 +21,7 @@ import model.Role;
 import service.AccountService;
 import service.PermissionService;
 import service.RoleService;
-import utils.LanguageManager;
+import utils.LanguageManagerAd;
 
 public class ManageAccountController{
 
@@ -50,26 +50,26 @@ public class ManageAccountController{
 	@FXML
 	public void initialize() {
 		
-		lblTitle.setText(LanguageManager.getString("manageAccount.title"));
-        lblSearch.setText(LanguageManager.getString("manageAccount.search.label"));
-        txtSearch.setPromptText(LanguageManager.getString("manageAccount.search.prompt"));
-        btnSearch.setText(LanguageManager.getString("manageAccount.search.button"));
-        colAccountId.setText(LanguageManager.getString("manageAccount.table.accountId"));
-        colUsername.setText(LanguageManager.getString("manageAccount.table.username"));
-        colRole.setText(LanguageManager.getString("manageAccount.table.role"));
-        colActive.setText(LanguageManager.getString("manageAccount.table.active"));
-        colPermissions.setText(LanguageManager.getString("manageAccount.table.permissions"));
-        btnEdit.setText(LanguageManager.getString("manageAccount.button.edit"));
-        btnDelete.setText(LanguageManager.getString("manageAccount.button.delete"));
-        btnResetPassword.setText(LanguageManager.getString("manageAccount.button.resetPassword"));
-        btnAssignPermission.setText(LanguageManager.getString("manageAccount.button.assignPermission"));
+		lblTitle.setText(LanguageManagerAd.getString("manageAccount.title"));
+        lblSearch.setText(LanguageManagerAd.getString("manageAccount.search.label"));
+        txtSearch.setPromptText(LanguageManagerAd.getString("manageAccount.search.prompt"));
+        btnSearch.setText(LanguageManagerAd.getString("manageAccount.search.button"));
+        colAccountId.setText(LanguageManagerAd.getString("manageAccount.table.accountId"));
+        colUsername.setText(LanguageManagerAd.getString("manageAccount.table.username"));
+        colRole.setText(LanguageManagerAd.getString("manageAccount.table.role"));
+        colActive.setText(LanguageManagerAd.getString("manageAccount.table.active"));
+        colPermissions.setText(LanguageManagerAd.getString("manageAccount.table.permissions"));
+        btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
+        btnDelete.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
+        btnResetPassword.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
+        btnAssignPermission.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
         
 		// Initialize TableView columns
 		colAccountId.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getAccountID()));
 		colUsername.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUserName()));
 		colRole.setCellValueFactory(cellData -> {
 		    String roleCode = cellData.getValue().getRole().getRoleName(); // VD: STAFF_CARE
-		    String localizedRole = LanguageManager.getString("manageAccount.role." + roleCode);
+		    String localizedRole = LanguageManagerAd.getString("manageAccount.role." + roleCode);
 		    return new ReadOnlyStringWrapper(localizedRole);
 		});
 		colActive.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().isActive()));
@@ -82,8 +82,8 @@ public class ManageAccountController{
 					setStyle("");
 				} else {
 					setText(isActive 
-							? LanguageManager.getString("manageAccount.status.active") 
-							: LanguageManager.getString("manageAccount.status.inactive"));
+							? LanguageManagerAd.getString("manageAccount.status.active") 
+							: LanguageManagerAd.getString("manageAccount.status.inactive"));
 
 					if (isActive) {
 						setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
@@ -129,7 +129,7 @@ public class ManageAccountController{
 
 	private void filterAccounts(String keyword) {
 		if (accountList == null || accountList.isEmpty()) {
-			System.err.println(LanguageManager.getString("manageAccount.error.empty_account_list"));
+			System.err.println(LanguageManagerAd.getString("manageAccount.error.empty_account_list"));
 			return;
 		}
 
@@ -155,8 +155,8 @@ public class ManageAccountController{
 		if (selectedAccount != null) {
 			// Tạo dialog để chỉnh sửa tài khoản
 			Dialog<Account> dialog = new Dialog<>();
-			dialog.setTitle(LanguageManager.getString("manageAccount.edit.dialog.title"));
-			dialog.setHeaderText(LanguageManager.getString("manageAccount.edit.dialog.header"));
+			dialog.setTitle(LanguageManagerAd.getString("manageAccount.edit.dialog.title"));
+			dialog.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.dialog.header"));
 			dialog.setResizable(true);
 
 			// Tạo các trường nhập liệu
@@ -169,17 +169,17 @@ public class ManageAccountController{
 			List<String> roleKeys = Arrays.asList("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
 
 			for (String roleKey : roleKeys) {
-			    String localizedRoleName = LanguageManager.getString("manageAccount.role." + roleKey);
+			    String localizedRoleName = LanguageManagerAd.getString("manageAccount.role." + roleKey);
 			    cbRole.getItems().add(localizedRoleName);
 			    displayNameToRoleKey.put(localizedRoleName, roleKey);
 			}
 
 			// Chọn item theo roleKey của tài khoản
 			String selectedRoleKey = selectedAccount.getRole().getRoleName();
-			String selectedLocalizedRole = LanguageManager.getString("manageAccount.role." + selectedRoleKey);
+			String selectedLocalizedRole = LanguageManagerAd.getString("manageAccount.role." + selectedRoleKey);
 			cbRole.getSelectionModel().select(selectedLocalizedRole);
 
-			cbRole.setPromptText(LanguageManager.getString("manageAccount.edit.label.role"));
+			cbRole.setPromptText(LanguageManagerAd.getString("manageAccount.edit.label.role"));
 
 			// Khi lưu lại, lấy roleKey từ tên hiển thị đã chọn
 			String selectedDisplayName = cbRole.getSelectionModel().getSelectedItem();
@@ -188,8 +188,8 @@ public class ManageAccountController{
 
 			// Nút để chỉnh sửa trạng thái hoạt động
 			ToggleGroup toggleGroup = new ToggleGroup();
-			RadioButton rbActive = new RadioButton(LanguageManager.getString("manageAccount.edit.status.active"));
-			RadioButton rbInactive = new RadioButton(LanguageManager.getString("manageAccount.edit.status.inactive"));
+			RadioButton rbActive = new RadioButton(LanguageManagerAd.getString("manageAccount.edit.status.active"));
+			RadioButton rbInactive = new RadioButton(LanguageManagerAd.getString("manageAccount.edit.status.inactive"));
 			rbActive.setToggleGroup(toggleGroup);
 			rbInactive.setToggleGroup(toggleGroup);
 
@@ -201,7 +201,7 @@ public class ManageAccountController{
 			}
 
 			// Thêm các thành phần vào VBox
-			vbox.getChildren().addAll(new Label(LanguageManager.getString("manageAccount.edit.label.role")), cbRole, new Label(LanguageManager.getString("manageAccount.edit.label.status")), rbActive,
+			vbox.getChildren().addAll(new Label(LanguageManagerAd.getString("manageAccount.edit.label.role")), cbRole, new Label(LanguageManagerAd.getString("manageAccount.edit.label.status")), rbActive,
 					rbInactive);
 
 			dialog.getDialogPane().setContent(vbox);
@@ -214,9 +214,9 @@ public class ManageAccountController{
 			        String roleKey = displayNameToRoleKey.get(chosenDisplayName);
 			        if (roleKey == null) {
 			            Alert alert = new Alert(Alert.AlertType.ERROR);
-			            alert.setTitle(LanguageManager.getString("manageAccount.edit.error.invalidRole.title"));
-			            alert.setHeaderText(LanguageManager.getString("manageAccount.edit.error.invalidRole.header"));
-			            alert.setContentText(LanguageManager.getString("manageAccount.edit.error.invalidRole.content"));
+			            alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.title"));
+			            alert.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.header"));
+			            alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.content"));
 			            alert.showAndWait();
 			            return null;
 			        }
@@ -224,9 +224,9 @@ public class ManageAccountController{
 			        int roleId = roleService.getRoleIdByRoleName(roleKey);
 			        if (roleId == -1) {
 			            Alert alert = new Alert(Alert.AlertType.ERROR);
-			            alert.setTitle(LanguageManager.getString("manageAccount.edit.error.invalidRole.title"));
-			            alert.setHeaderText(LanguageManager.getString("manageAccount.edit.error.invalidRole.header"));
-			            alert.setContentText(LanguageManager.getString("manageAccount.edit.error.invalidRole.content"));
+			            alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.title"));
+			            alert.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.header"));
+			            alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.content"));
 			            alert.showAndWait();
 			            return null;
 			        }
@@ -251,25 +251,25 @@ public class ManageAccountController{
 				boolean success = accountService.updateAccount(updatedAccount);
 				if (success) {
 					Alert alert = new Alert(Alert.AlertType.INFORMATION);
-					alert.setTitle(LanguageManager.getString("manageAccount.edit.success.title"));
+					alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.success.title"));
 					alert.setHeaderText(null);
-					alert.setContentText(LanguageManager.getString("manageAccount.edit.success.content"));
+					alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.success.content"));
 					alert.showAndWait();
 					loadAccounts(); // Làm mới danh sách tài khoản
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle(LanguageManager.getString("manageAccount.edit.error.updateFailed.title"));
+					alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.updateFailed.title"));
 					alert.setHeaderText(null);
-					alert.setContentText(LanguageManager.getString("manageAccount.edit.error.updateFailed.content"));
+					alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.updateFailed.content"));
 					alert.showAndWait();
 				}
 			});
 		} else {
 			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle(LanguageManager.getString("manageAccount.edit.warning.noSelection.title"));
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.warning.noSelection.title"));
 			alert.setHeaderText(null);
-			alert.setContentText(LanguageManager.getString("manageAccount.edit.warning.noSelection.content"));
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.warning.noSelection.content"));
 			alert.showAndWait();
 		}
 	}
@@ -280,9 +280,9 @@ public class ManageAccountController{
 		if (selectedAccount != null) {
 			// Hiển thị hộp thoại xác nhận
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-			alert.setTitle(LanguageManager.getString("manageAccount.delete.confirm.title"));
-			alert.setHeaderText(LanguageManager.getString("manageAccount.delete.confirm.header"));
-			alert.setContentText(LanguageManager.getString("manageAccount.delete.confirm.content", selectedAccount.getUserName()));
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.delete.confirm.title"));
+			alert.setHeaderText(LanguageManagerAd.getString("manageAccount.delete.confirm.header"));
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.delete.confirm.content", selectedAccount.getUserName()));
 
 			// Chờ người dùng chọn OK hoặc Cancel
 			Optional<ButtonType> result = alert.showAndWait();
@@ -294,9 +294,9 @@ public class ManageAccountController{
 		} else {
 			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle(LanguageManager.getString("manageAccount.delete.warning.title"));
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.delete.warning.title"));
 			alert.setHeaderText(null);
-			alert.setContentText(LanguageManager.getString("manageAccount.delete.warning.content"));
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.delete.warning.content"));
 			alert.showAndWait();
 		}
 	}
@@ -314,8 +314,8 @@ public class ManageAccountController{
 
 			// Tạo hộp thoại gán quyền
 			Dialog<List<String>> dialog = new Dialog<>();
-			dialog.setTitle(LanguageManager.getString("manageAccount.assignPermission.dialog.title"));
-			dialog.setHeaderText(LanguageManager.getString("manageAccount.assignPermission.dialog.header", selectedAccount.getUserName()));
+			dialog.setTitle(LanguageManagerAd.getString("manageAccount.assignPermission.dialog.title"));
+			dialog.setHeaderText(LanguageManagerAd.getString("manageAccount.assignPermission.dialog.header", selectedAccount.getUserName()));
 
 			// Tạo danh sách checkbox cho các quyền
 			VBox content = new VBox(10);
@@ -363,9 +363,9 @@ public class ManageAccountController{
 			});
 		} else {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle(LanguageManager.getString("manageAccount.assignPermission.warning.title"));
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.assignPermission.warning.title"));
 			alert.setHeaderText(null);
-			alert.setContentText(LanguageManager.getString("manageAccount.assignPermission.warning.content"));
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.assignPermission.warning.content"));
 			alert.showAndWait();
 		}
 	}
@@ -375,32 +375,32 @@ public class ManageAccountController{
 	    Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 	    if (selectedAccount != null) {
 	        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-	        alert.setTitle(LanguageManager.getString("manageAccount.resetPassword.confirm.title"));
-	        alert.setHeaderText(LanguageManager.getString("manageAccount.resetPassword.confirm.header"));
-	        alert.setContentText(LanguageManager.getString("manageAccount.resetPassword.confirm.content", selectedAccount.getUserName()));
+	        alert.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.title"));
+	        alert.setHeaderText(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.header"));
+	        alert.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.content", selectedAccount.getUserName()));
 
 	        Optional<ButtonType> result = alert.showAndWait();
 	        if (result.isPresent() && result.get() == ButtonType.OK) {
 	            boolean success = accountService.resetPassword(selectedAccount.getAccountID(), "123456789");
 	            if (success) {
 	                Alert info = new Alert(Alert.AlertType.INFORMATION);
-	                info.setTitle(LanguageManager.getString("manageAccount.resetPassword.success.title"));
+	                info.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.success.title"));
 	                info.setHeaderText(null);
-	                info.setContentText(LanguageManager.getString("manageAccount.resetPassword.success.content"));
+	                info.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.success.content"));
 	                info.showAndWait();
 	            } else {
 	                Alert error = new Alert(Alert.AlertType.ERROR);
-	                error.setTitle(LanguageManager.getString("manageAccount.resetPassword.error.title"));
+	                error.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.error.title"));
 	                error.setHeaderText(null);
-	                error.setContentText(LanguageManager.getString("manageAccount.resetPassword.error.content"));
+	                error.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.error.content"));
 	                error.showAndWait();
 	            }
 	        }
 	    } else {
 	        Alert alert = new Alert(Alert.AlertType.WARNING);
-	        alert.setTitle(LanguageManager.getString("manageAccount.resetPassword.warning.title"));
+	        alert.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.warning.title"));
 	        alert.setHeaderText(null);
-	        alert.setContentText(LanguageManager.getString("manageAccount.resetPassword.warning.content"));
+	        alert.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.warning.content"));
 	        alert.showAndWait();
 	    }
 	}

@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -7,12 +8,9 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import utils.LanguageChangeListener;
 import utils.LanguageManager;
+import utils.LanguageManagerAd;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 
 public class HomeController implements LanguageChangeListener {
 
@@ -22,16 +20,16 @@ public class HomeController implements LanguageChangeListener {
 
 	@FXML
 	public void initialize() {
-		LanguageManager.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
+		LanguageManagerAd.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
 		
 		languageCombo.getItems().addAll("Tiếng Việt", "English");
         languageCombo.setValue("Tiếng Việt");
         languageCombo.setOnAction(e -> {
             String lang = languageCombo.getValue();
             if (lang.equals("English")) {
-                LanguageManager.setLocale(new Locale("en", "US"));
+                LanguageManagerAd.setLocale(new Locale("en", "US"));
             } else {
-                LanguageManager.setLocale(new Locale("vi", "VN"));
+                LanguageManagerAd.setLocale(new Locale("vi", "VN"));
             }
         });
 
@@ -49,9 +47,10 @@ public class HomeController implements LanguageChangeListener {
 		loadTexts();
 	}
 	private void loadTexts() {
-	    lblTitle.setText(LanguageManager.getString("title"));
-	    btnLogin.setText(LanguageManager.getString("btn.login"));
+	    lblTitle.setText(LanguageManagerAd.getString("title"));
+	    btnLogin.setText(LanguageManagerAd.getString("btn.login"));
 	}
 
 
 }
+
