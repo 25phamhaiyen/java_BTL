@@ -15,6 +15,8 @@ import javafx.scene.image.ImageView;
 import model.Account;
 import model.Role;
 import service.AccountService;
+
+
 import utils.I18nUtil;
 import utils.LanguageManager;
 import utils.Session;
@@ -31,7 +33,7 @@ public class LoginController implements I18nUtil.I18nUpdatable {
     @FXML
     private Label titleLabel;
     @FXML
-    private Button btnLogin, btnLanguage;
+    private Button btnLogin;
     @FXML
     private ImageView togglePasswordVisibilityIcon;
     @FXML
@@ -53,8 +55,6 @@ public class LoginController implements I18nUtil.I18nUpdatable {
         // Initial language setup
         updateLanguage();
         
-        // Set up event handlers
-        btnLanguage.setOnAction(this::toggleLanguage);
     }
     
     @Override
@@ -66,7 +66,6 @@ public class LoginController implements I18nUtil.I18nUpdatable {
         
         // Update button texts
         btnLogin.setText(langManager.getString("login.button"));
-        btnLanguage.setText(langManager.getString("login.language.toggle"));
         
         // Update placeholder texts
         usernameField.setPromptText(langManager.getString("login.username"));
@@ -85,10 +84,15 @@ public class LoginController implements I18nUtil.I18nUpdatable {
         String username = usernameField.getText().trim();
         String password = passwordField.isVisible() ? passwordField.getText().trim()
                 : passwordTextField.getText().trim();
+//
+//		try {
+//			Optional<Account> user = accountService.login(username, password);
+//	        Account account = user.orElseThrow(() -> new BusinessException(LanguageManager.getString("login.error.invalid_credentials")));
 
         try {
             Optional<Account> user = accountService.login(username, password);
             Account account = user.orElseThrow(() -> new BusinessException(langManager.getString("login.error")));
+
 
             // Reset failed login attempts on successful login
             failedLoginAttempts = 0;
@@ -111,19 +115,20 @@ public class LoginController implements I18nUtil.I18nUpdatable {
             messageLabel.setText(e.getMessage());
             messageLabel.setStyle("-fx-text-fill: red;");
 
-            // Check if reached failed login threshold
-            if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
-                // Lock account
-                accountService.lockAccount(username);
-                messageLabel.setText(langManager.getString("login.account.locked.attempts", username));
-                messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                failedLoginAttempts = 0;
-                lastFailedUsername = null;
-            } else {
-                lastFailedUsername = username;
-            }
-        }
-    }
+			// Kiểm tra nếu đạt đến ngưỡng đăng nhập thất bại
+			if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
+				// Gọi service để khóa tài khoản
+				accountService.lockAccount(username);
+				messageLabel.setText(langManager.getString("login.account.locked.attempts", username));
+				messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+				failedLoginAttempts = 0; // Reset lại sau khi khóa
+				lastFailedUsername = null;
+			} else {
+				lastFailedUsername = username; // Cập nhật username thất bại gần nhất
+			}
+		}
+	}
+        
 
     private void routeBasedOnRole(Role role) {
         LanguageManager langManager = LanguageManager.getInstance();
@@ -132,7 +137,7 @@ public class LoginController implements I18nUtil.I18nUpdatable {
             SceneSwitcher.switchScene("dashboard.fxml");
             return;
         }
-
+        
         switch (role.getRoleName().toUpperCase()) {
         case "ADMIN":
             SceneSwitcher.switchScene("dashboard.fxml");

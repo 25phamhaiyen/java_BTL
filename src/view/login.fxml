@@ -26,8 +26,7 @@
         </StackPane>
 
         <Label fx:id="messageLabel" styleClass="error-label"/>
-
+       
         <Button fx:id="btnLogin" onAction="#handleLogin" styleClass="login-button"/>
-        <Button fx:id="btnLanguage" styleClass="button-right"/>
     </VBox>
 </AnchorPane>

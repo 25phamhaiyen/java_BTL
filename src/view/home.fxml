@@ -15,14 +15,17 @@
             </ImageView>
             
             <!-- Tiêu đề -->
-            <Label fx:id="title" text="CHĂM SÓC THÚ CƯNG CỦA BẠN" styleClass="title-label"/>
+            <Label fx:id="lblTitle" styleClass="title-label"/>
         </VBox>
         
         <!-- Nút chức năng -->
         <HBox fx:id="buttonBar" spacing="0" alignment="CENTER_LEFT" AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20" styleClass="button-bar">
             <Button fx:id="btnLogin" text="Đăng nhập" styleClass="button-left"/>
+
+          <ComboBox fx:id="languageCombo" styleClass="button-right"/>  
             
-            <Button fx:id="btnLanguage" text="🇻🇳 | 🇺🇸" styleClass="button-right"/>
+          <!-- <Button fx:id="btnLanguage" text="🇻🇳 | 🇺🇸" styleClass="button-right"/>  -->  
+
         </HBox>
     </AnchorPane>
 </AnchorPane>
