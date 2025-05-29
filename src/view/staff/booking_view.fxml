@@ -286,12 +286,12 @@
                     </padding>
         
                     <Label fx:id="statusMessageLabel"
+ 
                         style="-fx-text-fill: #333333;" text="Sẵn sàng" />
                     <Region HBox.hgrow="ALWAYS" />
                     <Button fx:id="homeButton" onAction="#goToHome"
                         style="-fx-background-color: #d88e3f; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 8 15;"
                         text="Về trang chủ" />
-
                     <Button onAction="#showHelp"
                         style="-fx-background-color: #DDDDDD; -fx-text-fill: #333333; -fx-background-radius: 4; -fx-padding: 8 15;"
                         text="Trợ giúp" />

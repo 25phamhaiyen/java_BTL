@@ -79,12 +79,13 @@ public class GeneralStatisticsController {
         loadChartDataByTimeUnit("WEEK");
     }
 
-
     private void loadChartDataByTimeUnit(String timeUnit) {
         // Lấy dữ liệu từ repository và cập nhật biểu đồ
+
         XYChart.Series<String, Number> revenueSeries = revenueRepository.getRevenueData(timeUnit);
         XYChart.Series<String, Number> bookingsSeries = bookingRepository.getBookingData(timeUnit);
         XYChart.Series<String, Number> customersSeries = customerRepository.getCustomerData(timeUnit);
+
 
         revenueChart.getData().clear();
         revenueChart.getData().add(revenueSeries);
@@ -99,7 +100,6 @@ public class GeneralStatisticsController {
         updateStatisticsLabels(timeUnit);
     }
 
-
     private void updateStatisticsLabels(String timeUnit) {
         double totalRevenue = revenueRepository.getRevenueTotal(timeUnit);
         int totalBookings = bookingRepository.getTotalBookings(timeUnit);
@@ -109,8 +109,6 @@ public class GeneralStatisticsController {
         lblBookingsStats.setText("Số lượng đặt lịch mới: " + totalBookings);
         lblNewCustomersStats.setText("Khách hàng mới: " + totalCustomers);
     }
-
-
 
     private String formatCurrency(double amount) {
         // Định dạng số tiền theo kiểu tiền tệ Việt Nam

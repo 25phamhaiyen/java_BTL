@@ -117,48 +117,47 @@ public class MyScheduleController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		scheduleService = new ScheduleService();
+	    scheduleService = new ScheduleService();
 
-		// Get current staff information from Session
-		Staff currentStaff = Session.getInstance().getCurrentStaff();
+	    // Get current staff information from Session
+	    Staff currentStaff = Session.getInstance().getCurrentStaff();
 
-		if (currentStaff == null || !RoleChecker.hasPermission("VIEW_SCHEDULE")) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
-					"Bạn không có quyền truy cập vào màn hình lịch làm việc.");
-			Stage stage = (Stage) dateLabel.getScene().getWindow();
-			stage.close();
-			return;
-		}
+	    if (currentStaff == null || !RoleChecker.hasPermission("VIEW_SCHEDULE")) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
+	                "Bạn không có quyền truy cập vào màn hình lịch làm việc.");
+	        Stage stage = (Stage) dateLabel.getScene().getWindow();
+	        stage.close();
+	        return;
+	    }
 
-		currentStaffId = currentStaff.getId();
-		dateLabel.setText("Lịch Làm Việc Của Bạn");
-		staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
-		positionLabel
-				.setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
+	    currentStaffId = currentStaff.getId();
+	    dateLabel.setText("Lịch Làm Việc Của Bạn");
+	    staffNameLabel.setText("Nhân viên: " + currentStaff.getFullName());
+	    positionLabel
+	            .setText("Vị trí: " + (currentStaff.getPosition() != null ? currentStaff.getPosition() : "Nhân viên"));
 
-		// Initialize table columns
-		setupTableColumns();
+	    // Initialize table columns
+	    setupTableColumns();
 
-		// Initialize ComboBoxes
-		initializeComboBoxes();
+	    // Initialize ComboBoxes
+	    initializeComboBoxes();
 
-		// Set default values for date pickers
-		initializeDatePickers();
+	    // Set default values for date pickers
+	    initializeDatePickers();
 
-		// Load schedule for a date that has data (e.g., 2025-05-10)
-		loadScheduleByDate(LocalDate.of(2025, 5, 10));
+	    // Load schedule for current date
+	    loadScheduleByDate(LocalDate.now()); // Sửa: sử dụng ngày hiện tại
 
-		// Add selection listener for schedule table
-		scheduleTable.getSelectionModel().selectedItemProperty()
-				.addListener((observable, oldValue, newValue) -> showScheduleDetails(newValue));
+	    // Add selection listener for schedule table
+	    scheduleTable.getSelectionModel().selectedItemProperty()
+	            .addListener((observable, oldValue, newValue) -> showScheduleDetails(newValue));
 
-		// Add listener for viewModeSelector
-		viewModeSelector.setOnAction(event -> handleViewModeChange());
+	    // Add listener for viewModeSelector
+	    viewModeSelector.setOnAction(event -> handleViewModeChange());
 
-		// Thiết lập hiển thị nút dựa trên quyền
-		setupButtonVisibility();
+	    // Thiết lập hiển thị nút dựa trên quyền
+	    setupButtonVisibility();
 	}
-
 	private void setupButtonVisibility() {
 		if (requestLeaveButton != null) {
 			requestLeaveButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
@@ -254,142 +253,140 @@ public class MyScheduleController implements Initializable {
 	}
 
 	private void initializeDatePickers() {
-		// Set date picker format
-		StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
-			@Override
-			public String toString(LocalDate date) {
-				return (date != null) ? dateFormatter.format(date) : "";
-			}
+	    // Set date picker format
+	    StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
+	        @Override
+	        public String toString(LocalDate date) {
+	            return (date != null) ? dateFormatter.format(date) : "";
+	        }
 
-			@Override
-			public LocalDate fromString(String string) {
-				return (string != null && !string.isEmpty()) ? LocalDate.parse(string, dateFormatter) : null;
-			}
-		};
+	        @Override
+	        public LocalDate fromString(String string) {
+	            return (string != null && !string.isEmpty()) ? LocalDate.parse(string, dateFormatter) : null;
+	        }
+	    };
 
-		datePicker.setConverter(converter);
-		registrationDatePicker.setConverter(converter);
+	    datePicker.setConverter(converter);
+	    registrationDatePicker.setConverter(converter);
 
-		// Set default values
-		LocalDate defaultDate = LocalDate.of(2025, 5, 10); // Ngày có dữ liệu
-		datePicker.setValue(defaultDate);
-		registrationDatePicker.setValue(defaultDate);
+	    // Set default values
+	    LocalDate defaultDate = LocalDate.now(); // Sửa: sử dụng ngày hiện tại
+	    datePicker.setValue(defaultDate);
+	    registrationDatePicker.setValue(defaultDate);
 
-		// Add listener for date picker changes
-		datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue != null) {
-				loadScheduleByDate(newValue);
-			}
-		});
+	    // Add listener for date picker changes
+	    datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue != null) {
+	            loadScheduleByDate(newValue);
+	        }
+	    });
 	}
-
 	private void handleViewModeChange() {
-		String mode = viewModeSelector.getValue();
-		LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
+	    String mode = viewModeSelector.getValue();
+	    LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now(); // Sửa: sử dụng ngày hiện tại
 
-		switch (mode) {
-		case "Hôm nay":
-			loadScheduleByDate(date);
-			break;
-		case "Tuần":
-			loadWeekSchedule();
-			break;
-		case "Tháng":
-			loadMonthSchedule();
-			break;
-		}
+	    switch (mode) {
+	    case "Hôm nay":
+	        loadScheduleByDate(date);
+	        break;
+	    case "Tuần":
+	        loadWeekSchedule();
+	        break;
+	    case "Tháng":
+	        loadMonthSchedule();
+	        break;
+	    }
 	}
-
 	private void loadScheduleByDate(LocalDate date) {
-		try {
-			List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaffId, date);
-			scheduleList = FXCollections.observableArrayList(schedules);
+	    try {
+	        List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaffId, date);
+	        scheduleList = FXCollections.observableArrayList(schedules);
 
-			// Kiểm tra nếu không có dữ liệu
-			if (schedules.isEmpty()) {
-				showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
-						"Không có lịch làm việc vào ngày " + date.format(dateFormatter));
-				scheduleTable.setItems(FXCollections.observableArrayList());
-			} else {
-				scheduleTable.setItems(scheduleList);
-			}
+	        // Kiểm tra nếu không có dữ liệu
+	        if (schedules.isEmpty()) {
+	            showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+	                    "Không có lịch làm việc vào ngày " + date.format(dateFormatter));
+	            scheduleTable.setItems(FXCollections.observableArrayList());
+	        } else {
+	            scheduleTable.setItems(scheduleList);
+	        }
 
-			dateLabel.setText("Lịch làm việc ngày: " + date.format(dateFormatter));
-			updateShiftSummary(schedules);
-			showDayView();
-			statusLabel.setText("Trạng thái: Đã tải lịch làm việc ngày " + date.format(dateFormatter));
-		} catch (Exception e) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc", e.getMessage());
-			statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc");
-		}
+	        dateLabel.setText("Lịch làm việc ngày: " + date.format(dateFormatter));
+	        updateShiftSummary(schedules);
+	        showDayView();
+	        statusLabel.setText("Trạng thái: Đã tải lịch làm việc ngày " + date.format(dateFormatter));
+	    } catch (Exception e) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc", e.getMessage());
+	        statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc");
+	    }
 	}
 
 	private void loadWeekSchedule() {
-		try {
-			LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
-			LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
-			LocalDate endOfWeek = startOfWeek.plusDays(6);
+	    try {
+	        LocalDate today = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now(); // Sửa: sử dụng ngày hiện tại
+	        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
+	        LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-			List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDateRange(currentStaffId, startOfWeek,
-					endOfWeek);
+	        List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDateRange(currentStaffId, startOfWeek,
+	                endOfWeek);
 
-			scheduleList = FXCollections.observableArrayList(schedules);
+	        scheduleList = FXCollections.observableArrayList(schedules);
 
-			// Kiểm tra nếu không có dữ liệu
-			if (schedules.isEmpty()) {
-				showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
-						"Không có lịch làm việc trong tuần từ " + startOfWeek.format(dateFormatter) + " đến "
-								+ endOfWeek.format(dateFormatter));
-				scheduleTable.setItems(FXCollections.observableArrayList());
-			} else {
-				scheduleTable.setItems(scheduleList);
-			}
+	        // Kiểm tra nếu không có dữ liệu
+	        if (schedules.isEmpty()) {
+	            showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+	                    "Không có lịch làm việc trong tuần từ " + startOfWeek.format(dateFormatter) + " đến "
+	                            + endOfWeek.format(dateFormatter));
+	            scheduleTable.setItems(FXCollections.observableArrayList());
+	        } else {
+	            scheduleTable.setItems(scheduleList);
+	        }
 
-			dateLabel.setText("Lịch làm việc từ: " + startOfWeek.format(dateFormatter) + " đến "
-					+ endOfWeek.format(dateFormatter));
+	        dateLabel.setText("Lịch làm việc từ: " + startOfWeek.format(dateFormatter) + " đến "
+	                + endOfWeek.format(dateFormatter));
 
-			updateShiftSummary(schedules);
-			populateWeekView(schedules);
-			showWeekView();
+	        updateShiftSummary(schedules);
+	        populateWeekView(schedules);
+	        showWeekView();
 
-			statusLabel.setText("Trạng thái: Đã tải lịch làm việc tuần từ " + startOfWeek.format(dateFormatter)
-					+ " đến " + endOfWeek.format(dateFormatter));
-		} catch (Exception e) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tuần", e.getMessage());
-			statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tuần");
-		}
+	        statusLabel.setText("Trạng thái: Đã tải lịch làm việc tuần từ " + startOfWeek.format(dateFormatter)
+	                + " đến " + endOfWeek.format(dateFormatter));
+	    } catch (Exception e) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tuần", e.getMessage());
+	        statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tuần");
+	    }
 	}
 
 	private void loadMonthSchedule() {
-		try {
-			LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.of(2025, 5, 10);
-			LocalDate startOfMonth = date.withDayOfMonth(1);
-			LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
+	    try {
+	        LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now(); // Sửa: sử dụng ngày hiện tại
+	        LocalDate startOfMonth = date.withDayOfMonth(1);
+	        LocalDate endOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
 
-			List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDateRange(currentStaffId, startOfMonth,
-					endOfMonth);
+	        List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDateRange(currentStaffId, startOfMonth,
+	                endOfMonth);
 
-			scheduleList = FXCollections.observableArrayList(schedules);
+	        scheduleList = FXCollections.observableArrayList(schedules);
 
-			// Kiểm tra nếu không có dữ liệu
-			if (schedules.isEmpty()) {
-				showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
-						"Không có lịch làm việc trong tháng " + date.getMonthValue() + "/" + date.getYear());
-				scheduleTable.setItems(FXCollections.observableArrayList());
-			} else {
-				scheduleTable.setItems(scheduleList);
-			}
+	        // Kiểm tra nếu không có dữ liệu
+	        if (schedules.isEmpty()) {
+	            showAlert(AlertType.INFORMATION, "Thông báo", "Không có lịch làm việc",
+	                    "Không có lịch làm việc trong tháng " + date.getMonthValue() + "/" + date.getYear());
+	            scheduleTable.setItems(FXCollections.observableArrayList());
+	        } else {
+	            scheduleTable.setItems(scheduleList);
+	        }
 
-			dateLabel.setText("Lịch làm việc tháng: " + date.getMonthValue() + "/" + date.getYear());
-			updateShiftSummary(schedules);
-			showDayView();
+	        dateLabel.setText("Lịch làm việc tháng: " + date.getMonthValue() + "/" + date.getYear());
+	        updateShiftSummary(schedules);
+	        showDayView();
 
-			statusLabel
-					.setText("Trạng thái: Đã tải lịch làm việc tháng " + date.getMonthValue() + "/" + date.getYear());
-		} catch (Exception e) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tháng", e.getMessage());
-			statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tháng");
-		}
+	        statusLabel
+	                .setText("Trạng thái: Đã tải lịch làm việc tháng " + date.getMonthValue() + "/" + date.getYear());
+	    } catch (Exception e) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không thể tải lịch làm việc theo tháng", e.getMessage());
+	        statusLabel.setText("Trạng thái: Lỗi khi tải lịch làm việc tháng");
+	    }
 	}
 
 	private void populateWeekView(List<WorkSchedule> schedules) {
