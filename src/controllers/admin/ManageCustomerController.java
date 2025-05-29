@@ -14,6 +14,8 @@ import model.PetType;
 import repository.PetTypeRepository;
 import service.CustomerService;
 import service.PetService;
+import utils.CustomerValidator;
+import utils.PetValidator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -167,77 +169,145 @@ public class ManageCustomerController {
 
 	@FXML
 	private void handleShowPetForm() {
-		// Tạo dialog nhập thông tin thú cưng
-		Dialog<Pet> dialog = new Dialog<>();
-		dialog.setTitle("Thêm thú cưng");
 
-		// Tạo các thành phần trong dialog
-		VBox dialogVbox = new VBox(10);
-		TextField petNameField = new TextField();
-		petNameField.setPromptText("Tên thú cưng");
-		ComboBox<GenderEnum> petGenderCombo = new ComboBox<>();
-		petGenderCombo.getItems().setAll(GenderEnum.values());
-		petGenderCombo.setPromptText("Giới tính");
-		PetTypeRepository petTypeRepo = new PetTypeRepository();
-		ComboBox<PetType> petTypeCombo = new ComboBox<>();
-		List<PetType> petTypes = petTypeRepo.selectAll();
-		petTypeCombo.getItems().addAll(petTypes);
-		DatePicker petDobPicker = new DatePicker();
-		TextField petWeightField = new TextField();
-		petWeightField.setPromptText("Cân nặng");
+	    // Tạo dialog nhập thông tin thú cưng
+	    Dialog<Pet> dialog = new Dialog<>();
+	    dialog.setTitle("Thêm thú cưng");
 
-		// Thêm các trường vào trong dialog
-		dialogVbox.getChildren().addAll(new Label("Tên thú cưng:"), petNameField, new Label("Giới tính:"),
-				petGenderCombo, new Label("Giống loài:"), petTypeCombo, new Label("Ngày sinh:"), petDobPicker,
-				new Label("Cân nặng (kg):"), petWeightField);
+	    // Tạo các thành phần trong dialog
+	    VBox dialogVbox = new VBox(10);
+	    TextField petNameField = new TextField();
+	    petNameField.setPromptText("Tên thú cưng");
+	    ComboBox<GenderEnum> petGenderCombo = new ComboBox<>();
+	    petGenderCombo.getItems().setAll(GenderEnum.values());
+	    petGenderCombo.setPromptText("Giới tính");
+	    PetTypeRepository petTypeRepo = new PetTypeRepository();
+	    ComboBox<PetType> petTypeCombo = new ComboBox<>();
+	    List<PetType> petTypes = petTypeRepo.selectAll();
+	    petTypeCombo.getItems().addAll(petTypes);
+	    DatePicker petDobPicker = new DatePicker();
+	    TextField petWeightField = new TextField();
+	    petWeightField.setPromptText("Cân nặng");
 
-		// Thiết lập button "Lưu" cho dialog
-		ButtonType saveButtonType = new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE);
-		dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+	    // Thêm các trường vào trong dialog
+	    dialogVbox.getChildren().addAll(
+	            new Label("Tên thú cưng:"), petNameField,
+	            new Label("Giới tính:"), petGenderCombo,
+	            new Label("Giống loài:"), petTypeCombo,
+	            new Label("Ngày sinh:"), petDobPicker,
+	            new Label("Cân nặng (kg):"), petWeightField
+	        );
 
-		// Thêm các thành phần vào Dialog
-		dialog.getDialogPane().setContent(dialogVbox);
+	    // Thiết lập button "Lưu" cho dialog
+	    ButtonType saveButtonType = new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE);
+	    dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-		// Khi người dùng nhấn "Lưu", tạo đối tượng Pet và thêm vào petList
-		dialog.setResultConverter(button -> {
-			if (button.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-				try {
-					return new Pet(petNameField.getText(), petGenderCombo.getValue(), petTypeCombo.getValue(),
-							petDobPicker.getValue(), Double.parseDouble(petWeightField.getText()));
-				} catch (Exception ex) {
-					ex.printStackTrace(); // Hoặc hiện alert lỗi
-					return null;
-				}
-			}
-			return null;
-		});
+	    // Thêm các thành phần vào Dialog
+	    dialog.getDialogPane().setContent(dialogVbox);
 
-		// Hiển thị dialog và xử lý kết quả
-		Optional<Pet> result = dialog.showAndWait();
+	    // Khi người dùng nhấn "Lưu", tạo đối tượng Pet và thêm vào petList
+	    dialog.setResultConverter(button -> {
+	        if (button.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+	            String name = petNameField.getText();
+	            GenderEnum gender = petGenderCombo.getValue();
+	            PetType type = petTypeCombo.getValue();
+	            LocalDate dob = petDobPicker.getValue();
+	            String weightText = petWeightField.getText();
 
-		// Nếu có kết quả (người dùng nhấn "Lưu"), thêm pet vào danh sách và cập nhật
-		// bảng
-		result.ifPresent(pet -> {
-			petList.add(pet);
-			updatePetTable(); // Cập nhật bảng hiển thị
-		});
+	            if (PetValidator.isValid(name, gender, type, dob, weightText)) {
+	                double weight = PetValidator.parseWeight(weightText);
+	                return new Pet(name, gender, type, dob, weight);
+	            }
+	        }
+	        return null;
+	    });
+
+
+	    // Hiển thị dialog và xử lý kết quả
+	    Optional<Pet> result = dialog.showAndWait();
+
+	    // Nếu có kết quả (người dùng nhấn "Lưu"), thêm pet vào danh sách và cập nhật bảng
+	    result.ifPresent(pet -> {
+	        petList.add(pet);
+	        updatePetTable(); // Cập nhật bảng hiển thị
+	    });
+>>>>>>> main
 	}
 
 	private void updatePetTable() {
 		petTable.setItems(FXCollections.observableArrayList(petList));
 	}
 
-	@FXML
-	private void handleEditPet() {
-		Pet selectedPet = petTable.getSelectionModel().getSelectedItem();
-		if (selectedPet == null) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Chưa chọn thú cưng");
-			alert.setHeaderText(null);
-			alert.setContentText("Vui lòng chọn một thú cưng để sửa.");
-			alert.showAndWait();
-			return;
-		}
+
+@FXML
+private void handleEditPet() {
+    Pet selectedPet = petTable.getSelectionModel().getSelectedItem();
+    if (selectedPet == null) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Chưa chọn thú cưng");
+        alert.setHeaderText(null);
+        alert.setContentText("Vui lòng chọn một thú cưng để sửa.");
+        alert.showAndWait();
+        return;
+    }
+
+    Dialog<Pet> dialog = new Dialog<>();
+    dialog.setTitle("Sửa thông tin thú cưng");
+
+    VBox dialogVbox = new VBox(10);
+
+    TextField petNameField = new TextField(selectedPet.getName());
+    ComboBox<GenderEnum> petGenderCombo = new ComboBox<>();
+    ComboBox<PetType> petTypeCombo = new ComboBox<>();
+    DatePicker petDobPicker = new DatePicker(selectedPet.getDob());
+    TextField petWeightField = new TextField(String.valueOf(selectedPet.getWeight()));
+
+    petGenderCombo.getItems().setAll(GenderEnum.values());
+    petGenderCombo.setValue(selectedPet.getGender());
+
+    PetTypeRepository petTypeRepo = new PetTypeRepository();
+    List<PetType> petTypes = petTypeRepo.selectAll();
+    petTypeCombo.getItems().addAll(petTypes);
+    petTypeCombo.setValue(selectedPet.getTypePet());
+
+    dialogVbox.getChildren().addAll(
+        new Label("Tên thú cưng:"), petNameField,
+        new Label("Giới tính:"), petGenderCombo,
+        new Label("Giống loài:"), petTypeCombo,
+        new Label("Ngày sinh:"), petDobPicker,
+        new Label("Cân nặng (kg):"), petWeightField
+    );
+
+    dialog.getDialogPane().getButtonTypes().addAll(
+        new ButtonType("Lưu", ButtonBar.ButtonData.OK_DONE),
+        ButtonType.CANCEL
+    );
+    dialog.getDialogPane().setContent(dialogVbox);
+
+    dialog.setResultConverter(button -> {
+        if (button.getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            String name = petNameField.getText();
+            GenderEnum gender = petGenderCombo.getValue();
+            PetType type = petTypeCombo.getValue();
+            LocalDate dob = petDobPicker.getValue();
+            String weightText = petWeightField.getText();
+
+            if (PetValidator.isValid(name, gender, type, dob, weightText)) {
+                selectedPet.setName(name);
+                selectedPet.setGender(gender);
+                selectedPet.setTypePet(type);
+                selectedPet.setDob(dob);
+                selectedPet.setWeight(PetValidator.parseWeight(weightText));
+                return selectedPet;
+            }
+        }
+        return null;
+    });
+
+    Optional<Pet> result = dialog.showAndWait();
+    result.ifPresent(editedPet -> petTable.refresh());
+}
+
 
 		// Tạo dialog và truyền thú cưng cần sửa
 		Dialog<Pet> dialog = new Dialog<>();
@@ -396,6 +466,10 @@ public class ManageCustomerController {
 				showAlert("Giới tính không hợp lệ");
 				return;
 			}
+			if (!CustomerValidator.isValid(name, phone, email, address, txtLoyaltyPoints.getText().trim())) {
+			    return;
+			}
+
 
 			if (selectedCustomer == null) {
 				Customer customer = new Customer(0, name, gender, phone, email, address, points);
