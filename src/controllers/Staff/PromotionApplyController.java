@@ -2,7 +2,7 @@ package controllers.Staff;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException; // Añadida importación de SQLException
+import java.sql.SQLException; 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;

@@ -114,10 +114,17 @@
                            </graphic>
                         </Button>
                         
+                        <Button fx:id="applyDiscountButton" text="Áp dụng KM" onAction="#applyDiscount"
+                               prefHeight="35"
+                               style="-fx-background-color: #8BC34A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+                           <graphic>
+                              <Region prefWidth="16" prefHeight="16" style="-fx-background-color: white; -fx-shape: 'M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z';" />
+                           </graphic>
+                        </Button>
+                        
                         <Region HBox.hgrow="ALWAYS" />
                         
                         <Label fx:id="statusMessageLabel" text="Sẵn sàng" style="-fx-font-style: italic;" />
-
                      </HBox>
                      
                      <TableView fx:id="invoiceTable" VBox.vgrow="ALWAYS" style="-fx-border-color: #e0e0e0; -fx-border-radius: 5;" 
@@ -192,6 +199,22 @@
                         </graphic>
                      </Button>
                      
+                     <Button fx:id="processPaymentAndPrintButton" disable="true" text="Thanh toán và in" onAction="#processPaymentAndPrint" 
+                             prefWidth="180" prefHeight="40"
+                             style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+                        <graphic>
+                           <Region prefWidth="16" prefHeight="16" style="-fx-background-color: white; -fx-shape: 'M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z';" />
+                        </graphic>
+                     </Button>
+                     
+                     <Button fx:id="qrPaymentButton" disable="true" text="Thanh toán QR" onAction="#openQRPaymentWindow" 
+                             prefWidth="180" prefHeight="40"
+                             style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
+                        <graphic>
+                           <Region prefWidth="16" prefHeight="16" style="-fx-background-color: white; -fx-shape: 'M4 4h7V2H4c-1.1 0-2 .9-2 2v7h2V4zm6 9l-4 5h12l-3-4-2.03 2.71L10 13zm7-4.5c0-.83-.67-1.5-1.5-1.5S14 7.67 14 8.5s.67 1.5 1.5 1.5S17 9.33 17 8.5zM20 2h-7v2h7v7h2V4c0-1.1-.9-2-2-2zm0 18h-7v2h7c1.1 0 2-.9 2-2v-7h-2v7zM4 13H2v7c0 1.1.9 2 2 2h7v-2H4v-7z';" />
+                        </graphic>
+                     </Button>
+                     
                      <Button fx:id="refundButton" disable="true" text="Hoàn tiền" onAction="#processRefund" 
                              prefWidth="180" prefHeight="40"
                              style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;">
@@ -240,4 +263,5 @@
          </Button>
       </HBox>
    </bottom>
+   
 </BorderPane>

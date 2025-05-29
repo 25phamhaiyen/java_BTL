@@ -1,0 +1,472 @@
+May 22, 2025 12:21:43 PM utils.PaymentLogger info
+INFO: QRPaymentService initialized
+May 22, 2025 12:21:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:21:43 PM utils.PaymentLogger info
+INFO: QRPaymentViewController initialized
+May 22, 2025 12:21:43 PM utils.PaymentLogger info
+INFO: Tạo giao dịch test: MOCK221747891303961 cho hóa đơn #22
+May 22, 2025 12:21:44 PM utils.PaymentLogger info
+INFO: QR Content generated: 0002010101021226360006QRIBFTTA01089704220210033312533253037045409150000.005802VN5915HOANG THANH DAT6008HOCHIMINH62230104PCC-HD22-Customer026304D1FA
+May 22, 2025 12:21:44 PM utils.PaymentLogger info
+INFO: Bắt đầu theo dõi giao dịch: MOCK221747891303961
+May 22, 2025 12:21:44 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK221747891303961 | ACTION: CREATE | DETAILS: QR Payment created for Invoice #22
+May 22, 2025 12:21:44 PM utils.PaymentLogger info
+INFO: QR payment created successfully: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK221747891303961 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Thành công
+May 22, 2025 12:21:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK221747891303961 | ACTION: SUCCESSFUL | DETAILS: Payment completed
+May 22, 2025 12:21:49 PM utils.PaymentLogger info
+INFO: Checking payment status for: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK221747891303961 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Thành công
+May 22, 2025 12:21:49 PM utils.PaymentLogger error
+SEVERE: Lỗi khi xử lý thanh toán thành công
+java.lang.NullPointerException: Cannot invoke "model.Customer.getId()" because the return value of "model.Order.getCustomer()" is null
+	at repository.OrderRepository.update(OrderRepository.java:95)
+	at service.payment.PaymentMonitor.handleSuccessfulPayment(PaymentMonitor.java:142)
+	at service.payment.PaymentMonitor$1.run(PaymentMonitor.java:100)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+
+May 22, 2025 12:21:49 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger error
+SEVERE: Error updating order status: Duplicate entry '43' for key 'invoice.order_id'
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '43' for key 'invoice.order_id'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:990)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1168)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1103)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1450)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1086)
+	at service.QRPaymentService.updateOrderStatus(QRPaymentService.java:298)
+	at service.QRPaymentService.processSuccessfulPayment(QRPaymentService.java:235)
+	at service.QRPaymentService.checkPaymentStatus(QRPaymentService.java:146)
+	at service.QRPaymentService.lambda$0(QRPaymentService.java:254)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1812)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1460)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:2036)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:189)
+
+May 22, 2025 12:21:49 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK221747891303961
+May 22, 2025 12:21:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK221747891303961 | ACTION: SUCCESS | DETAILS: Payment completed for Invoice #22
+May 22, 2025 12:21:54 PM utils.PaymentLogger info
+INFO: Payment successful for transaction: MOCK221747891303961
+May 22, 2025 12:21:59 PM utils.PaymentLogger info
+INFO: QRPaymentViewController initialized
+May 22, 2025 12:21:59 PM utils.PaymentLogger info
+INFO: Tạo giao dịch test: MOCK251747891319786 cho hóa đơn #25
+May 22, 2025 12:21:59 PM utils.PaymentLogger info
+INFO: QR Content generated: 0002010101021226360006QRIBFTTA01089704220210033312533253037045409350000.005802VN5915HOANG THANH DAT6008HOCHIMINH62230104PCC-HD25-Customer0563045822
+May 22, 2025 12:21:59 PM utils.PaymentLogger info
+INFO: Bắt đầu theo dõi giao dịch: MOCK251747891319786
+May 22, 2025 12:21:59 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747891319786 | ACTION: CREATE | DETAILS: QR Payment created for Invoice #25
+May 22, 2025 12:21:59 PM utils.PaymentLogger info
+INFO: QR payment created successfully: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747891319786 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Thành công
+May 22, 2025 12:22:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747891319786 | ACTION: SUCCESSFUL | DETAILS: Payment completed
+May 22, 2025 12:22:04 PM utils.PaymentLogger info
+INFO: Checking payment status for: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747891319786 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Thành công
+May 22, 2025 12:22:04 PM utils.PaymentLogger error
+SEVERE: Lỗi khi xử lý thanh toán thành công
+java.lang.NullPointerException: Cannot invoke "model.Customer.getId()" because the return value of "model.Order.getCustomer()" is null
+	at repository.OrderRepository.update(OrderRepository.java:95)
+	at service.payment.PaymentMonitor.handleSuccessfulPayment(PaymentMonitor.java:142)
+	at service.payment.PaymentMonitor$1.run(PaymentMonitor.java:100)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+
+May 22, 2025 12:22:04 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger error
+SEVERE: Error updating order status: Duplicate entry '46' for key 'invoice.order_id'
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '46' for key 'invoice.order_id'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:990)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1168)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1103)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1450)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1086)
+	at service.QRPaymentService.updateOrderStatus(QRPaymentService.java:298)
+	at service.QRPaymentService.processSuccessfulPayment(QRPaymentService.java:235)
+	at service.QRPaymentService.checkPaymentStatus(QRPaymentService.java:146)
+	at service.QRPaymentService.lambda$0(QRPaymentService.java:254)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1812)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:507)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1460)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:2036)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:189)
+
+May 22, 2025 12:22:04 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK251747891319786
+May 22, 2025 12:22:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747891319786 | ACTION: SUCCESS | DETAILS: Payment completed for Invoice #25
+May 22, 2025 12:22:14 PM utils.PaymentLogger info
+INFO: Payment successful for transaction: MOCK251747891319786
+May 22, 2025 12:23:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:25:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:27:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:29:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:31:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:33:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:35:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:37:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:39:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:41:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 1 giao dịch đang chờ
+May 22, 2025 12:41:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:41:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:42:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:42:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:42:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:42:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:42:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:42:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:42:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:42:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:43:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:43:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:43:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:43:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:43:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:43:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:43:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 2 giao dịch đang chờ
+May 22, 2025 12:43:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:43:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:43:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:43:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:44:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:44:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:44:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:44:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:44:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:44:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:44:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:44:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:44:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:45:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:45:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:45:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:18 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:45:18 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:45:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:33 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:45:33 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 2 giao dịch đang chờ
+May 22, 2025 12:45:48 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:45:48 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:45:49 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892463163
+May 22, 2025 12:45:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:46:03 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:46:03 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:46:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892463163 | ACTION: TIMEOUT | DETAILS: Payment timeout
+May 22, 2025 12:46:04 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK251747892463163
+May 22, 2025 12:46:19 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:46:19 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:46:34 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:46:34 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:46:49 PM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán giả lập cho giao dịch: MOCK251747892510254
+May 22, 2025 12:46:49 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: CHECK_STATUS | DETAILS: Trạng thái: Đang chờ
+May 22, 2025 12:47:04 PM utils.PaymentLogger transaction
+INFO: [TRANSACTION] ID: MOCK251747892510254 | ACTION: TIMEOUT | DETAILS: Payment timeout
+May 22, 2025 12:47:04 PM utils.PaymentLogger info
+INFO: Đã dừng theo dõi giao dịch: MOCK251747892510254
+May 22, 2025 12:47:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:49:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:51:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:53:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:55:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:57:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 12:59:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:01:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:03:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:05:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:07:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:09:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:11:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:13:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:15:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:17:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:19:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:21:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:23:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:25:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:27:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:29:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:31:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:33:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:35:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:37:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:39:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:41:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:43:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:45:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:47:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:49:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:51:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:53:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:55:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:57:44 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 1:59:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:01:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:03:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:05:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:07:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:09:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:11:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:13:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:15:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:17:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:19:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:21:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:23:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:25:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:27:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:29:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:31:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:33:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:35:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:37:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:39:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:41:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:43:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:45:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:47:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:49:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:51:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:53:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:55:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:57:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 2:59:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:01:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:03:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:05:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:07:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:09:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:11:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:13:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:15:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:17:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:19:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:21:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:23:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:25:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:27:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:29:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:31:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:33:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:35:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:37:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:39:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:41:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:43:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:45:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:47:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
+May 22, 2025 3:49:43 PM utils.PaymentLogger info
+INFO: Tìm thấy 0 giao dịch đang chờ
