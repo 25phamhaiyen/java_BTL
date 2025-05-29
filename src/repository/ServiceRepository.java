@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceRepository implements IRepository<Service> {
-<<<<<<< td4
 
 	public static ServiceRepository getInstance() {
 		return new ServiceRepository();

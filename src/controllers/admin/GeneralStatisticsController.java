@@ -80,47 +80,24 @@ public class GeneralStatisticsController {
     }
 
     private void loadChartDataByTimeUnit(String timeUnit) {
-        // Lấy dữ liệu từ repository
+        // Lấy dữ liệu từ repository và cập nhật biểu đồ
+
         XYChart.Series<String, Number> revenueSeries = revenueRepository.getRevenueData(timeUnit);
         XYChart.Series<String, Number> bookingsSeries = bookingRepository.getBookingData(timeUnit);
         XYChart.Series<String, Number> customersSeries = customerRepository.getCustomerData(timeUnit);
 
-        // Xóa dữ liệu cũ
-        revenueChart.getData().clear();
-        bookingsChart.getData().clear();
-        customersChart.getData().clear();
 
-        // Thêm dữ liệu mới
+        revenueChart.getData().clear();
         revenueChart.getData().add(revenueSeries);
+
+        bookingsChart.getData().clear();
         bookingsChart.getData().add(bookingsSeries);
+
+        customersChart.getData().clear();
         customersChart.getData().add(customersSeries);
 
-        // Cập nhật nhãn trục X dựa trên timeUnit
-        updateAxisLabels(timeUnit);
-
-        // Cập nhật label thống kê
+        // Gọi cập nhật label theo timeUnit
         updateStatisticsLabels(timeUnit);
-    }
-
-    private void updateAxisLabels(String timeUnit) {
-        String xAxisLabel;
-        switch (timeUnit) {
-            case "WEEK":
-                xAxisLabel = "Thời gian (Tuần)";
-                break;
-            case "MONTH":
-                xAxisLabel = "Thời gian (Tháng)";
-                break;
-            case "YEAR":
-                xAxisLabel = "Thời gian (Năm)";
-                break;
-            default:
-                xAxisLabel = "Thời gian";
-        }
-
-        revenueXAxis.setLabel(xAxisLabel);
-        bookingsXAxis.setLabel(xAxisLabel);
-        customersXAxis.setLabel(xAxisLabel);
     }
 
     private void updateStatisticsLabels(String timeUnit) {

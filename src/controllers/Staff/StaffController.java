@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import controllers.SceneSwitcher;
@@ -32,9 +33,13 @@ import service.StaffService;
 import utils.RoleChecker;
 import javafx.scene.control.ListCell;
 import utils.Session;
+import utils.LanguageManager;
+import utils.I18nUtil;
 
-public class StaffController implements Initializable {
+public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 
+	 @FXML
+	    private Button btnLanguage;
 	@FXML
 	private BorderPane mainContainer;
 
@@ -68,18 +73,36 @@ public class StaffController implements Initializable {
 	@FXML
 	private ListView<WorkSchedule> todayScheduleListView;
 
-	private final ScheduleService scheduleService = new ScheduleService();
-
-	private Staff currentStaff;
-
 	@FXML
 	private Label welcomeLabel;
 
 	@FXML
 	private ListView<String> todayAppointmentListView;
 
+	// Labels for internationalization
+	@FXML
+	private Label staffLabelText;
+
+	@FXML
+	private Label roleLabelText;
+
+	@FXML
+	private Label todayScheduleTitle;
+
+	@FXML
+	private Label todayAppointmentTitle;
+
+	private final ScheduleService scheduleService = new ScheduleService();
+	private Staff currentStaff;
+	private LanguageManager languageManager;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		languageManager = LanguageManager.getInstance();
+		
+		// Register this controller for language updates
+		I18nUtil.register(this);
+
 		new StaffService();
 
 		// Lấy thông tin nhân viên hiện tại từ Session
@@ -87,20 +110,22 @@ public class StaffController implements Initializable {
 
 		// Hiển thị thông tin nhân viên trên giao diện
 		if (currentStaff != null) {
+			btnLanguage.setOnAction(this::toggleLanguage);
 			staffNameLabel.setText(currentStaff.getFullName());
 			staffRoleLabel.setText(currentStaff.getRole().getRoleName());
 		}
 
-		// Cập nhật tên giao diện
-		welcomeLabel.setText("Chào mừng " + (currentStaff != null ? currentStaff.getFullName() : "Nhân viên") + ", "
-				+ (currentStaff != null && currentStaff.getRole() != null ? currentStaff.getRole().getRoleName()
-						: "Nhân viên"));
+		// Cập nhật tên giao diện với đa ngôn ngữ
+		updateWelcomeLabel();
 
 		// Kiểm tra quyền và hiển thị/ẩn các nút tương ứng
 		setupButtonVisibility();
 
 		// Cấu hình nút dựa trên vai trò
 		setupRoleBasedFocus();
+
+		// Cập nhật ngôn ngữ cho tất cả các thành phần
+		updateLanguage();
 
 		todayScheduleListView.setCellFactory(lv -> new ListCell<WorkSchedule>() {
 			@Override
@@ -118,6 +143,36 @@ public class StaffController implements Initializable {
 		loadTodayAppointments();
 	}
 
+	@Override
+	public void updateLanguage() {
+		// Update all UI text with current language
+		I18nUtil.setText(btnLanguage, "staff.btnLanguage");
+		I18nUtil.setText(staffLabelText, "staff.label");
+		I18nUtil.setText(roleLabelText, "role.label");
+		I18nUtil.setText(logoutButton, "logout.button");
+		I18nUtil.setText(editProfileButton, "edit.profile.button");
+		I18nUtil.setText(todayScheduleTitle, "today.schedule.title");
+		I18nUtil.setText(todayAppointmentTitle, "today.appointment.title");
+		I18nUtil.setText(myScheduleButton, "my.schedule.button");
+		I18nUtil.setText(bookingViewButton, "booking.view.button");
+		I18nUtil.setText(invoiceViewButton, "invoice.view.button");
+		
+		// Update welcome label
+		updateWelcomeLabel();
+		
+		// Reload data with new language
+		loadTodaySchedule();
+		loadTodayAppointments();
+	}
+
+	private void updateWelcomeLabel() {
+		String welcomeText = languageManager.getString("welcome.message", 
+			currentStaff != null ? currentStaff.getFullName() : languageManager.getString("staff.default"),
+			currentStaff != null && currentStaff.getRole() != null ? 
+				currentStaff.getRole().getRoleName() : languageManager.getString("staff.default"));
+		welcomeLabel.setText(welcomeText);
+	}
+
 	/**
 	 * Configure role-based button focus and styling
 	 */
@@ -126,14 +181,12 @@ public class StaffController implements Initializable {
 			return;
 
 		String roleName = currentStaff.getRole().getRoleName().toUpperCase();
-		// Ở đây bạn có thể thêm code để đặt focus hoặc style cho các nút dựa trên vai
-		// trò
-		// Ví dụ: Đặt style đặc biệt cho nút tương ứng với vai trò của nhân viên
+		// Ở đây bạn có thể thêm code để đặt focus hoặc style cho các nút dựa trên vai trò
 	}
 
 	private void loadTodaySchedule() {
 		try {
-			currentStaff = Session.getCurrentStaff(); // Kiểm tra lại thông tin nhân viên từ session
+			currentStaff = Session.getCurrentStaff();
 			if (currentStaff == null) {
 				System.out.println("Không thể xác định nhân viên hiện tại");
 				todayScheduleListView.getItems().clear();
@@ -143,20 +196,15 @@ public class StaffController implements Initializable {
 			LocalDate today = LocalDate.now();
 			List<WorkSchedule> schedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
 
-			// Log để kiểm tra dữ liệu
 			if (schedules != null && !schedules.isEmpty()) {
 				System.out.println("Dữ liệu lịch làm việc: ");
 				for (WorkSchedule schedule : schedules) {
-					System.out.println(schedule); // In ra thông tin của mỗi lịch làm việc
+					System.out.println(schedule);
 				}
-				// Đổ vào ListView nếu có lịch
 				todayScheduleListView.getItems().setAll(schedules);
 			} else {
-				System.out.println("Không có lịch làm việc cho hôm nay.");
-
-				// Sử dụng thông báo đơn giản thay vì đối tượng WorkSchedule
+				System.out.println(languageManager.getString("no.schedule.today"));
 				todayScheduleListView.getItems().clear();
-				// Nếu bạn vẫn muốn hiển thị thông báo, có thể sử dụng một Label khác
 			}
 		} catch (Exception e) {
 			System.out.println("Lỗi trong loadTodaySchedule: " + e.getMessage());
@@ -170,9 +218,9 @@ public class StaffController implements Initializable {
 		BookingService bookingService = new BookingService();
 
 		try {
-			currentStaff = Session.getCurrentStaff(); // Đảm bảo có thông tin nhân viên
+			currentStaff = Session.getCurrentStaff();
 			if (currentStaff == null) {
-				appointments.add("Không thể xác định nhân viên.");
+				appointments.add(languageManager.getString("cannot.identify.staff"));
 				todayAppointmentListView.setItems(appointments);
 				return;
 			}
@@ -186,23 +234,23 @@ public class StaffController implements Initializable {
 					Customer customer = booking.getCustomer();
 
 					String time = booking.getBookingTime().toLocalTime().toString();
-					String petName = (pet != null) ? pet.getName() : "Không rõ";
-					String customerName = (customer != null) ? customer.getFullName() : "Không rõ";
+					String petName = (pet != null) ? pet.getName() : languageManager.getString("unknown");
+					String customerName = (customer != null) ? customer.getFullName() : languageManager.getString("unknown");
 
-					String displayText = time + " - " + petName + " (" + customerName + ")";
+					String displayText = languageManager.getString("appointment.format", time, petName, customerName);
 					appointments.add(displayText);
 				}
 			}
 
 			if (appointments.isEmpty()) {
-				appointments.add("Không có lịch hẹn nào hôm nay.");
+				appointments.add(languageManager.getString("no.appointments.today"));
 			}
 
 			todayAppointmentListView.setItems(appointments);
 
 		} catch (Exception e) {
 			appointments.clear();
-			appointments.add("Lỗi khi tải lịch hẹn hôm nay: " + e.getMessage());
+			appointments.add(languageManager.getString("error.loading.appointments", e.getMessage()));
 			todayAppointmentListView.setItems(appointments);
 			e.printStackTrace();
 		}
@@ -227,7 +275,6 @@ public class StaffController implements Initializable {
 	@FXML
 	private void showBookingView(ActionEvent event) {
 		SceneSwitcher.switchScene("staff/booking_view.fxml");
-
 	}
 
 	@FXML
@@ -235,44 +282,31 @@ public class StaffController implements Initializable {
 		SceneSwitcher.switchScene("staff/invoice_view.fxml");
 	}
 
-// k sử dụng nữa, đã gộp dô thanh toán
-//	@FXML
-//	private void showPromotionView(ActionEvent event) {
-//		try {
-//			if (!RoleChecker.hasPermission("APPLY_PROMOTION")) {
-//				showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có quyền",
-//						"Bạn không có quyền áp dụng khuyến mãi.");
-//				return;
-//			}
-//
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/staff/promotion_apply.fxml"));
-//			Parent view = loader.load();
-//			mainContainer.setCenter(view);
-//		} catch (IOException e) {
-//			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể tải màn hình khuyến mãi", e.getMessage());
-//		}
-//	}
-
 	@FXML
 	private void showEditProfile(ActionEvent event) {
 		SceneSwitcher.switchScene("staff/edit_profile.fxml");
 	}
 
-	@FXML
-	private void logout(ActionEvent event) {
-		try {
-			// Xóa thông tin phiên đăng nhập
-			Session.clearSession();
-
-			// Chuyển về màn hình đăng nhập
-			Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-			SceneSwitcher.switchToLoginScene(currentStage);
-
-		} catch (Exception e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể đăng xuất", e.getMessage());
-		}
-	}
-
+    @FXML
+    private void handleLogout() {
+        // Show confirmation dialog
+        if (I18nUtil.showConfirmation("app.confirm", "msg.confirm.logout")) {
+            Session.logout();
+            SceneSwitcher.switchScene("login.fxml");
+        }
+    }
+	
+    private void toggleLanguage(ActionEvent event) {
+        LanguageManager langManager = LanguageManager.getInstance();
+        Locale currentLocale = langManager.getCurrentLocale();
+        
+        // Toggle between Vietnamese and English
+        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
+            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
+        } else {
+            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
+        }
+    }
 	private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);

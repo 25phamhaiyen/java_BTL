@@ -23,56 +23,56 @@
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/account.png"/>
                 </ImageView>
-                <Label text="Quản lý tài khoản"/>
+                <Label fx:id="lblAccountManagement"/>
             </HBox>
 
             <HBox fx:id="btnStaffManagement" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/employee.png"/>
                 </ImageView>
-                <Label text="Quản lý nhân viên"/>
+                <Label fx:id="lblStaffManagement"/>
             </HBox>
             
             <HBox fx:id="btnCustomerManagement" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/customer.png"/>
                 </ImageView>
-                <Label text="Quản lý khách hàng"/>
+                <Label fx:id="lblCustomerManagement"/>
             </HBox>
 
             <HBox fx:id="btnCreateWorkSchedule" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/schedule.png"/>
                 </ImageView>
-                <Label text="Tạo lịch làm việc"/>
+                <Label fx:id="lblWorkSchedule"/>
             </HBox>
 
             <HBox fx:id="btnServices" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/service.png"/>
                 </ImageView>
-                <Label text="Dịch vụ"/>
+                <Label fx:id="lblServices"/>
             </HBox>
 
             <HBox fx:id="btnDetailedDashboard" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/dashboard.png"/>
                 </ImageView>
-                <Label text="Thống kê chung"/>
+                <Label fx:id="lblDashboard"/>
             </HBox>
             
             <HBox fx:id="btnEditProfile" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/profile.png"/>
                 </ImageView>
-                <Label text="Hồ sơ cá nhân"/>
+                <Label fx:id="lblProfile"/>
             </HBox>
             
             <HBox fx:id="btnLogout" styleClass="nav-button" alignment="CENTER_LEFT" spacing="10">
                 <ImageView fitWidth="24" fitHeight="24">
                     <Image url="@/images/logout.png"/>
                 </ImageView>
-                <Label text="Đăng xuất"/>
+                <Label fx:id="lblLogout"/>
             </HBox>
         </VBox>
     </left>
@@ -80,7 +80,7 @@
     <center>
         <ScrollPane fitToWidth="true" fitToHeight="true">
             <VBox fx:id="centerContent" style="-fx-alignment: CENTER; -fx-spacing: 20;">
-                <Label styleClass="welcome-label" text="Chào Admin!"/>
+                <Label styleClass="welcome-label" fx:id="lblWelcome"/>
                 <ImageView fitWidth="600" fitHeight="400">
                     <Image url="@/images/welcome.png"/>
                 </ImageView>
