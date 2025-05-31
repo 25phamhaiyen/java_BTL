@@ -1,56 +1,56 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import utils.I18nUtil;
+import javafx.stage.Stage;
+import utils.LanguageChangeListener;
 import utils.LanguageManager;
+import utils.LanguageManagerAd;
+
 import java.util.Locale;
 
-public class HomeController implements I18nUtil.I18nUpdatable {
-    @FXML
-    private Label title;
-    @FXML
-    private Button btnLogin, btnLanguage;
+public class HomeController implements LanguageChangeListener {
 
-    @FXML
-    public void initialize() {
-        // Register for language updates
-        I18nUtil.register(this);
-        
-        // Initial language setup
-        updateLanguage();
-        
-        // Set up event handlers
-        btnLogin.setOnAction(this::handleLogin);
-        btnLanguage.setOnAction(this::toggleLanguage);
-    }
-    
-    @Override
-    public void updateLanguage() {
-        LanguageManager langManager = LanguageManager.getInstance();
-        
-        // Update text based on current language
-        title.setText(langManager.getString("home.title"));
-        btnLogin.setText(langManager.getString("home.login"));
-        btnLanguage.setText(langManager.getString("home.language"));
-    }
+	@FXML private Label lblTitle;
+	@FXML private Button btnLogin;
+	@FXML private ComboBox<String> languageCombo;
 
-    private void handleLogin(ActionEvent event) {
-        SceneSwitcher.switchScene("login.fxml");
-    }
+	@FXML
+	public void initialize() {
+		LanguageManagerAd.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
+		
+		languageCombo.getItems().addAll("Tiếng Việt", "English");
+        languageCombo.setValue("Tiếng Việt");
+        languageCombo.setOnAction(e -> {
+            String lang = languageCombo.getValue();
+            if (lang.equals("English")) {
+                LanguageManagerAd.setLocale(new Locale("en", "US"));
+            } else {
+                LanguageManagerAd.setLocale(new Locale("vi", "VN"));
+            }
+        });
 
-    private void toggleLanguage(ActionEvent event) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        Locale currentLocale = langManager.getCurrentLocale();
+        loadTexts(); // Gọi khi khởi tạo
         
-        // Toggle between Vietnamese and English
-        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
-            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
-        } else {
-            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
-        }
-    }
+		btnLogin.setOnAction(this::handleLogin);
+	}
+
+	private void handleLogin(ActionEvent event) {
+		SceneSwitcher.switchScene("login.fxml");
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+	}
+	private void loadTexts() {
+	    lblTitle.setText(LanguageManagerAd.getString("title"));
+	    btnLogin.setText(LanguageManagerAd.getString("btn.login"));
+	}
+
+
 }
+

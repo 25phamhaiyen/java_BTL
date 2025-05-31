@@ -1,0 +1,1810 @@
+May 24, 2025 10:58:51 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+May 24, 2025 10:58:53 AM utils.PaymentLogger info
+INFO: PayOSService initialized
+May 24, 2025 10:58:53 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CLIENT_ID, sử dụng giá trị mặc định
+May 24, 2025 10:58:53 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_API_KEY, sử dụng giá trị mặc định
+May 24, 2025 10:58:53 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CHECKSUM_KEY, sử dụng giá trị mặc định
+May 24, 2025 10:58:53 AM utils.PaymentLogger info
+INFO: Cấu hình PayOS đã được tải: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN], apiUrl=https://api-merchant.payos.vn, debugMode=true
+May 24, 2025 10:58:53 AM utils.PaymentLogger info
+INFO: Cấu hình PayOS hợp lệ: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN]
+May 24, 2025 10:58:53 AM utils.PaymentLogger info
+INFO: QRPaymentService initialized
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: QRPaymentViewController initialized at 24/05/2025 10:59:00
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Hiển thị thông tin hóa đơn #20
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Tạo thanh toán QR cho hóa đơn #20
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Bắt đầu tạo QR payment cho hóa đơn #20
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Đặt parentController cho QRPaymentViewController
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Tạo transactionId: PAYOS2020250524105900668
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Cập nhật transactionId cho hóa đơn #20: PAYOS2020250524105900668, Kết quả cập nhật: 1
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Gọi API PayOS để tạo liên kết thanh toán cho hóa đơn #20
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Tạo liên kết thanh toán PayOS cho hóa đơn #20
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Tạo orderCode: PCC000020-587
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu thanh toán đã được xây dựng: {amount=200000, cancelUrl=https://petcare.vn/payment/cancel?invoiceId=20, buyerPhone=0910000010, buyerEmail=cus10@mail.com, description=Thanh toán hóa đơn #20 - Pet Care Center, orderCode=PCC000020-587, buyerName=Customer 10, returnUrl=https://petcare.vn/payment/success?invoiceId=20, items=[{"quantity":1,"price":200000,"name":"Hóa đơn #20"}]}
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu thanh toán: {"amount":200000,"cancelUrl":"https:\/\/petcare.vn\/payment\/cancel?invoiceId=20","buyerPhone":"0910000010","buyerEmail":"cus10@mail.com","description":"Thanh toán hóa đơn #20 - Pet Care Center","orderCode":"PCC000020-587","buyerName":"Customer 10","returnUrl":"https:\/\/petcare.vn\/payment\/success?invoiceId=20","items":[{"quantity":1,"price":200000,"name":"Hóa đơn #20"}]}
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: POST https://api-merchant.payos.vn/v2/payment-requests
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu: {amount=200000, cancelUrl=https://petcare.vn/payment/cancel?invoiceId=20, buyerPhone=0910000010, buyerEmail=cus10@mail.com, description=Thanh toán hóa đơn #20 - Pet Care Center, orderCode=PCC000020-587, buyerName=Customer 10, returnUrl=https://petcare.vn/payment/success?invoiceId=20, items=[{"quantity":1,"price":200000,"name":"Hóa đơn #20"}]}
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"20","desc":"Thông tin truyền lên không đúng.","data":null}
+May 24, 2025 10:59:00 AM utils.PaymentLogger info
+INFO: Phản hồi từ API PayOS: {"code":"20","data":null,"desc":"Thông tin truyền lên không đúng."}
+May 24, 2025 10:59:00 AM utils.PaymentLogger error
+SEVERE: PayOS API Error: Thông tin truyền lên không đúng.
+May 24, 2025 10:59:00 AM utils.PaymentLogger error
+SEVERE: PayOS payment creation failed: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 10:59:00 AM utils.PaymentLogger error
+SEVERE: Tạo QR thất bại: Không thể tạo link thanh toán: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 10:59:00 AM utils.PaymentLogger error
+SEVERE: Lỗi thanh toán QR: Lỗi: Không thể tạo link thanh toán: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 10:59:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 10:59:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 10:59:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 10:59:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 10:59:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 10:59:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:00:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:00:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:19 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:19 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:00:19 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:19 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:19 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:00:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:00:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:00:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:00:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:01:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:01:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:01:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:01:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:01:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:01:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:02:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:02:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:02:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:02:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:02:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:02:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:03:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:03:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:03:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:03:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:03:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:03:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:04:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:04:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:04:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:04:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:04:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:04:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:05:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:05:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:05:24 AM utils.PaymentLogger error
+SEVERE: Lỗi gọi API PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:05:24 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:05:24 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:05:24 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: QRPaymentViewController initialized at 24/05/2025 11:05:32
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Hiển thị thông tin hóa đơn #17
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Tạo thanh toán QR cho hóa đơn #17
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Đặt parentController cho QRPaymentViewController
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Bắt đầu tạo QR payment cho hóa đơn #17
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Tạo transactionId: PAYOS1720250524110532972
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Cập nhật transactionId cho hóa đơn #17: PAYOS1720250524110532972, Kết quả cập nhật: 1
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Gọi API PayOS để tạo liên kết thanh toán cho hóa đơn #17
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Tạo liên kết thanh toán PayOS cho hóa đơn #17
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Tạo orderCode: PCC000017-2771
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu thanh toán đã được xây dựng: {amount=300000, cancelUrl=https://petcare.vn/payment/cancel?invoiceId=17, buyerPhone=0910000007, buyerEmail=cus07@mail.com, description=Thanh toán hóa đơn #17 - Pet Care Center, orderCode=PCC000017-2771, buyerName=Customer 07, returnUrl=https://petcare.vn/payment/success?invoiceId=17, items=[{"quantity":1,"price":300000,"name":"Hóa đơn #17"}]}
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu thanh toán: {"amount":300000,"cancelUrl":"https:\/\/petcare.vn\/payment\/cancel?invoiceId=17","buyerPhone":"0910000007","buyerEmail":"cus07@mail.com","description":"Thanh toán hóa đơn #17 - Pet Care Center","orderCode":"PCC000017-2771","buyerName":"Customer 07","returnUrl":"https:\/\/petcare.vn\/payment\/success?invoiceId=17","items":[{"quantity":1,"price":300000,"name":"Hóa đơn #17"}]}
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: POST https://api-merchant.payos.vn/v2/payment-requests
+May 24, 2025 11:05:32 AM utils.PaymentLogger info
+INFO: Dữ liệu yêu cầu: {amount=300000, cancelUrl=https://petcare.vn/payment/cancel?invoiceId=17, buyerPhone=0910000007, buyerEmail=cus07@mail.com, description=Thanh toán hóa đơn #17 - Pet Care Center, orderCode=PCC000017-2771, buyerName=Customer 07, returnUrl=https://petcare.vn/payment/success?invoiceId=17, items=[{"quantity":1,"price":300000,"name":"Hóa đơn #17"}]}
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"20","desc":"Thông tin truyền lên không đúng.","data":null}
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi từ API PayOS: {"code":"20","data":null,"desc":"Thông tin truyền lên không đúng."}
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: PayOS API Error: Thông tin truyền lên không đúng.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: PayOS payment creation failed: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Tạo QR thất bại: Không thể tạo link thanh toán: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Lỗi thanh toán QR: Lỗi: Không thể tạo link thanh toán: Lỗi tạo liên kết thanh toán: Thông tin truyền lên không đúng.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:05:41 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:05:41 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:05:41 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:06:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:06:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:06:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:06:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:06:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:06:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:06:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:07:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:07:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:33 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:07:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:07:34 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:07:34 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:07:34 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:08:03 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:08:03 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=200, Nội dung={"code":"101","desc":"Mã thanh toán không tồn tại"}
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Mã thanh toán không tồn tại
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_28_003
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_28_003
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:08:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_25_002
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_25_002
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:08:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_22_001
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_22_001
+May 24, 2025 11:08:04 AM utils.PaymentLogger info
+INFO: Phản hồi API PayOS: Mã trạng thái=429, Nội dung=Too many requests, please try again later.
+May 24, 2025 11:08:04 AM utils.PaymentLogger error
+SEVERE: Yêu cầu API PayOS thất bại với mã trạng thái: 429
+May 24, 2025 11:08:04 AM utils.PaymentLogger warning
+WARNING: PayOS payment status check failed: Lỗi từ API PayOS: Too many requests, please try again later.
+May 24, 2025 11:08:33 AM utils.PaymentLogger info
+INFO: Found 10 pending QR payments
+May 24, 2025 11:08:33 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_46_010
+May 24, 2025 11:08:33 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_46_010
+May 24, 2025 11:08:54 AM utils.PaymentLogger error
+SEVERE: Lỗi gọi API PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:08:54 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:08:54 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_43_009
+May 24, 2025 11:08:54 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_43_009
+May 24, 2025 11:09:15 AM utils.PaymentLogger error
+SEVERE: Lỗi gọi API PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:15 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:15 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_36_006
+May 24, 2025 11:09:15 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_36_006
+May 24, 2025 11:09:36 AM utils.PaymentLogger error
+SEVERE: Lỗi gọi API PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:36 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:36 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_33_005
+May 24, 2025 11:09:36 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_33_005
+May 24, 2025 11:09:57 AM utils.PaymentLogger error
+SEVERE: Lỗi gọi API PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:57 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS: Connection timed out: getsockopt
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:682)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:549)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:592)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:760)
+	at java.base/sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:531)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:636)
+	at java.base/sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:264)
+	at java.base/sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:377)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1243)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1129)
+	at java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1691)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1615)
+	at java.base/java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:531)
+	at java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getResponseCode(HttpsURLConnectionImpl.java:307)
+	at service.PayOSService.makePayOSApiCall(PayOSService.java:317)
+	at service.PayOSService.getPaymentInfoAPI(PayOSService.java:282)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:146)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+May 24, 2025 11:09:57 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode: PAYOS_31_004
+May 24, 2025 11:09:57 AM utils.PaymentLogger info
+INFO: Gửi yêu cầu API PayOS: GET https://api-merchant.payos.vn/v2/payment-requests/PAYOS_31_004

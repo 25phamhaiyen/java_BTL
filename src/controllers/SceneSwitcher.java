@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import controllers.Staff.CreateInvoiceController;
 import controllers.Staff.InvoiceViewController;
@@ -10,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Booking;
 import service.BookingService;
-import utils.LanguageManager;
+import utils.LanguageManagerAd;
 
 /**
  * Lớp tiện ích dùng để chuyển đổi giữa các màn hình (scene) trong ứng dụng
@@ -22,13 +23,24 @@ public class SceneSwitcher {
 	/**
 	 * Thiết lập stage chính của ứng dụng
 	 * 
-	 * @param stage Stage chính
 	 */
 	public static void setMainStage(Stage stage) {
-		mainStage = stage;
-		mainStage.setTitle("Cửa hàng chăm sóc thú cưng BESTPETS");
-
+	    mainStage = stage;
+	    
+	    LanguageManagerAd.addListener(() -> {
+	        String title = LanguageManagerAd.getString("title");
+	        
+	        if (mainStage != null) {
+	            mainStage.setTitle(title);
+	        }
+	    });
+	    
+	    // Thiết lập luôn title ngay lần đầu, tránh trường hợp Stage set xong mà chưa có title
+	    if (mainStage != null) {
+	        mainStage.setTitle(LanguageManagerAd.getString("title"));
+	    }
 	}
+
 
 	/**
 	 * Chuyển đến một scene khác dựa trên đường dẫn file FXML
@@ -37,11 +49,14 @@ public class SceneSwitcher {
 	 */
 	public static void switchScene(String fxmlPath) {
 		try {
-			Parent root = FXMLLoader.load(SceneSwitcher.class.getResource("/view/" + fxmlPath));
+			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/" + fxmlPath));
+			loader.setResources(ResourceBundle.getBundle("lang.messages", LanguageManagerAd.getCurrentLocale()));
+			Parent root = loader.load();
+			
 			Scene scene = new Scene(root, 800, 700);
 			mainStage.setScene(scene);
 			// Set window title based on current language
-//            LanguageManager langManager = LanguageManager.getInstance();
+//            LanguageManagerAd langManager = LanguageManagerAd.getInstance();
 //            mainStage.setTitle(langManager.getString("app.title"));
 			mainStage.show();
 		} catch (IOException e) {
@@ -49,6 +64,7 @@ public class SceneSwitcher {
 			showErrorDialog("Không thể tải màn hình: " + e.getMessage());
 		}
 	}
+
 
 	/**
 	 * Chuyển đến màn hình đăng nhập
@@ -199,3 +215,4 @@ public class SceneSwitcher {
 		alert.showAndWait();
 	}
 }
+

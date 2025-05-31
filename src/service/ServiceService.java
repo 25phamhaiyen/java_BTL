@@ -74,7 +74,7 @@ public class ServiceService {
 	}
 
 	// Kiểm tra xem dịch vụ đã tồn tại hay chưa (theo tên)
-	private boolean isServiceExists(String serviceName) {
+	public boolean isServiceExists(String serviceName) {
 		List<Service> services = serviceRepository.selectByCondition("name = ?", serviceName);
 		return !services.isEmpty();
 	}

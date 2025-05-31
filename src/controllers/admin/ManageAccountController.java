@@ -1,6 +1,8 @@
 package controllers.admin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,30 +21,26 @@ import model.Role;
 import service.AccountService;
 import service.PermissionService;
 import service.RoleService;
+import utils.LanguageManagerAd;
 
-public class ManageAccountController {
+public class ManageAccountController{
 
-	@FXML
-	private TextField txtSearch;
+	@FXML private Label lblTitle;
+    @FXML private Label lblSearch;
+	@FXML private TextField txtSearch;
 
-	@FXML
-	private TableView<Account> tblAccounts;
+	@FXML private TableView<Account> tblAccounts;
 
-	@FXML
-	private TableColumn<Account, Integer> colAccountId;
+	@FXML private TableColumn<Account, Integer> colAccountId;
 
-	@FXML
-	private TableColumn<Account, String> colUsername, colRole;
+	@FXML private TableColumn<Account, String> colUsername, colRole;
 
-	@FXML
-	private TableColumn<Account, Boolean> colActive;
-	@FXML
-	private TableColumn<Account, String> colPermissions;
+	@FXML private TableColumn<Account, Boolean> colActive;
+	@FXML private TableColumn<Account, String> colPermissions;
 
-	@FXML
-	private Button btnAdd, btnEdit, btnDelete, btnResetPassword;
-	@FXML
-	private Button btnAssignPermission;
+	@FXML private Button btnAdd, btnEdit, btnDelete, btnResetPassword;
+	@FXML private Button btnAssignPermission;
+	@FXML private Button btnSearch;
 
 	private final AccountService accountService = new AccountService();
 	private final RoleService roleService = new RoleService();
@@ -51,10 +49,29 @@ public class ManageAccountController {
 
 	@FXML
 	public void initialize() {
+		
+		lblTitle.setText(LanguageManagerAd.getString("manageAccount.title"));
+        lblSearch.setText(LanguageManagerAd.getString("manageAccount.search.label"));
+        txtSearch.setPromptText(LanguageManagerAd.getString("manageAccount.search.prompt"));
+        btnSearch.setText(LanguageManagerAd.getString("manageAccount.search.button"));
+        colAccountId.setText(LanguageManagerAd.getString("manageAccount.table.accountId"));
+        colUsername.setText(LanguageManagerAd.getString("manageAccount.table.username"));
+        colRole.setText(LanguageManagerAd.getString("manageAccount.table.role"));
+        colActive.setText(LanguageManagerAd.getString("manageAccount.table.active"));
+        colPermissions.setText(LanguageManagerAd.getString("manageAccount.table.permissions"));
+        btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
+        btnDelete.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
+        btnResetPassword.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
+        btnAssignPermission.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
+        
 		// Initialize TableView columns
 		colAccountId.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getAccountID()));
 		colUsername.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUserName()));
-		colRole.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getRole().getRoleName()));
+		colRole.setCellValueFactory(cellData -> {
+		    String roleCode = cellData.getValue().getRole().getRoleName(); // VD: STAFF_CARE
+		    String localizedRole = LanguageManagerAd.getString("manageAccount.role." + roleCode);
+		    return new ReadOnlyStringWrapper(localizedRole);
+		});
 		colActive.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().isActive()));
 		colActive.setCellFactory(column -> new TableCell<Account, Boolean>() {
 			@Override
@@ -64,7 +81,9 @@ public class ManageAccountController {
 					setText(null);
 					setStyle("");
 				} else {
-					setText(isActive ? "Đang hoạt động" : "Bị khóa");
+					setText(isActive 
+							? LanguageManagerAd.getString("manageAccount.status.active") 
+							: LanguageManagerAd.getString("manageAccount.status.inactive"));
 
 					if (isActive) {
 						setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
@@ -110,7 +129,7 @@ public class ManageAccountController {
 
 	private void filterAccounts(String keyword) {
 		if (accountList == null || accountList.isEmpty()) {
-			System.err.println("Danh sách tài khoản trống hoặc chưa được khởi tạo.");
+			System.err.println(LanguageManagerAd.getString("manageAccount.error.empty_account_list"));
 			return;
 		}
 
@@ -130,102 +149,14 @@ public class ManageAccountController {
 		}
 	}
 
-//	@FXML
-//	private void handleAddAccount() {
-//		// Tạo dialog để nhập thông tin tài khoản mới
-//		Dialog<Account> dialog = new Dialog<>();
-//		dialog.setTitle("Thêm tài khoản");
-//		dialog.setHeaderText("Nhập thông tin tài khoản mới");
-//		dialog.setResizable(true);
-//	
-//		// Tạo các trường nhập liệu
-//		VBox vbox = new VBox(10);
-//		TextField txtUsername = new TextField();
-//		txtUsername.setPromptText("Tên đăng nhập");
-//		PasswordField txtPassword = new PasswordField();
-//		txtPassword.setPromptText("Mật khẩu");
-//	
-//		ComboBox<String> cbRole = new ComboBox<>();
-//		cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEIPTION");
-//		cbRole.getSelectionModel().selectFirst();
-//		cbRole.setPromptText("Chọn vai trò");
-//	
-//		CheckBox cbActive = new CheckBox("Kích hoạt tài khoản");
-//		cbActive.setSelected(true);
-//	
-//		Label lblError = new Label();
-//		lblError.setStyle("-fx-text-fill: red;"); // Hiển thị lỗi bằng màu đỏ
-//	
-//		vbox.getChildren().addAll(new Label("Tên đăng nhập:"), txtUsername,
-//								  new Label("Mật khẩu:"), txtPassword,
-//								  new Label("Vai trò:"), cbRole,
-//								  cbActive,
-//								  lblError);
-//	
-//		dialog.getDialogPane().setContent(vbox);
-//		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-//	
-//		// Xử lý kết quả khi nhấn OK
-//		dialog.setResultConverter(dialogButton -> {
-//			if (dialogButton == ButtonType.OK) {
-//				String username = txtUsername.getText().trim();
-//				String password = txtPassword.getText().trim();
-//				String roleName = cbRole.getValue();
-//				boolean isActive = cbActive.isSelected();
-//	
-//				if (username.isEmpty() || password.isEmpty()) {
-//					lblError.setText("Tên đăng nhập và mật khẩu không được để trống.");
-//					return null; // Không đóng dialog
-//				}
-//	
-//				// Tạo đối tượng Account mới
-//				Account newAccount = new Account();
-//				newAccount.setUserName(username);
-//				newAccount.setPassword(password);
-//				newAccount.setRole(new Role(0, roleName)); // Gán vai trò
-//				newAccount.setActive(isActive);
-//	
-//				// Gọi service để kiểm tra lỗi
-//				String validationError = accountService.validateAccountData(username, password);
-//				if (validationError != null) {
-//					lblError.setText(validationError); // Hiển thị lỗi
-//					return null; // Không đóng dialog
-//				}
-//	
-//				return newAccount; // Nếu không có lỗi, trả về tài khoản mới
-//			}
-//			return null;
-//		});
-//	
-//		Optional<Account> result = dialog.showAndWait();
-//		result.ifPresent(newAccount -> {
-//			// Gọi service để thêm tài khoản
-//			boolean success = accountService.register(newAccount.getUserName(), newAccount.getPassword(), newAccount.getRole());
-//			if (success) {
-//				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//				alert.setTitle("Thành công");
-//				alert.setHeaderText(null);
-//				alert.setContentText("Tài khoản mới đã được thêm thành công.");
-//				alert.showAndWait();
-//				loadAccounts(); // Làm mới danh sách tài khoản
-//			} else {
-//				Alert alert = new Alert(Alert.AlertType.ERROR);
-//				alert.setTitle("Lỗi");
-//				alert.setHeaderText(null);
-//				alert.setContentText("Không thể thêm tài khoản. Vui lòng thử lại.");
-//				alert.showAndWait();
-//			}
-//		});
-//	}
-
 	@FXML
 	private void handleEditAccount() {
 		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 		if (selectedAccount != null) {
 			// Tạo dialog để chỉnh sửa tài khoản
 			Dialog<Account> dialog = new Dialog<>();
-			dialog.setTitle("Chỉnh sửa tài khoản");
-			dialog.setHeaderText("Chỉnh sửa vai trò và trạng thái hoạt động của tài khoản");
+			dialog.setTitle(LanguageManagerAd.getString("manageAccount.edit.dialog.title"));
+			dialog.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.dialog.header"));
 			dialog.setResizable(true);
 
 			// Tạo các trường nhập liệu
@@ -233,14 +164,32 @@ public class ManageAccountController {
 
 			// ComboBox để chọn vai trò
 			ComboBox<String> cbRole = new ComboBox<>();
-			cbRole.getItems().addAll("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
-			cbRole.getSelectionModel().select(selectedAccount.getRole().getRoleName());
-			cbRole.setPromptText("Chọn vai trò");
+			// Tạo map ánh xạ giữa tên hiển thị và roleKey
+			Map<String, String> displayNameToRoleKey = new HashMap<>();
+			List<String> roleKeys = Arrays.asList("ADMIN", "STAFF_CARE", "STAFF_CASHIER", "STAFF_RECEPTION");
+
+			for (String roleKey : roleKeys) {
+			    String localizedRoleName = LanguageManagerAd.getString("manageAccount.role." + roleKey);
+			    cbRole.getItems().add(localizedRoleName);
+			    displayNameToRoleKey.put(localizedRoleName, roleKey);
+			}
+
+			// Chọn item theo roleKey của tài khoản
+			String selectedRoleKey = selectedAccount.getRole().getRoleName();
+			String selectedLocalizedRole = LanguageManagerAd.getString("manageAccount.role." + selectedRoleKey);
+			cbRole.getSelectionModel().select(selectedLocalizedRole);
+
+			cbRole.setPromptText(LanguageManagerAd.getString("manageAccount.edit.label.role"));
+
+			// Khi lưu lại, lấy roleKey từ tên hiển thị đã chọn
+			String selectedDisplayName = cbRole.getSelectionModel().getSelectedItem();
+			String roleKeyToSave = displayNameToRoleKey.get(selectedDisplayName);
+
 
 			// Nút để chỉnh sửa trạng thái hoạt động
 			ToggleGroup toggleGroup = new ToggleGroup();
-			RadioButton rbActive = new RadioButton("Mở (Đang hoạt động)");
-			RadioButton rbInactive = new RadioButton("Khóa (Bị khóa)");
+			RadioButton rbActive = new RadioButton(LanguageManagerAd.getString("manageAccount.edit.status.active"));
+			RadioButton rbInactive = new RadioButton(LanguageManagerAd.getString("manageAccount.edit.status.inactive"));
 			rbActive.setToggleGroup(toggleGroup);
 			rbInactive.setToggleGroup(toggleGroup);
 
@@ -252,7 +201,7 @@ public class ManageAccountController {
 			}
 
 			// Thêm các thành phần vào VBox
-			vbox.getChildren().addAll(new Label("Vai trò:"), cbRole, new Label("Trạng thái hoạt động:"), rbActive,
+			vbox.getChildren().addAll(new Label(LanguageManagerAd.getString("manageAccount.edit.label.role")), cbRole, new Label(LanguageManagerAd.getString("manageAccount.edit.label.status")), rbActive,
 					rbInactive);
 
 			dialog.getDialogPane().setContent(vbox);
@@ -260,30 +209,40 @@ public class ManageAccountController {
 
 			// Xử lý kết quả khi nhấn OK
 			dialog.setResultConverter(dialogButton -> {
-				if (dialogButton == ButtonType.OK) {
-					String roleName = cbRole.getValue();
-					int roleId = roleService.getRoleIdByRoleName(roleName);
-					if (roleId == -1) {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Lỗi");
-						alert.setHeaderText("Không thể cập nhật tài khoản");
-						alert.setContentText("Vai trò không hợp lệ.");
-						alert.showAndWait();
-						return null;
-					}
+			    if (dialogButton == ButtonType.OK) {
+			        String chosenDisplayName  = cbRole.getValue();
+			        String roleKey = displayNameToRoleKey.get(chosenDisplayName);
+			        if (roleKey == null) {
+			            Alert alert = new Alert(Alert.AlertType.ERROR);
+			            alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.title"));
+			            alert.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.header"));
+			            alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.content"));
+			            alert.showAndWait();
+			            return null;
+			        }
 
-					Account updatedAccount = new Account();
-					updatedAccount.setAccountID(selectedAccount.getAccountID());
-					updatedAccount.setUserName(selectedAccount.getUserName());
-					updatedAccount.setPassword(selectedAccount.getPassword());
-					updatedAccount.setRole(new Role(roleId, roleName)); // Gán role_id hợp lệ
-					boolean isActive = rbActive.isSelected();
-					updatedAccount.setActive(isActive);
+			        int roleId = roleService.getRoleIdByRoleName(roleKey);
+			        if (roleId == -1) {
+			            Alert alert = new Alert(Alert.AlertType.ERROR);
+			            alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.title"));
+			            alert.setHeaderText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.header"));
+			            alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.invalidRole.content"));
+			            alert.showAndWait();
+			            return null;
+			        }
 
-					return updatedAccount;
-				}
-				return null;
+			        Account updatedAccount = new Account();
+			        updatedAccount.setAccountID(selectedAccount.getAccountID());
+			        updatedAccount.setUserName(selectedAccount.getUserName());
+			        updatedAccount.setPassword(selectedAccount.getPassword());
+			        updatedAccount.setRole(new Role(roleId, roleKey));
+			        updatedAccount.setActive(rbActive.isSelected());
+
+			        return updatedAccount;
+			    }
+			    return null;
 			});
+
 
 			// Hiển thị dialog và xử lý kết quả
 			Optional<Account> result = dialog.showAndWait();
@@ -292,25 +251,25 @@ public class ManageAccountController {
 				boolean success = accountService.updateAccount(updatedAccount);
 				if (success) {
 					Alert alert = new Alert(Alert.AlertType.INFORMATION);
-					alert.setTitle("Thành công");
+					alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.success.title"));
 					alert.setHeaderText(null);
-					alert.setContentText("Tài khoản đã được cập nhật thành công.");
+					alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.success.content"));
 					alert.showAndWait();
 					loadAccounts(); // Làm mới danh sách tài khoản
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Lỗi");
+					alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.updateFailed.title"));
 					alert.setHeaderText(null);
-					alert.setContentText("Không thể cập nhật tài khoản. Vui lòng thử lại.");
+					alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.error.updateFailed.content"));
 					alert.showAndWait();
 				}
 			});
 		} else {
 			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Cảnh báo");
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.warning.noSelection.title"));
 			alert.setHeaderText(null);
-			alert.setContentText("Vui lòng chọn một tài khoản để chỉnh sửa.");
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.warning.noSelection.content"));
 			alert.showAndWait();
 		}
 	}
@@ -321,9 +280,9 @@ public class ManageAccountController {
 		if (selectedAccount != null) {
 			// Hiển thị hộp thoại xác nhận
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-			alert.setTitle("Xác nhận xóa");
-			alert.setHeaderText("Bạn có chắc chắn muốn xóa tài khoản này?");
-			alert.setContentText("Tài khoản: " + selectedAccount.getUserName());
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.delete.confirm.title"));
+			alert.setHeaderText(LanguageManagerAd.getString("manageAccount.delete.confirm.header"));
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.delete.confirm.content", selectedAccount.getUserName()));
 
 			// Chờ người dùng chọn OK hoặc Cancel
 			Optional<ButtonType> result = alert.showAndWait();
@@ -335,9 +294,9 @@ public class ManageAccountController {
 		} else {
 			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Cảnh báo");
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.delete.warning.title"));
 			alert.setHeaderText(null);
-			alert.setContentText("Vui lòng chọn một tài khoản để xóa.");
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.delete.warning.content"));
 			alert.showAndWait();
 		}
 	}
@@ -355,8 +314,8 @@ public class ManageAccountController {
 
 			// Tạo hộp thoại gán quyền
 			Dialog<List<String>> dialog = new Dialog<>();
-			dialog.setTitle("Gán quyền");
-			dialog.setHeaderText("Gán quyền cho tài khoản: " + selectedAccount.getUserName());
+			dialog.setTitle(LanguageManagerAd.getString("manageAccount.assignPermission.dialog.title"));
+			dialog.setHeaderText(LanguageManagerAd.getString("manageAccount.assignPermission.dialog.header", selectedAccount.getUserName()));
 
 			// Tạo danh sách checkbox cho các quyền
 			VBox content = new VBox(10);
@@ -404,34 +363,48 @@ public class ManageAccountController {
 			});
 		} else {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Cảnh báo");
+			alert.setTitle(LanguageManagerAd.getString("manageAccount.assignPermission.warning.title"));
 			alert.setHeaderText(null);
-			alert.setContentText("Vui lòng chọn một tài khoản để gán quyền.");
+			alert.setContentText(LanguageManagerAd.getString("manageAccount.assignPermission.warning.content"));
 			alert.showAndWait();
 		}
 	}
 
 	@FXML
 	private void handleResetPassword() {
-		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
-		if (selectedAccount != null) {
-			// Tạo hộp thoại xác nhận
-			// reset password thành mặc định = 123456789
-			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-			alert.setTitle("Xác nhận đặt lại mật khẩu");
-			alert.setHeaderText("Bạn có chắc chắn muốn đặt lại mật khẩu cho tài khoản này?");
-			alert.setContentText("Tài khoản: " + selectedAccount.getUserName() + "\nMật khẩu mới sẽ là: 123456789");
-			// Chờ người dùng chọn OK hoặc Cancel
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.isPresent() && result.get() == ButtonType.OK) {
-				// Nếu người dùng chọn OK, thực hiện đặt lại mật khẩu
-				accountService.resetPassword(selectedAccount.getAccountID(), "123456789");
-				Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-				successAlert.setTitle("Thành công");
-				successAlert.setHeaderText(null);
-				successAlert.setContentText("Mật khẩu đã được đặt lại thành công.");
-				successAlert.showAndWait();
-			}
-		}
+	    Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
+	    if (selectedAccount != null) {
+	        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+	        alert.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.title"));
+	        alert.setHeaderText(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.header"));
+	        alert.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.content", selectedAccount.getUserName()));
+
+	        Optional<ButtonType> result = alert.showAndWait();
+	        if (result.isPresent() && result.get() == ButtonType.OK) {
+	            boolean success = accountService.resetPassword(selectedAccount.getAccountID(), "123456789");
+	            if (success) {
+	                Alert info = new Alert(Alert.AlertType.INFORMATION);
+	                info.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.success.title"));
+	                info.setHeaderText(null);
+	                info.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.success.content"));
+	                info.showAndWait();
+	            } else {
+	                Alert error = new Alert(Alert.AlertType.ERROR);
+	                error.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.error.title"));
+	                error.setHeaderText(null);
+	                error.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.error.content"));
+	                error.showAndWait();
+	            }
+	        }
+	    } else {
+	        Alert alert = new Alert(Alert.AlertType.WARNING);
+	        alert.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.warning.title"));
+	        alert.setHeaderText(null);
+	        alert.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.warning.content"));
+	        alert.showAndWait();
+	    }
 	}
+
+
+
 }

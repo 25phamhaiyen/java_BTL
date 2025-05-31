@@ -13,7 +13,7 @@
     <!-- Header Section -->
     <top>
         <VBox alignment="CENTER" spacing="10" styleClass="header-container">
-            <Label styleClass="header-label" text="QUẢN LÝ TÀI KHOẢN" />
+            <Label fx:id="lblTitle" styleClass="header-label"/>
         </VBox>
     </top>
 
@@ -22,19 +22,19 @@
         <VBox alignment="CENTER" spacing="20" styleClass="content-container">
             <!-- Search Bar -->
             <HBox alignment="CENTER" spacing="10" styleClass="search-bar">
-                <Label text="Tìm kiếm:" />
-                <TextField fx:id="txtSearch" prefWidth="300" promptText="Nhập username hoặc role..." styleClass="search-field" />
-                <Button fx:id="btnSearch" styleClass="search-button" text="Tìm kiếm" />
+                <Label fx:id="lblSearch" />
+                <TextField fx:id="txtSearch" prefWidth="300" styleClass="search-field" />
+                <Button fx:id="btnSearch" styleClass="search-button" />
             </HBox>
 
             <!-- TableView -->
             <TableView fx:id="tblAccounts" prefHeight="400" prefWidth="1300" styleClass="account-table">
                 <columns>
-                    <TableColumn fx:id="colAccountId" prefWidth="100" text="Account ID" />
-                    <TableColumn fx:id="colUsername" prefWidth="150" text="Username" />
-                    <TableColumn fx:id="colRole" prefWidth="180" text="Role" />
-                    <TableColumn fx:id="colActive" prefWidth="170" text="Active" />
-                    <TableColumn fx:id="colPermissions" prefWidth="850" text="Quyền" />
+                    <TableColumn fx:id="colAccountId" prefWidth="100" />
+                    <TableColumn fx:id="colUsername" prefWidth="150" />
+                    <TableColumn fx:id="colRole" prefWidth="180"/>
+                    <TableColumn fx:id="colActive" prefWidth="170"/>
+                    <TableColumn fx:id="colPermissions" prefWidth="850"/>
                 </columns>
             </TableView>
         </VBox>
@@ -43,10 +43,10 @@
     <!-- Bottom Section -->
     <bottom>
         <HBox alignment="CENTER" spacing="20" styleClass="button-bar">
-        <Button fx:id="btnEdit" styleClass="action-button" onAction="#handleEditAccount" text="Sửa tài khoản" />
-            <Button fx:id="btnDelete" onAction="#handleDeleteAccount" styleClass="action-button" text="Xóa tài khoản" />
-            <Button fx:id="btnResetPassword" onAction="#handleResetPassword" styleClass="action-button" text="Reset Password" />
-            <Button fx:id="btnAssignPermission" onAction="#handleAssignPermission" styleClass="action-button" text="Gán quyền" />
+            <Button fx:id="btnEdit" styleClass="action-button" onAction="#handleEditAccount" />
+            <Button fx:id="btnDelete" onAction="#handleDeleteAccount" styleClass="action-button" />
+            <Button fx:id="btnResetPassword" onAction="#handleResetPassword" styleClass="action-button" />
+            <Button fx:id="btnAssignPermission" onAction="#handleAssignPermission" styleClass="action-button" />
         </HBox>
     </bottom>
 </BorderPane>
