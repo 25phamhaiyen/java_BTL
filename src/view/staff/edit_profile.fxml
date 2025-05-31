@@ -20,12 +20,12 @@
 
     <top>
         <HBox alignment="CENTER" maxWidth="Infinity" styleClass="header-box">
-            <Label styleClass="header-title" text="CHỈNH SỬA HỒ SƠ" />
+            <Label fx:id="headerTitle" styleClass="header-title" text="Edit Profile" />
+            
         </HBox>
     </top>
 
     <center>
-
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
             <VBox fx:id="mainContainer" alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" spacing="20" styleClass="main-container" VBox.vgrow="ALWAYS">
                 <padding>
@@ -33,22 +33,21 @@
                 </padding>
 
                 <!-- Avatar Section -->
-
                 <VBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" spacing="15" styleClass="avatar-section">
                     <StackPane>
-                        <ImageView fitHeight="100.0" fitWidth="100.0" preserveRatio="true" styleClass="avatar-image">
+                        <ImageView fx:id="avatarImageView" fitHeight="200.0" fitWidth="200.0" preserveRatio="true" styleClass="avatar-image">
                             <image>
                                 <Image url="@/images/avatar_placeholder.png" />
                             </image>
                         </ImageView>
                     </StackPane>
 
-                    <Button prefWidth="200" styleClass="btn-secondary" text="ĐỔI ẢNH ĐẠI DIỆN" />
+                    <Button fx:id="changeAvatarBtn" onAction="#handleChangeAvatar" prefWidth="200" styleClass="btn-secondary" text="Change Avatar" />
                 </VBox>
 
                 <!-- Profile Form -->
                 <VBox fx:id="profileForm" alignment="CENTER" maxWidth="Infinity" spacing="20" styleClass="form-card" VBox.vgrow="ALWAYS">
-                    <Label styleClass="form-title" text="THÔNG TIN CÁ NHÂN" />
+                    <Label fx:id="formTitle" styleClass="form-title" text="Personal Information" />
 
                     <GridPane alignment="CENTER" hgap="15" maxWidth="Infinity" styleClass="form-grid" vgap="15" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                         <columnConstraints>
@@ -56,35 +55,39 @@
                             <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
                         </columnConstraints>
 
-                        <Label styleClass="field-label" text="Họ và tên:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="fullNameField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+                        <!-- Username Field -->
+                        <Label fx:id="usernameLabel" styleClass="field-label" text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="usernameField" maxWidth="Infinity" promptText="Enter username" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
 
-                        <Label styleClass="field-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <TextField fx:id="emailField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                        <Label fx:id="fullNameLabel" styleClass="field-label" text="Full Name:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="fullNameField" maxWidth="Infinity" promptText="Enter full name" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
 
-                        <Label styleClass="field-label" text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="phoneField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <Label fx:id="emailLabel" styleClass="field-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="emailField" maxWidth="Infinity" promptText="Enter email address" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
 
-                        <Label styleClass="field-label" text="Địa chỉ:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <TextField fx:id="addressField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-                  <rowConstraints>
-                     <RowConstraints />
-                     <RowConstraints />
-                     <RowConstraints />
-                     <RowConstraints />
-                  </rowConstraints>
+                        <Label fx:id="phoneLabel" styleClass="field-label" text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="phoneField" maxWidth="Infinity" promptText="Enter phone number" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+
+                        <Label fx:id="addressLabel" styleClass="field-label" text="Address:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextField fx:id="addressField" maxWidth="Infinity" promptText="Enter address" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
                     </GridPane>
 
                     <HBox alignment="CENTER" maxWidth="Infinity" spacing="20" styleClass="button-group">
-                        <Button fx:id="changePasswordBtn" onAction="#handleChangePasswordForm" prefWidth="200" styleClass="btn-primary" text="ĐỔI MẬT KHẨU" />
-                        <Button fx:id="updateProfileBtn" onAction="#handleUpdateProfile" prefWidth="200" styleClass="btn-success" text="CẬP NHẬT" />
-
+                        <Button fx:id="changePasswordBtn" onAction="#handleChangePasswordForm" prefWidth="200" styleClass="btn-primary" text="Change Password" />
+                        <Button fx:id="updateProfileBtn" onAction="#handleUpdateProfile" prefWidth="200" styleClass="btn-success" text="Update" />
                     </HBox>
                 </VBox>
 
-
+                <!-- Password Form -->
                 <VBox fx:id="passwordForm" alignment="CENTER" managed="false" maxWidth="Infinity" spacing="20" styleClass="form-card" visible="false" VBox.vgrow="ALWAYS">
-                    <Label styleClass="form-title" text="ĐỔI MẬT KHẨU" />
+                    <Label fx:id="passwordFormTitle" styleClass="form-title" text="Change Password" />
 
                     <GridPane alignment="CENTER" hgap="15" maxWidth="Infinity" styleClass="form-grid" vgap="15" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                         <columnConstraints>
@@ -92,33 +95,33 @@
                             <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
                         </columnConstraints>
 
-                        <Label styleClass="field-label" text="Mật khẩu hiện tại:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <PasswordField fx:id="currentPasswordField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+                        <Label fx:id="currentPasswordLabel" styleClass="field-label" text="Current Password:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <PasswordField fx:id="currentPasswordField" maxWidth="Infinity" promptText="Enter current password" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
 
-                        <Label styleClass="field-label" text="Mật khẩu mới:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <PasswordField fx:id="newPasswordField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                        <Label fx:id="newPasswordLabel" styleClass="field-label" text="New Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <PasswordField fx:id="newPasswordField" maxWidth="Infinity" promptText="Enter new password" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
 
-                        <Label styleClass="field-label" text="Xác nhận mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <PasswordField fx:id="confirmPasswordField" maxWidth="Infinity" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                  <rowConstraints>
-                     <RowConstraints />
-                     <RowConstraints />
-                     <RowConstraints />
-                  </rowConstraints>
+                        <Label fx:id="confirmPasswordLabel" styleClass="field-label" text="Confirm Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <PasswordField fx:id="confirmPasswordField" maxWidth="Infinity" promptText="Confirm new password" styleClass="field-input" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
                     </GridPane>
 
                     <HBox alignment="CENTER" maxWidth="Infinity" spacing="20" styleClass="button-group">
-                        <Button fx:id="backToProfileBtn" onAction="#handleBackToProfile" prefWidth="200" styleClass="btn-danger" text="QUAY LẠI" />
-                        <Button fx:id="changePasswordConfirmBtn" onAction="#handleChangePassword" prefWidth="200" styleClass="btn-primary" text="ĐỔI MẬT KHẨU" />
-
+                        <Button fx:id="backToProfileBtn" onAction="#handleBackToProfile" prefWidth="200" styleClass="btn-danger" text="Back" />
+                        <Button fx:id="changePasswordConfirmBtn" onAction="#handleChangePassword" prefWidth="200" styleClass="btn-primary" text="Change Password" />
                     </HBox>
                 </VBox>
-              <HBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" styleClass="footer-box">
-                  <Button fx:id="backButton" onAction="#handleBack" prefWidth="200" styleClass="btn-neutral" text="QUAY LẠI TRANG CHỦ" />
-              </HBox>
+
+                <HBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" styleClass="footer-box">
+                    <Button fx:id="backButton" onAction="#handleBack" prefWidth="200" styleClass="btn-neutral" text="Back to Home" />
+                    <Button fx:id="btnLanguage" onAction="#toggleLanguage" styleClass="btn-neutral"/>
+                </HBox>
             </VBox>
         </ScrollPane>
     </center>
 
 </BorderPane>
-

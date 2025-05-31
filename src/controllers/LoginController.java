@@ -164,6 +164,7 @@ public class LoginController implements I18nUtil.I18nUpdatable {
         }
     }
     
+    @FXML
     private void toggleLanguage(ActionEvent event) {
         LanguageManager langManager = LanguageManager.getInstance();
         Locale currentLocale = langManager.getCurrentLocale();

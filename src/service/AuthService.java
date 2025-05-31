@@ -81,6 +81,46 @@ public class AuthService {
 		return false;
 	}
 
+	/**
+	 * Kiểm tra username đã tồn tại chưa
+	 */
+	public boolean isUsernameExists(String username) {
+		String sql = "SELECT COUNT(*) FROM account WHERE username = ?";
+		try (Connection conn = DatabaseConnection.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi kiểm tra username: " + e.getMessage());
+		}
+		return false;
+	}
+
+	/**
+	 * Cập nhật username
+	 */
+	public boolean updateUsername(int accountId, String newUsername) {
+		String sql = "UPDATE account SET username = ? WHERE account_id = ?";
+		try (Connection conn = DatabaseConnection.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			pstmt.setString(1, newUsername);
+			pstmt.setInt(2, accountId);
+
+			int rowsAffected = pstmt.executeUpdate();
+			return rowsAffected > 0;
+
+		} catch (SQLException e) {
+			System.err.println("Lỗi khi cập nhật username: " + e.getMessage());
+			return false;
+		}
+	}
+
 	private void showAlert(AlertType alertType, String title, String header, String content) {
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
