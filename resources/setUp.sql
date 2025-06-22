@@ -205,6 +205,17 @@ CREATE TABLE account_permission (
     FOREIGN KEY (permission_code) REFERENCES permission(permission_code) ON DELETE CASCADE
 );
 
+CREATE TABLE shift_request (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    staff_id INT UNSIGNED NOT NULL,
+    request_date DATE NOT NULL,
+    shift ENUM('MORNING', 'AFTERNOON', 'EVENING') NOT NULL,
+    type ENUM('WORK', 'LEAVE') NOT NULL,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+    reason VARCHAR(255),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
 -- View tổng quan dashboard
 CREATE VIEW dashboard_summary AS
 SELECT

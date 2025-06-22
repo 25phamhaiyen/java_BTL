@@ -578,6 +578,7 @@ public class InvoiceService {
      */
     public boolean updatePaymentMethod(int invoiceId, PaymentMethodEnum paymentMethod) {
         Invoice invoice = invoiceRepository.selectById(invoiceId);
+        System.out.println(invoice);
         if (invoice == null) {
             PaymentLogger.error("Hóa đơn không tồn tại: " + invoiceId);
             throw new IllegalArgumentException("Hóa đơn không tồn tại");

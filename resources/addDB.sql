@@ -49,6 +49,31 @@ VALUES
 (12, 'reception02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4), -- pass: 123
 (13, 'reception03', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4); -- pass: 123
 
+-- Insert into permission
+INSERT INTO permission (permission_code, description) VALUES
+('CREATE_BOOKING', 'Đặt lịch hẹn cho khách'),
+('MANAGE_PAYMENT', 'Thực hiện thanh toán, áp dụng KM, ghi nhận hóa đơn'),
+('VIEW_CUSTOMER', 'Xem thông tin khách hàng, lịch sử booking'),
+('PRINT_RECEIPT', 'In hóa đơn hoặc phiếu thanh toán'),
+('APPLY_PROMOTION', 'Áp dụng chương trình khuyến mãi'),
+('VIEW_INVOICE', 'Xem danh sách hóa đơn đã lập'),
+('VIEW_BOOKING_ASSIGNED', 'Xem các lịch hẹn được phân công (Groomer)'),
+('MARK_SERVICE_DONE', 'Đánh dấu đã hoàn thành dịch vụ chăm sóc'),
+('UPDATE_PET_STATUS', 'Cập nhật tình trạng thú cưng'),
+('VIEW_SCHEDULE', 'Xem lịch làm việc cá nhân'),
+('MANAGE_ACCOUNT', 'Thêm, sửa, xoá tài khoản nhân viên'),
+('ASSIGN_PERMISSION', 'Gán quyền cho tài khoản STAFF'),
+('MANAGE_SCHEDULE', 'Lên lịch làm việc cho nhân viên'),
+('ADD_EMPLOYEE', 'Thêm nhân viên mới vào hệ thống'),
+('MANAGE_SERVICE', 'Thêm, sửa, xoá dịch vụ trong cửa hàng'),
+('VIEW_FINANCE', 'Xem báo cáo tài chính, doanh thu, chi phí'),
+('VIEW_DASHBOARD', 'Xem tổng quan số liệu cửa hàng'),
+('UPDATE_PROFILE', 'Cập nhật thông tin tài khoản cá nhân'),
+('APPROVE_LEAVE', 'Phê duyệt yêu cầu nghỉ phép'),
+('APPROVE_SHIFT_CHANGE', 'Phê duyệt yêu cầu đổi ca'),
+('REGISTER_SHIFT', 'Đăng ký ca làm việc'),
+('REQUEST_LEAVE', 'Yêu cầu nghỉ phép');
+
 INSERT INTO staff (staff_id, dob, salary, hire_date, account_id, role_id)
 VALUES
 (1, '1990-01-01', 20000000, '2020-01-01', 1, 1),
@@ -381,28 +406,6 @@ INSERT INTO work_schedule (staff_id, work_date, shift, note, start_time, end_tim
 (10, '2025-05-05', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Thu ngân'),
 (11, '2025-05-05', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 1', 'Tiếp nhận khách'),
 (12, '2025-05-05', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Tiếp nhận khách');
-
-
-INSERT INTO permission (permission_code, description) VALUES
-('CREATE_BOOKING', 'Đặt lịch hẹn cho khách'),
-('MANAGE_PAYMENT', 'Thực hiện thanh toán, áp dụng KM, ghi nhận hóa đơn'),
-('VIEW_CUSTOMER', 'Xem thông tin khách hàng, lịch sử booking'),
-('PRINT_RECEIPT', 'In hóa đơn hoặc phiếu thanh toán'),
-('APPLY_PROMOTION', 'Áp dụng chương trình khuyến mãi'),
-('VIEW_INVOICE', 'Xem danh sách hóa đơn đã lập'),
-('VIEW_BOOKING_ASSIGNED', 'Xem các lịch hẹn được phân công (Groomer)'),
-('MARK_SERVICE_DONE', 'Đánh dấu đã hoàn thành dịch vụ chăm sóc'),
-('UPDATE_PET_STATUS', 'Cập nhật tình trạng thú cưng'),
-('VIEW_SCHEDULE', 'Xem lịch làm việc cá nhân'),
-('MANAGE_ACCOUNT', 'Thêm, sửa, xoá tài khoản nhân viên'),
-('ASSIGN_PERMISSION', 'Gán quyền cho tài khoản STAFF'),
-('MANAGE_SCHEDULE', 'Lên lịch làm việc cho nhân viên'),
-('ADD_EMPLOYEE', 'Thêm nhân viên mới vào hệ thống'),
-('MANAGE_SERVICE', 'Thêm, sửa, xoá dịch vụ trong cửa hàng'),
-('VIEW_FINANCE', 'Xem báo cáo tài chính, doanh thu, chi phí'),
-('VIEW_DASHBOARD', 'Xem tổng quan số liệu cửa hàng'),
-('UPDATE_PROFILE', 'Cập nhật thông tin tài khoản cá nhân');
-
 
 UPDATE invoice 
 SET promotion_code = NULL, 

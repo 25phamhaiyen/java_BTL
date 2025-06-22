@@ -11,35 +11,35 @@
     <!-- Bố cục chính -->
     <VBox spacing="10" alignment="TOP_CENTER" prefWidth="1450" prefHeight="600">
         <!-- Tiêu đề -->
-        <Label text="Quản Lý Nhân Viên" styleClass="header-label" />
+        <Label fx:id="lblTitle" styleClass="header-label"/>
 
         <!-- Thanh tìm kiếm -->
         <HBox spacing="10" alignment="CENTER">
-            <Label text="Tìm kiếm:" />
-            <TextField fx:id="txtSearch" promptText="Nhập tên nhân viên, vai trò hoặc tài khoản..." />
-            <Button text="Tìm kiếm" onAction="#handleSearchStaff" />
+            <Label fx:id="lblSearch" />
+			<TextField fx:id="txtSearch" prefWidth="300" styleClass="search-field" />
+            <Button fx:id="btnSearch"  onAction="#handleSearchStaff" />
         </HBox>
 
         <!-- Bảng hiển thị danh sách nhân viên -->
         <TableView fx:id="tblStaff" prefHeight="600">
             <columns>
-                <TableColumn fx:id="colStaffId" text="ID" prefWidth="50" />
-                <TableColumn fx:id="colStaffName" text="Tên nhân viên" prefWidth="250" />
-                <TableColumn fx:id="colStaffRole" text="Vai trò" prefWidth="150" />
-                <TableColumn fx:id="colStaffPhone" text="Số điện thoại" prefWidth="120" />
-                <TableColumn fx:id="colStaffEmail" text="Email" prefWidth="300" />
-                <TableColumn fx:id="colStartDate" text="Ngày bắt đầu" prefWidth="200" />
-                <TableColumn fx:id="colSalary" text="Lương" prefWidth="150" />
-                <TableColumn fx:id="colAccount" text="Tên tài khoản" prefWidth="200" />
+                <TableColumn fx:id="colStaffId" prefWidth="50" />
+                <TableColumn fx:id="colStaffName" prefWidth="250" />
+                <TableColumn fx:id="colStaffRole" prefWidth="150" />
+                <TableColumn fx:id="colStaffPhone" prefWidth="120" />
+                <TableColumn fx:id="colStaffEmail" prefWidth="300" />
+                <TableColumn fx:id="colStartDate" prefWidth="200" />
+                <TableColumn fx:id="colSalary" prefWidth="150" />
+                <TableColumn fx:id="colAccount" prefWidth="200" />
             </columns>
         </TableView>
 
         <!-- Các nút chức năng -->
         <HBox spacing="10" alignment="CENTER">
-            <Button text="Thêm nhân viên" onAction="#handleAddStaff" />
-            <Button text="Sửa thông tin" onAction="#handleEditStaff" />
-            <Button text="Xóa nhân viên" onAction="#handleDeleteStaff" />
-            <Button fx:id="terminateButton" text="Cho nghỉ việc" onAction="#handleTerminateStaff" />
+            <Button fx:id="btnAdd"  onAction="#handleAddStaff" />
+            <Button fx:id="btnEdit"  onAction="#handleEditStaff" />
+            <Button fx:id="btnDelete"  onAction="#handleDeleteStaff" />
+            <Button fx:id="terminateButton" onAction="#handleTerminateStaff" />
         </HBox>
     </VBox>
 </AnchorPane>

@@ -1,6 +1,7 @@
-
 package controllers.admin;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -18,16 +19,25 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import model.ShiftAssignment;
+import model.ShiftRequest;
 import model.Staff;
 import model.WorkSchedule;
 import service.ScheduleService;
 import service.StaffService;
+import utils.DatabaseConnection;
 
 import java.awt.Desktop;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,6 +51,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -51,6 +62,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
+
+import enums.RequestStatus;
 import enums.Shift;
 
 public class ManageScheduleController implements Initializable {
@@ -66,6 +79,8 @@ public class ManageScheduleController implements Initializable {
 
 	@FXML
 	private Button exportPdfButton;
+	@FXML
+	private Button autoAssignButton;
 
 	private List<Staff> allAvailableEmployees;
 	private Map<LocalDate, Map<Shift, List<WorkSchedule>>> weeklySchedule;
@@ -184,6 +199,41 @@ public class ManageScheduleController implements Initializable {
 
 		// Đánh dấu ô đã đủ nhân sự
 		highlightFullRoles(startDate, endDate);
+	}
+
+	@FXML
+	private void autoAssignShifts() {
+		LocalDate selected = startDatePicker.getValue();
+
+		LocalDate weekStart = selected.with(DayOfWeek.MONDAY);
+		LocalDate thisWeekStart = LocalDate.now().with(DayOfWeek.MONDAY);
+
+		if (weekStart.isBefore(thisWeekStart)) {
+			showAlert("Lỗi", "Không thể phân lịch cho tuần đã qua.");
+			return;
+		}
+		if (scheduleService.isWeekScheduled(weekStart)) {
+			showAlert("Lỗi", "Tuần này đã có lịch làm. Không thể phân tự động.");
+			return;
+		}
+		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+				"Bạn có chắc muốn phân lịch tự động cho tuần bắt đầu từ " + weekStart + "?", ButtonType.YES,
+				ButtonType.NO);
+		Optional<ButtonType> result = confirm.showAndWait();
+
+		if (result.isPresent() && result.get() == ButtonType.YES) {
+			List<Staff> staffList = staffService.getAllStaffs();
+
+			// Lấy dữ liệu từ service
+			Pair<Map<Integer, List<Shift>>, Map<Integer, List<ShiftAssignment>>> requestData = scheduleService
+					.getApprovedRequests(weekStart);
+
+			Map<Integer, List<Shift>> leaveRequests = requestData.getKey();
+			Map<Integer, List<ShiftAssignment>> preferredShifts = requestData.getValue();
+
+			scheduleService.autoAssignWeekShifts(staffList, weekStart, leaveRequests, preferredShifts);
+			loadScheduleForWeek();
+		}
 	}
 
 	private StackPane createScheduleCell(LocalDate date, Shift shift, List<WorkSchedule> schedules) {
@@ -529,7 +579,7 @@ public class ManageScheduleController implements Initializable {
 			return;
 		}
 
-		String filePath = "weekly_schedule_itext5_" + startDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "_"
+		String filePath = "Schedule_" + startDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "_"
 				+ endDate.format(DateTimeFormatter.ofPattern("ddMMyyyy")) + ".pdf";
 
 		try {
@@ -539,8 +589,10 @@ public class ManageScheduleController implements Initializable {
 			document.open();
 
 			// Sử dụng font hỗ trợ tiếng Việt (Arial)
-			Font fontHeader = FontFactory.getFont("Arial", 12, Font.BOLD);
-			Font fontContent = FontFactory.getFont("Arial", 10, Font.NORMAL);
+			String path = "lib/LiberationSerif-Regular.ttf";
+			BaseFont bf = BaseFont.createFont(path, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			Font fontHeader = new Font(bf, 12, Font.BOLD);
+			Font fontContent = new Font(bf, 10, Font.NORMAL);
 
 			// Thêm tiêu đề
 			Paragraph title = new Paragraph(
@@ -617,5 +669,89 @@ public class ManageScheduleController implements Initializable {
 			showAlert("Lỗi", "Không thể xuất lịch trình ra file PDF.");
 		}
 	}
+	
+	@FXML
+	private void handleViewRequests() {
+	    Dialog<Void> dialog = new Dialog<>();
+	    dialog.setTitle("Duyệt yêu cầu ca làm");
+	    dialog.setHeaderText("Danh sách yêu cầu ca làm đang chờ duyệt");
+
+	    ButtonType closeButtonType = new ButtonType("Đóng", ButtonBar.ButtonData.CANCEL_CLOSE);
+	    dialog.getDialogPane().getButtonTypes().add(closeButtonType);
+
+	    // Tạo bảng
+	    TableView<ShiftRequest> table = new TableView<>();
+	    table.setPrefHeight(300);
+	    table.setPrefWidth(600);
+
+	    TableColumn<ShiftRequest, String> colStaff = new TableColumn<>("Nhân viên");
+	    colStaff.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStaff().getFullName()));
+
+	    TableColumn<ShiftRequest, String> colDate = new TableColumn<>("Ngày");
+	    colDate.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getRequestDate().toString()));
+
+	    TableColumn<ShiftRequest, String> colShift = new TableColumn<>("Ca");
+	    colShift.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getShift().name()));
+
+	    TableColumn<ShiftRequest, String> colType = new TableColumn<>("Loại");
+	    colType.setCellValueFactory(cell -> new SimpleStringProperty(
+	            switch (cell.getValue().getType()) {
+	                case LEAVE -> "Xin nghỉ";
+	                case WORK -> "Đăng ký";
+	            }
+	    ));
+
+	    TableColumn<ShiftRequest, String> colReason = new TableColumn<>("Lý do");
+	    colReason.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getReason()));
+
+	    TableColumn<ShiftRequest, String> colStatus = new TableColumn<>("Trạng thái");
+	    colStatus.setCellValueFactory(cell -> new SimpleStringProperty(
+	            switch (cell.getValue().getStatus()) {
+	                case PENDING -> "Đang chờ";
+	                case APPROVED -> "Đã duyệt";
+	                case REJECTED -> "Từ chối";
+	            }
+	    ));
+
+	    table.getColumns().addAll(colStaff, colDate, colShift, colType, colReason, colStatus);
+
+	    // Load data
+	    ObservableList<ShiftRequest> requests = FXCollections.observableArrayList(scheduleService.getPendingRequests());
+	    table.setItems(requests);
+
+	    // Nút hành động
+	    Button btnApprove = new Button("Duyệt");
+	    btnApprove.setOnAction(e -> {
+	        ShiftRequest selected = table.getSelectionModel().getSelectedItem();
+	        if (selected != null) {
+	            if (scheduleService.approveRequest(selected.getId(), RequestStatus.APPROVED)) {
+	                showAlert("Thành công", "Yêu cầu đã được duyệt.");
+	                table.getItems().remove(selected);
+	            }
+	        }
+	    });
+
+	    Button btnReject = new Button("Từ chối");
+	    btnReject.setOnAction(e -> {
+	        ShiftRequest selected = table.getSelectionModel().getSelectedItem();
+	        if (selected != null) {
+	            if (scheduleService.approveRequest(selected.getId(), RequestStatus.REJECTED)) {
+	                showAlert("Đã từ chối", "Yêu cầu đã bị từ chối.");
+	                table.getItems().remove(selected);
+	            }
+	        }
+	    });
+
+	    HBox actionBox = new HBox(10, btnApprove, btnReject);
+	    actionBox.setAlignment(Pos.CENTER_RIGHT);
+	    actionBox.setPadding(new Insets(10, 0, 0, 0));
+
+	    VBox content = new VBox(10, table, actionBox);
+	    content.setPadding(new Insets(10));
+
+	    dialog.getDialogPane().setContent(content);
+	    dialog.showAndWait();
+	}
+
 
 }

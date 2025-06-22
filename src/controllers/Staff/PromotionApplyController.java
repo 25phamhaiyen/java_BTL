@@ -1,6 +1,5 @@
 package controllers.Staff;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException; 
 import java.time.LocalDate;
@@ -12,10 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -33,7 +29,6 @@ import utils.RoleChecker;
 import repository.InvoiceRepository;
 import repository.OrderDetailRepository;
 import model.Invoice;
-import repository.OrderRepository;
 
 public class PromotionApplyController implements Initializable {
 
@@ -527,7 +522,7 @@ public class PromotionApplyController implements Initializable {
 	 * Save changes to invoice
 	 */
 	@FXML
-	private void saveChanges() {
+	private void saveChanges() throws SQLException {
 		if (currentInvoice == null) {
 			showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
 					"Không thể lưu thay đổi khi không có hóa đơn.");
@@ -589,8 +584,6 @@ public class PromotionApplyController implements Initializable {
 
 		} catch (NumberFormatException e) {
 			showAlert(Alert.AlertType.ERROR, "Lỗi", "Dữ liệu không hợp lệ", e.getMessage());
-		} catch (SQLException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể lưu thay đổi", e.getMessage());
 		}
 	}
 
@@ -602,4 +595,5 @@ public class PromotionApplyController implements Initializable {
 		Stage stage = (Stage) saveButton.getScene().getWindow();
 		stage.close();
 	}
+
 }

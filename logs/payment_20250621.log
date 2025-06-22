@@ -1,0 +1,142 @@
+thg 6 21, 2025 2:01:27 CH utils.PaymentLogger info
+INFO: Database driver loaded successfully
+thg 6 21, 2025 2:04:31 CH utils.PaymentLogger info
+INFO: Database driver loaded successfully
+thg 6 21, 2025 10:03:17 CH utils.PaymentLogger info
+INFO: Database driver loaded successfully
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CLIENT_ID, sử dụng giá trị mặc định
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_API_KEY, sử dụng giá trị mặc định
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CHECKSUM_KEY, sử dụng giá trị mặc định
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger error
+SEVERE: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger error
+SEVERE: Lỗi tải cấu hình PayOS: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+java.lang.IllegalStateException: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+	at utils.PaymentConfig.validateConfiguration(PaymentConfig.java:158)
+	at utils.PaymentConfig.loadConfiguration(PaymentConfig.java:68)
+	at utils.PaymentConfig.<clinit>(PaymentConfig.java:33)
+	at service.QRPaymentService.<init>(QRPaymentService.java:45)
+	at service.QRPaymentService.getInstance(QRPaymentService.java:55)
+	at service.InvoiceService.initQRPaymentService(InvoiceService.java:76)
+	at service.InvoiceService.<init>(InvoiceService.java:71)
+	at service.InvoiceService.getInstance(InvoiceService.java:132)
+	at controllers.Staff.InvoiceViewController.<init>(InvoiceViewController.java:109)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:501)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:485)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:928)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:970)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:217)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2823)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2619)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2533)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2503)
+	at controllers.SceneSwitcher.switchScene(SceneSwitcher.java:54)
+	at controllers.Staff.StaffController.showInvoiceView(StaffController.java:282)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:65)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at javafx.base@24/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:112)
+	at javafx.fxml@24/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:78)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1845)
+	at javafx.fxml@24/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1718)
+	at javafx.base@24/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base@24/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base@24/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24/javafx.scene.Node.fireEvent(Node.java:9005)
+	at javafx.controls@24/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls@24/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+	at javafx.controls@24/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base@24/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base@24/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base@24/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base@24/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24/javafx.scene.Scene$MouseHandler.process(Scene.java:4005)
+	at javafx.graphics@24/javafx.scene.Scene.processMouseEvent(Scene.java:1934)
+	at javafx.graphics@24/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2763)
+	at javafx.graphics@24/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:352)
+	at javafx.graphics@24/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:254)
+	at javafx.graphics@24/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics@24/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:386)
+	at javafx.graphics@24/com.sun.glass.ui.View.handleMouseEvent(View.java:560)
+	at javafx.graphics@24/com.sun.glass.ui.View.notifyMouse(View.java:946)
+	at javafx.graphics@24/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics@24/com.sun.glass.ui.win.WinApplication.lambda$runLoop$0(WinApplication.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger info
+INFO: PayOSService initialized
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger info
+INFO: Cấu hình PayOS hợp lệ: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN]
+thg 6 21, 2025 10:03:22 CH utils.PaymentLogger info
+INFO: QRPaymentService initialized
+thg 6 21, 2025 10:03:32 CH utils.PaymentLogger info
+INFO: Found 1 pending QR payments
+thg 6 21, 2025 10:03:55 CH utils.PaymentLogger info
+INFO: Tạo transaction_id khi cập nhật phương thức QR: PCC1520250621220355879
+thg 6 21, 2025 10:03:55 CH utils.PaymentLogger info
+INFO: Cập nhật phương thức thanh toán hóa đơn 15 thành: QR Code
+thg 6 21, 2025 10:03:55 CH utils.PaymentLogger info
+INFO: Bắt đầu tạo QR payment cho hóa đơn #15
+thg 6 21, 2025 10:03:55 CH utils.PaymentLogger info
+INFO: Gọi API PayOS để tạo liên kết thanh toán cho hóa đơn #15
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Đơn hàng 15 đã tồn tại trên PayOS, kiểm tra trạng thái
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán cho giao dịch: PCC1520250621220355879
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger error
+SEVERE: Không tìm thấy mã đơn hàng PayOS cho giao dịch: PCC1520250621220355879
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: QRPaymentViewController initialized at 21/06/2025 22:03:57
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Hiển thị thông tin hóa đơn #15
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Tạo thanh toán QR cho hóa đơn #15
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Bắt đầu tạo QR payment cho hóa đơn #15
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Gọi API PayOS để tạo liên kết thanh toán cho hóa đơn #15
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Đặt parentController cho QRPaymentViewController
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Đơn hàng 15 đã tồn tại trên PayOS, kiểm tra trạng thái
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán cho giao dịch: PCC1520250621220355879
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger error
+SEVERE: Không tìm thấy mã đơn hàng PayOS cho giao dịch: PCC1520250621220355879
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger error
+SEVERE: Tạo QR thất bại: Đơn hàng này đã bị hủy hoặc hết hạn
+thg 6 21, 2025 10:03:57 CH utils.PaymentLogger error
+SEVERE: Lỗi thanh toán QR: Đơn hàng này đã bị hủy hoặc hết hạn
+thg 6 21, 2025 10:04:02 CH utils.PaymentLogger info
+INFO: Found 2 pending QR payments
+thg 6 21, 2025 10:04:03 CH utils.PaymentLogger info
+INFO: Cửa sổ thanh toán QR đóng thành công
+thg 6 21, 2025 10:04:32 CH utils.PaymentLogger info
+INFO: Found 2 pending QR payments

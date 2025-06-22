@@ -1,6 +1,7 @@
 package controllers.admin;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import controllers.SceneSwitcher;
 import javafx.application.Platform;
@@ -9,13 +10,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import utils.LanguageChangeListener;
 import utils.LanguageManagerAd;
 
-public class AdminHomeController {
+public class AdminHomeController implements LanguageChangeListener{
 
 	@FXML
 	private Pane centerContent;
@@ -36,21 +39,26 @@ public class AdminHomeController {
 	@FXML
 	private HBox btnAccountManagement, btnStaffManagement, btnCreateWorkSchedule, btnServices, btnDetailedDashboard,
 			btnEditProfile, btnCustomerManagement, btnLogout;
+	@FXML private ComboBox<String> languageCombo;
 
 	private boolean isCollapsed = false;
 
 	@FXML
 	public void initialize() throws IOException {
-		lblLogo.setText(LanguageManagerAd.getString("logo.text"));
-	    lblAccountManagement.setText(LanguageManagerAd.getString("admin.account.management"));
-	    lblStaffManagement.setText(LanguageManagerAd.getString("admin.staff.management"));
-	    lblCustomerManagement.setText(LanguageManagerAd.getString("admin.customer.management"));
-	    lblWorkSchedule.setText(LanguageManagerAd.getString("admin.schedule.create"));
-	    lblServices.setText(LanguageManagerAd.getString("admin.services"));
-	    lblDashboard.setText(LanguageManagerAd.getString("admin.dashboard"));
-	    lblProfile.setText(LanguageManagerAd.getString("admin.profile"));
-	    lblLogout.setText(LanguageManagerAd.getString("admin.logout"));
-	    lblWelcome.setText(LanguageManagerAd.getString("admin.welcome"));
+		LanguageManagerAd.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
+				
+		languageCombo.getItems().addAll("Tiếng Việt", "English");
+        languageCombo.setValue("Tiếng Việt");
+        languageCombo.setOnAction(e -> {
+            String lang = languageCombo.getValue();
+            if (lang.equals("English")) {
+                LanguageManagerAd.setLocale(new Locale("en", "US"));
+            } else {
+                LanguageManagerAd.setLocale(new Locale("vi", "VN"));
+            }
+        });
+        
+        loadTexts();
 		    
 		Platform.runLater(() -> {
 			// Sự kiện di chuột vào sidebar để mở rộng
@@ -139,6 +147,25 @@ public class AdminHomeController {
 			}
 		}
 		selectedButton.getStyleClass().add("sidebar-active");
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+		
+	}
+	
+	private void loadTexts() {
+		lblLogo.setText(LanguageManagerAd.getString("logo.text"));
+	    lblAccountManagement.setText(LanguageManagerAd.getString("admin.account.management"));
+	    lblStaffManagement.setText(LanguageManagerAd.getString("admin.staff.management"));
+	    lblCustomerManagement.setText(LanguageManagerAd.getString("admin.customer.management"));
+	    lblWorkSchedule.setText(LanguageManagerAd.getString("admin.schedule.create"));
+	    lblServices.setText(LanguageManagerAd.getString("admin.services"));
+	    lblDashboard.setText(LanguageManagerAd.getString("admin.dashboard"));
+	    lblProfile.setText(LanguageManagerAd.getString("admin.profile"));
+	    lblLogout.setText(LanguageManagerAd.getString("admin.logout"));
+	    lblWelcome.setText(LanguageManagerAd.getString("admin.welcome"));
 	}
 
 }

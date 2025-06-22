@@ -78,6 +78,11 @@ stylesheets="@/styles/style.css">
       </GridPane>
    </center>
    <bottom>
-   	<Button fx:id="exportPdfButton" text="Xuất PDF" onAction="#exportScheduleToPdf" />
-   </bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="exportPdfButton" text="Xuất PDF" onAction="#exportScheduleToPdf" />
+            <Button fx:id="autoAssignButton" text="Tự động phân công" onAction="#autoAssignShifts" />
+            <Button fx:id="btnViewRequests" text="Xem yêu cầu ca làm" onAction="#handleViewRequests" />
+            
+        </HBox>
+    </bottom>
 </BorderPane>

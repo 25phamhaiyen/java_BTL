@@ -17,6 +17,8 @@ import model.Staff;
 import service.AccountService;
 import service.RoleService;
 import service.StaffService;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerAd;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,7 +30,7 @@ import java.util.regex.Pattern;
 
 import enums.GenderEnum;
 
-public class ManageStaff {
+public class ManageStaff implements LanguageChangeListener{
 
 	@FXML
 	private TableView<Staff> tblStaff;
@@ -57,8 +59,10 @@ public class ManageStaff {
 	@FXML
 	private TableColumn<Staff, String> colAccount;
 
-	@FXML
-	private TextField txtSearch;
+	@FXML private Label lblTitle;
+    @FXML private Label lblSearch;
+	@FXML private TextField txtSearch;
+	@FXML private Button btnAdd, btnEdit, btnDelete, btnSearch;
 	@FXML
 	private Button terminateButton;
 
@@ -69,6 +73,9 @@ public class ManageStaff {
 
 	@FXML
 	public void initialize() {
+		LanguageManagerAd.addListener(this);
+		loadTexts();
+		
 		// Ánh xạ các cột với thuộc tính của lớp Staff
 		colStaffId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colStaffName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
@@ -118,32 +125,32 @@ public class ManageStaff {
 	private void handleAddStaff() {
 		// Tạo dialog để nhập thông tin nhân viên
 		Dialog<Staff> dialog = new Dialog<>();
-		dialog.setTitle("Thêm nhân viên mới");
-		dialog.setHeaderText("Nhập thông tin nhân viên");
+		dialog.setTitle(LanguageManagerAd.getString("manageStaff.add.dialog.title"));
+		dialog.setHeaderText(LanguageManagerAd.getString("manageStaff.add.dialog.header"));
 
 		// Tạo các trường nhập liệu
 		TextField txtFullName = new TextField();
-		txtFullName.setPromptText("Họ và tên");
+		txtFullName.setPromptText(LanguageManagerAd.getString("manageStaff.add.fullName"));
 
 		ToggleGroup genderGroup = new ToggleGroup();
-		RadioButton rbMale = new RadioButton("MALE");
-		RadioButton rbFemale = new RadioButton("FEMALE");
-		RadioButton rbOther = new RadioButton("OTHER");
+		RadioButton rbMale = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.male"));
+		RadioButton rbFemale = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.female"));
+		RadioButton rbOther = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.other"));
 		rbMale.setToggleGroup(genderGroup);
 		rbFemale.setToggleGroup(genderGroup);
 		rbOther.setToggleGroup(genderGroup);
 
 		TextField txtPhone = new TextField();
-		txtPhone.setPromptText("Số điện thoại");
+		txtPhone.setPromptText(LanguageManagerAd.getString("manageStaff.add.phone"));
 
 		TextField txtAddress = new TextField();
-		txtAddress.setPromptText("Địa chỉ");
+		txtAddress.setPromptText(LanguageManagerAd.getString("manageStaff.add.address"));
 
 		TextField txtEmail = new TextField();
-		txtEmail.setPromptText("Email");
+		txtEmail.setPromptText(LanguageManagerAd.getString("manageStaff.add.email"));
 
 		DatePicker dpDob = new DatePicker();
-		dpDob.setPromptText("Ngày sinh (YYYY-MM-DD)");
+		dpDob.setPromptText(LanguageManagerAd.getString("manageStaff.add.dob"));
 		dpDob.setDayCellFactory(picker -> new DateCell() {
 			@Override
 			public void updateItem(LocalDate item, boolean empty) {
@@ -157,10 +164,10 @@ public class ManageStaff {
 
 		ComboBox<String> cbRole = new ComboBox<>();
 		cbRole.getItems().addAll("STAFF_RECEPTION", "STAFF_CASHIER", "STAFF_CARE", "ADMIN");
-		cbRole.setPromptText("Vai trò");
+		cbRole.setPromptText(LanguageManagerAd.getString("manageStaff.add.role"));
 
 		DatePicker dpStartDate = new DatePicker(LocalDate.now());
-		dpStartDate.setPromptText("Ngày bắt đầu (YYYY-MM-DD)");
+		dpStartDate.setPromptText(LanguageManagerAd.getString("manageStaff.add.startDate"));
 		dpStartDate.setDayCellFactory(picker -> new DateCell() {
 			@Override
 			public void updateItem(LocalDate item, boolean empty) {
@@ -173,7 +180,7 @@ public class ManageStaff {
 		});
 
 		TextField txtSalary = new TextField();
-		txtSalary.setPromptText("Lương (VD: 10000000)");
+		txtSalary.setPromptText(LanguageManagerAd.getString("manageStaff.add.salary"));
 		txtSalary.setTextFormatter(new TextFormatter<>(change -> {
 			String newText = change.getControlNewText();
 			return newText.matches("\\d*") ? change : null;
@@ -184,32 +191,32 @@ public class ManageStaff {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
-		grid.add(new Label("Họ và tên:"), 0, 0);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.fullName")), 0, 0);
 		grid.add(txtFullName, 1, 0);
-		grid.add(new Label("Giới tính:"), 0, 1);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.gender")), 0, 1);
 		grid.add(rbMale, 1, 1);
 		grid.add(rbFemale, 2, 1);
 		grid.add(rbOther, 3, 1);
-		grid.add(new Label("Số điện thoại:"), 0, 2);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.phone")), 0, 2);
 		grid.add(txtPhone, 1, 2);
-		grid.add(new Label("Địa chỉ:"), 0, 3);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.address")), 0, 3);
 		grid.add(txtAddress, 1, 3);
-		grid.add(new Label("Email:"), 0, 4);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.email")), 0, 4);
 		grid.add(txtEmail, 1, 4);
-		grid.add(new Label("Ngày sinh:"), 0, 5);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.dob")), 0, 5);
 		grid.add(dpDob, 1, 5);
-		grid.add(new Label("Vai trò:"), 0, 6);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.role")), 0, 6);
 		grid.add(cbRole, 1, 6);
-		grid.add(new Label("Ngày bắt đầu:"), 0, 7);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.startDate")), 0, 7);
 		grid.add(dpStartDate, 1, 7);
-		grid.add(new Label("Lương:"), 0, 8);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.add.prompt.salary")), 0, 8);
 		grid.add(txtSalary, 1, 8);
 
 		dialog.getDialogPane().setContent(grid);
 
 		// Thêm nút OK và Cancel
-		ButtonType btnOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-		ButtonType btnCancel = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+		ButtonType btnOk = new ButtonType(LanguageManagerAd.getString("manageStaff.add.button.ok"), ButtonBar.ButtonData.OK_DONE);
+		ButtonType btnCancel = new ButtonType(LanguageManagerAd.getString("manageStaff.add.button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().addAll(btnOk, btnCancel);
 
 		// Lấy nút OK từ dialog
@@ -229,9 +236,9 @@ public class ManageStaff {
 				} catch (NumberFormatException e) {
 					// Xử lý trường hợp người dùng nhập không phải là số
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Lỗi");
-					alert.setHeaderText("Lỗi định dạng số");
-					alert.setContentText("Vui lòng nhập một số hợp lệ cho lương.");
+					alert.setTitle(LanguageManagerAd.getString("manageStaff.add.alert.error.title"));
+					alert.setHeaderText(LanguageManagerAd.getString("manageStaff.add.alert.salary.formatError.header"));
+					alert.setContentText(LanguageManagerAd.getString("manageStaff.add.alert.salary.formatError.content"));
 					alert.showAndWait();
 					event.consume();
 					return; // Dừng xử lý nếu không chuyển đổi được
@@ -243,7 +250,7 @@ public class ManageStaff {
 
 				if (dob == null || dob.isAfter(LocalDate.now())
 						|| Period.between(dob, LocalDate.now()).getYears() < 18) {
-					throw new IllegalArgumentException("Nhân viên phải đủ 18 tuổi");
+					throw new IllegalArgumentException(LanguageManagerAd.getString("manageStaff.add.alert.ageError"));
 				}
 				// Kiểm tra dữ liệu nhập
 				validateStaffData(fullName, phone, email, startDate, salary, address, roleName, gender);
@@ -252,17 +259,17 @@ public class ManageStaff {
 			} catch (IllegalArgumentException e) {
 				// Hiển thị thông báo lỗi và ngăn dialog đóng
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Thông tin không hợp lệ");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.add.alert.error.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.add.alert.error.header"));
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 				event.consume(); // Ngăn dialog đóng
 			} catch (Exception e) {
 				// Hiển thị thông báo lỗi chung và ngăn dialog đóng
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Đã xảy ra lỗi");
-				alert.setContentText("Vui lòng kiểm tra lại thông tin đã nhập.\nLỗi: " + e.getMessage());
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.add.alert.error.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.add.alert.error.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.add.alert.error.content") + e.getMessage());
 				alert.showAndWait();
 				event.consume();
 			}
@@ -323,15 +330,15 @@ public class ManageStaff {
 			if (isAdded) {
 				loadData(); // Làm mới danh sách nhân viên
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Thành công");
-				alert.setHeaderText("Thêm nhân viên thành công");
-				alert.setContentText("Nhân viên " + newStaff.getFullName() + " đã được thêm.");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.add.alert.success.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.add.alert.success.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.add.alert.success.content", newStaff.getFullName()) );
 				alert.showAndWait();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Thêm nhân viên thất bại");
-				alert.setContentText("Đã xảy ra lỗi khi thêm nhân viên. Vui lòng thử lại.");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.add.alert.fail.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.add.alert.fail.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.add.alert.fail.content"));
 				alert.showAndWait();
 			}
 		});
@@ -343,33 +350,33 @@ public class ManageStaff {
 		Staff selectedStaff = tblStaff.getSelectionModel().getSelectedItem();
 		if (selectedStaff == null) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Cảnh báo");
-			alert.setHeaderText("Không có nhân viên nào được chọn");
-			alert.setContentText("Vui lòng chọn một nhân viên để chỉnh sửa.");
+			alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.noSelection.title"));
+			alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.noSelection.header"));
+			alert.setContentText(LanguageManagerAd.getString("manageStaff.edit.alert.noSelection.content"));
 			alert.showAndWait();
 			return;
 		}
 
 		// Tạo dialog để chỉnh sửa thông tin nhân viên
 		Dialog<Staff> dialog = new Dialog<>();
-		dialog.setTitle("Chỉnh sửa nhân viên");
-		dialog.setHeaderText("Chỉnh sửa thông tin nhân viên");
+		dialog.setTitle(LanguageManagerAd.getString("manageStaff.edit.dialog.title"));
+		dialog.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.dialog.header"));
 
 		// Tạo các trường nhập liệu và khởi tạo với thông tin của nhân viên được chọn
 		TextField txtFullName = new TextField(selectedStaff.getFullName());
-		txtFullName.setPromptText("Họ và tên");
+		txtFullName.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.fullName"));
 
 		TextField txtPhone = new TextField(selectedStaff.getPhone());
-		txtPhone.setPromptText("Số điện thoại");
+		txtPhone.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.phone"));
 
 		TextField txtEmail = new TextField(selectedStaff.getEmail());
-		txtEmail.setPromptText("Email");
+		txtEmail.setPromptText(LanguageManagerAd.getString("manageStaff.add.alert.fail.content"));
 
 		DatePicker dpStartDate = new DatePicker();
 		if (selectedStaff.getHire_date() != null) {
 			dpStartDate.setValue(new java.sql.Date(selectedStaff.getHire_date().getTime()).toLocalDate());
 		}
-		dpStartDate.setPromptText("Ngày bắt đầu (YYYY-MM-DD)");
+		dpStartDate.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.startDate"));
 		dpStartDate.setDayCellFactory(picker -> new DateCell() {
 			@Override
 			public void updateItem(LocalDate item, boolean empty) {
@@ -382,7 +389,7 @@ public class ManageStaff {
 		});
 
 		TextField txtSalary = new TextField(String.valueOf(selectedStaff.getSalary()));
-		txtSalary.setPromptText("Lương");
+		txtSalary.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.salary"));
 		txtSalary.setTextFormatter(new TextFormatter<>(change -> {
 			String newText = change.getControlNewText();
 			return newText.matches("\\d*") ? change : null;
@@ -391,13 +398,13 @@ public class ManageStaff {
 		ComboBox<String> cbRole = new ComboBox<>();
 		cbRole.getItems().addAll("STAFF_RECEPTION", "STAFF_CASHIER", "STAFF_CARE", "ADMIN");
 		cbRole.setValue(selectedStaff.getRole().getRoleName());
-		cbRole.setPromptText("Vai trò");
+		cbRole.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.role"));
 
 		// Tìm RadioButton tương ứng với giới tính của nhân viên
 		ToggleGroup genderGroup = new ToggleGroup();
-		RadioButton rbMale = new RadioButton("MALE");
-		RadioButton rbFemale = new RadioButton("FEMALE");
-		RadioButton rbOther = new RadioButton("OTHER");
+		RadioButton rbMale = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.male"));
+		RadioButton rbFemale = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.female"));
+		RadioButton rbOther = new RadioButton(LanguageManagerAd.getString("manageStaff.add.gender.other"));
 		rbMale.setToggleGroup(genderGroup);
 		rbFemale.setToggleGroup(genderGroup);
 		rbOther.setToggleGroup(genderGroup);
@@ -416,37 +423,37 @@ public class ManageStaff {
 		}
 
 		TextField txtAddress = new TextField(selectedStaff.getAddress());
-		txtAddress.setPromptText("Địa chỉ");
+		txtAddress.setPromptText(LanguageManagerAd.getString("manageStaff.edit.field.address"));
 
 		// Sắp xếp các trường nhập liệu trong GridPane
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
-		grid.add(new Label("Họ và tên:"), 0, 0);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.fullName")), 0, 0);
 		grid.add(txtFullName, 1, 0);
-		grid.add(new Label("Giới tính:"), 0, 1);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.gender")), 0, 1);
 		grid.add(rbMale, 1, 1);
 		grid.add(rbFemale, 2, 1);
 		grid.add(rbOther, 3, 1);
-		grid.add(new Label("Số điện thoại:"), 0, 2);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.phone")), 0, 2);
 		grid.add(txtPhone, 1, 2);
-		grid.add(new Label("Địa chỉ:"), 0, 3);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.address")), 0, 3);
 		grid.add(txtAddress, 1, 3);
-		grid.add(new Label("Email:"), 0, 4);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.email")), 0, 4);
 		grid.add(txtEmail, 1, 4);
-		grid.add(new Label("Ngày bắt đầu:"), 0, 5);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.startDate")), 0, 5);
 		grid.add(dpStartDate, 1, 5);
-		grid.add(new Label("Lương:"), 0, 6);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.salary")), 0, 6);
 		grid.add(txtSalary, 1, 6);
-		grid.add(new Label("Vai trò:"), 0, 7);
+		grid.add(new Label(LanguageManagerAd.getString("manageStaff.edit.field.role")), 0, 7);
 		grid.add(cbRole, 1, 7);
 
 		dialog.getDialogPane().setContent(grid);
 
 		// Thêm nút OK và Cancel
-		ButtonType btnOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-		ButtonType btnCancel = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+		ButtonType btnOk = new ButtonType(LanguageManagerAd.getString("manageStaff.edit.button.ok"), ButtonBar.ButtonData.OK_DONE);
+		ButtonType btnCancel = new ButtonType(LanguageManagerAd.getString("manageStaff.edit.button.cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 		dialog.getDialogPane().getButtonTypes().addAll(btnOk, btnCancel);
 
 		// Xử lý khi nhấn nút OK
@@ -481,16 +488,16 @@ public class ManageStaff {
 				} catch (IllegalArgumentException e) {
 					// Hiển thị thông báo lỗi
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Lỗi");
-					alert.setHeaderText("Thông tin không hợp lệ");
+					alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.title"));
+					alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.header"));
 					alert.setContentText(e.getMessage());
 					alert.showAndWait();
 				} catch (Exception e) {
 					// Hiển thị thông báo lỗi chung
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Lỗi");
-					alert.setHeaderText("Đã xảy ra lỗi");
-					alert.setContentText("Vui lòng kiểm tra lại thông tin đã nhập.\nLỗi: " + e.getMessage());
+					alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.title"));
+					alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.header"));
+					alert.setContentText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.content", e.getMessage()));
 					alert.showAndWait();
 				}
 			}
@@ -517,17 +524,17 @@ public class ManageStaff {
 			} catch (IllegalArgumentException e) {
 				// Hiển thị thông báo lỗi và ngăn dialog đóng
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Thông tin không hợp lệ");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.header"));
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 				event.consume(); // Ngăn dialog đóng
 			} catch (Exception e) {
 				// Hiển thị thông báo lỗi chung và ngăn dialog đóng
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Đã xảy ra lỗi");
-				alert.setContentText("Vui lòng kiểm tra lại thông tin đã nhập.\nLỗi: " + e.getMessage());
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.edit.alert.invalid.content", e.getMessage()));
 				alert.showAndWait();
 			}
 		});
@@ -547,24 +554,24 @@ public class ManageStaff {
 
 					if (!isAccountUpdated) {
 						Alert alert = new Alert(Alert.AlertType.WARNING);
-						alert.setTitle("Cảnh báo");
-						alert.setHeaderText("Cập nhật tài khoản thất bại");
+						alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.accountUpdate.failed.title"));
+						alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.accountUpdate.failed.header"));
 						alert.setContentText(
-								"Vai trò trong tài khoản liên kết không được cập nhật. Vui lòng kiểm tra lại.");
+								LanguageManagerAd.getString("manageStaff.edit.alert.accountUpdate.failed.content"));
 						alert.showAndWait();
 					}
 				}
 				loadData(); // Làm mới danh sách nhân viên
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Thành công");
-				alert.setHeaderText("Cập nhật nhân viên thành công");
-				alert.setContentText("Nhân viên " + updatedStaff.getFullName() + " đã được cập nhật.");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.update.success.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.update.success.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.edit.alert.update.success.content", updatedStaff.getFullName()));
 				alert.showAndWait();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Lỗi");
-				alert.setHeaderText("Cập nhật nhân viên thất bại");
-				alert.setContentText("Đã xảy ra lỗi khi cập nhật nhân viên. Vui lòng thử lại.");
+				alert.setTitle(LanguageManagerAd.getString("manageStaff.edit.alert.update.failed.title"));
+				alert.setHeaderText(LanguageManagerAd.getString("manageStaff.edit.alert.update.failed.header"));
+				alert.setContentText(LanguageManagerAd.getString("manageStaff.edit.alert.update.failed.content"));
 				alert.showAndWait();
 			}
 		});
@@ -573,28 +580,28 @@ public class ManageStaff {
 	private void validateStaffData(String fullName, String phone, String email, LocalDate startDate, double salary,
 			String address, String roleName, String gender) { // Thêm tham số dob
 		if (fullName == null || fullName.trim().isEmpty() || !Pattern.matches("^[\\p{L}\\s]+$", fullName.trim())) {
-			throw new IllegalArgumentException("Họ và tên không hợp lệ.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.fullName.invalid"));
 		}
 		if (phone == null || !phone.matches("^[0-9]{10}$")) {
-			throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.phone.invalid"));
 		}
 		if (email == null || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-			throw new IllegalArgumentException("Email không hợp lệ.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.email.invalid"));
 		}
 		if (salary < 0 || salary > 99999999.99) {
-			throw new IllegalArgumentException("Lương không hợp lệ.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.salary.invalid"));
 		}
 		if (roleName == null || roleName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Vai trò không được để trống.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.role.empty"));
 		}
 		if (address == null || address.trim().isEmpty()) {
-			throw new IllegalArgumentException("Địa chỉ không được để trống.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.address.empty"));
 		}
 		if (gender == null || gender.trim().isEmpty()) {
-			throw new IllegalArgumentException("Giới tính không được để trống");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.gender.empty"));
 		}
 		if (startDate.isAfter(LocalDate.now())) {
-			throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày hiện tại.");
+			throw new IllegalArgumentException(LanguageManagerAd.getString("staff.validation.startDate.future"));
 		}
 	}
 
@@ -605,15 +612,15 @@ public class ManageStaff {
 		// Lấy nhân viên được chọn từ bảng
 		Staff selectedStaff = tblStaff.getSelectionModel().getSelectedItem();
 		if (selectedStaff == null) {
-			showAlert(AlertType.WARNING, "Lỗi", "Vui lòng chọn một nhân viên.");
+			showAlert(AlertType.WARNING, LanguageManagerAd.getString("manageStaff.terminate.alert.noSelection.title"), LanguageManagerAd.getString("manageStaff.terminate.alert.noSelection.content"));
 			return;
 		}
 
 		// Xác nhận hành động
 		Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
-		confirmationAlert.setTitle("Xác nhận");
-		confirmationAlert.setHeaderText("Bạn có chắc chắn muốn cho nhân viên này nghỉ việc?");
-		confirmationAlert.setContentText("Nhân viên: " + selectedStaff.getFullName());
+		confirmationAlert.setTitle(LanguageManagerAd.getString("manageStaff.terminate.confirm.title"));
+		confirmationAlert.setHeaderText(LanguageManagerAd.getString("manageStaff.terminate.confirm.header"));
+		confirmationAlert.setContentText(LanguageManagerAd.getString("manageStaff.terminate.confirm.content", selectedStaff.getFullName()));
 		Optional<ButtonType> result = confirmationAlert.showAndWait();
 
 		if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -635,7 +642,7 @@ public class ManageStaff {
 			tblStaff.refresh();
 
 			// Hiển thị thông báo thành công
-			showAlert(AlertType.INFORMATION, "Thành công", "Nhân viên đã được cho nghỉ việc.");
+			showAlert(AlertType.INFORMATION, LanguageManagerAd.getString("manageStaff.terminate.success.title"), LanguageManagerAd.getString("manageStaff.terminate.success.header"));
 		}
 	}
 
@@ -652,9 +659,9 @@ public class ManageStaff {
 		Staff selectedStaff = tblStaff.getSelectionModel().getSelectedItem();
 		if (selectedStaff != null) {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Xác nhận xóa");
-			alert.setHeaderText("Bạn có chắc chắn muốn xóa nhân viên này?");
-			alert.setContentText("Tên nhân viên: " + selectedStaff.getFullName());
+			alert.setTitle(LanguageManagerAd.getString("manageStaff.delete.confirm.title"));
+			alert.setHeaderText(LanguageManagerAd.getString("manageStaff.delete.confirm.header"));
+			alert.setContentText(LanguageManagerAd.getString("manageStaff.delete.confirm.content", selectedStaff.getFullName()));
 
 			// xóa trong cơ sở dữ liệu luôn, khi xóa thì account chuyển sang bị khóa
 			Optional<ButtonType> result = alert.showAndWait();
@@ -671,25 +678,50 @@ public class ManageStaff {
 				if (isDeleted) {
 					loadData(); // Làm mới danh sách nhân viên
 					Alert alertSuccess = new Alert(Alert.AlertType.INFORMATION);
-					alertSuccess.setTitle("Thành công");
-					alertSuccess.setHeaderText("Xóa nhân viên thành công");
-					alertSuccess.setContentText("Nhân viên " + selectedStaff.getFullName() + " đã được xóa.");
+					alertSuccess.setTitle(LanguageManagerAd.getString("manageStaff.delete.success.title"));
+					alertSuccess.setHeaderText(LanguageManagerAd.getString("manageStaff.delete.success.header"));
+					alertSuccess.setContentText(LanguageManagerAd.getString("manageStaff.delete.success.content", selectedStaff.getFullName()));
 					alertSuccess.showAndWait();
 				} else {
 					Alert alertError = new Alert(Alert.AlertType.ERROR);
-					alertError.setTitle("Lỗi");
-					alertError.setHeaderText("Xóa nhân viên thất bại");
-					alertError.setContentText("Đã xảy ra lỗi khi xóa nhân viên. Vui lòng thử lại.");
+					alertError.setTitle(LanguageManagerAd.getString("manageStaff.delete.failed.title"));
+					alertError.setHeaderText(LanguageManagerAd.getString("manageStaff.delete.failed.header"));
+					alertError.setContentText(LanguageManagerAd.getString("manageStaff.delete.failed.content"));
 					alertError.showAndWait();
 				}
 			}
 
 		} else {
 			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Cảnh báo");
+			alert.setTitle(LanguageManagerAd.getString("manageStaff.delete.alert.noSelection.title"));
 			alert.setHeaderText(null);
-			alert.setContentText("Vui lòng chọn một nhân viên để xóa.");
+			alert.setContentText(LanguageManagerAd.getString("manageStaff.delete.alert.noSelection.content"));
 			alert.showAndWait();
 		}
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+		
+	}
+	
+	private void loadTexts() {
+		lblTitle.setText(LanguageManagerAd.getString("manageStaff.title"));
+        lblSearch.setText(LanguageManagerAd.getString("manageStaff.search.label"));
+        txtSearch.setPromptText(LanguageManagerAd.getString("manageAccount.search.prompt"));
+        btnSearch.setText(LanguageManagerAd.getString("manageStaff.search.button"));
+        colStaffId.setText(LanguageManagerAd.getString("manageStaff.table.staffId"));
+        colStaffName.setText(LanguageManagerAd.getString("manageStaff.table.staffName"));
+        colStaffRole.setText(LanguageManagerAd.getString("manageStaff.table.role"));
+        colStaffPhone.setText(LanguageManagerAd.getString("manageStaff.table.phone"));
+        colStartDate.setText(LanguageManagerAd.getString("manageStaff.table.startDate"));
+        colStaffEmail.setText(LanguageManagerAd.getString("manageStaff.table.email"));
+        colSalary.setText(LanguageManagerAd.getString("manageStaff.table.salary"));
+        colAccount.setText(LanguageManagerAd.getString("manageStaff.table.accountName"));
+        btnAdd.setText(LanguageManagerAd.getString("manageStaff.button.add"));
+        btnEdit.setText(LanguageManagerAd.getString("manageStaff.button.edit"));
+        terminateButton.setText(LanguageManagerAd.getString("manageStaff.button.terminate"));
+        btnDelete.setText(LanguageManagerAd.getString("manageStaff.button.delete"));
 	}
 }
