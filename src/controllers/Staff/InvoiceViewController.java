@@ -1078,6 +1078,7 @@ public class InvoiceViewController implements Initializable {
         try {
             // Cập nhật phương thức thanh toán của hóa đơn thành QR nếu chưa phải
             if (selectedInvoice.getPaymentMethod() != PaymentMethodEnum.QR) {
+            	System.out.println(selectedInvoice.getInvoiceId());
                 invoiceService.updatePaymentMethod(selectedInvoice.getInvoiceId(), PaymentMethodEnum.QR);
                 // Tải lại thông tin hóa đơn
                 selectedInvoice = invoiceService.getInvoiceById(selectedInvoice.getInvoiceId());

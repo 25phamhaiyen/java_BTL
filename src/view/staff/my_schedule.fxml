@@ -440,9 +440,9 @@
 														<ComboBox fx:id="shiftSelector" prefWidth="200"
 															GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-														<Label text="Store:" GridPane.columnIndex="0"
+														<Label text="Loại yêu cầu:" GridPane.columnIndex="0"
 															GridPane.rowIndex="2" />
-														<ComboBox fx:id="locationSelector"
+														<ComboBox fx:id="typeSelector"
 															prefWidth="200" GridPane.columnIndex="1"
 															GridPane.rowIndex="2" />
 
@@ -480,6 +480,19 @@
 										</BorderPane>
 									</ScrollPane>
 								</content>
+							</Tab>
+							<Tab fx:id="myRequestsTab" text="Yêu cầu của tôi">
+							    <VBox spacing="10">
+							        <TableView fx:id="tblRequests">
+							            <columns>
+							                <TableColumn fx:id="colDate" minWidth="100" text="Ngày" />
+							                <TableColumn fx:id="colShift" minWidth="100" text="Ca" />
+							                <TableColumn fx:id="colType" minWidth="300" text="Loại" />
+							                <TableColumn fx:id="colStatus" minWidth="300" text="Trạng thái" />
+							                <TableColumn fx:id="colReason" minWidth="100" text="Lý do" />
+							            </columns>
+							        </TableView>
+							    </VBox>
 							</Tab>
 						</tabs>
 					</TabPane>

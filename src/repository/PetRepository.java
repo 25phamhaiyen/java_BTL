@@ -276,5 +276,21 @@ public class PetRepository implements IRepository<Pet> {
 
 		return pets;
 	}
+	
+	public boolean existsByPetId(int petId) {
+	    String sql = "SELECT COUNT(*) FROM booking WHERE pet_id = ?";
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setInt(1, petId);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt(1) > 0;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return false;
+	}
+
 
 }

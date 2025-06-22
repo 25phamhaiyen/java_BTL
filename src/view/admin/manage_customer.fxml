@@ -15,6 +15,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
 
 
 <VBox xmlns:fx="http://javafx.com/fxml/1"
@@ -23,7 +24,7 @@
       spacing="20" alignment="CENTER" prefWidth="1450" prefHeight="700">
 
     <!-- Tiêu đề -->
-    <Label text="QUẢN LÝ KHÁCH HÀNG VÀ THÚ CƯNG" styleClass="header-label" />
+    <Label fx:id="lblTitle" styleClass="header-label" />
 
     <!-- Khu vực chuyển đổi giữa bảng và form -->
     <StackPane fx:id="contentPane">
@@ -31,68 +32,83 @@
         <VBox fx:id="mainContentBox" spacing="20" alignment="CENTER">
             <!-- Tìm kiếm -->
             <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="searchTextField" promptText="Nhập số điện thoại khách hàng..." prefWidth="350"/>
-                <Button text="Tìm kiếm" onAction="#handleSearchCustomer"/>
+                <TextField fx:id="searchTextField" prefWidth="350"/>
+                <Button fx:id="btnSearch" onAction="#handleSearchCustomer"/>
             </HBox>
 
             <!-- Bảng -->
             <TableView fx:id="customerTable" prefHeight="400" prefWidth="900">
                 <columns>
-                    <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="fullNameColumn" text="Họ tên" prefWidth="270"/>
-                    <TableColumn fx:id="genderColumn" text="Giới tính" prefWidth="100"/>
-                    <TableColumn fx:id="phoneColumn" text="SĐT" prefWidth="150"/>
-                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="300"/>
-                    <TableColumn fx:id="petColumn" text="Thú cưng" prefWidth="220"/>
-                    <TableColumn fx:id="loyaltyPointsColumn" text="Điểm TL" prefWidth="150"/>
-                    <TableColumn fx:id="serviceHistoryColumn" text="Số lượng đơn hàng" prefWidth="200"/>
+                    <TableColumn fx:id="idColumn" prefWidth="60"/>
+                    <TableColumn fx:id="fullNameColumn" prefWidth="270"/>
+                    <TableColumn fx:id="genderColumn" prefWidth="100"/>
+                    <TableColumn fx:id="phoneColumn" prefWidth="150"/>
+                    <TableColumn fx:id="emailColumn" prefWidth="300"/>
+                    <TableColumn fx:id="petColumn" prefWidth="220"/>
+                    <TableColumn fx:id="loyaltyPointsColumn" prefWidth="150"/>
+                    <TableColumn fx:id="serviceHistoryColumn" prefWidth="200"/>
                 </columns>
             </TableView>
 
             <!-- Nút -->
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Thêm khách hàng" onAction="#handleAddCustomer"/>
-                <Button text="Sửa khách hàng" onAction="#handleEditCustomer"/>
+                <Button fx:id="btnAdd" onAction="#handleAddCustomer"/>
+                <Button fx:id="btnEdit" onAction="#handleEditCustomer"/>
             </HBox>
         </VBox>
 
-        <!-- Form nhập liệu -->
-        <VBox fx:id="formBox" spacing="15" visible="false" managed="false" alignment="CENTER">
-            <Label text="Thông tin khách hàng" styleClass="form-title"/>
+		        <!-- Form chính: chia trái/phải -->
+		<HBox fx:id="formBox" spacing="30" alignment="TOP_CENTER">
+		    <!-- Form thông tin khách hàng -->
+		    <VBox spacing="15" alignment="TOP_LEFT">
+		        <Label fx:id="lblFormCus" styleClass="form-title"/>
+		
+		        <HBox spacing="10">
+		            <Label fx:id="lblName"/>
+		            <TextField fx:id="txtFullName" prefWidth="250"/>
+		        </HBox>
+		        <HBox spacing="10">
+		            <Label fx:id="lblGender"/>
+		            <ComboBox fx:id="cmbGender" prefWidth="120"/>
+		        </HBox>
+		        <HBox spacing="10">
+		            <Label fx:id="lblPhone"/>
+		            <TextField fx:id="txtPhone" prefWidth="250"/>
+		        </HBox>
+		        <HBox spacing="10">
+		            <Label fx:id="lblAddress"/>
+		            <TextField fx:id="txtAddress" prefWidth="250"/>
+		        </HBox>
+		        <HBox spacing="10">
+		            <Label fx:id="lblEmail"/>
+		            <TextField fx:id="txtEmail" prefWidth="250"/>
+		        </HBox>
+		        <HBox spacing="10">
+		            <Label fx:id="lblPoints"/>
+		            <TextField fx:id="txtLoyaltyPoints" prefWidth="120"/>
+		        </HBox>
+		
+		        <HBox spacing="10" alignment="CENTER">
+		            <Button fx:id="saveButton" onAction="#handleSaveCustomer"/>
+		            <Button fx:id="btnCancel" text="Hủy" onAction="#handleCancel"/>
+		        </HBox>
+		    </VBox>
+		
+		    <!-- Danh sách thú cưng dạng card -->
+		    <VBox spacing="15" alignment="TOP_CENTER">
+		        <Label fx:id="lblFormPet" styleClass="form-title"/>
+		
+		        <!-- Dùng FlowPane để hiển thị card -->
+		        <FlowPane fx:id="petCardPane" hgap="15" vgap="15" prefWrapLength="500" />
+		
+		        <!-- Các nút thao tác thú cưng -->
+		        <HBox spacing="10" alignment="CENTER">
+		            <Button fx:id="btnAddPet" onAction="#handleShowPetForm"/>
+		            <Button fx:id="btnEditPet" onAction="#handleEditPet"/>
+		            <Button fx:id="btnDelPet" onAction="#handleDeletePet"/>
+		        </HBox>
+		    </VBox>
+		</HBox>
 
-            <!-- Các trường nhập liệu -->
-            <HBox spacing="10"><Label text="Họ tên:"/><TextField fx:id="txtFullName" promptText="Họ tên" prefWidth="250"/></HBox>
-            <HBox spacing="10"><Label text="Giới tính:"/><ComboBox fx:id="cmbGender" promptText="Giới tính" prefWidth="120"/></HBox>
-            <HBox spacing="10"><Label text="SĐT:"/><TextField fx:id="txtPhone" promptText="SĐT" prefWidth="250"/></HBox>
-            <HBox spacing="10"><Label text="Địa chỉ:"/><TextField fx:id="txtAddress" promptText="Địa chỉ" prefWidth="250"/></HBox>
-            <HBox spacing="10"><Label text="Email:"/><TextField fx:id="txtEmail" promptText="Email" prefWidth="250"/></HBox>
-            <HBox spacing="10"><Label text="Điểm TL:"/><TextField fx:id="txtLoyaltyPoints" promptText="Điểm" prefWidth="120"/></HBox>
-
-            <!-- Thú cưng -->
-            <Label text="Danh sách thú cưng" styleClass="form-title" />
-	        <TableView fx:id="petTable" prefHeight="400" prefWidth="900">
-	            <columns>
-	                <TableColumn fx:id="petIdColumn" text="ID" visible="false" />
-	                <TableColumn fx:id="petNameColumn" text="Tên" prefWidth="200"/>
-	                <TableColumn fx:id="petGenderColumn" text="Giới tính" prefWidth="100"/>
-	                <TableColumn fx:id="petTypeColumn" text="Giống loài" prefWidth="300"/>
-	                <TableColumn fx:id="petDobColumn" text="Ngày sinh" prefWidth="300"/>
-	                <TableColumn fx:id="petWeightColumn" text="Cân nặng" prefWidth="100"/>
-	            </columns>
-	        </TableView>
-
-
-			<HBox spacing="10" alignment="CENTER">
-				<Button text="Thêm thú cưng" onAction="#handleShowPetForm" />
-				<Button text="Sửa thú cưng" onAction="#handleEditPet" />
-				<Button text="Xóa thú cưng" onAction="#handleDeletePet" />
-			</HBox>
-			
-
-            <HBox spacing="10" alignment="CENTER">
-                <Button fx:id="saveButton" text="Lưu" onAction="#handleSaveCustomer"/>
-                <Button fx:id="btnCancel" text="Hủy" onAction="#handleCancel"/>
-            </HBox>
-        </VBox>
     </StackPane>
 </VBox>   

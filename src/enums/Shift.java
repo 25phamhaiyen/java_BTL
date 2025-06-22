@@ -22,4 +22,14 @@ public enum Shift {
 		}
 		throw new IllegalArgumentException("Invalid shift code: " + code);
 	}
+	@Override
+	public String toString() {
+	    return switch (this) {
+	        case MORNING -> "Ca sáng";
+	        case AFTERNOON -> "Ca chiều";
+	        case EVENING -> "Ca tối";
+	        case NOSHIFT -> "Không có ca";
+	    };
+	}
+
 }

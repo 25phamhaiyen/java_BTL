@@ -21,9 +21,10 @@ import model.Role;
 import service.AccountService;
 import service.PermissionService;
 import service.RoleService;
+import utils.LanguageChangeListener;
 import utils.LanguageManagerAd;
 
-public class ManageAccountController{
+public class ManageAccountController implements LanguageChangeListener{
 
 	@FXML private Label lblTitle;
     @FXML private Label lblSearch;
@@ -50,19 +51,8 @@ public class ManageAccountController{
 	@FXML
 	public void initialize() {
 		
-		lblTitle.setText(LanguageManagerAd.getString("manageAccount.title"));
-        lblSearch.setText(LanguageManagerAd.getString("manageAccount.search.label"));
-        txtSearch.setPromptText(LanguageManagerAd.getString("manageAccount.search.prompt"));
-        btnSearch.setText(LanguageManagerAd.getString("manageAccount.search.button"));
-        colAccountId.setText(LanguageManagerAd.getString("manageAccount.table.accountId"));
-        colUsername.setText(LanguageManagerAd.getString("manageAccount.table.username"));
-        colRole.setText(LanguageManagerAd.getString("manageAccount.table.role"));
-        colActive.setText(LanguageManagerAd.getString("manageAccount.table.active"));
-        colPermissions.setText(LanguageManagerAd.getString("manageAccount.table.permissions"));
-        btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
-        btnDelete.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
-        btnResetPassword.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
-        btnAssignPermission.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
+		LanguageManagerAd.addListener(this);
+		loadTexts();
         
 		// Initialize TableView columns
 		colAccountId.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getAccountID()));
@@ -403,6 +393,29 @@ public class ManageAccountController{
 	        alert.setContentText(LanguageManagerAd.getString("manageAccount.resetPassword.warning.content"));
 	        alert.showAndWait();
 	    }
+	}
+
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+		
+	}
+	
+	private void loadTexts() {
+		lblTitle.setText(LanguageManagerAd.getString("manageAccount.title"));
+        lblSearch.setText(LanguageManagerAd.getString("manageAccount.search.label"));
+        txtSearch.setPromptText(LanguageManagerAd.getString("manageStaff.search.prompt"));
+        btnSearch.setText(LanguageManagerAd.getString("manageAccount.search.button"));
+        colAccountId.setText(LanguageManagerAd.getString("manageAccount.table.accountId"));
+        colUsername.setText(LanguageManagerAd.getString("manageAccount.table.username"));
+        colRole.setText(LanguageManagerAd.getString("manageAccount.table.role"));
+        colActive.setText(LanguageManagerAd.getString("manageAccount.table.active"));
+        colPermissions.setText(LanguageManagerAd.getString("manageAccount.table.permissions"));
+        btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
+        btnDelete.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
+        btnResetPassword.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
+        btnAssignPermission.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
+        
 	}
 
 

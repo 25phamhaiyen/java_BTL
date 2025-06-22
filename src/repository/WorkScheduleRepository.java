@@ -1,16 +1,24 @@
 package repository;
 
+import model.ShiftAssignment;
+import model.ShiftRequest;
 import model.Staff;
 import model.WorkSchedule;
+import service.StaffService;
 import utils.DatabaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import enums.RequestStatus;
+import enums.RequestType;
 import enums.Shift;
+import javafx.util.Pair;
 
 public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 
@@ -154,7 +162,9 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 					list.add(mapResultSetToWorkSchedule(rs));
 				}
 			}
+			System.out.println("QUERY: " + baseQuery);
 		} catch (SQLException e) {
+			
 			System.err.println("Lỗi khi truy vấn WorkSchedule theo điều kiện: " + e.getMessage());
 		}
 
@@ -215,4 +225,203 @@ public class WorkScheduleRepository implements IRepository<WorkSchedule> {
 		}
 		return workSchedules;
 	}
+	
+	
+	
+//	Admin duyệt yêu cầu
+	public boolean approveRequest(int requestId, RequestStatus status) {
+	    String sql = "UPDATE shift_request SET status = ? WHERE id = ?";
+	    try (Connection con = DatabaseConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setString(1, status.name());
+	        ps.setInt(2, requestId);
+	        return ps.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	// Admin xem các yêu cầu chưa duyệt
+	public List<ShiftRequest> getPendingRequests() {
+	    List<ShiftRequest> requests = new ArrayList<>();
+	    String sql = "SELECT * FROM shift_request WHERE status = 'PENDING'";
+	    try (Connection con = DatabaseConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	        while (rs.next()) {
+	            ShiftRequest req = new ShiftRequest();
+	            req.setId(rs.getInt("id"));
+	            int staffId = rs.getInt("staff_id");
+	            StaffService staffSer = new StaffService();
+	            Staff staff = staffSer.getStaffById(staffId);
+	            req.setStaff(staff);
+	            req.setRequestDate(rs.getDate("request_date").toLocalDate());
+	            req.setShift(Shift.valueOf(rs.getString("shift").toUpperCase()));
+	            req.setType(RequestType.valueOf(rs.getString("type")));
+	            req.setStatus(RequestStatus.valueOf(rs.getString("status")));
+	            req.setReason(rs.getString("reason"));
+	            requests.add(req);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return requests;
+	}
+	
+	public Pair<Map<Integer, List<Shift>>, Map<Integer, List<ShiftAssignment>>> getApprovedRequests(LocalDate weekStart) {
+	    Map<Integer, List<Shift>> leaveRequests = new HashMap<>();
+	    Map<Integer, List<ShiftAssignment>> preferredShifts = new HashMap<>();
+
+	    LocalDate weekEnd = weekStart.plusDays(6);
+
+	    String sql = "SELECT staff_id, request_date, shift, type FROM shift_request "
+	               + "WHERE status = 'APPROVED' AND request_date BETWEEN ? AND ?";
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+	        stmt.setDate(1, Date.valueOf(weekStart));
+	        stmt.setDate(2, Date.valueOf(weekEnd));
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            int staffId = rs.getInt("staff_id");
+	            LocalDate date = rs.getDate("request_date").toLocalDate();
+	            Shift shift = Shift.valueOf(rs.getString("shift"));
+	            String type = rs.getString("type");
+
+	            if (type.equalsIgnoreCase("LEAVE")) {
+	                leaveRequests.computeIfAbsent(staffId, k -> new ArrayList<>()).add(shift);
+	            } else if (type.equalsIgnoreCase("WORK")) {
+	                preferredShifts.computeIfAbsent(staffId, k -> new ArrayList<>()).add(new ShiftAssignment(date, shift));
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return new Pair<>(leaveRequests, preferredShifts);
+	}
+
+
+
+	public boolean assignShift(int staffId, LocalDate date, Shift shift) {
+	    String sql = "INSERT IGNORE INTO work_schedule (staff_id, work_date, shift) VALUES (?, ?, ?)";
+	    try (Connection con = DatabaseConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, staffId);
+	        ps.setDate(2, Date.valueOf(date));
+	        ps.setString(3, shift.name());
+	        return ps.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+	public boolean insert(ShiftRequest request) throws SQLException {
+        String sql = "INSERT INTO shift_request (staff_id, request_date, shift, type, reason) VALUES (?, ?, ?, ?, ?)";
+        try (Connection con = DatabaseConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, request.getStaff().getId());
+            ps.setDate(2, Date.valueOf(request.getRequestDate()));
+            ps.setString(3, request.getShift().name());
+            ps.setString(4, request.getType().name());
+            ps.setString(5, request.getReason());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean isDuplicate(Staff staff, LocalDate date, Shift shift) throws SQLException {
+        String sql = "SELECT id FROM shift_request WHERE staff_id = ? AND request_date = ? AND shift = ?";
+        try (Connection con = DatabaseConnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, staff.getId());
+            ps.setDate(2, Date.valueOf(date));
+            ps.setString(3, shift.name());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+    public List<ShiftRequest> getRequestsByStaffId(int staffId) {
+        List<ShiftRequest> list = new ArrayList<>();
+        String sql = "SELECT * FROM shift_request WHERE staff_id = ? ORDER BY request_date DESC";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, staffId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSetToShiftRequest(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    private ShiftRequest mapResultSetToShiftRequest(ResultSet rs) throws SQLException {
+        ShiftRequest request = new ShiftRequest();
+
+        int staffId = rs.getInt("staff_id");
+        StaffService staffService = new StaffService();
+        Staff staff = staffService.getStaffById(staffId); // lấy đầy đủ đối tượng Staff
+
+        request.setId(rs.getInt("id"));
+        request.setStaff(staff); 
+
+        // Convert chuỗi từ DB sang Enum
+        request.setShift(Shift.valueOf(rs.getString("shift")));          
+        request.setType(RequestType.valueOf(rs.getString("type")));       
+        request.setStatus(RequestStatus.valueOf(rs.getString("status"))); 
+
+        request.setRequestDate(rs.getDate("request_date").toLocalDate());
+        request.setReason(rs.getString("reason"));
+
+        return request;
+    }
+
+    public ShiftRequest findRequestById(int requestId) {
+        String sql = "SELECT * FROM shift_request WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, requestId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToShiftRequest(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi tìm shift_request theo ID: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public boolean deleteWorkSchedule(int staffId, LocalDate date, Shift shift) {
+        String sql = "DELETE FROM work_schedule WHERE staff_id = ? AND work_date = ? AND shift = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, staffId);
+            stmt.setDate(2, Date.valueOf(date));
+            stmt.setString(3, shift.name());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa lịch làm việc: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertWorkSchedule(int staffId, LocalDate date, Shift shift, String note) {
+        WorkSchedule ws = new WorkSchedule();
+        Staff staff = new Staff(); 
+        staff.setId(staffId);
+        ws.setStaff(staff);
+        ws.setWorkDate(date);
+        ws.setShift(shift);
+        ws.setNote(note);
+        ws.setStartTime(null); 
+        ws.setEndTime(null);
+        ws.setLocation(null);
+        ws.setTask(null);
+        
+        return insert(ws) > 0;
+    }
+
+
+
 }

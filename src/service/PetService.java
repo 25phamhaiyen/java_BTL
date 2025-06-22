@@ -147,6 +147,9 @@ public class PetService {
         return petRepository.getPetsByCustomerId(customerId);
     }
 
+    public boolean hasBooking(int petId) {
+        return petRepository.existsByPetId(petId);
+    }
 
 }
 
