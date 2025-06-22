@@ -34,13 +34,13 @@ import service.StaffService;
 import utils.Session;
 import utils.AvatarUtility;
 import utils.ValidatorUtil;
-import utils.I18nUtil;
-import utils.LanguageManager;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerStaff;
 
-public class EditProfileController implements Initializable, I18nUtil.I18nUpdatable {
+public class EditProfileController implements Initializable, LanguageChangeListener {
 
-	 @FXML
-	    private Button changePasswordConfirmBtn, btnLanguage;
+	@FXML
+	private Button changePasswordConfirmBtn, btnLanguage;
 	@FXML
 	private TextField usernameField;
 	@FXML
@@ -115,11 +115,11 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// Register for i18n updates
-		I18nUtil.register(this);
+		// Register for language change notifications
+		LanguageManagerStaff.addListener(this);
 		
 		// Initialize UI text
-		updateLanguage();
+		loadTexts();
 		
 		// Load profile data
 		loadProfile();
@@ -128,65 +128,98 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 	}
 
 	@Override
-	public void updateLanguage() {
-		LanguageManager langManager = LanguageManager.getInstance();
-		
+	public void onLanguageChanged() {
+		loadTexts();
+	}
+
+	/**
+	 * Load all text elements with current language
+	 */
+	private void loadTexts() {
 		// Update all text elements
 		if (headerTitle != null) {
-			I18nUtil.setText(headerTitle, "editProfile.title");
+			headerTitle.setText(LanguageManagerStaff.getString("editProfile.title"));
 		}
 		
 		if (formTitle != null) {
-			I18nUtil.setText(formTitle, "editProfile.personalInfo");
+			formTitle.setText(LanguageManagerStaff.getString("editProfile.personalInfo"));
 		}
 		
 		if (passwordFormTitle != null) {
-			I18nUtil.setText(passwordFormTitle, "editProfile.changePassword");
+			passwordFormTitle.setText(LanguageManagerStaff.getString("editProfile.changePassword"));
 		}
 		
 		// Field labels
 		if (usernameLabel != null) {
-			I18nUtil.setText(usernameLabel, "editProfile.username");
+			usernameLabel.setText(LanguageManagerStaff.getString("editProfile.username"));
 		}
 		if (fullNameLabel != null) {
-			I18nUtil.setText(fullNameLabel, "editProfile.fullName");
+			fullNameLabel.setText(LanguageManagerStaff.getString("editProfile.fullName"));
 		}
 		if (emailLabel != null) {
-			I18nUtil.setText(emailLabel, "editProfile.email");
+			emailLabel.setText(LanguageManagerStaff.getString("editProfile.email"));
 		}
 		if (phoneLabel != null) {
-			I18nUtil.setText(phoneLabel, "editProfile.phone");
+			phoneLabel.setText(LanguageManagerStaff.getString("editProfile.phone"));
 		}
 		if (addressLabel != null) {
-			I18nUtil.setText(addressLabel, "editProfile.address");
+			addressLabel.setText(LanguageManagerStaff.getString("editProfile.address"));
 		}
 		if (currentPasswordLabel != null) {
-			I18nUtil.setText(currentPasswordLabel, "editProfile.currentPassword");
+			currentPasswordLabel.setText(LanguageManagerStaff.getString("editProfile.currentPassword"));
 		}
 		if (newPasswordLabel != null) {
-			I18nUtil.setText(newPasswordLabel, "editProfile.newPassword");
+			newPasswordLabel.setText(LanguageManagerStaff.getString("editProfile.newPassword"));
 		}
 		if (confirmPasswordLabel != null) {
-			I18nUtil.setText(confirmPasswordLabel, "editProfile.confirmPassword");
+			confirmPasswordLabel.setText(LanguageManagerStaff.getString("editProfile.confirmPassword"));
 		}
 		
 		// Buttons
-		I18nUtil.setText(btnLanguage, "staff.btnLanguage");
-		I18nUtil.setText(changeAvatarBtn, "editProfile.changeAvatar");
-		I18nUtil.setText(updateProfileBtn, "editProfile.update");
-		I18nUtil.setText(changePasswordBtn, "editProfile.changePassword");
-		I18nUtil.setText(backToProfileBtn, "common.back");
-		I18nUtil.setText(backButton, "editProfile.backToHome");
+		if (btnLanguage != null) {
+			btnLanguage.setText(LanguageManagerStaff.getString("staff.btnLanguage"));
+		}
+		if (changeAvatarBtn != null) {
+			changeAvatarBtn.setText(LanguageManagerStaff.getString("editProfile.changeAvatar"));
+		}
+		if (updateProfileBtn != null) {
+			updateProfileBtn.setText(LanguageManagerStaff.getString("editProfile.update"));
+		}
+		if (changePasswordBtn != null) {
+			changePasswordBtn.setText(LanguageManagerStaff.getString("editProfile.changePassword"));
+		}
+		if (backToProfileBtn != null) {
+			backToProfileBtn.setText(LanguageManagerStaff.getString("common.back"));
+		}
+		if (backButton != null) {
+			backButton.setText(LanguageManagerStaff.getString("editProfile.backToHome"));
+		}
 		
 		// Prompt texts
-		I18nUtil.setPromptText(usernameField, "editProfile.usernamePlaceholder");
-		I18nUtil.setPromptText(fullNameField, "editProfile.fullNamePlaceholder");
-		I18nUtil.setPromptText(emailField, "editProfile.emailPlaceholder");
-		I18nUtil.setPromptText(phoneField, "editProfile.phonePlaceholder");
-		I18nUtil.setPromptText(addressField, "editProfile.addressPlaceholder");
-		I18nUtil.setPromptText(currentPasswordField, "editProfile.currentPasswordPlaceholder");
-		I18nUtil.setPromptText(newPasswordField, "editProfile.newPasswordPlaceholder");
-		I18nUtil.setPromptText(confirmPasswordField, "editProfile.confirmPasswordPlaceholder");
+		if (usernameField != null) {
+			usernameField.setPromptText(LanguageManagerStaff.getString("editProfile.usernamePlaceholder"));
+		}
+		if (fullNameField != null) {
+			fullNameField.setPromptText(LanguageManagerStaff.getString("editProfile.fullNamePlaceholder"));
+		}
+		if (emailField != null) {
+			emailField.setPromptText(LanguageManagerStaff.getString("editProfile.emailPlaceholder"));
+		}
+		if (phoneField != null) {
+			phoneField.setPromptText(LanguageManagerStaff.getString("editProfile.phonePlaceholder"));
+		}
+		if (addressField != null) {
+			addressField.setPromptText(LanguageManagerStaff.getString("editProfile.addressPlaceholder"));
+		}
+		if (currentPasswordField != null) {
+			currentPasswordField.setPromptText(LanguageManagerStaff.getString("editProfile.currentPasswordPlaceholder"));
+		}
+		if (newPasswordField != null) {
+			newPasswordField.setPromptText(LanguageManagerStaff.getString("editProfile.newPasswordPlaceholder"));
+		}
+		if (confirmPasswordField != null) {
+			confirmPasswordField.setPromptText(LanguageManagerStaff.getString("editProfile.confirmPasswordPlaceholder"));
+		}
 	}
 
 	/**
@@ -276,13 +309,17 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 				try {
 					ValidatorUtil.validateUsername(newUsername);
 				} catch (IllegalArgumentException e) {
-					I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.usernameFormat");
+					showAlert(Alert.AlertType.ERROR, 
+						LanguageManagerStaff.getString("error.title"), 
+						LanguageManagerStaff.getString("editProfile.error.usernameFormat"));
 					return;
 				}
 				
 				// Check if username already exists
 				if (authService.isUsernameExists(newUsername)) {
-					I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.usernameExists");
+					showAlert(Alert.AlertType.ERROR, 
+						LanguageManagerStaff.getString("error.title"), 
+						LanguageManagerStaff.getString("editProfile.error.usernameExists"));
 					return;
 				}
 				
@@ -292,7 +329,7 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 				// Update username in database
 				boolean usernameUpdated = authService.updateUsername(account.getAccountID(), newUsername);
 				if (!usernameUpdated) {
-					throw new Exception(LanguageManager.getInstance().getString("editProfile.error.updateUsername"));
+					throw new Exception(LanguageManagerStaff.getString("editProfile.error.updateUsername"));
 				}
 				
 				// Rename avatar file if exists
@@ -324,12 +361,16 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 				// Reload avatar with new username
 				loadAvatar();
 				
-				I18nUtil.showAlert(Alert.AlertType.INFORMATION, "success.title", "editProfile.success.update");
+				showAlert(Alert.AlertType.INFORMATION, 
+					LanguageManagerStaff.getString("success.title"), 
+					LanguageManagerStaff.getString("editProfile.success.update"));
 			} else {
-				throw new Exception(LanguageManager.getInstance().getString("editProfile.error.updateFailed"));
+				throw new Exception(LanguageManagerStaff.getString("editProfile.error.updateFailed"));
 			}
 		} catch (Exception e) {
-			I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.updateFailed");
+			showAlert(Alert.AlertType.ERROR, 
+				LanguageManagerStaff.getString("error.title"), 
+				LanguageManagerStaff.getString("editProfile.error.updateFailed"));
 			// Reload original information if error occurs
 			loadProfile();
 			loadAvatar();
@@ -507,12 +548,13 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 	@FXML
 	private void handleChangeAvatar(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		I18nUtil.setTitle((Stage) changeAvatarBtn.getScene().getWindow(), "editProfile.selectAvatar");
+		Stage stage = (Stage) changeAvatarBtn.getScene().getWindow();
+		stage.setTitle(LanguageManagerStaff.getString("editProfile.selectAvatar"));
 		
 		// Set filters for image files
 		fileChooser.getExtensionFilters().addAll(
 			new FileChooser.ExtensionFilter(
-				LanguageManager.getInstance().getString("editProfile.imageFiles"), 
+				LanguageManagerStaff.getString("editProfile.imageFiles"), 
 				"*.png", "*.jpg", "*.jpeg", "*.gif"
 			),
 			new FileChooser.ExtensionFilter("PNG", "*.png"),
@@ -521,16 +563,19 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 			new FileChooser.ExtensionFilter("GIF", "*.gif")
 		);
 		
-		Stage stage = (Stage) changeAvatarBtn.getScene().getWindow();
 		File selectedFile = fileChooser.showOpenDialog(stage);
 		
 		if (selectedFile != null) {
 			try {
 				saveAvatar(selectedFile);
 				loadAvatar();
-				I18nUtil.showAlert(Alert.AlertType.INFORMATION, "success.title", "editProfile.success.avatarChanged");
+				showAlert(Alert.AlertType.INFORMATION, 
+					LanguageManagerStaff.getString("success.title"), 
+					LanguageManagerStaff.getString("editProfile.success.avatarChanged"));
 			} catch (Exception e) {
-				I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.avatarChange");
+				showAlert(Alert.AlertType.ERROR, 
+					LanguageManagerStaff.getString("error.title"), 
+					LanguageManagerStaff.getString("editProfile.error.avatarChange"));
 			}
 		}
 	}
@@ -546,7 +591,7 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 			
 			boolean success = AvatarUtility.saveAvatar(selectedFile, username);
 			if (!success) {
-				throw new IOException(LanguageManager.getInstance().getString("editProfile.error.saveAvatar"));
+				throw new IOException(LanguageManagerStaff.getString("editProfile.error.saveAvatar"));
 			}
 			
 			File newAvatarFile = AvatarUtility.findAvatarFile(username);
@@ -585,7 +630,9 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 
 		// Check if new password and confirmation match
 		if (!newPassword.equals(confirmPassword)) {
-			I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.passwordMismatch");
+			showAlert(Alert.AlertType.ERROR, 
+				LanguageManagerStaff.getString("error.title"), 
+				LanguageManagerStaff.getString("editProfile.error.passwordMismatch"));
 			return;
 		}
 
@@ -595,7 +642,9 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 
 			// Verify current password
 			if (!authService.verifyPassword(account.getAccountID(), currentPassword)) {
-				I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.currentPasswordWrong");
+				showAlert(Alert.AlertType.ERROR, 
+					LanguageManagerStaff.getString("error.title"), 
+					LanguageManagerStaff.getString("editProfile.error.currentPasswordWrong"));
 				return;
 			}
 
@@ -603,13 +652,17 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 			boolean success = authService.changePassword(account.getAccountID(), newPassword);
 
 			if (success) {
-				I18nUtil.showAlert(Alert.AlertType.INFORMATION, "success.title", "editProfile.success.passwordChanged");
+				showAlert(Alert.AlertType.INFORMATION, 
+					LanguageManagerStaff.getString("success.title"), 
+					LanguageManagerStaff.getString("editProfile.success.passwordChanged"));
 				handleBackToProfile(null);
 			} else {
-				throw new Exception(LanguageManager.getInstance().getString("editProfile.error.passwordChangeFailed"));
+				throw new Exception(LanguageManagerStaff.getString("editProfile.error.passwordChangeFailed"));
 			}
 		} catch (Exception e) {
-			I18nUtil.showAlert(Alert.AlertType.ERROR, "error.title", "editProfile.error.passwordChangeFailed");
+			showAlert(Alert.AlertType.ERROR, 
+				LanguageManagerStaff.getString("error.title"), 
+				LanguageManagerStaff.getString("editProfile.error.passwordChangeFailed"));
 		}
 	}
 
@@ -621,18 +674,19 @@ public class EditProfileController implements Initializable, I18nUtil.I18nUpdata
 			SceneSwitcher.switchScene("staff/staff_home.fxml");
 		}
 	}
+
 	@FXML
-    private void toggleLanguage(ActionEvent event) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        Locale currentLocale = langManager.getCurrentLocale();
-        
-        // Toggle between Vietnamese and English
-        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
-            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
-        } else {
-            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
-        }
-    }
+	private void toggleLanguage(ActionEvent event) {
+		Locale currentLocale = LanguageManagerStaff.getCurrentLocale();
+		
+		// Toggle between Vietnamese and English
+		if (currentLocale.equals(new Locale("vi", "VN"))) {
+			LanguageManagerStaff.setLocale(new Locale("en", "US"));
+		} else {
+			LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
+		}
+	}
+
 	private void showAlert(Alert.AlertType type, String title, String message) {
 		Alert alert = new Alert(type);
 		alert.setTitle(title);

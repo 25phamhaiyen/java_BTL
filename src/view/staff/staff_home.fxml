@@ -9,6 +9,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@/styles/staff.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Staff.StaffController">
 
@@ -21,7 +25,7 @@
                 <Label fx:id="staffNameLabel" />
                 <Label fx:id="roleLabelText" text="Vai trò:" />
                 <Label fx:id="staffRoleLabel" />
-                <Button fx:id="btnLanguage" styleClass="button-right"/>
+                <ComboBox fx:id="languageCombo" styleClass="language-combo" prefHeight="25.0" prefWidth="137.0"/>
                 <Button fx:id="logoutButton" onAction="#handleLogout" prefHeight="25.0" prefWidth="137.0" text="Đăng xuất" />
             </HBox>
 

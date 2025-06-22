@@ -109,10 +109,47 @@ HBox, .right {
 -fx-background-radius: 4;
 }
 
+
+.language-combo {
+-fx-background-color: #f1d6a1;
+-fx-text-fill: #5a3d2a;
+-fx-font-size: 14px;
+-fx-padding: 10 20;
+-fx-border-radius: 5;
+-fx-background-radius: 5;
+-fx-border-color: #d88e3f;
+-fx-border-width: 1;
+-fx-cursor: hand;
+}
+
+.language-combo:hover {
+-fx-background-color: #e09c4d;
+-fx-text-fill: white;
+}
+
+.language-combo .list-cell {
+-fx-background-color: #f1d6a1;
+-fx-text-fill: #5a3d2a;
+-fx-font-size: 14px;
+}
+
+.language-combo:hover .list-cell {
+-fx-background-color: #e09c4d;
+-fx-text-fill: white;
+}
+
+.language-combo .arrow {
+    -fx-background-color: #f39c12;
+}
+
+.language-combo:hover .arrow {
+    -fx-background-color: white;
+}
+
 /* ==== COMBOBOX ==== */
 .combo-box {
 -fx-padding: 8;
--fx-border-color: #e0e0e0;
+-fx-border-color: #d88e3f;
 -fx-border-width: 1;
 -fx-border-radius: 4;
 -fx-background-radius: 4;

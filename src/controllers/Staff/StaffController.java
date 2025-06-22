@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -33,13 +34,14 @@ import service.StaffService;
 import utils.RoleChecker;
 import javafx.scene.control.ListCell;
 import utils.Session;
-import utils.LanguageManager;
-import utils.I18nUtil;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerStaff;
 
-public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
+public class StaffController implements Initializable, LanguageChangeListener {
 
-	 @FXML
-	    private Button btnLanguage;
+	@FXML
+	private ComboBox<String> languageCombo;
+	
 	@FXML
 	private BorderPane mainContainer;
 
@@ -94,23 +96,22 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 
 	private final ScheduleService scheduleService = new ScheduleService();
 	private Staff currentStaff;
-	private LanguageManager languageManager;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		languageManager = LanguageManager.getInstance();
-		
 		// Register this controller for language updates
-		I18nUtil.register(this);
+		LanguageManagerStaff.addListener(this);
 
 		new StaffService();
 
 		// Lấy thông tin nhân viên hiện tại từ Session
 		currentStaff = Session.getCurrentStaff();
 
+		// Set up language combo box
+		setupLanguageCombo();
+
 		// Hiển thị thông tin nhân viên trên giao diện
 		if (currentStaff != null) {
-			btnLanguage.setOnAction(this::toggleLanguage);
 			staffNameLabel.setText(currentStaff.getFullName());
 			staffRoleLabel.setText(currentStaff.getRole().getRoleName());
 		}
@@ -125,7 +126,7 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 		setupRoleBasedFocus();
 
 		// Cập nhật ngôn ngữ cho tất cả các thành phần
-		updateLanguage();
+		loadTexts();
 
 		todayScheduleListView.setCellFactory(lv -> new ListCell<WorkSchedule>() {
 			@Override
@@ -143,34 +144,78 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 		loadTodayAppointments();
 	}
 
+	private void setupLanguageCombo() {
+		// Lấy danh sách ngôn ngữ có sẵn từ LanguageManagerStaff
+		languageCombo.getItems().clear();
+		languageCombo.getItems().addAll("Tiếng Việt", "English");
+		
+		// Set current language based on current locale
+		Locale currentLocale = LanguageManagerStaff.getCurrentLocale();
+		if (currentLocale != null && currentLocale.getLanguage().equals("en")) {
+			languageCombo.setValue("English");
+		} else {
+			languageCombo.setValue("Tiếng Việt");
+		}
+		
+		// Handle language change
+		languageCombo.setOnAction(e -> {
+			String selectedLang = languageCombo.getValue();
+			if ("English".equals(selectedLang)) {
+				LanguageManagerStaff.setLocale(new Locale("en", "US"));
+			} else {
+				LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
+			}
+			System.out.println("Language changed to: " + selectedLang);
+		});
+	}
+
 	@Override
-	public void updateLanguage() {
-		// Update all UI text with current language
-		I18nUtil.setText(btnLanguage, "staff.btnLanguage");
-		I18nUtil.setText(staffLabelText, "staff.label");
-		I18nUtil.setText(roleLabelText, "role.label");
-		I18nUtil.setText(logoutButton, "logout.button");
-		I18nUtil.setText(editProfileButton, "edit.profile.button");
-		I18nUtil.setText(todayScheduleTitle, "today.schedule.title");
-		I18nUtil.setText(todayAppointmentTitle, "today.appointment.title");
-		I18nUtil.setText(myScheduleButton, "my.schedule.button");
-		I18nUtil.setText(bookingViewButton, "booking.view.button");
-		I18nUtil.setText(invoiceViewButton, "invoice.view.button");
-		
-		// Update welcome label
-		updateWelcomeLabel();
-		
-		// Reload data with new language
-		loadTodaySchedule();
-		loadTodayAppointments();
+	public void onLanguageChanged() {
+		// Được gọi khi ngôn ngữ thay đổi từ LanguageManagerStaff
+		System.out.println("Language changed event received in StaffController");
+		loadTexts();
+	}
+
+	private void loadTexts() {
+		try {
+			// Update all UI text with current language
+			staffLabelText.setText(LanguageManagerStaff.getString("staff.label"));
+			roleLabelText.setText(LanguageManagerStaff.getString("role.label"));
+			logoutButton.setText(LanguageManagerStaff.getString("logout.button"));
+			editProfileButton.setText(LanguageManagerStaff.getString("edit.profile.button"));
+			todayScheduleTitle.setText(LanguageManagerStaff.getString("today.schedule.title"));
+			todayAppointmentTitle.setText(LanguageManagerStaff.getString("today.appointment.title"));
+			myScheduleButton.setText(LanguageManagerStaff.getString("my.schedule.button"));
+			bookingViewButton.setText(LanguageManagerStaff.getString("booking.view.button"));
+			invoiceViewButton.setText(LanguageManagerStaff.getString("invoice.view.button"));
+			
+			// Update welcome label
+			updateWelcomeLabel();
+			
+			// Reload data with new language
+			loadTodaySchedule();
+			loadTodayAppointments();
+			
+			System.out.println("All texts updated successfully");
+		} catch (Exception e) {
+			System.err.println("Error updating texts: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	private void updateWelcomeLabel() {
-		String welcomeText = languageManager.getString("welcome.message", 
-			currentStaff != null ? currentStaff.getFullName() : languageManager.getString("staff.default"),
-			currentStaff != null && currentStaff.getRole() != null ? 
-				currentStaff.getRole().getRoleName() : languageManager.getString("staff.default"));
-		welcomeLabel.setText(welcomeText);
+		try {
+			String welcomeText = LanguageManagerStaff.getString("welcome.message");
+			if (currentStaff != null) {
+				welcomeText = String.format(welcomeText, 
+					currentStaff.getFullName(),
+					currentStaff.getRole() != null ? currentStaff.getRole().getRoleName() : LanguageManagerStaff.getString("staff.default"));
+			}
+			welcomeLabel.setText(welcomeText);
+		} catch (Exception e) {
+			System.err.println("Error updating welcome label: " + e.getMessage());
+			welcomeLabel.setText("Welcome"); // Fallback
+		}
 	}
 
 	/**
@@ -203,7 +248,7 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 				}
 				todayScheduleListView.getItems().setAll(schedules);
 			} else {
-				System.out.println(languageManager.getString("no.schedule.today"));
+				System.out.println(LanguageManagerStaff.getString("no.schedule.today"));
 				todayScheduleListView.getItems().clear();
 			}
 		} catch (Exception e) {
@@ -220,7 +265,7 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 		try {
 			currentStaff = Session.getCurrentStaff();
 			if (currentStaff == null) {
-				appointments.add(languageManager.getString("cannot.identify.staff"));
+				appointments.add(LanguageManagerStaff.getString("cannot.identify.staff"));
 				todayAppointmentListView.setItems(appointments);
 				return;
 			}
@@ -234,23 +279,23 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 					Customer customer = booking.getCustomer();
 
 					String time = booking.getBookingTime().toLocalTime().toString();
-					String petName = (pet != null) ? pet.getName() : languageManager.getString("unknown");
-					String customerName = (customer != null) ? customer.getFullName() : languageManager.getString("unknown");
+					String petName = (pet != null) ? pet.getName() : LanguageManagerStaff.getString("unknown");
+					String customerName = (customer != null) ? customer.getFullName() : LanguageManagerStaff.getString("unknown");
 
-					String displayText = languageManager.getString("appointment.format", time, petName, customerName);
+					String displayText = String.format(LanguageManagerStaff.getString("appointment.format"), time, petName, customerName);
 					appointments.add(displayText);
 				}
 			}
 
 			if (appointments.isEmpty()) {
-				appointments.add(languageManager.getString("no.appointments.today"));
+				appointments.add(LanguageManagerStaff.getString("no.appointments.today"));
 			}
 
 			todayAppointmentListView.setItems(appointments);
 
 		} catch (Exception e) {
 			appointments.clear();
-			appointments.add(languageManager.getString("error.loading.appointments", e.getMessage()));
+			appointments.add(String.format(LanguageManagerStaff.getString("error.loading.appointments"), e.getMessage()));
 			todayAppointmentListView.setItems(appointments);
 			e.printStackTrace();
 		}
@@ -287,31 +332,34 @@ public class StaffController implements Initializable, I18nUtil.I18nUpdatable {
 		SceneSwitcher.switchScene("staff/edit_profile.fxml");
 	}
 
-    @FXML
-    private void handleLogout() {
-        // Show confirmation dialog
-        if (I18nUtil.showConfirmation("app.confirm", "msg.confirm.logout")) {
-            Session.logout();
-            SceneSwitcher.switchScene("login.fxml");
-        }
-    }
-	
-    private void toggleLanguage(ActionEvent event) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        Locale currentLocale = langManager.getCurrentLocale();
-        
-        // Toggle between Vietnamese and English
-        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
-            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
-        } else {
-            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
-        }
-    }
+	@FXML
+	private void handleLogout() {
+		// Show confirmation dialog
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle(LanguageManagerStaff.getString("app.confirm"));
+		alert.setContentText(LanguageManagerStaff.getString("msg.confirm.logout"));
+		
+		alert.showAndWait().ifPresent(response -> {
+			if (response == javafx.scene.control.ButtonType.OK) {
+				Session.logout();
+				SceneSwitcher.switchScene("login.fxml");
+			}
+		});
+	}
+
 	private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
+	}
+	
+	/**
+	 * Cleanup method - gọi khi controller bị hủy
+	 */
+	public void cleanup() {
+		LanguageManagerStaff.removeListener(this);
+		System.out.println("StaffController cleanup completed");
 	}
 }

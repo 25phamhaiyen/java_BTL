@@ -15,14 +15,14 @@ DROP TABLE IF EXISTS pet_type;
 DROP TABLE IF EXISTS service;
 DROP TABLE IF EXISTS promotion;
 DROP TABLE IF EXISTS permission;
-DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS `role`;
 DROP TABLE IF EXISTS person;
 
 -- Ensure we're using the correct database
 USE bestpets;
 
--- Insert into role
-INSERT INTO role (role_name) VALUES 
+-- Insert into `role`
+INSERT INTO `role` (role_name) VALUES 
 ('ADMIN'), 
 ('STAFF_CARE'), 
 ('STAFF_CASHIER'), 
@@ -57,18 +57,18 @@ INSERT INTO person (person_id, full_name, gender, phone, address, email) VALUES
 -- Insert into account
 INSERT INTO `account` (account_id, username, `password`, role_id) VALUES
 (1, 'admin01', '$2a$10$bxB8Fa1fAwS7BZoplZQCQOyc6CQEMDixqUWZ1e6O/6QJRUVW5mYlG', 1),
-(2, 'care01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(3, 'care02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(4, 'care03', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(5, 'care04', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(6, 'care05', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(7, 'care06', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(8, 'care07', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 2),
-(9, 'cashier01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 3),
-(10, 'cashier02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 3),
-(11, 'reception01', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4),
-(12, 'reception02', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4),
-(13, 'reception03', '$2a$10$Jg2R.bSJNMiMZPhxW6wIr.JZn5n0hW7QoqfKB3ehaK94SnSIgFDOq', 4);
+(2, 'care01', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(3, 'care02', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(4, 'care03', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(5, 'care04', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(6, 'care05', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(7, 'care06', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(8, 'care07', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 2),
+(9, 'cashier01', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 3),
+(10, 'cashier02', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 3),
+(11, 'reception01', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 4),
+(12, 'reception02', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 4),
+(13, 'reception03', '$2a$10$PjIlPrb1fRBqqqCHvtqeseCYKlJo2XX1ETPKseRMGnEwCuSIAQpcu', 4);
 
 -- Insert into permission
 INSERT INTO permission (permission_code, description) VALUES
@@ -165,14 +165,14 @@ INSERT INTO service (service_id, name, description, price, duration_minutes, act
 
 -- Insert into promotion
 INSERT INTO promotion (promotion_id, code, description, discount_percent, start_date, end_date, active) VALUES
-(1, 'KM1', 'Giảm 10% cho tất cả các dịch vụ', 10, '2025-05-06', '2025-05-17', true),
-(2, 'KM2', 'Chỉ áp dụng cho khách hàng lần đầu sử dụng', 20, '2025-05-06', '2025-05-17', true),
-(3, 'KM3', 'Giảm 15% khi sử dụng combo 2 dịch vụ', 15, '2025-05-06', '2025-05-17', false),
-(4, 'KM4', 'Giảm 5% toàn bộ đơn hàng >300k', 5, '2025-05-06', '2025-05-17', true),
+(1, 'KM1', 'Giảm 10% cho tất cả các dịch vụ', 10, '2025-05-06', '2025-07-17', true),
+(2, 'KM2', 'Chỉ áp dụng cho khách hàng lần đầu sử dụng', 20, '2025-05-06', '2025-07-17', true),
+(3, 'KM3', 'Giảm 15% khi sử dụng combo 2 dịch vụ', 15, '2025-05-06', '2025-07-17', false),
+(4, 'KM4', 'Giảm 5% toàn bộ đơn hàng >300k', 5, '2025-05-06', '2025-07-17', true),
 (5, 'KM5', 'Giảm 25% cho đơn hàng từ 500k trở lên', 25, '2025-05-07', '2025-05-21', true),
-(6, 'KM6', 'Giảm 30% cho khách hàng VIP', 30, '2025-05-12', '2025-06-11', true),
-(7, 'KM7', 'Giảm 10% khi đặt lịch trước 3 ngày', 10, '2025-05-17', '2025-06-16', true),
-(8, 'KM8', 'Giảm 20% cho dịch vụ thứ 3 trong combo', 20, '2025-05-06', '2025-06-02', false),
+(6, 'KM6', 'Giảm 30% cho khách hàng VIP', 30, '2025-05-12', '2025-07-11', true),
+(7, 'KM7', 'Giảm 10% khi đặt lịch trước 3 ngày', 10, '2025-05-17', '2025-07-16', true),
+(8, 'KM8', 'Giảm 20% cho dịch vụ thứ 3 trong combo', 20, '2025-05-06', '2025-07-02', false),
 (9, 'KM9', 'Giảm 15% cho đơn hàng cuối tuần', 15, '2025-06-03', '2025-07-02', true);
 
 -- Insert into booking (12–16/05/2025)
@@ -509,7 +509,7 @@ INSERT INTO invoice (order_id, payment_date, subtotal, discount_percent, discoun
 
 -- Insert into work_schedule
 INSERT INTO work_schedule (staff_id, work_date, shift, note, start_time, end_time, location, task) VALUES
-(2, '2025-05-12', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
+(2, '2025-06-19', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
 (3, '2025-05-12', 'AFTERNOON', 'WORKING', '13:00:00', '17:00:00', 'Store 1', 'Chăm sóc thú cưng'),
 (4, '2025-05-12', 'EVENING', 'WORKING', '17:00:00', '21:00:00', 'Store 1', 'Chăm sóc thú cưng'),
 (5, '2025-05-12', 'MORNING', 'WORKING', '08:00:00', '12:00:00', 'Store 1', 'Chăm sóc thú cưng'),
@@ -635,3 +635,31 @@ CALL sp_assign_permission_to_role(4, 'REGISTER_SHIFT');
 CALL sp_assign_permission_to_role(4, 'REQUEST_LEAVE');
 CALL sp_assign_permission_to_role(1, 'APPROVE_LEAVE');
 CALL sp_assign_permission_to_role(1, 'APPROVE_SHIFT_CHANGE');
+
+SET SQL_SAFE_UPDATES = 0;
+
+-- 1. UPDATE promotion: shift start & end date
+UPDATE promotion
+SET
+start_date = DATE_ADD(start_date, INTERVAL 40 DAY),
+end_date = DATE_ADD(end_date, INTERVAL 40 DAY);
+
+-- 2. UPDATE booking_time (bắt đầu từ 21/06)
+UPDATE booking
+SET booking_time = DATE_ADD(booking_time, INTERVAL 40 DAY);
+
+-- 3. UPDATE order_date (ghi nhận đơn hàng khách từ 21/06)
+UPDATE `order`
+SET order_date = DATE_ADD(order_date, INTERVAL 40 DAY);
+
+-- 4. UPDATE invoice.payment_date
+UPDATE invoice
+SET payment_date = DATE_ADD(payment_date, INTERVAL 40 DAY);
+
+-- 5. UPDATE work_schedule (ngày làm việc staff chỉnh từ 21/06)
+UPDATE work_schedule
+SET work_date = DATE_ADD(work_date, INTERVAL 40 DAY);
+
+
+-- Kích hoạt lại nếu cần (tùy chọn)
+SET SQL_SAFE_UPDATES = 1;

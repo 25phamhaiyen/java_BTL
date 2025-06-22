@@ -527,7 +527,7 @@ public class PromotionApplyController implements Initializable {
 	 * Save changes to invoice
 	 */
 	@FXML
-	private void saveChanges() {
+	private void saveChanges() throws SQLException {
 		if (currentInvoice == null) {
 			showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
 					"Không thể lưu thay đổi khi không có hóa đơn.");
@@ -589,8 +589,6 @@ public class PromotionApplyController implements Initializable {
 
 		} catch (NumberFormatException e) {
 			showAlert(Alert.AlertType.ERROR, "Lỗi", "Dữ liệu không hợp lệ", e.getMessage());
-		} catch (SQLException e) {
-			showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể lưu thay đổi", e.getMessage());
 		}
 	}
 

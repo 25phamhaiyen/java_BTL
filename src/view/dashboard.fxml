@@ -9,29 +9,29 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.DashboardController"
 stylesheets="@/styles/dashboard.css">
 
-    <!-- Thanh top menu -->
-    <top>
-        <HBox fx:id="menuBar" spacing="10" alignment="CENTER_RIGHT" styleClass="menu-bar">
-            <padding>
-                <Insets top="0" right="20" bottom="0" left="0"/>
-            </padding>
-            <Label fx:id="lblWelcome" styleClass="welcome-label"/>
-            <Button fx:id="btnLanguage" styleClass="language-button"/>
-            <Button fx:id="btnLogout" styleClass="logout-button"/>
-        </HBox>
-    </top>
+<!-- Thanh top menu -->
+<top>
+<HBox fx:id="menuBar" spacing="10" alignment="CENTER_RIGHT" styleClass="menu-bar">
+<padding>
+<Insets top="0" right="20" bottom="0" left="0"/>
+</padding>
+<Label fx:id="lblWelcome" styleClass="welcome-label"/>
+<ComboBox fx:id="languageCombo" styleClass="language-combo" prefWidth="120"/>
+<Button fx:id="btnLogout" styleClass="logout-button"/>
+</HBox>
+</top>
 
-    <!-- Phần nội dung chính -->
-    <center>
-        <VBox fx:id="functionBox" spacing="15" alignment="CENTER" styleClass="function-box">
-            <ImageView fitWidth="150" fitHeight="150" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="/images/logo.png" />
-                </image>
-            </ImageView>
-            <Label fx:id="lblMessage" styleClass="info-message"/>
-            <Button fx:id="btnAdminPanel" onAction="#handleAdminPanel" visible="false" styleClass="continue-button" />
-            <Button fx:id="btnEmployeePanel" onAction="#handleEmployeePanel" visible="false" styleClass="continue-button" />
-        </VBox>
-    </center>
+<!-- Phần nội dung chính -->
+<center>
+<VBox fx:id="functionBox" spacing="15" alignment="CENTER" styleClass="function-box">
+<ImageView fitWidth="150" fitHeight="150" pickOnBounds="true" preserveRatio="true">
+<image>
+<Image url="@/images/logo.png" />
+</image>
+</ImageView>
+<Label fx:id="lblMessage" styleClass="info-message"/>
+<Button fx:id="btnAdminPanel" onAction="#handleAdminPanel" visible="false" styleClass="continue-button" />
+<Button fx:id="btnEmployeePanel" onAction="#handleEmployeePanel" visible="false" styleClass="continue-button" />
+</VBox>
+</center>
 </BorderPane>

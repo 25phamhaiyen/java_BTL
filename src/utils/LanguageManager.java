@@ -1,100 +1,90 @@
-package utils;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-
-public class LanguageManager {
-    private static LanguageManager instance;
-    private ResourceBundle resourceBundle;
-    private Locale currentLocale;
-    private Preferences prefs;
-    
-    // Observable properties for UI binding
-    private final ObservableList<StringProperty> observableStrings = FXCollections.observableArrayList();
-    
-    // Supported languages
-    @SuppressWarnings("deprecation")
-	public static final Locale ENGLISH = new Locale("en");
-    @SuppressWarnings("deprecation")
-	public static final Locale VIETNAMESE = new Locale("vi");
-    
-    private LanguageManager() {
-        prefs = Preferences.userNodeForPackage(LanguageManager.class);
-        // Load saved language or default to English
-        String savedLang = prefs.get("language", "en");
-        currentLocale = savedLang.equals("vi") ? VIETNAMESE : ENGLISH;
-        loadResourceBundle();
-    }
-    
-    public static LanguageManager getInstance() {
-        if (instance == null) {
-            instance = new LanguageManager();
-        }
-        return instance;
-    }
-    
-    private void loadResourceBundle() {
-        try {
-            resourceBundle = ResourceBundle.getBundle("lang.messages", currentLocale);
-        } catch (Exception e) {
-            // Fallback to default
-            resourceBundle = ResourceBundle.getBundle("lang.messages", ENGLISH);
-        }
-    }
-    
-    public String getString(String key) {
-        try {
-            return resourceBundle.getString(key);
-        } catch (Exception e) {
-            return key; // Return key if translation not found
-        }
-    }
-    
-    public void changeLanguage(Locale locale) {
-        currentLocale = locale;
-        loadResourceBundle();
-        
-        // Save preference
-        prefs.put("language", locale.getLanguage());
-        
-        // Update all observable strings
-        updateObservableStrings();
-    }
-    
-    public Locale getCurrentLocale() {
-        return currentLocale;
-    }
-    
-    public String getCurrentLanguageName() {
-        return currentLocale.equals(VIETNAMESE) ? "Tiếng Việt" : "English";
-    }
-    
-    // Create observable string property that updates when language changes
-    public StringProperty createStringProperty(String key) {
-        StringProperty property = new SimpleStringProperty(getString(key));
-        observableStrings.add(property);
-        return property;
-    }
-    
-    // Update all observable strings when language changes
-    private void updateObservableStrings() {
-        // This would require keeping track of keys, which is more complex
-        // For now, we'll use a simpler approach with manual updates
-    }
-    
-    // Utility method to get formatted string
-    public String getString(String key, Object... args) {
-        String message = resourceBundle.getString(key);
-        if (args.length > 0) {
-            return MessageFormat.format(message, args);
-        }
-        return message;
-    }
-}
+//package utils;
+//import java.util.*;
+//
+//public class LanguageManager {
+//    private static Locale currentLocale = new Locale("vi", "VN"); // mặc định
+//    private static ResourceBundle bundle = ResourceBundle.getBundle("lang.messages", currentLocale);
+//    private static final List<LanguageChangeListener> listeners = new ArrayList<>();
+//    
+//    /**
+//     * Thiết lập ngôn ngữ mới và thông báo cho tất cả các listeners
+//     */
+//    public static void setLocale(Locale locale) {
+//        currentLocale = locale;
+//        bundle = ResourceBundle.getBundle("lang.messages", locale);
+//        notifyListeners();
+//    }
+//    
+//    /**
+//     * Lấy locale hiện tại
+//     */
+//    public static Locale getCurrentLocale() {
+//        return currentLocale;
+//    }
+//    
+//    /**
+//     * Lấy chuỗi dịch theo key và tham số
+//     */
+//    public static String getString(String key, Object... params) {
+//        try {
+//            String pattern = bundle.getString(key);
+//            return params.length > 0 ? java.text.MessageFormat.format(pattern, params) : pattern;
+//        } catch (MissingResourceException e) {
+//            return "!" + key + "!"; // Trả về key nếu không tìm thấy
+//        }
+//    }
+//    
+//    /**
+//     * Thêm listener để lắng nghe sự thay đổi ngôn ngữ
+//     */
+//    public static void addListener(LanguageChangeListener listener) {
+//        if (listener != null && !listeners.contains(listener)) {
+//            listeners.add(listener);
+//        }
+//    }
+//    
+//    /**
+//     * Xóa listener
+//     */
+//    public static void removeListener(LanguageChangeListener listener) {
+//        listeners.remove(listener);
+//    }
+//    
+//    /**
+//     * Xóa tất cả listeners
+//     */
+//    public static void clearListeners() {
+//        listeners.clear();
+//    }
+//    
+//    /**
+//     * Thông báo cho tất cả listeners về sự thay đổi ngôn ngữ
+//     */
+//    private static void notifyListeners() {
+//        for (LanguageChangeListener listener : listeners) {
+//            try {
+//                listener.onLanguageChanged();
+//            } catch (Exception e) {
+//                e.printStackTrace(); // Log lỗi nhưng không dừng việc thông báo
+//            }
+//        }
+//    }
+//    
+//    /**
+//     * Lấy danh sách các ngôn ngữ có sẵn
+//     */
+//    public static List<Locale> getAvailableLocales() {
+//        return Arrays.asList(
+//            new Locale("vi", "VN"), // Tiếng Việt
+//            new Locale("en", "US"), // Tiếng Anh
+//            new Locale("zh", "CN")  // Tiếng Trung (nếu cần)
+//        );
+//    }
+//    
+//    /**
+//     * Kiểm tra xem có bao nhiêu listeners đang đăng ký
+//     */
+//    public static int getListenerCount() {
+//        return listeners.size();
+//    }
+//}

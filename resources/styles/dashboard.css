@@ -32,7 +32,7 @@
     -fx-text-fill: white;
 }
 
-.language-button {
+.language-combo {
     -fx-background-color: white;
     -fx-text-fill: #f39c12;
     -fx-border-color: #f39c12;
@@ -43,9 +43,27 @@
     -fx-cursor: hand;
 }
 
-.language-button:hover {
+.language-combo:hover {
     -fx-background-color: #f39c12;
     -fx-text-fill: white;
+}
+
+.language-combo .list-cell {
+    -fx-text-fill: #f39c12;
+    -fx-font-weight: bold;
+}
+
+.language-combo:hover .list-cell {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+}
+
+.language-combo .arrow {
+    -fx-background-color: #f39c12;
+}
+
+.language-combo:hover .arrow {
+    -fx-background-color: #f39c12;
 }
 
 /* Thông báo thông tin cửa hàng */
