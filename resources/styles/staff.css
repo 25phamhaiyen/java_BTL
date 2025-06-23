@@ -1,465 +1,529 @@
-/* ==== CƠ BẢN CHUNG ==== */
+/* ==== ROOT & GENERAL SETTINGS ==== */
 .root {
--fx-font-family: "Segoe UI", Arial, sans-serif;
--fx-font-size: 14px;
--fx-background-color: #f9f3e6; /* Nền sáng */
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f9f3e6; /* Nền sáng từ CSS cũ */
 }
 
-/* ==== HEADER / HBOX TOP ==== */
-HBox, .right {
--fx-background-color: #d88e3f; /* Cam đậm */
--fx-padding: 10;
--fx-alignment: center-left;
+/* ==== MAIN CONTAINER ==== */
+#mainContainer {
+    -fx-background-color: #f9f3e6;
 }
 
-/* Phần top cụ thể */
-#mainContainer > .top HBox {
--fx-spacing: 20;
--fx-padding: 10 20 10 20;
--fx-alignment: CENTER_LEFT;
+/* ==== HEADER STYLES ==== */
+.main-header {
+    -fx-background-color: #d88e3f; /* Cam đậm từ CSS cũ */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
 }
 
-#mainContainer > .top ImageView {
--fx-margin-left: auto;
--fx-padding: 0 10 0 30; /* thêm khoảng cách */
+.app-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
-/* ==== NÚT CHUNG ==== */
-.button, Button {
--fx-background-color: #f1d6a1;
--fx-text-fill: #5a3d2a;
--fx-font-size: 14px;
--fx-padding: 10 20;
--fx-border-radius: 5;
--fx-background-radius: 5;
--fx-border-color: #d88e3f;
--fx-border-width: 1;
--fx-cursor: hand;
+.header-divider {
+    -fx-background-color: #d88e3f;
+    -fx-min-height: 1px;
+    -fx-max-height: 1px;
 }
 
-.button:hover, Button:hover {
--fx-background-color: #e09c4d;
--fx-text-fill: white;
+/* ==== STAFF INFO STYLES ==== */
+.staff-info-box {
+    -fx-background-color: #f1d6a1; /* Sử dụng màu từ CSS cũ với opacity */
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+    
+}
+.staff-info-box:hover{
+	  -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
 }
 
-/* Các nút đặc biệt */
-#registerShiftButton, #requestLeaveButton {
--fx-background-color: #4CAF50;
--fx-text-fill: white;
--fx-font-weight: bold;
+.info-label {
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 13px;
 }
 
-#registerShiftButton:hover, #requestLeaveButton:hover {
--fx-background-color: #388e3c;
+.info-value {
+    -fx-text-fill: #5a3d2a;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
 }
 
-#homeButton {
--fx-background-color: #d88e3f;
--fx-text-fill: white;
--fx-font-weight: bold;
+/* ==== ICON STYLES ==== */
+.icon-staff, .icon-role, .icon-language {
+    -fx-opacity: 0.8;
 }
 
-#homeButton:hover {
--fx-background-color: #c47c30;
+.card-icon {
+    -fx-opacity: 0.9;
 }
 
-/* ==== GIAO DIỆN CHÍNH ==== */
-.center {
--fx-background-color: #f9f3e6;
--fx-padding: 20;
+/* ==== HEADER BUTTONS ==== */
+.header-button {
+    -fx-background-color: #f1d6a1; /* Màu từ CSS cũ */
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
 }
 
-/* ==== BOX CHUNG CHO CÁC KHỐI LISTVIEW ==== */
-.list-view-box {
--fx-background-color: #ffffff;
--fx-padding: 15;
--fx-spacing: 10;
--fx-border-color: #d88e3f;
--fx-border-width: 1;
--fx-border-radius: 10;
--fx-background-radius: 10;
+.header-button:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
 }
 
-/* ==== TIÊU ĐỀ CHO MỖI KHỐI ==== */
-.list-view-title {
--fx-font-size: 16px;
--fx-font-weight: bold;
--fx-text-fill: #d88e3f;
+.logout-button {
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
 }
 
-/* ==== DANH SÁCH LISTVIEW CHUNG ==== */
-.list-view {
--fx-background-color: #f4f4f4;
--fx-border-color: #dddddd;
--fx-border-radius: 5;
--fx-background-radius: 5;
--fx-padding: 10;
+.logout-button:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
 }
 
-.list-view .list-cell:hover {
--fx-background-color: #ffe9cc;
+.button-text {
+    -fx-text-fill: inherit;
+    -fx-font-size: 13px;
 }
 
-/* ==== TEXT FIELD & PASSWORD ==== */
-.text-field, .password-field {
--fx-padding: 8;
--fx-border-color: #e0e0e0;
--fx-border-width: 1;
--fx-border-radius: 4;
--fx-background-radius: 4;
-}
-
-
+/* ==== LANGUAGE COMBO ==== */
 .language-combo {
--fx-background-color: #f1d6a1;
--fx-text-fill: #5a3d2a;
--fx-font-size: 14px;
--fx-padding: 10 20;
--fx-border-radius: 5;
--fx-background-radius: 5;
--fx-border-color: #d88e3f;
--fx-border-width: 1;
--fx-cursor: hand;
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15 8 40px; /* Trên | Phải | Dưới | Trái (Tăng trái lên 40px) */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    
+  
 }
 
 .language-combo:hover {
--fx-background-color: #e09c4d;
--fx-text-fill: white;
-}
-
-.language-combo .list-cell {
--fx-background-color: #f1d6a1;
--fx-text-fill: #5a3d2a;
--fx-font-size: 14px;
-}
-
-.language-combo:hover .list-cell {
--fx-background-color: #e09c4d;
--fx-text-fill: white;
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
 }
 
 .language-combo .arrow {
-    -fx-background-color: #f39c12;
+    -fx-background-color: #e09c4d;
 }
 
 .language-combo:hover .arrow {
     -fx-background-color: white;
 }
 
-/* ==== COMBOBOX ==== */
+/* Hover effect cho dropdown list items */
+.language-combo .list-cell {
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 13px;
+     -fx-padding: 0 0 0 25px;
+    -fx-background-position: left center;
+}
+
+.language-combo .list-cell:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+}
+
+.language-combo .list-cell:selected {
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+}
+.language-combo:hover .list-cell:selected {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+}
+
+/* Style cho dropdown popup */
+.language-combo .list-view {
+    -fx-background-color: #f1d6a1;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+/* ==== MAIN CONTENT ==== */
+.main-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.main-content {
+    -fx-background-color: #f9f3e6;
+}
+
+/* ==== WELCOME SECTION ==== */
+.welcome-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 25 30;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.2), 12, 0, 0, 2); /* Sử dụng màu cam cho shadow */
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+}
+
+.welcome-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d88e3f; /* Màu cam đậm từ CSS cũ */
+}
+
+.welcome-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #5a3d2a; /* Màu nâu từ CSS cũ */
+}
+
+/* ==== DASHBOARD CARDS ==== */
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.15), 12, 0, 0, 2);
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+}
+
+.dashboard-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.25), 16, 0, 0, 4);
+}
+
+/* ==== CARD HEADERS ==== */
+.card-header {
+    -fx-background-color: #f1d6a1; /* Màu từ CSS cũ */
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a3d2a; /* Màu nâu từ CSS cũ */
+}
+
+.card-badge {
+    -fx-background-color: #4CAF50; /* Giữ màu xanh cho badge đặc biệt */
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 8;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+.card-badge-warning {
+    -fx-background-color: #d88e3f; /* Sử dụng màu cam thay vì vàng */
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 8;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+/* ==== ENHANCED LIST VIEWS ==== */
+.schedule-list, .appointment-list, .list-view {
+    -fx-background-color: #f4f4f4; /* Màu từ CSS cũ */
+    -fx-border-color: #d88e3f;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+}
+
+.schedule-list .list-cell, .appointment-list .list-cell, .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 12 15;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-fill: #5a3d2a; /* Màu nâu từ CSS cũ */
+    -fx-font-size: 14px;
+}
+
+.schedule-list .list-cell:hover, .appointment-list .list-cell:hover, .list-view .list-cell:hover {
+    -fx-background-color: #ffe9cc; /* Màu hover từ CSS cũ */
+    -fx-text-fill: #5a3d2a;
+    -fx-font-weight: 500;
+}
+
+.schedule-list .list-cell:selected, .appointment-list .list-cell:selected, .list-view .list-cell:selected {
+    -fx-background-color: #d88e3f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.schedule-list .list-cell:empty, .appointment-list .list-cell:empty, .list-view .list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* ==== ACTION BUTTONS ==== */
+.action-buttons {
+    -fx-background-color: #f1d6a1;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.primary-action-button {
+    -fx-background-color: #4CAF50; /* Giữ màu xanh cho nút đặc biệt */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+.primary-action-button:hover {
+    -fx-background-color: #388e3c;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+}
+
+.secondary-action-button {
+    -fx-background-color: #f1d6a1; /* Màu từ CSS cũ */
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+.secondary-action-button:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+}
+
+.hidden-button {
+    -fx-opacity: 0;
+}
+
+/* ==== QUICK STATS SECTION ==== */
+.stats-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.15), 12, 0, 0, 2);
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+}
+
+.stat-card {
+    -fx-background-color: #f1d6a1; /* Màu từ CSS cũ */
+    -fx-background-radius: 12;
+    -fx-padding: 15 20;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-min-width: 120;
+}
+
+.stat-card:hover {
+    -fx-background-color: #e09c4d;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #5a3d2a; /* Màu nâu từ CSS cũ */
+    -fx-font-weight: 500;
+}
+
+.stat-value {
+    -fx-font-size: 18px;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-weight: bold;
+}
+
+/* ==== GENERAL BUTTON STYLES ==== */
+.button, Button {
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.button:hover, Button:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
+}
+
+/* ==== LIST VIEW BOX STYLES ==== */
+.list-view-box {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.list-view-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d88e3f;
+}
+
+/* ==== SCROLL BAR IMPROVEMENTS ==== */
+.scroll-bar:horizontal, .scroll-bar:vertical {
+    -fx-background-color: #f9f3e6;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
+    -fx-background-color: #d88e3f;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:horizontal .thumb:hover, .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #c47c30;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-background-color: #f1d6a1;
+    -fx-border-color: transparent;
+    -fx-padding: 3;
+}
+
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-background-color: #5a3d2a;
+}
+
+/* ==== COMBO BOX ENHANCEMENTS ==== */
 .combo-box {
--fx-padding: 8;
--fx-border-color: #d88e3f;
--fx-border-width: 1;
--fx-border-radius: 4;
--fx-background-radius: 4;
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-border-color: #d88e3f;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 12;
+    -fx-border-width: 1;
+}
+
+.combo-box:hover {
+    -fx-background-color: #e09c4d;
+    -fx-text-fill: white;
 }
 
 .combo-box .list-cell {
--fx-padding: 6;
+    -fx-background-color: #f1d6a1;
+    -fx-text-fill: #5a3d2a;
+    -fx-padding: 6;
 }
 
 .combo-box-popup .list-view {
--fx-background-color: white;
--fx-border-color: #d88e3f;
--fx-border-width: 1;
+    -fx-background-color: white;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1;
 }
 
 .combo-box-popup .list-cell:hover {
--fx-background-color: #ffe9cc;
+    -fx-background-color: #ffe9cc;
 }
 
 .combo-box-popup .list-cell:filled:selected {
--fx-background-color: #d88e3f;
--fx-text-fill: white;
+    -fx-background-color: #d88e3f;
+    -fx-text-fill: white;
 }
 
-/* ==== LABEL TIÊU ĐỀ ==== */
-.title-label {
--fx-font-size: 20;
--fx-font-weight: bold;
--fx-text-fill: #d88e3f;
+/* ==== TEXT FIELD ENHANCEMENTS ==== */
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-border-color: #d88e3f;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+    -fx-border-width: 1;
 }
 
-/* ==== TABLE VIEW ==== */
-.table-view {
--fx-background-color: white;
--fx-border-color: #e0e0e0;
--fx-border-width: 1;
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #c47c30;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.25), 4, 0, 0, 0);
 }
 
-.table-view .column-header {
--fx-background-color: #d88e3f;
--fx-text-fill: white;
--fx-font-weight: bold;
+/* ==== SPECIAL BUTTON STYLES ==== */
+#registerShiftButton, #requestLeaveButton {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
-.table-view .column-header-background {
--fx-background-color: #d88e3f;
+#registerShiftButton:hover, #requestLeaveButton:hover {
+    -fx-background-color: #388e3c;
 }
 
-.table-view .column-header .label {
--fx-text-fill: white;
--fx-font-weight: bold;
--fx-padding: 10 5;
+#homeButton {
+    -fx-background-color: #d88e3f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
-.table-view .table-cell {
--fx-padding: 8;
--fx-alignment: center;
-}
-
-.table-row-cell:odd {
--fx-background-color: #fef9f1;
-}
-
-.table-row-cell:selected {
--fx-background-color: #ffe0b3;
-}
-
-.table-row-cell:selected .table-cell {
--fx-text-fill: #5a3d2a;
-}
-
-/* ==== BUTTON TRONG TABLE ==== */
-.table-cell .button {
--fx-padding: 4 8;
--fx-font-size: 12;
--fx-min-width: 60;
-}
-
-/* ==== DATEPICKER ==== */
-.date-picker {
--fx-border-color: #e0e0e0;
--fx-border-radius: 4;
--fx-background-radius: 4;
-}
-
-.date-picker .arrow-button {
--fx-background-color: #f1d6a1;
--fx-background-radius: 0 4 4 0;
-}
-
-.date-picker .arrow-button:hover {
--fx-background-color: #e09c4d;
-}
-
-.date-picker .arrow-button .arrow {
--fx-background-color: #5a3d2a;
-}
-
-.date-picker-popup {
--fx-border-color: #d88e3f;
-}
-
-.date-picker-popup .month-year-pane {
--fx-background-color: #d88e3f;
-}
-
-.date-picker-popup .month-year-pane .label {
--fx-text-fill: white;
-}
-
-.date-picker-popup .week-number-cell {
--fx-text-fill: #d88e3f;
-}
-
-.date-picker-popup .day-cell {
--fx-background-color: white;
--fx-border-color: #f4f4f4;
-}
-
-.date-picker-popup .day-cell:hover {
--fx-background-color: #ffe9cc;
-}
-
-.date-picker-popup .selected {
--fx-background-color: #d88e3f;
--fx-text-fill: white;
-}
-
-.date-picker-popup .today {
--fx-background-color: #f1d6a1;
-}
-
-/* ==== TABS ==== */
-.tab-pane .tab-header-area .tab-header-background {
--fx-background-color: #f1d6a1;
--fx-border-color: #d88e3f;
--fx-border-width: 0 0 1 0;
-}
-
-.tab-pane .tab {
--fx-background-color: #f1d6a1;
--fx-padding: 10 15;
-}
-
-.tab-pane .tab:selected {
--fx-background-color: #d88e3f;
-}
-
-.tab-pane .tab:hover {
--fx-background-color: #e09c4d;
-}
-
-.tab-pane .tab .tab-label {
--fx-text-fill: #5a3d2a;
--fx-font-size: 14;
-}
-
-.tab-pane .tab:selected .tab-label {
--fx-text-fill: white;
--fx-font-weight: bold;
+#homeButton:hover {
+    -fx-background-color: #c47c30;
 }
 
 /* ==== SEPARATOR ==== */
 .separator {
--fx-background-color: #d88e3f;
--fx-opacity: 0.7;
+    -fx-background-color: #d88e3f;
+    -fx-opacity: 0.7;
 }
 
 .separator:vertical .line {
--fx-border-color: #d88e3f;
--fx-border-width: 0 1 0 0;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 0 1 0 0;
 }
 
 .separator:horizontal .line {
--fx-border-color: #d88e3f;
--fx-border-width: 1 0 0 0;
-}
-
-/* ==== TEXT AREA ==== */
-.text-area {
--fx-border-color: #e0e0e0;
--fx-border-radius: 4;
--fx-background-radius: 4;
-}
-
-.text-area .content {
--fx-background-color: white;
-}
-
-.text-area:focused .content {
--fx-background-color: #fffcf5;
-}
-
-/* ==== SCROLL PANE ==== */
-.scroll-pane {
--fx-background-color: transparent;
--fx-padding: 0;
-}
-
-.scroll-pane > .viewport {
--fx-background-color: transparent;
-}
-
-.scroll-bar:horizontal, .scroll-bar:vertical {
--fx-background-color: #f9f3e6;
-}
-
-.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
--fx-background-color: #d88e3f;
--fx-background-radius: 5;
-}
-
-.scroll-bar:horizontal .thumb:hover, .scroll-bar:vertical .thumb:hover {
--fx-background-color: #c47c30;
-}
-
-.scroll-bar .increment-button, .scroll-bar .decrement-button {
--fx-background-color: #f1d6a1;
--fx-padding: 3;
-}
-
-.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
--fx-background-color: #5a3d2a;
-}
-
-/* ==== BORDER PANE ==== */
-.border-pane {
--fx-background-color: #f9f3e6;
-}
-
-/* ==== STACK PANE ==== */
-.stack-pane {
--fx-background-color: transparent;
-}
-
-/* ==== GRID PANE ==== */
-.grid-pane {
--fx-padding: 10;
--fx-hgap: 10;
--fx-vgap: 10;
-}
-
-/* ==== WEEK VIEW STYLES ==== */
-#weekView .label {
--fx-alignment: center;
--fx-padding: 5;
-}
-
-#weekView VBox {
--fx-border-color: #e0e0e0;
--fx-border-width: 1;
--fx-padding: 5;
-}
-
-/* Styles for shift headers */
-#weekView Label[text="Ca sáng"] {
--fx-background-color: #d0e8f2;
--fx-text-fill: #1565c0;
-}
-
-#weekView Label[text="Ca chiều"] {
--fx-background-color: #ffecc7;
--fx-text-fill: #e65100;
-}
-
-#weekView Label[text="Ca tối"] {
--fx-background-color: #e8d0f2;
--fx-text-fill: #6a1b9a;
-}
-
-/* Day headers */
-#weekView GridPane Label[text^="Thứ"], #weekView GridPane Label[text="Chủ Nhật"] {
--fx-font-weight: bold;
--fx-background-color: #f5f5f5;
-}
-
-/* ==== SPECIAL LABELS ==== */
-#dateLabel {
--fx-font-size: 22;
--fx-font-weight: bold;
--fx-text-fill: #d88e3f;
-}
-
-#staffNameLabel, #positionLabel {
--fx-font-size: 14;
-}
-
-#statusLabel {
--fx-font-style: italic;
-}
-
-/* ==== NOTES SECTION ==== */
-VBox:bottom {
--fx-background-color: #f5f5f5;
-}
-
-VBox:bottom Label {
--fx-font-style: italic;
--fx-text-fill: #666666;
-}
-
-/* ==== FOOTER ==== */
-HBox:bottom {
--fx-background-color: #f0f0f0;
--fx-padding: 10 15;
--fx-spacing: 10;
--fx-min-height: 60;
-}
-
-/* ==== SHIFT COUNT LABELS ==== */
-#totalShiftsLabel, #morningShiftsLabel, #afternoonShiftsLabel, #eveningShiftsLabel {
--fx-font-size: 14;
+    -fx-border-color: #d88e3f;
+    -fx-border-width: 1 0 0 0;
 }
