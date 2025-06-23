@@ -16,10 +16,10 @@
 
     <!-- Header -->
     <top>
-        <VBox spacing="10" alignment="CENTER">
-            <Label text="Quản lý dịch vụ" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-            <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="searchField" promptText="Tìm kiếm dịch vụ theo tên..." />
+        <VBox spacing="25" alignment="CENTER">
+            <Label text="Quản lý dịch vụ" styleClass="title-label" />
+            <HBox spacing="25" alignment="CENTER">
+				<TextField fx:id="searchField" promptText="Tìm kiếm dịch vụ theo tên..." styleClass="text-field"/>
                 <Button fx:id="searchButton" text="Tìm kiếm" onAction="#handleSearch" />
             </HBox>
         </VBox>
@@ -27,7 +27,7 @@
 
     <!-- Bảng danh sách dịch vụ -->
     <center>
-        <TableView fx:id="tableView" prefHeight="400" prefWidth="1400">
+		<TableView fx:id="tableView" prefHeight="400" prefWidth="1400" styleClass="table-view">
             <columns>
                 <TableColumn fx:id="idColumn" text="ID" prefWidth="100" />
                 <TableColumn fx:id="nameColumn" text="Tên dịch vụ" prefWidth="300" />
@@ -41,10 +41,10 @@
 
     <!-- Các nút chức năng -->
     <bottom>
-        <HBox spacing="10" alignment="CENTER" >
-            <Button fx:id="addButton" text="Thêm" onAction="#handleAddService" />
-            <Button fx:id="editButton" text="Sửa" onAction="#handleEditService" />
-            <Button fx:id="deleteButton" text="Xóa" onAction="#handleDeleteService" />
+        <HBox spacing="25" alignment="CENTER" >
+            <Button fx:id="addButton" text="Thêm" onAction="#handleAddService" styleClass="button"/>
+            <Button fx:id="editButton" text="Sửa" onAction="#handleEditService" styleClass="button"/>
+            <Button fx:id="deleteButton" text="Xóa" onAction="#handleDeleteService" styleClass="button"/>
         </HBox>
     </bottom>
 

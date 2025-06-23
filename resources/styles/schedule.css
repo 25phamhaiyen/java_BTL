@@ -1,386 +1,115 @@
-/* Main color definitions */
-:root {
-    -fx-primary: #d88e3f; /* Main orange theme color */
-    -fx-primary-light: #f5a94d; /* Lighter orange for hover effects */
-    -fx-primary-dark: #b06a20; /* Darker orange for pressed effects */
-    -fx-secondary: #4d7fa8; /* Complementary blue for contrast */
-    -fx-accent: #5a9e5a; /* Green accent for positive actions */
-    -fx-danger: #e65c5c; /* Red for warnings/danger actions */
-    -fx-background: #fcf8f4; /* Very light orange tint for backgrounds */
-    -fx-text-primary: #5a4a3a; /* Dark warm brown for text */
-    -fx-text-light: #ffffff; /* White text for dark backgrounds */
-    -fx-border-color: #e8d5c0; /* Light border color */
-}
-
-/* General Styling */
-.root {
-    -fx-background-color: -fx-background;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 13px;
-    -fx-text-fill: -fx-text-primary;
-}
-
-/* Top Section with Orange Header */
-.top-header {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0.0, 0, 2);
-    -fx-padding: 12px 15px;
-}
-
-/* Date Label in Header */
-#dateLabel {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-light;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0.0, 0, 1);
-}
-
-/* Staff Info Labels */
-#staffNameLabel, #positionLabel {
-    -fx-text-fill: -fx-text-light;
-    -fx-font-size: 14px;
-}
-
-/* Separator styling */
-.separator {
-    -fx-background-color: -fx-border-color;
-}
-
-.separator .line {
-    -fx-border-color: derive(-fx-primary, 80%);
+.schedule-title {
+    -fx-background-color: linear-gradient(to bottom, #fff3e0, #ffe0b2);
+    -fx-border-color: #ffcc80;
     -fx-border-width: 1px;
-}
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
 
-/* Tab Pane styling */
-.tab-pane {
-    -fx-tab-min-width: 120px;
-}
-
-.tab-pane .tab-header-area .tab-header-background {
-    -fx-background-color: derive(-fx-background, -2%);
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 0 0 1px 0;
-}
-
-.tab-pane .tab {
-    -fx-background-color: derive(-fx-background, -5%);
-    -fx-background-radius: 5 5 0 0;
-    -fx-padding: 5px 15px;
-}
-
-.tab-pane .tab:selected {
-    -fx-background-color: -fx-primary-light;
-}
-
-.tab-pane .tab:selected .tab-label {
-    -fx-text-fill: -fx-text-light;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-text-fill: #5a3000;
+
+    -fx-padding: 8px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;  /* QUAN TRỌNG để hiển thị xuống dòng */
+
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-min-width: 110px;
+    -fx-min-height: 60px;
 }
 
-.tab-pane .tab-content-area {
-    -fx-background-color: -fx-background;
+#lblTitle {
+     -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00); /* Cam rực hơn */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.5, 0, 3); /* Đổ bóng mạnh hơn */
+
+    /* Thêm nền mờ giúp chữ nổi bật trên nền ảnh */
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 10;
+
+    /* Viền cam rực */
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+
+    /* Căn chỉnh và khoảng cách */
+    -fx-padding: 14 28;
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
 }
 
-/* Button Styling */
-.button {
-    -fx-background-color: derive(-fx-background, -10%);
-    -fx-text-fill: -fx-text-primary;
-    -fx-padding: 8px 16px;
-    -fx-background-radius: 4px;
-    -fx-border-radius: 4px;
-    -fx-border-color: derive(-fx-background, -20%);
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0.0, 0, 1);
-}
+.main-title {
+    -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 0, 2);
 
-.button:hover {
-    -fx-background-color: derive(-fx-background, -15%);
-}
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 12;
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
 
-.button:pressed {
-    -fx-background-color: derive(-fx-background, -20%);
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 1, 0.0, 0, 0);
+    -fx-padding: 30 40; /* Tăng chiều cao và không gian xung quanh */
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
 }
-
-/* Primary Button (Orange) */
-.button.primary, #homeButton {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
+.picker-bar .label {
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
+    -fx-text-fill: #333333;
 }
 
-.button.primary:hover, #homeButton:hover {
-    -fx-background-color: -fx-primary-light;
-}
-
-.button.primary:pressed, #homeButton:pressed {
-    -fx-background-color: -fx-primary-dark;
-}
-
-/* Positive action Button (Green) */
-#registerShiftButton, Button[style*="4CAF50"] {
-    -fx-background-color: -fx-accent;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-}
-
-#registerShiftButton:hover, Button[style*="4CAF50"]:hover {
-    -fx-background-color: derive(-fx-accent, 10%);
-}
-
-#registerShiftButton:pressed, Button[style*="4CAF50"]:pressed {
-    -fx-background-color: derive(-fx-accent, -10%);
-}
-
-/* Blue Button */
-#requestLeaveButton, Button[style*="2196F3"] {
-    -fx-background-color: -fx-secondary;
-    -fx-text-fill: -fx-text-light;
-}
-
-#requestLeaveButton:hover, Button[style*="2196F3"]:hover {
-    -fx-background-color: derive(-fx-secondary, 10%);
-}
-
-#requestLeaveButton:pressed, Button[style*="2196F3"]:pressed {
-    -fx-background-color: derive(-fx-secondary, -10%);
-}
-
-/* Table View Styling */
-.table-view {
-    -fx-background-color: -fx-background;
-    -fx-table-cell-border-color: derive(-fx-border-color, 10%);
-    -fx-table-header-border-color: derive(-fx-border-color, -10%);
-}
-
-.table-view .column-header-background {
-    -fx-background-color: linear-gradient(to bottom, derive(-fx-primary, 80%), derive(-fx-primary, 60%));
-    -fx-padding: 5px;
-}
-
-.table-view .column-header, .table-view .filler {
-    -fx-background-color: transparent;
-    -fx-border-width: 0 1px 0 0;
-    -fx-border-color: derive(-fx-border-color, -5%);
-}
-
-.table-view .column-header .label {
-    -fx-text-fill: -fx-text-primary;
-    -fx-font-weight: bold;
-    -fx-alignment: CENTER_LEFT;
-}
-
-.table-row-cell {
-    -fx-background-color: -fx-background;
-    -fx-border-color: derive(-fx-border-color, 5%);
-    -fx-border-width: 0 0 1px 0;
-    -fx-padding: 2px 0;
-}
-
-.table-row-cell:odd {
-    -fx-background-color: derive(-fx-background, -2%);
-}
-
-.table-row-cell:selected {
-    -fx-background-color: derive(-fx-primary, 50%);
-    -fx-text-fill: -fx-text-primary;
-}
-
-/* Date Picker Styling */
 .date-picker {
-    -fx-background-color: -fx-background;
-    -fx-border-color: -fx-border-color;
-    -fx-border-radius: 4px;
-}
-
-.date-picker:focused {
+    -fx-background-color: #fffbe6;
     -fx-border-color: -fx-primary;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6;
+    -fx-font-weight: bold;
+    -fx-border-color: #f7c948;
 }
 
 .date-picker .arrow-button {
-    -fx-background-color: -fx-primary;
-    -fx-background-radius: 0 4px 4px 0;
+    -fx-background-color: #f7c948;
+    -fx-background-radius: 0 6 6 0;
 }
 
 .date-picker .arrow-button .arrow {
-    -fx-background-color: -fx-text-light;
+    -fx-background-color: white;
 }
-
-.date-picker .cell {
-    -fx-background-color: -fx-background;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.date-picker .cell:hover {
-    -fx-background-color: derive(-fx-primary, 80%);
-}
-
-.date-picker .cell:focused {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-}
-
-/* ComboBox Styling */
-.combo-box {
-    -fx-background-color: -fx-background;
-    -fx-border-color: -fx-border-color;
-    -fx-border-radius: 4px;
-}
-
-.combo-box:focused {
-    -fx-border-color: -fx-primary;
-}
-
-.combo-box .arrow-button {
-    -fx-background-color: -fx-primary;
-}
-
-.combo-box .arrow {
-    -fx-background-color: -fx-text-light;
-}
-
-.combo-box-popup .list-view {
-    -fx-background-color: -fx-background;
-    -fx-border-color: -fx-border-color;
-}
-
-.combo-box-popup .list-cell {
-    -fx-background-color: -fx-background;
-    -fx-text-fill: -fx-text-primary;
-    -fx-padding: 8px 12px;
-}
-
-.combo-box-popup .list-cell:hover {
-    -fx-background-color: derive(-fx-primary, 80%);
-}
-
-.combo-box-popup .list-cell:selected {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-}
-
-/* Text Area Styling */
-.text-area {
-    -fx-background-color: -fx-background;
-    -fx-border-color: -fx-border-color;
-    -fx-border-radius: 4px;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.text-area:focused {
-    -fx-border-color: -fx-primary;
-}
-
-.text-area .content {
-    -fx-background-color: -fx-background;
-}
-
-/* Label Styling */
-.label {
-    -fx-text-fill: -fx-text-primary;
-}
-
-.label.section-header {
-    -fx-font-size: 16px;
+.button {
+    -fx-background-color: linear-gradient(to right, #ffa726, #fb8c00); /* Gradient cam */
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10px 0;
-}
-
-/* Week View Grid Styling */
-.grid-pane {
-    -fx-background-color: #e0e0e0;
-    -fx-hgap: 1;
-    -fx-vgap: 1;
-    -fx-padding: 1;
-}
-
-/* Day headers in week view */
-.grid-pane .label[style*="font-weight: bold"] {
-    -fx-background-color: derive(-fx-primary, 80%);
-    -fx-padding: 10px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 10 20;
+    -fx-border-color: #ef6c00; /* Viền cam đậm */
+    -fx-border-width: 2px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.3, 0, 2);
+    -fx-font-size: 15px;
     -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #ffb74d, #ffa000); /* Sáng hơn khi hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 6, 0.4, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(to right, #ef6c00, #e65100); /* Tối hơn khi nhấn */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0.2, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
 }
 
 
-/* Morning shift styling */
-.grid-pane .label[text="Ca sáng"] {
-    -fx-background-color: #d0e8f2;
-}
 
-/* Afternoon shift styling */
-.grid-pane .label[text="Ca chiều"] {
-    -fx-background-color: #ffecc7;
-}
-
-/* Evening shift styling */
-.grid-pane .label[text="Ca tối"] {
-    -fx-background-color: #e8d0f2;
-}
-
-/* Shift VBox containers in week view */
-.grid-pane VBox[style*="white"] {
-    -fx-background-color: -fx-background;
-    -fx-padding: 5px;
-    -fx-spacing: 5px;
-    -fx-border-color: derive(-fx-border-color, 20%);
-    -fx-border-width: 0.5px;
-}
-
-/* Bottom status bar */
-HBox[style*="f0f0f0"] {
-    -fx-background-color: derive(-fx-primary, 80%);
-    -fx-border-color: derive(-fx-primary, 60%);
-    -fx-border-width: 1px 0 0 0;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0.0, 0, -1);
-}
-
-/* Status Label */
-#statusLabel {
-    -fx-text-fill: -fx-text-primary;
-    -fx-font-style: italic;
-}
-
-/* Registration Section Note */
-VBox[style*="f5f5f5"] Label[style*="italic"] {
-    -fx-text-fill: derive(-fx-text-primary, 20%);
-}
-
-/* Scroll Pane Styling */
-.scroll-pane {
-    -fx-background-color: transparent;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical,
-.scroll-bar:horizontal {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical .thumb,
-.scroll-bar:horizontal .thumb {
-    -fx-background-color: derive(-fx-primary, 60%);
-    -fx-background-radius: 5em;
-}
-
-.scroll-bar:vertical .thumb:hover,
-.scroll-bar:horizontal .thumb:hover {
-    -fx-background-color: derive(-fx-primary, 40%);
-}
-
-/* Specific styles for view selector buttons */
-.view-selector-buttons .button {
-    -fx-padding: 5px 12px;
-    -fx-min-width: 100px;
-}
-
-/* Tooltip styling */
-.tooltip {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-size: 12px;
-    -fx-padding: 5px 10px;
-    -fx-background-radius: 3px;
-}

@@ -26,18 +26,14 @@ import model.Staff;
 import model.WorkSchedule;
 import service.ScheduleService;
 import service.StaffService;
-import utils.DatabaseConnection;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerAd;
 
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +43,6 @@ import java.util.stream.Collectors;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -56,18 +51,13 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalTime;
 
 import enums.RequestStatus;
 import enums.Shift;
 
-public class ManageScheduleController implements Initializable {
+public class ManageScheduleController implements Initializable, LanguageChangeListener {
 
+	@FXML private Label lblTitle, lblPick, lblShift, lblMon, lblTue, lblWed, lblThus, lblFri, lblSat, lblSun, lblMorning, lblAfternoon, lblEvening;
 	@FXML
 	private DatePicker startDatePicker;
 
@@ -78,7 +68,7 @@ public class ManageScheduleController implements Initializable {
 	private GridPane scheduleGrid;
 
 	@FXML
-	private Button exportPdfButton;
+	private Button exportPdfButton, btnShow, btnViewRequests;
 	@FXML
 	private Button autoAssignButton;
 
@@ -93,6 +83,10 @@ public class ManageScheduleController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		
+		LanguageManagerAd.addListener(this);
+		loadTexts();
+		
 		roleColors.put("STAFF_CARE", Color.BLUEVIOLET);
 		roleColors.put("STAFF_CASHIER", Color.DARKORANGE);
 		roleColors.put("STAFF_RECEPTION", Color.DEEPPINK);
@@ -128,7 +122,7 @@ public class ManageScheduleController implements Initializable {
 		LocalDate endDate = endDatePicker.getValue();
 
 		if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
-			showAlert("Lỗi", "Vui lòng chọn khoảng thời gian hợp lệ.");
+			showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.alert.invalidTimeRange"));
 			return;
 		}
 
@@ -142,7 +136,7 @@ public class ManageScheduleController implements Initializable {
 		}
 
 		List<WorkSchedule> fetchedSchedules = scheduleService.getWorkSchedulesByWeek(startDate, endDate);
-		System.out.println("Fetched schedules count: " + (fetchedSchedules != null ? fetchedSchedules.size() : 0));
+		System.out.println(LanguageManagerAd.getString("manageSchedule.fetchedCount") + (fetchedSchedules != null ? fetchedSchedules.size() : 0));
 		if (fetchedSchedules != null) {
 			for (WorkSchedule schedule : fetchedSchedules) {
 				LocalDate date = schedule.getWorkDate();
@@ -168,38 +162,61 @@ public class ManageScheduleController implements Initializable {
 		// ===== Tiêu đề hàng (Ca làm) ở cột 0 =====
 		for (int row = 1; row <= 3; row++) {
 			Shift shift = Shift.values()[row - 1];
-			Label shiftLabel = new Label(shift.toString());
-			shiftLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
-			shiftLabel.setWrapText(true);
-			scheduleGrid.add(shiftLabel, 0, row);
+		    String shiftKey = switch (shift.name()) {
+		        case "MORNING" -> "manageSchedule.shift.morning";
+		        case "AFTERNOON" -> "manageSchedule.shift.afternoon";
+		        case "EVENING" -> "manageSchedule.shift.evening";
+		        default -> throw new IllegalArgumentException("Unexpected value: " + shift.name());
+		    };
+		    Label shiftLabel = new Label(LanguageManagerAd.getString(shiftKey));
+		    shiftLabel.getStyleClass().add("schedule-title");
+		    shiftLabel.setWrapText(true);
+		    scheduleGrid.add(shiftLabel, 0, row);
+
 		}
 
 		// ===== Tiêu đề cột (Thứ + Ngày) và dữ liệu từng ô =====
 		for (int day = 0; day < 7; day++) {
-			LocalDate currentDate = startDate.plusDays(day);
-			int columnIndex = day + 1;
+		    LocalDate currentDate = startDate.plusDays(day);
+		    int columnIndex = day + 1;
 
-			// Tiêu đề cột: Thứ + Ngày
-			String headerText = dayOfWeekFormatter.format(currentDate) + "\n" + dateFormatter.format(currentDate);
-			Label dayLabel = new Label(headerText);
-			dayLabel.setStyle("-fx-font-weight: bold; -fx-alignment: center; -fx-text-alignment: center;");
-			dayLabel.setWrapText(true);
-			scheduleGrid.add(dayLabel, columnIndex, 0);
+		    String dayKey = getDayKey(currentDate);
+		    String headerText = LanguageManagerAd.getString(dayKey) + "\n" +
+		                        currentDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-			// Các ca trong ngày
-			for (int row = 1; row <= 3; row++) {
-				Shift shift = Shift.values()[row - 1];
-				List<WorkSchedule> schedulesInShift = weeklySchedule.getOrDefault(currentDate, new HashMap<>())
-						.getOrDefault(shift, new ArrayList<>());
+		    Label dayLabel = new Label(headerText);
+		    dayLabel.getStyleClass().add("schedule-title");
+		    dayLabel.setWrapText(true);
+		    scheduleGrid.add(dayLabel, columnIndex, 0);
+		    
 
-				StackPane cellPane = createScheduleCell(currentDate, shift, schedulesInShift);
-				scheduleGrid.add(cellPane, columnIndex, row);
-			}
+		    for (int row = 1; row <= 3; row++) {
+		        Shift shift = Shift.values()[row - 1];
+		        List<WorkSchedule> schedulesInShift = weeklySchedule
+		                .getOrDefault(currentDate, new HashMap<>())
+		                .getOrDefault(shift, new ArrayList<>());
+
+		        StackPane cellPane = createScheduleCell(currentDate, shift, schedulesInShift);
+		        scheduleGrid.add(cellPane, columnIndex, row);
+		    }
 		}
 
 		// Đánh dấu ô đã đủ nhân sự
 		highlightFullRoles(startDate, endDate);
 	}
+	private String getDayKey(LocalDate date) {
+	    DayOfWeek dow = date.getDayOfWeek();
+	    return switch (dow) {
+	        case MONDAY -> "manageSchedule.column.mon";
+	        case TUESDAY -> "manageSchedule.column.tue";
+	        case WEDNESDAY -> "manageSchedule.column.wed";
+	        case THURSDAY -> "manageSchedule.column.thu";
+	        case FRIDAY -> "manageSchedule.column.fri";
+	        case SATURDAY -> "manageSchedule.column.sat";
+	        case SUNDAY -> "manageSchedule.column.sun";
+	    };
+	}
+
 
 	@FXML
 	private void autoAssignShifts() {
@@ -209,15 +226,15 @@ public class ManageScheduleController implements Initializable {
 		LocalDate thisWeekStart = LocalDate.now().with(DayOfWeek.MONDAY);
 
 		if (weekStart.isBefore(thisWeekStart)) {
-			showAlert("Lỗi", "Không thể phân lịch cho tuần đã qua.");
+			showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.alert.pastWeek"));
 			return;
 		}
 		if (scheduleService.isWeekScheduled(weekStart)) {
-			showAlert("Lỗi", "Tuần này đã có lịch làm. Không thể phân tự động.");
+			showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.alert.weekAlreadyScheduled"));
 			return;
 		}
 		Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-				"Bạn có chắc muốn phân lịch tự động cho tuần bắt đầu từ " + weekStart + "?", ButtonType.YES,
+				LanguageManagerAd.getString("manageSchedule.confirm.autoAssignMessage", weekStart), ButtonType.YES,
 				ButtonType.NO);
 		Optional<ButtonType> result = confirm.showAndWait();
 
@@ -242,8 +259,8 @@ public class ManageScheduleController implements Initializable {
 		cellPane.setPadding(new Insets(5));
 
 		ContextMenu contextMenu = new ContextMenu();
-		MenuItem editItem = new MenuItem("Sửa");
-		MenuItem deleteItem = new MenuItem("Xóa");
+		MenuItem editItem = new MenuItem(LanguageManagerAd.getString("manageSchedule.editSchedule"));
+		MenuItem deleteItem = new MenuItem(LanguageManagerAd.getString("manageSchedule.deleteSchedule.button"));
 		contextMenu.getItems().addAll(editItem, deleteItem);
 
 		final WorkSchedule[] selectedSchedule = { null };
@@ -256,7 +273,6 @@ public class ManageScheduleController implements Initializable {
 
 		deleteItem.setOnAction(e -> {
 			if (e.getSource() instanceof MenuItem) {
-				// Pass the whole schedules list.
 				handleDeleteSchedule(date, shift, schedules);
 			}
 		});
@@ -278,7 +294,7 @@ public class ManageScheduleController implements Initializable {
 
 			// Create tooltip
 			Tooltip tooltip = new Tooltip();
-			tooltip.setText("Role: " + schedule.getStaff().getRole().getRoleName() + "\nNote: "
+			tooltip.setText(LanguageManagerAd.getString("manageSchedule.tooltip.role", schedule.getStaff().getRole().getRoleName()) +"\n" + LanguageManagerAd.getString("manageSchedule.tooltip.note")
 					+ (schedule.getNote() != null ? schedule.getNote() : "N/A"));
 			employeeLabel.setTooltip(tooltip);
 
@@ -297,11 +313,11 @@ public class ManageScheduleController implements Initializable {
 	}
 
 	private void handleEditSchedule(LocalDate date, Shift shift, List<WorkSchedule> existingSchedules) {
-		System.out.println("Phương thức handleEditSchedule được gọi cho ca: " + shift + " ngày: " + date);
+		System.out.println(LanguageManagerAd.getString("manageSchedule.editScheduleCalled", shift, date));
 
 		Stage dialogStage = new Stage();
 		dialogStage.initModality(Modality.APPLICATION_MODAL);
-		dialogStage.setTitle("Sửa thông tin nhân viên");
+		dialogStage.setTitle(LanguageManagerAd.getString("manageSchedule.editScheduleTitle"));
 
 		VBox dialogVBox = new VBox(10);
 		dialogVBox.setPadding(new Insets(10));
@@ -323,9 +339,9 @@ public class ManageScheduleController implements Initializable {
 		});
 
 		TextField noteField = new TextField();
-		noteField.setPromptText("Ghi chú");
+		noteField.setPromptText(LanguageManagerAd.getString("manageSchedule.editSchedule.notePrompt"));
 
-		Button saveButton = new Button("Lưu");
+		Button saveButton = new Button(LanguageManagerAd.getString("manageSchedule.editSchedule.saveButton"));
 		saveButton.setOnAction(event -> {
 			WorkSchedule selectedSchedule = scheduleListView.getSelectionModel().getSelectedItem();
 			if (selectedSchedule != null) {
@@ -335,7 +351,7 @@ public class ManageScheduleController implements Initializable {
 				loadScheduleForWeek();
 				dialogStage.close();
 			} else {
-				showAlert("Lỗi", "Vui lòng chọn một nhân viên để sửa.");
+				showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.editSchedule.selectStaff"));
 			}
 		});
 
@@ -347,19 +363,19 @@ public class ManageScheduleController implements Initializable {
 	}
 
 	private void handleDeleteSchedule(LocalDate date, Shift shift, List<WorkSchedule> schedulesToDelete) {
-		System.out.println("Phương thức handleDeleteSchedule được gọi cho ca: " + shift + " ngày: " + date);
+		System.out.println(LanguageManagerAd.getString("manageSchedule.deleteScheduleCalled", shift, date));
 
 		Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-		confirmationAlert.setTitle("Xác nhận xóa");
-		confirmationAlert.setHeaderText("Bạn có chắc chắn muốn xóa ca làm của nhân viên?");
-		confirmationAlert.setContentText("Hành động này không thể hoàn tác.");
+		confirmationAlert.setTitle(LanguageManagerAd.getString("manageSchedule.deleteSchedule.title"));
+		confirmationAlert.setHeaderText(LanguageManagerAd.getString("manageSchedule.deleteSchedule.header"));
+		confirmationAlert.setContentText(LanguageManagerAd.getString("manageSchedule.deleteSchedule.content"));
 
 		Optional<ButtonType> result = confirmationAlert.showAndWait();
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			// Show a dialog to select which schedule to delete
 			Stage dialogStage = new Stage();
 			dialogStage.initModality(Modality.APPLICATION_MODAL);
-			dialogStage.setTitle("Chọn nhân viên để xóa");
+			dialogStage.setTitle(LanguageManagerAd.getString("manageSchedule.deleteSchedule.dialogTitle"));
 
 			VBox dialogVBox = new VBox(10);
 			dialogVBox.setPadding(new Insets(10));
@@ -379,7 +395,7 @@ public class ManageScheduleController implements Initializable {
 				}
 			});
 
-			Button deleteButton = new Button("Xóa");
+			Button deleteButton = new Button(LanguageManagerAd.getString("manageSchedule.deleteSchedule.button"));
 			deleteButton.setOnAction(event -> {
 				WorkSchedule selectedSchedule = scheduleListView.getSelectionModel().getSelectedItem();
 				if (selectedSchedule != null) {
@@ -388,7 +404,7 @@ public class ManageScheduleController implements Initializable {
 					loadScheduleForWeek();
 					dialogStage.close();
 				} else {
-					showAlert("Lỗi", "Vui lòng chọn một nhân viên để xóa.");
+					showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.deleteSchedule.selectStaff"));
 				}
 			});
 
@@ -417,11 +433,11 @@ public class ManageScheduleController implements Initializable {
 
 		if (availableEmployees.isEmpty()) {
 			if (date.isBefore(today)) {
-				showAlert("Thông báo", "Không thể thêm lịch trình vào ngày này.");
+				showAlert(LanguageManagerAd.getString("manageSchedule.alert.info"), LanguageManagerAd.getString("manageSchedule.pastNotAllowed"));
 			} else if (date.isEqual(today)) {
-				showAlert("Thông báo", "Không thể thêm lịch trình vào ngày hôm nay.");
+				showAlert(LanguageManagerAd.getString("manageSchedule.alert.info"), LanguageManagerAd.getString("manageSchedule.todayNotAllowed"));
 			} else {
-				showAlert("Thông báo", "Không có nhân viên nào rảnh vào ca này.");
+				showAlert(LanguageManagerAd.getString("manageSchedule.alert.info"), LanguageManagerAd.getString("manageSchedule.noStaffAvailable"));
 			}
 			return;
 		}
@@ -440,27 +456,24 @@ public class ManageScheduleController implements Initializable {
 			employeeLabel.setTextFill(roleColors.getOrDefault(employee.getRole().getRoleName(), Color.BLACK));
 
 			TextField noteField = new TextField();
-			noteField.setPromptText("Ghi chú");
+			noteField.setPromptText(LanguageManagerAd.getString("manageSchedule.note.placeholder"));
 
-			Button addButton = new Button("Thêm");
+			Button addButton = new Button(LanguageManagerAd.getString("manageSchedule.button.add"));
 			String employeeRole = employee.getRole().getRoleName();
 			long currentCountForRole = currentRoleCounts.getOrDefault(employeeRole, 0L);
 			int requiredForRole = requiredRoles.getOrDefault(employeeRole, 0);
 
-			System.out.println("Checking role: " + employeeRole + ", currentCount: " + currentCountForRole
-					+ ", required: " + requiredForRole);
-
 			if (currentCountForRole >= requiredForRole) {
 				addButton.setDisable(true);
-				addButton.setText("Đã đủ");
+				addButton.setText(LanguageManagerAd.getString("manageSchedule.button.full"));
 			} else {
 				// Disable adding to past dates
 				if (date.isBefore(today)) {
 					addButton.setDisable(true);
-					addButton.setText("Hôm qua");
+					addButton.setText(LanguageManagerAd.getString("manageSchedule.button.yesterday"));
 				} else if (date.isEqual(today)) {
 					addButton.setDisable(true);
-					addButton.setText("Hôm nay"); // Keep this to disable adding on the current day
+					addButton.setText(LanguageManagerAd.getString("manageSchedule.button.today")); 
 				} else {
 					addButton.setOnAction(event -> {
 						String note = noteField.getText();
@@ -575,7 +588,7 @@ public class ManageScheduleController implements Initializable {
 		LocalDate endDate = endDatePicker.getValue();
 
 		if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
-			showAlert("Lỗi", "Vui lòng chọn khoảng thời gian hợp lệ để xuất lịch.");
+			showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.invalidRange"));
 			return;
 		}
 
@@ -596,8 +609,8 @@ public class ManageScheduleController implements Initializable {
 
 			// Thêm tiêu đề
 			Paragraph title = new Paragraph(
-					"Lịch trình tuần từ " + startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " đến "
-							+ endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+					LanguageManagerAd.getString("manageSchedule.pdf.header", startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), 
+							endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
 					fontHeader);
 			title.setAlignment(Paragraph.ALIGN_CENTER);
 			document.add(title);
@@ -609,7 +622,7 @@ public class ManageScheduleController implements Initializable {
 			table.setWidths(new float[] { 1, 2, 2, 2, 2, 2, 2, 2 }); // Tỷ lệ chiều rộng cột
 
 			// Thêm tiêu đề bảng
-			PdfPCell cell = new PdfPCell(new Phrase("Ca", fontHeader));
+			PdfPCell cell = new PdfPCell(new Phrase(LanguageManagerAd.getString("manageSchedule.table.header.shift"), fontHeader));
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 			cell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
 			table.addCell(cell);
@@ -654,29 +667,29 @@ public class ManageScheduleController implements Initializable {
 			document.add(table);
 			document.close();
 
-			showAlert("Thành công", "Đã xuất lịch trình tuần ra file PDF.");
+			showAlert(LanguageManagerAd.getString("manageSchedule.pdf.success.title"), LanguageManagerAd.getString("manageSchedule.pdf.success.message"));
 
 			// Mở file PDF sau khi xuất thành công
 			File pdfFile = new File(filePath);
 			if (pdfFile.exists()) {
 				Desktop.getDesktop().open(pdfFile);
 			} else {
-				showAlert("Lỗi", "Không tìm thấy file PDF vừa xuất.");
+				showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.pdf.fileNotFound"));
 			}
 
 		} catch (DocumentException | IOException e) {
 			e.printStackTrace();
-			showAlert("Lỗi", "Không thể xuất lịch trình ra file PDF.");
+			showAlert(LanguageManagerAd.getString("manageStaff.delete.failed.title"), LanguageManagerAd.getString("manageSchedule.pdf.fail.message"));
 		}
 	}
 	
 	@FXML
 	private void handleViewRequests() {
 	    Dialog<Void> dialog = new Dialog<>();
-	    dialog.setTitle("Duyệt yêu cầu ca làm");
-	    dialog.setHeaderText("Danh sách yêu cầu ca làm đang chờ duyệt");
+	    dialog.setTitle(LanguageManagerAd.getString("manageSchedule.dialog.approve.title"));
+	    dialog.setHeaderText(LanguageManagerAd.getString("manageSchedule.dialog.approve.header"));
 
-	    ButtonType closeButtonType = new ButtonType("Đóng", ButtonBar.ButtonData.CANCEL_CLOSE);
+	    ButtonType closeButtonType = new ButtonType(LanguageManagerAd.getString("manageSchedule.dialog.button.close"), ButtonBar.ButtonData.CANCEL_CLOSE);
 	    dialog.getDialogPane().getButtonTypes().add(closeButtonType);
 
 	    // Tạo bảng
@@ -684,32 +697,32 @@ public class ManageScheduleController implements Initializable {
 	    table.setPrefHeight(300);
 	    table.setPrefWidth(600);
 
-	    TableColumn<ShiftRequest, String> colStaff = new TableColumn<>("Nhân viên");
+	    TableColumn<ShiftRequest, String> colStaff = new TableColumn<>(LanguageManagerAd.getString("shiftRequest.table.header.staff"));
 	    colStaff.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStaff().getFullName()));
 
-	    TableColumn<ShiftRequest, String> colDate = new TableColumn<>("Ngày");
+	    TableColumn<ShiftRequest, String> colDate = new TableColumn<>(LanguageManagerAd.getString("shiftRequest.table.header.date"));
 	    colDate.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getRequestDate().toString()));
 
-	    TableColumn<ShiftRequest, String> colShift = new TableColumn<>("Ca");
+	    TableColumn<ShiftRequest, String> colShift = new TableColumn<>(LanguageManagerAd.getString("shiftRequest.table.header.shift"));
 	    colShift.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getShift().name()));
 
-	    TableColumn<ShiftRequest, String> colType = new TableColumn<>("Loại");
+	    TableColumn<ShiftRequest, String> colType = new TableColumn<>(LanguageManagerAd.getString("shiftRequest.table.header.type"));
 	    colType.setCellValueFactory(cell -> new SimpleStringProperty(
 	            switch (cell.getValue().getType()) {
-	                case LEAVE -> "Xin nghỉ";
-	                case WORK -> "Đăng ký";
+	                case LEAVE -> LanguageManagerAd.getString("shiftRequest.type.leave");
+	                case WORK -> LanguageManagerAd.getString("shiftRequest.type.work");
 	            }
 	    ));
 
-	    TableColumn<ShiftRequest, String> colReason = new TableColumn<>("Lý do");
+	    TableColumn<ShiftRequest, String> colReason = new TableColumn<>( LanguageManagerAd.getString("shiftRequest.table.header.reason"));
 	    colReason.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getReason()));
 
-	    TableColumn<ShiftRequest, String> colStatus = new TableColumn<>("Trạng thái");
+	    TableColumn<ShiftRequest, String> colStatus = new TableColumn<>( LanguageManagerAd.getString("shiftRequest.table.header.status"));
 	    colStatus.setCellValueFactory(cell -> new SimpleStringProperty(
 	            switch (cell.getValue().getStatus()) {
-	                case PENDING -> "Đang chờ";
-	                case APPROVED -> "Đã duyệt";
-	                case REJECTED -> "Từ chối";
+	                case PENDING ->  LanguageManagerAd.getString("shiftRequest.status.pending");
+	                case APPROVED ->  LanguageManagerAd.getString("shiftRequest.status.approved");
+	                case REJECTED ->  LanguageManagerAd.getString("shiftRequest.status.rejected");
 	            }
 	    ));
 
@@ -720,23 +733,23 @@ public class ManageScheduleController implements Initializable {
 	    table.setItems(requests);
 
 	    // Nút hành động
-	    Button btnApprove = new Button("Duyệt");
+	    Button btnApprove = new Button( LanguageManagerAd.getString("shiftRequest.button.approve"));
 	    btnApprove.setOnAction(e -> {
 	        ShiftRequest selected = table.getSelectionModel().getSelectedItem();
 	        if (selected != null) {
 	            if (scheduleService.approveRequest(selected.getId(), RequestStatus.APPROVED)) {
-	                showAlert("Thành công", "Yêu cầu đã được duyệt.");
+	                showAlert( LanguageManagerAd.getString("shiftRequest.alert.approve.success.title"),  LanguageManagerAd.getString("shiftRequest.alert.approve.success.message"));
 	                table.getItems().remove(selected);
 	            }
 	        }
 	    });
 
-	    Button btnReject = new Button("Từ chối");
+	    Button btnReject = new Button( LanguageManagerAd.getString("shiftRequest.button.reject"));
 	    btnReject.setOnAction(e -> {
 	        ShiftRequest selected = table.getSelectionModel().getSelectedItem();
 	        if (selected != null) {
 	            if (scheduleService.approveRequest(selected.getId(), RequestStatus.REJECTED)) {
-	                showAlert("Đã từ chối", "Yêu cầu đã bị từ chối.");
+	                showAlert(LanguageManagerAd.getString("shiftRequest.alert.reject.success.title"),  LanguageManagerAd.getString("shiftRequest.alert.reject.success.message"));
 	                table.getItems().remove(selected);
 	            }
 	        }
@@ -753,5 +766,31 @@ public class ManageScheduleController implements Initializable {
 	    dialog.showAndWait();
 	}
 
+	@Override
+	public void onLanguageChanged() {
+		loadTexts();
+		loadScheduleForWeek();
+	}
+	private void loadTexts() {
+		lblTitle.setText(LanguageManagerAd.getString("manageSchedule.title"));
+		lblPick.setText(LanguageManagerAd.getString("manageSchedule.week.select"));
+		startDatePicker.setPromptText(LanguageManagerAd.getString("manageSchedule.week.from"));
+		endDatePicker.setPromptText(LanguageManagerAd.getString("manageSchedule.week.to"));
+		btnShow.setText(LanguageManagerAd.getString("manageSchedule.week.view"));
+		lblShift.setText(LanguageManagerAd.getString("manageSchedule.column.shift"));
+		lblMon.setText(LanguageManagerAd.getString("manageSchedule.column.mon"));
+		lblTue.setText(LanguageManagerAd.getString("manageSchedule.column.tue"));
+		lblWed.setText(LanguageManagerAd.getString("manageSchedule.column.wed"));
+		lblThus.setText(LanguageManagerAd.getString("manageSchedule.column.thu"));
+		lblFri.setText(LanguageManagerAd.getString("manageSchedule.column.fri"));
+		lblSat.setText(LanguageManagerAd.getString("manageSchedule.column.sat"));
+		lblSun.setText(LanguageManagerAd.getString("manageSchedule.column.sun"));
+		lblMorning.setText(LanguageManagerAd.getString("manageSchedule.shift.morning"));
+		lblAfternoon.setText(LanguageManagerAd.getString("manageSchedule.shift.afternoon"));
+		lblEvening.setText(LanguageManagerAd.getString("manageSchedule.shift.evening"));
+		exportPdfButton.setText(LanguageManagerAd.getString("manageSchedule.pdf.export"));
+		autoAssignButton.setText(LanguageManagerAd.getString("manageSchedule.auto.assign"));
+		btnViewRequests.setText(LanguageManagerAd.getString("manageSchedule.view.requests"));
+	}
 
 }

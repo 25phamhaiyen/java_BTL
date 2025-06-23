@@ -1,3 +1,64 @@
+.root{
+	-fx-background-image: url("/images/bg_meomeo.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+/* ComboBox chính */
+#languageCombo {
+    -fx-background-color: #fff3e0; /* nền cam nhạt */
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 6 12;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5a4a3a;
+    -fx-font-size: 13px;
+}
+
+/* Khi focus (được chọn) */
+#languageCombo:focused {
+    -fx-border-color: #ffb300;
+    -fx-effect: dropshadow(gaussian, rgba(255,152,0,0.3), 4, 0.3, 0, 2);
+}
+
+/* Nút mũi tên xổ xuống */
+#languageCombo .arrow-button {
+    -fx-background-color: #ffb74d; /* cam đậm hơn một chút */
+    -fx-background-radius: 0 6 6 0;
+    -fx-padding: 4;
+}
+
+/* Mũi tên */
+#languageCombo .arrow-button .arrow {
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* hình tam giác chỉ xuống */
+    -fx-background-color: white;
+}
+
+/* Menu xổ xuống */
+.combo-box-popup .list-view {
+    -fx-background-color: #fff8e1;
+    -fx-border-color: #ffcc80;
+}
+
+.combo-box-popup .list-cell {
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #5a4a3a;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #ffe0b2;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #ffb74d;
+    -fx-text-fill: white;
+}
+
+
 .sidebar {
     -fx-background-color: linear-gradient(to bottom, #FFB74D, #FF9800);  /* Gradient từ vàng nhạt sang vàng cam đậm */
     -fx-padding: 15;

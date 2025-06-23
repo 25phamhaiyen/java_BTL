@@ -7,14 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import model.Account;
 import model.Permission;
 import model.Role;
@@ -26,23 +34,13 @@ import utils.LanguageManagerAd;
 
 public class ManageAccountController implements LanguageChangeListener{
 
-	@FXML private Label lblTitle;
-    @FXML private Label lblSearch;
-	@FXML private TextField txtSearch;
+	@FXML private Label lblTitle, titleAd, titleCare, titleCashier, titleRecept;
+	@FXML private FlowPane adminAccountPane, staffAccountPane, cashierAccountPane, receptionAccountPane;
+	@FXML private Button btnEdit, btnDel, btnAssign, btnResetPass;
+	@FXML private VBox actionPanel, cardContainer;
+	@FXML private Label lblSelectedUsername;
 
-	@FXML private TableView<Account> tblAccounts;
-
-	@FXML private TableColumn<Account, Integer> colAccountId;
-
-	@FXML private TableColumn<Account, String> colUsername, colRole;
-
-	@FXML private TableColumn<Account, Boolean> colActive;
-	@FXML private TableColumn<Account, String> colPermissions;
-
-	@FXML private Button btnAdd, btnEdit, btnDelete, btnResetPassword;
-	@FXML private Button btnAssignPermission;
-	@FXML private Button btnSearch;
-
+	private Account selectedAccount;
 	private final AccountService accountService = new AccountService();
 	private final RoleService roleService = new RoleService();
 
@@ -53,95 +51,136 @@ public class ManageAccountController implements LanguageChangeListener{
 		
 		LanguageManagerAd.addListener(this);
 		loadTexts();
-        
-		// Initialize TableView columns
-		colAccountId.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getAccountID()));
-		colUsername.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUserName()));
-		colRole.setCellValueFactory(cellData -> {
-		    String roleCode = cellData.getValue().getRole().getRoleName(); // VD: STAFF_CARE
-		    String localizedRole = LanguageManagerAd.getString("manageAccount.role." + roleCode);
-		    return new ReadOnlyStringWrapper(localizedRole);
-		});
-		colActive.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().isActive()));
-		colActive.setCellFactory(column -> new TableCell<Account, Boolean>() {
-			@Override
-			protected void updateItem(Boolean isActive, boolean empty) {
-				super.updateItem(isActive, empty);
-				if (empty || isActive == null) {
-					setText(null);
-					setStyle("");
-				} else {
-					setText(isActive 
-							? LanguageManagerAd.getString("manageAccount.status.active") 
-							: LanguageManagerAd.getString("manageAccount.status.inactive"));
+		
+		accountList.setAll(accountService.getAllAccounts());
 
-					if (isActive) {
-						setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-					} else {
-						setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-					}
-				}
-			}
-		});
-
-		// Load accounts into TableView
-		loadAccounts();
-
-		// Add listeners
-		tblAccounts.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-			boolean isSelected = newSelection != null;
-			btnEdit.setDisable(!isSelected);
-			btnDelete.setDisable(!isSelected);
-			btnResetPassword.setDisable(!isSelected);
-			btnAssignPermission.setDisable(!isSelected);
-		});
-
-		txtSearch.textProperty().addListener((observable, oldValue, newValue) -> filterAccounts(newValue));
-	}
-
-	private void loadAccounts() {
-		Map<Account, String> accountPermissionsMap = accountService.getAllAccountsWithPermissions();
-		List<Account> accounts = new ArrayList<>(accountPermissionsMap.keySet());
-
-		// Gán dữ liệu vào accountList
-		accountList.setAll(accounts);
-
-		// Gắn danh sách tài khoản vào bảng
-		tblAccounts.setItems(accountList);
-
-		// Gắn danh sách quyền vào cột "Quyền"
-		colPermissions.setCellValueFactory(cellData -> {
-			Account account = cellData.getValue();
-			String permissions = accountPermissionsMap.get(account);
-			return new SimpleStringProperty(permissions);
-		});
-	}
-
-	private void filterAccounts(String keyword) {
-		if (accountList == null || accountList.isEmpty()) {
-			System.err.println(LanguageManagerAd.getString("manageAccount.error.empty_account_list"));
-			return;
+		for (Account acc : accountList) {
+		    String role = acc.getRole().getRoleName();
+		    switch (role) {
+		        case "ADMIN" -> addAccountCard(adminAccountPane, acc);
+		        case "STAFF_CARE" -> addAccountCard(staffAccountPane, acc);
+		        case "STAFF_CASHIER" -> addAccountCard(cashierAccountPane, acc);
+		        case "STAFF_RECEPTION" -> addAccountCard(receptionAccountPane, acc);
+		    }
 		}
+		
+		Platform.runLater(() -> {
+			cardContainer.setOnMousePressed(event -> {
+			    Node target = (Node) event.getTarget();
+			    if (!isDescendantOf(target, "account-card") && !isDescendantOf(target, "action-panel")) {
+			        actionPanel.setVisible(false);
+			    }
+			});
 
-		if (keyword == null || keyword.isEmpty()) {
-			tblAccounts.setItems(accountList); // Hiển thị toàn bộ danh sách nếu không có từ khóa
-		} else {
-			ObservableList<Account> filteredList = FXCollections.observableArrayList();
-			for (Account account : accountList) {
-				// Lọc theo username hoặc roleName
-				if (account.getUserName().toLowerCase().contains(keyword.toLowerCase())
-						|| (account.getRole() != null && account.getRole().getRoleName() != null
-								&& account.getRole().getRoleName().toLowerCase().contains(keyword.toLowerCase()))) {
-					filteredList.add(account);
-				}
-			}
-			tblAccounts.setItems(filteredList); // Cập nhật danh sách hiển thị
-		}
+		});
+	}
+	private boolean isDescendantOf(Node node, String styleClass) {
+	    while (node != null) {
+	        if (node.getStyleClass() != null && node.getStyleClass().contains(styleClass)) {
+	            return true;
+	        }
+	        node = node.getParent();
+	    }
+	    return false;
 	}
 
+	
+	private void addAccountCard(FlowPane pane, Account account) {
+	    VBox card = new VBox(10);
+	    card.getStyleClass().add("account-card");
+	    card.setAlignment(Pos.CENTER);
+
+	    // Ảnh đại diện
+	    ImageView avatar = new ImageView();
+	    String avatarPath = "/images/default_avt.jpg";
+	    Image image = new Image(getClass().getResourceAsStream(avatarPath));
+	    avatar.setImage(image);
+	    avatar.setFitWidth(60);
+	    avatar.setFitHeight(60);
+	    avatar.setClip(new Circle(30, 30, 30)); // Cắt hình tròn
+
+	    // Thông tin tài khoản
+	    Label lblUsername = new Label(account.getUserName());
+	    lblUsername.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #ff9800;");
+
+	    // Song ngữ cho vai trò
+	    String roleLabel = LanguageManagerAd.getString("manageAccount.table.role");
+	    String roleName = switch (account.getRole().getRoleName()) {
+	        case "ADMIN" -> LanguageManagerAd.getString("manageAccount.role.ADMIN");         
+	        case "STAFF_CARE" -> LanguageManagerAd.getString("manageAccount.role.STAFF_CARE");     
+	        case "STAFF_CASHIER" -> LanguageManagerAd.getString("manageAccount.role.STAFF_CASHIER");
+	        case "STAFF_RECEPTION" -> LanguageManagerAd.getString("manageAccount.role.STAFF_RECEPTION");
+	        default -> LanguageManagerAd.getString("manageAccount.role.unknown");       
+	    };
+	    Label lblRole = new Label(roleLabel + roleName);
+
+	    // Song ngữ cho trạng thái
+	    String statusLabel = LanguageManagerAd.getString("manageAccount.edit.label.status");
+	    String statusText = account.isActive()
+	        ? LanguageManagerAd.getString("manageAccount.status.active")  
+	        : LanguageManagerAd.getString("manageAccount.status.inactive");
+	    Label lblStatus = new Label(statusLabel + statusText);
+
+	    card.setOnMouseClicked(event -> {
+	        selectedAccount = account;
+	        lblSelectedUsername.setText(account.getUserName());
+	        actionPanel.setVisible(true);
+	        event.consume(); 
+	    });
+
+
+	    card.getChildren().addAll(avatar, lblUsername, lblRole, lblStatus);
+	    pane.getChildren().add(card);
+	    
+//	    refreshCards();
+	}
+
+
+
+
+	private void refreshCards() {
+	    adminAccountPane.getChildren().clear();
+	    staffAccountPane.getChildren().clear();
+	    cashierAccountPane.getChildren().clear();
+	    receptionAccountPane.getChildren().clear();
+
+	    accountList.setAll(accountService.getAllAccounts());
+
+	    for (Account acc : accountList) {
+	        String role = acc.getRole().getRoleName();
+	        switch (role) {
+	            case "ADMIN" -> addAccountCard(adminAccountPane, acc);
+	            case "STAFF_CARE" -> addAccountCard(staffAccountPane, acc);
+	            case "STAFF_CASHIER" -> addAccountCard(cashierAccountPane, acc);
+	            case "STAFF_RECEPTION" -> addAccountCard(receptionAccountPane, acc);
+	        }
+	    }
+	}
+
+//	private void filterAccounts(String keyword) {
+//		if (accountList == null || accountList.isEmpty()) {
+//			System.err.println(LanguageManagerAd.getString("manageAccount.error.empty_account_list"));
+//			return;
+//		}
+//
+//		if (keyword == null || keyword.isEmpty()) {
+//			tblAccounts.setItems(accountList); // Hiển thị toàn bộ danh sách nếu không có từ khóa
+//		} else {
+//			ObservableList<Account> filteredList = FXCollections.observableArrayList();
+//			for (Account account : accountList) {
+//				// Lọc theo username hoặc roleName
+//				if (account.getUserName().toLowerCase().contains(keyword.toLowerCase())
+//						|| (account.getRole() != null && account.getRole().getRoleName() != null
+//								&& account.getRole().getRoleName().toLowerCase().contains(keyword.toLowerCase()))) {
+//					filteredList.add(account);
+//				}
+//			}
+//			tblAccounts.setItems(filteredList); // Cập nhật danh sách hiển thị
+//		}
+//	}
+//
 	@FXML
 	private void handleEditAccount() {
-		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 		if (selectedAccount != null) {
 			// Tạo dialog để chỉnh sửa tài khoản
 			Dialog<Account> dialog = new Dialog<>();
@@ -233,7 +272,6 @@ public class ManageAccountController implements LanguageChangeListener{
 			    return null;
 			});
 
-
 			// Hiển thị dialog và xử lý kết quả
 			Optional<Account> result = dialog.showAndWait();
 			result.ifPresent(updatedAccount -> {
@@ -245,7 +283,7 @@ public class ManageAccountController implements LanguageChangeListener{
 					alert.setHeaderText(null);
 					alert.setContentText(LanguageManagerAd.getString("manageAccount.edit.success.content"));
 					alert.showAndWait();
-					loadAccounts(); // Làm mới danh sách tài khoản
+					refreshCards();
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle(LanguageManagerAd.getString("manageAccount.edit.error.updateFailed.title"));
@@ -266,7 +304,6 @@ public class ManageAccountController implements LanguageChangeListener{
 
 	@FXML
 	private void handleDeleteAccount() {
-		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 		if (selectedAccount != null) {
 			// Hiển thị hộp thoại xác nhận
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -279,7 +316,7 @@ public class ManageAccountController implements LanguageChangeListener{
 			if (result.isPresent() && result.get() == ButtonType.OK) {
 				// Nếu người dùng chọn OK, thực hiện xóa
 				accountService.deleteAccount(selectedAccount.getAccountID());
-				loadAccounts(); // Làm mới danh sách sau khi xóa
+				refreshCards();
 			}
 		} else {
 			// Hiển thị cảnh báo nếu không có tài khoản nào được chọn
@@ -293,7 +330,6 @@ public class ManageAccountController implements LanguageChangeListener{
 
 	@FXML
 	private void handleAssignPermission() {
-		Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 		if (selectedAccount != null) {
 			PermissionService permissionService = new PermissionService();
 
@@ -349,7 +385,7 @@ public class ManageAccountController implements LanguageChangeListener{
 								permission.getPermissionCode());
 					}
 				}
-				loadAccounts(); // Làm mới bảng
+				refreshCards();
 			});
 		} else {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -362,7 +398,6 @@ public class ManageAccountController implements LanguageChangeListener{
 
 	@FXML
 	private void handleResetPassword() {
-	    Account selectedAccount = tblAccounts.getSelectionModel().getSelectedItem();
 	    if (selectedAccount != null) {
 	        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 	        alert.setTitle(LanguageManagerAd.getString("manageAccount.resetPassword.confirm.title"));
@@ -398,26 +433,20 @@ public class ManageAccountController implements LanguageChangeListener{
 	@Override
 	public void onLanguageChanged() {
 		loadTexts();
-		
+		refreshCards();
 	}
 	
 	private void loadTexts() {
 		lblTitle.setText(LanguageManagerAd.getString("manageAccount.title"));
-        lblSearch.setText(LanguageManagerAd.getString("manageAccount.search.label"));
-        txtSearch.setPromptText(LanguageManagerAd.getString("manageStaff.search.prompt"));
-        btnSearch.setText(LanguageManagerAd.getString("manageAccount.search.button"));
-        colAccountId.setText(LanguageManagerAd.getString("manageAccount.table.accountId"));
-        colUsername.setText(LanguageManagerAd.getString("manageAccount.table.username"));
-        colRole.setText(LanguageManagerAd.getString("manageAccount.table.role"));
-        colActive.setText(LanguageManagerAd.getString("manageAccount.table.active"));
-        colPermissions.setText(LanguageManagerAd.getString("manageAccount.table.permissions"));
-        btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
-        btnDelete.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
-        btnResetPassword.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
-        btnAssignPermission.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
-        
+		titleAd.setText(LanguageManagerAd.getString("manageAccount.role.ADMIN"));
+		titleCare.setText(LanguageManagerAd.getString("manageAccount.role.STAFF_CARE"));
+		titleCashier.setText(LanguageManagerAd.getString("manageAccount.role.STAFF_CASHIER"));
+		titleRecept.setText(LanguageManagerAd.getString("manageAccount.role.STAFF_RECEPTION"));
+		btnEdit.setText(LanguageManagerAd.getString("manageAccount.button.edit"));
+		btnDel.setText(LanguageManagerAd.getString("manageAccount.button.delete"));
+		btnAssign.setText(LanguageManagerAd.getString("manageAccount.button.assignPermission"));
+		btnResetPass.setText(LanguageManagerAd.getString("manageAccount.button.resetPassword"));
+		
 	}
-
-
 
 }
