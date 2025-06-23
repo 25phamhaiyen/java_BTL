@@ -1,107 +1,154 @@
-/* Toàn bộ font */
+/* Font mặc định */
 .root {
+    -fx-background-color: transparent;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 16px;
 }
 
-/* Header Label */
+.transparent-scroll, 
+.transparent-scroll .viewport,
+.transparent-box, 
+.transparent-scroll .content {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+.action-panel {
+    -fx-background-color: transparent;
+}
+
+
 .header-label {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #8B4513;
-    -fx-alignment: center;
-}
+    -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00); /* Cam rực hơn */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.5, 0, 3); /* Đổ bóng mạnh hơn */
 
-/* Search Field */
-.search-field {
-    -fx-background-color: #fffbe6;
-    -fx-border-color: #f7c948;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 8 12;
-    -fx-font-size: 16px;
-}
-
-/* Nút tìm kiếm */
-.search-button {
-    -fx-background-color: #f7c948;
-    -fx-text-fill: black;
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 6;
-    -fx-cursor: hand;
-}
-
-.search-button:hover {
-    -fx-background-color: #ffe066;
-}
-
-/* Bảng TableView */
-.account-table {
-    -fx-font-size: 14px; /* Phông chữ lớn hơn */
-    -fx-border-color: #DDD; /* Viền nhạt */
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-column-header-background: #FFD700; 
-    -fx-table-cell-border-color: #e60000; 
-}
-.account-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: #ddd;
-}
-
-/* Bảng khi hover */
-.account-table .table-row-cell:hover {
-    -fx-background-color: #f0f0f0;
-}
-
-
-.account-table .column-header .label {
-    -fx-text-fill: black;
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
-}
-
-/* Bảng có viền đậm hơn khi click */
-.account-table .table-row-cell:filled:selected {
-    -fx-background-color: #ffe066;
-    -fx-text-fill: black;
-    -fx-font-weight: bold;
-    -fx-border-color: #e0a800;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
-}
-
-
-
-/* Buttons chung */
-.action-button, .back-button {
-    -fx-background-color: #83b90f;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
+    /* Thêm nền mờ giúp chữ nổi bật trên nền ảnh */
+    -fx-background-color: rgba(255, 255, 255, 0.6);
     -fx-background-radius: 10;
-    -fx-padding: 10 20;
+
+    /* Viền cam rực */
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+
+    /* Căn chỉnh và khoảng cách */
+    -fx-padding: 14 28;
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
+}
+
+
+/* Container spacing */
+.header-container, .content-container, .button-bar {
+    -fx-padding: 20;
+}
+
+.role-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00);
+    -fx-alignment: center;
+    -fx-padding: 10 0 10 0;
+    -fx-text-alignment: center;
+    -fx-label-padding: 10;
+    -fx-underline: true;
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+}
+
+
+
+/* === ACCOUNT CARD === */
+.account-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffe0b2, #ffcc80);
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.15, 0, 6);
+    -fx-pref-width: 330;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
+    -fx-transition: all 0.3s ease-in-out;
 }
 
-.action-button:hover, .back-button:hover {
-    -fx-background-color: #43a047;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+.account-card:hover {
+    -fx-background-color: linear-gradient(to bottom right, #fff3e0, #ffb74d);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.2, 0, 6);
 }
 
-/* Các container */
-.header-container {
+
+/* Text tiêu đề trong card */
+.account-card Label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #e65100;
+    -fx-font-weight: bold;
+}
+.account-card Label:first-of-type {
+    -fx-font-size: 20px;
+    -fx-text-fill: #ff6f00;
+}
+
+
+ Button {
+    -fx-background-color: linear-gradient(to bottom, #ffe082, #ffb300);
+    -fx-text-fill: #4e342e;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 5 12;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.15), 3, 0.2, 0, 2);
+    -fx-cursor: hand;
+}
+Button:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff59d, #fbc02d);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 6, 0.3, 0, 3);
+}
+Button:pressed {
+    -fx-background-color: #ef6c00;
+    -fx-text-fill: white;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.4), 4, 0.4, 0, 2);
+}
+
+/* FlowPane Container */
+.flow-container {
+    -fx-background-color: linear-gradient(to bottom, #fffde7, #ffffff);
     -fx-padding: 20;
+    -fx-spacing: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0.3, 0, 5);
 }
 
-.content-container {
-    -fx-padding: 20;
+/* === ScrollBar tùy biến cho ScrollPane === */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
 }
 
-.button-bar {
-    -fx-padding: 15;
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #ffb74d;  /* màu cam nhẹ */
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #ffa726;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button {
+    -fx-opacity: 0; /* ẩn nút mũi tên */
+    -fx-padding: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+.scroll-bar:vertical {
+    -fx-pref-width: 6px;
+}
+.scroll-bar:horizontal {
+    -fx-pref-height: 6px;
 }

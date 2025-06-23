@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -9,44 +11,60 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@/styles/manage_account.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.admin.ManageAccountController">
+<BorderPane fx:id="root" stylesheets="@/styles/manage_account.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.admin.ManageAccountController">
     <!-- Header Section -->
     <top>
         <VBox alignment="CENTER" spacing="10" styleClass="header-container">
             <Label fx:id="lblTitle" styleClass="header-label"/>
         </VBox>
     </top>
+    <left>
+        <VBox fx:id="actionPanel" visible="false" spacing="10" alignment="TOP_CENTER" maxHeight="220" prefWidth="130"
+      styleClass="action-panel">
+        </VBox>
+    </left>
 
     <!-- Center Section -->
-    <center>
-        <VBox alignment="CENTER" spacing="20" styleClass="content-container">
-            <!-- Search Bar -->
-            <HBox alignment="CENTER" spacing="10" styleClass="search-bar">
-                <Label fx:id="lblSearch" />
-                <TextField fx:id="txtSearch" prefWidth="300" styleClass="search-field" />
-                <Button fx:id="btnSearch" styleClass="search-button" />
-            </HBox>
-
-            <!-- TableView -->
-            <TableView fx:id="tblAccounts" prefHeight="400" prefWidth="1300" styleClass="account-table">
-                <columns>
-                    <TableColumn fx:id="colAccountId" prefWidth="100" />
-                    <TableColumn fx:id="colUsername" prefWidth="150" />
-                    <TableColumn fx:id="colRole" prefWidth="180"/>
-                    <TableColumn fx:id="colActive" prefWidth="170"/>
-                    <TableColumn fx:id="colPermissions" prefWidth="850"/>
-                </columns>
-            </TableView>
-        </VBox>
+    <center >
+		<ScrollPane hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" fitToWidth="true" styleClass="transparent-scroll">
+			<VBox fx:id="cardContainer" alignment="CENTER" translateX="40" spacing="50" styleClass="transparent-box">
+ 					<!-- ADMIN -->
+	                <VBox>
+	                    <Label fx:id="titleAd" styleClass="role-title"/>
+	                    <FlowPane fx:id="adminAccountPane" hgap="70" vgap="30"/>
+	                </VBox>
+	                <!-- NHÂN VIÊN CHĂM SÓC -->
+	                <VBox>
+	                    <Label fx:id="titleCare" styleClass="role-title"/>
+	                    <FlowPane fx:id="staffAccountPane" hgap="70" vgap="30"/>
+	                </VBox>
+	
+	                <!-- THU NGÂN -->
+	                <VBox>
+	                    <Label fx:id="titleCashier" styleClass="role-title"/>
+	                    <FlowPane fx:id="cashierAccountPane" hgap="70" vgap="30"/>
+	                </VBox>
+	
+	                <!-- LỄ TÂN -->
+	                <VBox>
+	                    <Label fx:id="titleRecept" styleClass="role-title"/>
+	                    <FlowPane fx:id="receptionAccountPane" hgap="70" vgap="30"/>
+	                </VBox>
+                
+ 				 </VBox>
+ 				 </ScrollPane>
     </center>
+    
+    <right>
+        <VBox fx:id="actionPanel" visible="false" spacing="10" alignment="TOP_CENTER" maxHeight="220" prefWidth="130"
+      styleClass="action-panel">
 
-    <!-- Bottom Section -->
-    <bottom>
-        <HBox alignment="CENTER" spacing="20" styleClass="button-bar">
-            <Button fx:id="btnEdit" styleClass="action-button" onAction="#handleEditAccount" />
-            <Button fx:id="btnDelete" onAction="#handleDeleteAccount" styleClass="action-button" />
-            <Button fx:id="btnResetPassword" onAction="#handleResetPassword" styleClass="action-button" />
-            <Button fx:id="btnAssignPermission" onAction="#handleAssignPermission" styleClass="action-button" />
-        </HBox>
-    </bottom>
+            <Label fx:id="lblSelectedUsername" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+            <Button fx:id="btnEdit" onAction="#handleEditAccount"/>
+            <Button fx:id="btnDel" onAction="#handleDeleteAccount"/>
+            <Button fx:id="btnAssign" onAction="#handleAssignPermission"/>
+            <Button fx:id="btnResetPass" onAction="#handleResetPassword"/>
+        </VBox>
+    </right>
+
 </BorderPane>
