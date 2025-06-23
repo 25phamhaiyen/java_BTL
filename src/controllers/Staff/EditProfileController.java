@@ -40,7 +40,7 @@ import utils.LanguageManagerStaff;
 public class EditProfileController implements Initializable, LanguageChangeListener {
 
 	@FXML
-	private Button changePasswordConfirmBtn, btnLanguage;
+	private Button changePasswordConfirmBtn;
 	@FXML
 	private TextField usernameField;
 	@FXML
@@ -176,9 +176,7 @@ public class EditProfileController implements Initializable, LanguageChangeListe
 		}
 		
 		// Buttons
-		if (btnLanguage != null) {
-			btnLanguage.setText(LanguageManagerStaff.getString("staff.btnLanguage"));
-		}
+	
 		if (changeAvatarBtn != null) {
 			changeAvatarBtn.setText(LanguageManagerStaff.getString("editProfile.changeAvatar"));
 		}
@@ -675,17 +673,17 @@ public class EditProfileController implements Initializable, LanguageChangeListe
 		}
 	}
 
-	@FXML
-	private void toggleLanguage(ActionEvent event) {
-		Locale currentLocale = LanguageManagerStaff.getCurrentLocale();
-		
-		// Toggle between Vietnamese and English
-		if (currentLocale.equals(new Locale("vi", "VN"))) {
-			LanguageManagerStaff.setLocale(new Locale("en", "US"));
-		} else {
-			LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
-		}
-	}
+//	@FXML
+//	private void toggleLanguage(ActionEvent event) {
+//		Locale currentLocale = LanguageManagerStaff.getCurrentLocale();
+//		
+//		// Toggle between Vietnamese and English
+//		if (currentLocale.equals(new Locale("vi", "VN"))) {
+//			LanguageManagerStaff.setLocale(new Locale("en", "US"));
+//		} else {
+//			LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
+//		}
+//	}
 
 	private void showAlert(Alert.AlertType type, String title, String message) {
 		Alert alert = new Alert(type);

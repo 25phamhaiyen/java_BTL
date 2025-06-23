@@ -118,7 +118,7 @@
 
                 <HBox alignment="CENTER" maxWidth="Infinity" prefWidth="463.0" styleClass="footer-box">
                     <Button fx:id="backButton" onAction="#handleBack" prefWidth="200" styleClass="btn-neutral" text="Back to Home" />
-                    <Button fx:id="btnLanguage" onAction="#toggleLanguage" styleClass="btn-neutral"/>
+                   
                 </HBox>
             </VBox>
         </ScrollPane>

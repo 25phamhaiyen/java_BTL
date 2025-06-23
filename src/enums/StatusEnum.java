@@ -21,4 +21,8 @@ public enum StatusEnum {
 		}
 		throw new IllegalArgumentException("Invalid status code: " + code);
 	}
+	 // Thêm phương thức này
+    public boolean isCompleted() {
+        return this == COMPLETED;
+    }
 }

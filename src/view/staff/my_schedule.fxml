@@ -25,14 +25,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true"
+<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@/styles/schedule.css"
 	hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
 	xmlns="http://javafx.com/javafx/23.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="controllers.Staff.MyScheduleController">
 
 	<content>
-		<BorderPane stylesheets="@/styles/staff.css"
+		<BorderPane 
 			prefWidth="1024" prefHeight="768" minWidth="800" minHeight="600">
 
 			<top>
