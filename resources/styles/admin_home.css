@@ -1,5 +1,6 @@
+
 .root{
-	-fx-background-image: url("/images/bg_meomeo.jpg");
+	-fx-background-image: url("/images/bg_basic.jpg");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }

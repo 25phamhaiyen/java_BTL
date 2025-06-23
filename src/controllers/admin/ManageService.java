@@ -11,9 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Service;
 import service.ServiceService;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerAd;
 
-public class ManageService {
-
+public class ManageService implements LanguageChangeListener{
+	@FXML private Label lblTitle;
     @FXML
     private TableView<Service> tableView;
 
@@ -39,7 +41,7 @@ public class ManageService {
     private TableColumn<Service, Boolean> statusColumn;
 
     @FXML
-    private Button addButton;
+    private Button addButton, searchButton;
 
     @FXML
     private Button editButton;
@@ -56,6 +58,9 @@ public class ManageService {
 
     @FXML
     public void initialize() {
+    	LanguageManagerAd.addListener(this);
+    	loadTexts();
+    	
         idColumn.setCellValueFactory(new PropertyValueFactory<>("serviceId"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -71,7 +76,7 @@ public class ManageService {
                 if (empty || active == null) {
                     setText(null);
                 } else {
-                    setText(active ? "Hoạt động" : "Ngừng hoạt động");
+                    setText(active ? LanguageManagerAd.getString("manageService.dialog.status.active") : LanguageManagerAd.getString("manageService.dialog.status.inactive"));
                     setStyle(active ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
                 }
             }
@@ -101,32 +106,32 @@ public class ManageService {
     @FXML
     private void handleAddService() {
         Dialog<Service> dialog = new Dialog<>();
-        dialog.setTitle("Thêm dịch vụ");
+        dialog.setTitle(LanguageManagerAd.getString("manageService.dialog.add.title"));
 
         // Tạo các trường nhập liệu
         TextField nameField = new TextField();
-        nameField.setPromptText("Tên dịch vụ");
+        nameField.setPromptText(LanguageManagerAd.getString("manageService.column.name"));
 
         TextField descriptionField = new TextField();
-        descriptionField.setPromptText("Mô tả dịch vụ");
+        descriptionField.setPromptText(LanguageManagerAd.getString("manageService.column.description"));
 
         TextField priceField = new TextField();
-        priceField.setPromptText("Giá dịch vụ");
+        priceField.setPromptText(LanguageManagerAd.getString("manageService.column.price"));
 
         TextField durationField = new TextField();
-        durationField.setPromptText("Thời gian (phút)");
+        durationField.setPromptText(LanguageManagerAd.getString("manageService.column.duration"));
 
         // Bố trí các trường nhập liệu
         VBox content = new VBox(10, 
-            new HBox(10, new Label("Tên:"), nameField),
-            new HBox(10, new Label("Mô tả:"), descriptionField),
-            new HBox(10, new Label("Giá:"), priceField),
-            new HBox(10, new Label("Thời gian:"), durationField)
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.name")), nameField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.description")), descriptionField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.price")), priceField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.duration")), durationField)
         );
         dialog.getDialogPane().setContent(content);
 
         // Thêm các nút Thêm và Hủy
-        ButtonType addButtonType = new ButtonType("Thêm", ButtonBar.ButtonData.OK_DONE);
+        ButtonType addButtonType = new ButtonType(LanguageManagerAd.getString("manageService.button.add"), ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
         // Xử lý khi nhấn nút Thêm
@@ -138,12 +143,12 @@ public class ManageService {
         	    String durationText = durationField.getText().trim();
 
         	    if (name.isEmpty()) {
-        	        showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên dịch vụ không được để trống.");
+        	        showAlert(Alert.AlertType.WARNING, LanguageManagerAd.getString("manageService.alert.warning.title"), LanguageManagerAd.getString("manageService.alert.warning.empty.name"));
         	        return null;
         	    }
 
         	    if (serviceService.isServiceExists(name)) {
-        	        showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tên dịch vụ đã tồn tại.");
+        	        showAlert(Alert.AlertType.WARNING, LanguageManagerAd.getString("manageService.alert.warning.title"), LanguageManagerAd.getString("manageService.alert.warning.name.exists"));
         	        return null;
         	    }
 
@@ -151,8 +156,8 @@ public class ManageService {
         	        double price = Double.parseDouble(priceText);
         	        int duration = Integer.parseInt(durationText);
 
-        	        if (price <= 10000 || duration <= 5) {
-        	            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Giá phải >=10k vnd và thời gian phải >=5 phút.");
+        	        if (price <= 10000 || duration <= 5 || price >= 100000000 || duration > 61) {
+        	            showAlert(Alert.AlertType.WARNING, LanguageManagerAd.getString("manageService.alert.warning.title"), LanguageManagerAd.getString("manageService.alert.warning.price.duration"));
         	            return null;
         	        }
 
@@ -161,11 +166,11 @@ public class ManageService {
         	        if (serviceService.addService(newService)) {
         	            loadServicesFromDatabase();
         	        } else {
-        	            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm dịch vụ.");
+        	            showAlert(Alert.AlertType.ERROR, LanguageManagerAd.getString("manageService.alert.error.title"), LanguageManagerAd.getString("manageService.alert.error.add.fail"));
         	        }
 
         	    } catch (NumberFormatException e) {
-        	        showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá phải là số thực và thời gian phải là số nguyên.");
+        	        showAlert(Alert.AlertType.ERROR, LanguageManagerAd.getString("manageService.alert.error.title"), LanguageManagerAd.getString("manageService.alert.error.invalid.number"));
         	    }
         	}
         	return null;
@@ -184,7 +189,7 @@ public class ManageService {
     private void handleEditService() {
         Service selectedService = tableView.getSelectionModel().getSelectedItem();
         if (selectedService == null) {
-            showAlert(Alert.AlertType.WARNING, "Chưa chọn dịch vụ", "Vui lòng chọn dịch vụ để sửa.");
+            showAlert(Alert.AlertType.WARNING, LanguageManagerAd.getString("manageService.alert.warning.title"), LanguageManagerAd.getString("manageService.alert.warning.select.edit"));
             return;
         }
 
@@ -199,15 +204,15 @@ public class ManageService {
 
         // Tạo ComboBox để chọn trạng thái
         ComboBox<String> statusComboBox = new ComboBox<>();
-        statusComboBox.getItems().addAll("Hoạt động", "Ngừng hoạt động");
-        statusComboBox.setValue(selectedService.isActive() ? "Hoạt động" : "Ngừng hoạt động");
+        statusComboBox.getItems().addAll(LanguageManagerAd.getString("manageService.dialog.status.active"), LanguageManagerAd.getString("manageService.dialog.status.inactive"));
+        statusComboBox.setValue(selectedService.isActive() ? LanguageManagerAd.getString("manageService.dialog.status.active") : LanguageManagerAd.getString("manageService.dialog.status.inactive"));
 
         // Bố trí các trường nhập liệu
         VBox content = new VBox(10, 
-            new HBox(10, new Label("Tên:"), nameField),
-            new HBox(10, new Label("Mô tả:"), descriptionField),
-            new HBox(10, new Label("Giá:"), priceField),
-            new HBox(10, new Label("Thời gian:"), durationField),
+    		new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.name")), nameField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.description")), descriptionField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.price")), priceField),
+            new HBox(10, new Label(LanguageManagerAd.getString("manageService.column.duration")), durationField),
             new HBox(10, new Label("Trạng thái:"), statusComboBox)
         );
         dialog.getDialogPane().setContent(content);
@@ -230,10 +235,10 @@ public class ManageService {
                     if (serviceService.updateService(selectedService)) {
                         loadServicesFromDatabase(); // Làm mới danh sách hiển thị
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể sửa dịch vụ.");
+                        showAlert(Alert.AlertType.ERROR, LanguageManagerAd.getString("manageService.alert.error.title"), "Không thể sửa dịch vụ.");
                     }
                 } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Lỗi", "Giá và thời gian phải là số hợp lệ.");
+                    showAlert(Alert.AlertType.ERROR, LanguageManagerAd.getString("manageService.alert.error.title"), "Giá và thời gian phải là số hợp lệ.");
                 }
             }
             return null;
@@ -264,7 +269,7 @@ public class ManageService {
             if (serviceService.deleteService(selectedService)) {
                 loadServicesFromDatabase(); // Làm mới danh sách hiển thị
             } else {
-                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa dịch vụ.");
+                showAlert(Alert.AlertType.ERROR, LanguageManagerAd.getString("manageService.alert.error.title"), "Không thể xóa dịch vụ.");
             }
         } else {
             // Nếu người dùng nhấn "Cancel" hoặc đóng hộp thoại, không làm gì cả
@@ -294,6 +299,26 @@ public class ManageService {
 
         tableView.setItems(filteredList);
     }
-    
+
+    @Override
+	public void onLanguageChanged() {
+		loadTexts();
+		
+	}
+	
+	private void loadTexts() {
+		lblTitle.setText(LanguageManagerAd.getString("manageService.title"));
+		searchField.setPromptText(LanguageManagerAd.getString("manageService.search.placeholder"));
+		searchButton.setText(LanguageManagerAd.getString("manageService.search.button"));
+		idColumn.setText(LanguageManagerAd.getString("manageService.column.id"));
+		nameColumn.setText(LanguageManagerAd.getString("manageService.column.name"));
+		descriptionColumn.setText(LanguageManagerAd.getString("manageService.column.description"));
+		priceColumn.setText(LanguageManagerAd.getString("manageService.column.price"));
+		durationColumn.setText(LanguageManagerAd.getString("manageService.column.duration"));
+		statusColumn.setText(LanguageManagerAd.getString("manageService.column.status"));
+		addButton.setText(LanguageManagerAd.getString("manageService.button.add"));
+		editButton.setText(LanguageManagerAd.getString("manageService.button.edit"));
+		deleteButton.setText(LanguageManagerAd.getString("manageService.button.delete"));
+	}
     
 }
