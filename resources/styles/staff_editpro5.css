@@ -163,6 +163,7 @@
     -fx-cursor: hand;
     -fx-font-size: 14px;
     -fx-max-width: Infinity;
+    -fx-border-radius: 5;
 }
 
 .btn-neutral:hover {
