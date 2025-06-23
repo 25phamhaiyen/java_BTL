@@ -13,57 +13,62 @@ import model.Booking;
 import service.BookingService;
 import utils.LanguageManagerAd;
 
-/**
- * Lớp tiện ích dùng để chuyển đổi giữa các màn hình (scene) trong ứng dụng
- */
 public class SceneSwitcher {
 
-	private static Stage mainStage;
+    private static Stage mainStage;
 
-	/**
-	 * Thiết lập stage chính của ứng dụng
-	 * 
-	 */
-	public static void setMainStage(Stage stage) {
-	    mainStage = stage;
-	    
-	    LanguageManagerAd.addListener(() -> {
-	        String title = LanguageManagerAd.getString("title");
-	        
-	        if (mainStage != null) {
-	            mainStage.setTitle(title);
-	        }
-	    });
-	    
-	    // Thiết lập luôn title ngay lần đầu, tránh trường hợp Stage set xong mà chưa có title
-	    if (mainStage != null) {
-	        mainStage.setTitle(LanguageManagerAd.getString("title"));
-	    }
-	}
+    public static void setMainStage(Stage stage) {
+        mainStage = stage;
+        
+        LanguageManagerAd.addListener(() -> {
+            String title = LanguageManagerAd.getString("title");
+            if (mainStage != null) {
+                mainStage.setTitle(title);
+            }
+        });
+        
+        if (mainStage != null) {
+            mainStage.setTitle(LanguageManagerAd.getString("title"));
+        }
+    }
 
+    /**
+     * Chuyển scene mặc định (full màn hình)
+     * @param fxmlPath Đường dẫn FXML
+     */
+    public static void switchScene(String fxmlPath) {
+        switchScene(fxmlPath, false); // Mặc định là full màn hình
+    }
 
-	/**
-	 * Chuyển đến một scene khác dựa trên đường dẫn file FXML
-	 * 
-	 * @param fxmlPath Đường dẫn tới file FXML
-	 */
-	public static void switchScene(String fxmlPath) {
-		try {
-			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/" + fxmlPath));
-			loader.setResources(ResourceBundle.getBundle("lang.messages", LanguageManagerAd.getCurrentLocale()));
-			Parent root = loader.load();
-			
-			Scene scene = new Scene(root, 800, 700);
-			mainStage.setScene(scene);
-			// Set window title based on current language
-//            LanguageManagerAd langManager = LanguageManagerAd.getInstance();
-//            mainStage.setTitle(langManager.getString("app.title"));
-			mainStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			showErrorDialog("Không thể tải màn hình: " + e.getMessage());
-		}
-	}
+    /**
+     * Chuyển scene với tùy chọn không full màn hình (dành cho home)
+     * @param fxmlPath Đường dẫn FXML
+     * @param isHomeScreen Có phải màn hình home không (nếu true thì không full màn hình)
+     */
+    public static void switchScene(String fxmlPath, boolean isHomeScreen) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/" + fxmlPath));
+            loader.setResources(ResourceBundle.getBundle("lang.messages", LanguageManagerAd.getCurrentLocale()));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            mainStage.setScene(scene);
+            
+            // Thiết lập không full màn hình nếu là home
+            if (isHomeScreen) {
+                mainStage.setMaximized(false);
+                mainStage.setWidth(800);
+                mainStage.setHeight(700);
+            } else {
+                mainStage.setMaximized(true);
+            }
+            
+            mainStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorDialog("Không thể tải màn hình: " + e.getMessage());
+        }
+    }
 
 
 	/**
@@ -121,31 +126,6 @@ public class SceneSwitcher {
 	}
 
 	/**
-	 * Chuyển đến màn hình chi tiết booking
-	 * 
-	 * @param currentStage Stage hiện tại
-	 * @param bookingId    ID của booking
-	 */
-//	public static void switchToBookingDetailScene(Stage currentStage, int bookingId) {
-//		try {
-//			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/bookingDetail.fxml"));
-//			Parent root = loader.load();
-//
-//			// Truyền bookingId cho controller
-//			BookingDetailController controller = loader.getController();
-//			controller.initData(bookingId);
-//
-//			Scene scene = new Scene(root);
-//			currentStage.setScene(scene);
-//			currentStage.setTitle("Chi tiết đặt lịch #" + bookingId);
-//			currentStage.show();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			showErrorDialog("Không thể tải màn hình chi tiết đặt lịch: " + e.getMessage());
-//		}
-//	}
-
-	/**
 	 * Chuyển đến màn hình xử lý hóa đơn
 	 * 
 	 * @param currentStage Stage hiện tại
@@ -177,30 +157,6 @@ public class SceneSwitcher {
 		}
 	}
 
-//	/**
-//	 * Chuyển đến màn hình chi tiết hóa đơn
-//	 * 
-//	 * @param currentStage Stage hiện tại
-//	 * @param invoiceId    ID của hóa đơn
-//	 */
-//	public static void switchToInvoiceDetailScene(Stage currentStage, int invoiceId) {
-//		try {
-//			FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("/view/staff/invoiceDetail.fxml"));
-//			Parent root = loader.load();
-//
-//			// Truyền invoiceId cho controller
-//			InvoiceViewController controller = loader.getController();
-//			controller.initData(invoiceId);
-//
-//			Scene scene = new Scene(root);
-//			currentStage.setScene(scene);
-//			currentStage.setTitle("Chi tiết hóa đơn #" + invoiceId);
-//			currentStage.show();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			showErrorDialog("Không thể tải màn hình chi tiết hóa đơn: " + e.getMessage());
-//		}
-//	}
 
 	/**
 	 * Hiển thị hộp thoại thông báo lỗi

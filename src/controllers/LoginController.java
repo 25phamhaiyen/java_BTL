@@ -12,6 +12,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import model.Account;
 import model.Role;
 import service.AccountService;
@@ -56,29 +58,51 @@ public class LoginController implements LanguageChangeListener {
         
         // Initial language setup
         loadTexts();
+        
+        // Add key event handlers for Enter key
+        setupEnterKeyHandlers();
+    }
+    
+    private void setupEnterKeyHandlers() {
+        // When Enter is pressed in username field, move focus to password field
+        usernameField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                if (passwordField.isVisible()) {
+                    passwordField.requestFocus();
+                } else {
+                    passwordTextField.requestFocus();
+                }
+            }
+        });
+        
+        // When Enter is pressed in password field (visible or hidden), trigger login
+        passwordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+        });
+        
+        passwordTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+        });
     }
     
     @Override
     public void onLanguageChanged() {
-        // Được gọi khi ngôn ngữ thay đổi từ HomeController hoặc bất kỳ đâu
         System.out.println("Language changed event received in LoginController");
         loadTexts();
     }
     
     private void loadTexts() {
         try {
-            // Update title label
             titleLabel.setText(LanguageManagerAd.getString("login.title"));
-            
-            // Update button texts
             btnLogin.setText(LanguageManagerAd.getString("login.button"));
-            
-            // Update placeholder texts
             usernameField.setPromptText(LanguageManagerAd.getString("login.username"));
             passwordField.setPromptText(LanguageManagerAd.getString("login.password"));
             passwordTextField.setPromptText(LanguageManagerAd.getString("login.password"));
             
-            // Clear any existing messages when language changes
             if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
                 messageLabel.setText("");
                 messageLabel.setStyle("");
@@ -101,11 +125,9 @@ public class LoginController implements LanguageChangeListener {
             Optional<Account> user = accountService.login(username, password);
             Account account = user.orElseThrow(() -> new BusinessException(LanguageManagerAd.getString("login.error")));
 
-            // Reset failed login attempts on successful login
             failedLoginAttempts = 0;
             lastFailedUsername = null;
 
-            // Check if account is active
             if (!account.isActive()) {
                 throw new BusinessException(LanguageManagerAd.getString("login.account.locked"));
             }
@@ -114,7 +136,6 @@ public class LoginController implements LanguageChangeListener {
             messageLabel.setStyle("-fx-text-fill: green;");
             Session.setCurrentAccount(account);
 
-            // Route to appropriate view based on role
             routeBasedOnRole(account.getRole());
 
         } catch (BusinessException e) {
@@ -122,20 +143,18 @@ public class LoginController implements LanguageChangeListener {
             messageLabel.setText(e.getMessage());
             messageLabel.setStyle("-fx-text-fill: red;");
 
-            // Kiểm tra nếu đạt đến ngưỡng đăng nhập thất bại
             if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
-                // Gọi service để khóa tài khoản
                 try {
                     accountService.lockAccount(username);
                     messageLabel.setText(LanguageManagerAd.getString("login.account.locked.attempts", username));
                     messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                    failedLoginAttempts = 0; // Reset lại sau khi khóa
+                    failedLoginAttempts = 0;
                     lastFailedUsername = null;
                 } catch (Exception lockException) {
                     System.err.println("Error locking account: " + lockException.getMessage());
                 }
             } else {
-                lastFailedUsername = username; // Cập nhật username thất bại gần nhất
+                lastFailedUsername = username;
             }
         } catch (Exception e) {
             messageLabel.setText(LanguageManagerAd.getString("login.error.general"));
@@ -147,24 +166,24 @@ public class LoginController implements LanguageChangeListener {
 
     private void routeBasedOnRole(Role role) {
         if (role == null) {
-            SceneSwitcher.switchScene("dashboard.fxml");
+            SceneSwitcher.switchScene("dashboard.fxml, true");
             return;
         }
         
         try {
             switch (role.getRoleName().toUpperCase()) {
                 case "ADMIN":
-                    SceneSwitcher.switchScene("dashboard.fxml");
+                    SceneSwitcher.switchScene("dashboard.fxml", true);
                     break;
                 case "STAFF_CARE":
                 case "STAFF_CASHIER":
                 case "STAFF_RECEPTION":
-                    SceneSwitcher.switchScene("dashboard.fxml");
+                    SceneSwitcher.switchScene("dashboard.fxml", true);
                     break;
                 case "OUT":
                     throw new BusinessException(LanguageManagerAd.getString("login.account.out"));
                 default:
-                    SceneSwitcher.switchScene("dashboard.fxml");
+                    SceneSwitcher.switchScene("dashboard.fxml", true);
                     break;
             }
         } catch (BusinessException e) {
@@ -195,5 +214,4 @@ public class LoginController implements LanguageChangeListener {
             System.err.println("Error toggling password visibility: " + e.getMessage());
         }
     }
-    
 }

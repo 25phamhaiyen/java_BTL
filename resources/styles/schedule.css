@@ -1,327 +1,318 @@
 /* ===== SCHEDULE CSS - HARMONIZED WITH MAIN THEME ===== */
-/* Import main theme variables */
 .root {
-    -fx-primary: #d88e3f; /* Main orange */
-    -fx-primary-light: #f1d6a1; /* Light orange */
-    -fx-primary-dark: #b06a20; /* Dark orange */
-    -fx-secondary: #4d7fa8; /* Blue */
-    -fx-accent: #4CAF50; /* Green */
-    -fx-danger: #e65c5c; /* Red */
-    -fx-background: #f9f3e6; /* Cream background */
-    -fx-text-primary: #5a3d2a; /* Dark brown text */
-    -fx-text-light: white; /* White text */
-    -fx-border-color: #d88e3f; /* Orange border */
+    /* Define color variables */
+    -primary-color: #d88e3f; /* Main orange */
+    -primary-light: #f1d6a1; /* Light orange */
+    -primary-dark: #b06a20; /* Dark orange */
+    -secondary-color: #4d7fa8; /* Blue */
+    -accent-color: #4CAF50; /* Green */
+    -danger-color: #e65c5c; /* Red */
+    -background-color: #f9f3e6; /* Cream background */
+    -text-primary: #5a3d2a; /* Dark brown text */
+    -text-light: white; /* White text */
+    -border-color: #d88e3f; /* Orange border */
+}
+
+/* Thêm màu nền cho phần trống của ScrollPane */
+.scroll-pane > .viewport {
+    -fx-background-color: #f9f3e6; /* Màu kem nhẹ từ biến -background-color */
 }
 
 /* ===== MAIN CONTAINER ===== */
 .schedule-container {
-    -fx-background-color: -fx-background;
+    -fx-background-color: -background-color;
     -fx-padding: 15;
 }
 
-/* ===== HEADER SECTION ===== */
-.schedule-header {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary, derive(-fx-primary, -10%));
-    -fx-padding: 12 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
-    -fx-background-radius: 10 10 0 0;
-}
-
-.schedule-title {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-light;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
-}
-
-.staff-info {
-    -fx-text-fill: -fx-text-light;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-/* ===== FILTER CONTROLS ===== */
-.filter-container {
+/* ===== TABLE STYLES ===== */
+.table-view {
     -fx-background-color: white;
-    -fx-padding: 15;
-    -fx-background-radius: 0 0 10 10;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 0 1px 1px 1px;
-    -fx-border-radius: 0 0 10 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
-}
-
-.filter-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.date-picker, .combo-box {
-    -fx-background-color: white;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 8;
-    -fx-font-size: 14px;
-}
-
-.date-picker .arrow-button, .combo-box .arrow-button {
-    -fx-background-color: -fx-primary;
-    -fx-background-radius: 0 5 5 0;
-}
-
-.date-picker .arrow, .combo-box .arrow {
-    -fx-background-color: -fx-text-light;
-}
-
-.filter-button {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-    -fx-padding: 8 15;
-    -fx-background-radius: 5;
-}
-
-.filter-button:hover {
-    -fx-background-color: -fx-primary-light;
-}
-
-/* ===== SCHEDULE TABLE ===== */
-.schedule-table {
-    -fx-background-color: white;
-    -fx-border-color: -fx-border-color;
+    -fx-border-color: -border-color;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
 }
 
-.schedule-table .column-header {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-    -fx-text-fill: -fx-text-light;
+/* Column headers */
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, -primary-light, -primary-color);
+    -fx-text-fill: -text-light;
     -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-border-color: derive(-fx-primary, 20%);
+    -fx-font-size: 14px;
+    -fx-padding: 8 5;
+    -fx-border-color: derive(-primary-color, 20%);
     -fx-border-width: 0 1px 0 0;
 }
 
-.schedule-table .table-row-cell {
+/* Table rows */
+.table-view .table-row-cell {
     -fx-background-color: white;
-    -fx-border-color: derive(-fx-border-color, 50%);
+    -fx-border-color: derive(-border-color, 50%);
     -fx-border-width: 0 0 1px 0;
+    -fx-cell-size: 40px;
 }
 
-.schedule-table .table-row-cell:odd {
-    -fx-background-color: derive(-fx-background, -5%);
+/* Alternate row coloring */
+.table-view .table-row-cell:odd {
+    -fx-background-color: derive(-background-color, -3%);
 }
 
-.schedule-table .table-row-cell:selected {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
+/* Selected row */
+.table-view .table-row-cell:selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -text-light;
 }
 
-.schedule-table .table-cell {
-    -fx-padding: 10 8;
-    -fx-alignment: CENTER_LEFT;
-}
-
-/* ===== WEEK VIEW ===== */
-.week-grid {
-    -fx-background-color: #e0e0e0;
-    -fx-hgap: 1;
-    -fx-vgap: 1;
-    -fx-padding: 1;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
-}
-
-.day-header {
-    -fx-background-color: -fx-primary-light;
-    -fx-text-fill: -fx-text-primary;
-    -fx-font-weight: bold;
-    -fx-padding: 10;
-    -fx-alignment: CENTER;
-}
-
-.shift-header {
-    -fx-font-weight: bold;
+/* Table cells */
+.table-view .table-cell {
     -fx-padding: 8 10;
-    -fx-alignment: CENTER;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 13px;
 }
 
-.morning-shift-header {
-    -fx-background-color: #d0e8f2; /* Light blue */
+/* Specific table styling */
+#scheduleTable {
+    -fx-table-cell-border-color: derive(-border-color, 50%);
 }
 
-.afternoon-shift-header {
-    -fx-background-color: #ffecc7; /* Light orange */
+#tblRequests {
+    -fx-table-cell-border-color: derive(-secondary-color, 50%);
 }
 
-.evening-shift-header {
-    -fx-background-color: #e8d0f2; /* Light purple */
+/* ===== STATUS STYLES ===== */
+.status-pending {
+    -fx-text-fill: #FF9800;
+    -fx-font-weight: bold;
 }
 
-.shift-cell {
+.status-approved {
+    -fx-text-fill: -accent-color;
+    -fx-font-weight: bold;
+}
+
+.status-rejected {
+    -fx-text-fill: -danger-color;
+    -fx-font-weight: bold;
+}
+
+
+/* ===== ĐĂNG KÝ CA LÀM TAB STYLES ===== */
+.shift-registration-tab {
+    -fx-background-color: -background-color;
+}
+
+#registrationLabel {
+    -fx-text-fill: -primary-dark;
+    -fx-font-size: 30px;
+}
+
+/* GridPane styling */
+#shiftRegistrationTab GridPane {
     -fx-background-color: white;
-    -fx-min-height: 100;
-    -fx-padding: 5;
-    -fx-border-color: derive(-fx-border-color, 20%);
-    -fx-border-width: 0.5;
-}
-
-/* ===== DETAILS SECTION ===== */
-.details-container {
-    -fx-background-color: white;
-    -fx-padding: 15;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1;
+    -fx-border-color: -border-color;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
+    -fx-padding: 20;
 }
 
-.details-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.info-textarea {
+/* DatePicker styling */
+#registrationDatePicker {
     -fx-background-color: white;
-    -fx-border-color: -fx-border-color;
+    -fx-border-color: -border-color;
     -fx-border-radius: 5;
-    -fx-padding: 8;
-    -fx-font-size: 14px;
-}
-
-.stats-container {
-    -fx-padding: 10 0;
-    -fx-spacing: 15;
-}
-
-.stat-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.stat-value {
-    -fx-font-size: 14px;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.stat-separator {
-    -fx-background-color: -fx-border-color;
-    -fx-pref-height: 20;
-    -fx-pref-width: 1;
-}
-
-/* ===== ACTION BUTTONS ===== */
-.action-buttons {
-    -fx-spacing: 10;
-    -fx-padding: 15 0 0 0;
-}
-
-.action-button {
-    -fx-padding: 8 15;
     -fx-background-radius: 5;
+    -fx-pref-height: 35;
+}
+
+/* ComboBox styling */
+#shiftSelector, #typeSelector {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-pref-height: 35;
+}
+
+/* TextArea styling */
+#registrationNotes {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: derive(-text-primary, 50%);
+}
+
+/* Button styling */
+#registerShiftButton {
+    -fx-background-color: -accent-color;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
 }
 
-.primary-action {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
+#registerShiftButton:hover {
+    -fx-background-color: derive(-accent-color, 10%);
 }
 
-.primary-action:hover {
-    -fx-background-color: -fx-primary-light;
+#registerShiftButton:pressed {
+    -fx-background-color: derive(-accent-color, -10%);
 }
 
-.secondary-action {
-    -fx-background-color: -fx-primary-light;
-    -fx-text-fill: -fx-text-primary;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1;
+#selectScheduleButton, #cancelRegistration {
+    -fx-background-color: white;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
 }
 
-.secondary-action:hover {
-    -fx-background-color: derive(-fx-primary-light, -10%);
+#selectScheduleButton:hover, #cancelRegistration:hover {
+    -fx-background-color: -primary-light;
+    -fx-text-fill: white;
 }
 
-/* ===== FOOTER ===== */
-.schedule-footer {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-    -fx-padding: 10 15;
+#selectScheduleButton:pressed, #cancelRegistration:pressed {
+    -fx-background-color: -primary-dark;
+}
+
+/* Bottom note section */
+#shiftRegistrationTab .bottom VBox {
+    -fx-background-color: -primary-light;
     -fx-background-radius: 0 0 10 10;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1px 0 0 0;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+    -fx-border-color: -border-color;
+    -fx-border-width: 1 0 0 0;
 }
 
-.status-label {
-    -fx-text-fill: -fx-text-light;
+#shiftRegistrationTab .bottom Label {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
     -fx-font-style: italic;
 }
 
-.footer-button {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-    -fx-padding: 8 15;
-    -fx-background-radius: 5;
+/* ScrollPane styling */
+#shiftRegistrationTab ScrollPane {
+    -fx-background-color: transparent;
 }
 
-.footer-button:hover {
-    -fx-background-color: -fx-primary-light;
+#shiftRegistrationTab ScrollPane .viewport {
+    -fx-background-color: transparent;
 }
 
 /* ===== TAB STYLING ===== */
 .tab-pane {
     -fx-tab-min-width: 120px;
     -fx-tab-max-width: 200px;
-}
-
-.tab-pane .tab-header-area {
-    -fx-background-color: transparent;
+    -fx-focus-color: transparent; /* Loại bỏ viền focus màu xanh */
+    -fx-faint-focus-color: transparent; /* Loại bỏ viền focus nhạt */
 }
 
 .tab-pane .tab-header-background {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
+    -fx-background-color: linear-gradient(to bottom, #f8e3c5, #e6a756);
 }
 
 .tab {
-    -fx-background-color: derive(-fx-primary, 80%);
-    -fx-background-radius: 5 5 0 0;
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
     -fx-padding: 5 15;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
+    -fx-border-color: #d88e3f;
+    -fx-border-radius: 8 8 0 0;
     -fx-border-width: 1 1 0 1;
 }
+
 .tab:selected {
-    -fx-background-color: white;
-    -fx-text-fill: -fx-text-primary;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #d88e3f; /* Đảm bảo viền vẫn là màu cam khi selected */
     -fx-border-width: 1 1 0 1;
 }
 
 .tab-label {
-    -fx-text-fill: -fx-text-light;
+    -fx-text-fill: #9c5b26;
     -fx-font-weight: bold;
 }
 
 .tab:selected .tab-label {
-    -fx-text-fill: -fx-text-primary;
+    -fx-text-fill: #5a3d2b;
 }
 
-/* ===== RESPONSIVE ADJUSTMENTS ===== 
-@media (max-width: 800px) {
-    .filter-container {
-        -fx-padding: 10;
-    }
-    
-    .filter-label {
-        -fx-font-size: 12px;
-    }
-    
-    .date-picker, .combo-box {
-        -fx-pref-width: 120px;
-    }
-} */
+.tab:hover {
+    -fx-background-color: #e6a756;
+}
+
+.tab:hover .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab:hover {
+    -fx-border-color: #d88e3f;
+    -fx-border-insets: 0;
+}
+
+/* Loại bỏ hoàn toàn hiệu ứng focus */
+.tab:selected:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.date-picker, .combo-box, .button {
+    -fx-background-color: white;
+    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+}
+
+
+/* Hiệu ứng hover */
+.date-picker:hover, .combo-box:hover, .button:hover {
+    -fx-background-color: #fff3e6; /* Màu cam nhạt khi hover */
+    -fx-border-color: #c67c2e;    /* Màu cam đậm hơn khi hover */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.5, 0, 1); /* Đổ bóng nhẹ */
+}
+
+/* Hiệu ứng khi nhấn */
+.date-picker:pressed, .combo-box:pressed, .button:pressed {
+    -fx-background-color: #ffe0b3; /* Màu cam đậm hơn khi nhấn */
+    -fx-border-color: #b56b25;     /* Màu cam đậm nhất */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.2), 5, 0.5, 0, 1); /* Hiệu ứng nhấn vào */
+}
+
+/* Hiệu ứng khi focus */
+.date-picker:focused, .combo-box:focused, .button:focused {
+    -fx-border-color: #e69138;     /* Màu cam sáng hơn khi focus */
+    -fx-effect: dropshadow(gaussian, rgba(230,145,56,0.4), 10, 0.5, 0, 0); /* Hiệu ứng focus nổi bật */
+}
+
+/* ===== FOOTER STYLES ===== */
+.footer-container {
+    -fx-background-color: linear-gradient(to bottom, -primary-light, -primary-color);
+    -fx-padding: 12 15;
+    -fx-border-color: derive(-primary-color, -20%);
+    -fx-border-width: 1px 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+}
+
+.footer-button {
+    -fx-background-color: -primary-dark;
+    -fx-text-fill: -text-light;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-min-width: 100;
+}
+
+.footer-button:hover {
+    -fx-background-color: derive(-primary-dark, 10%);
+}
+
+.footer-button:pressed {
+    -fx-background-color: derive(-primary-dark, -10%);
+}

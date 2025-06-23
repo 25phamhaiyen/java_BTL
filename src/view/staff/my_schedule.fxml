@@ -18,22 +18,22 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@/styles/schedule.css"
-	hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
-	xmlns="http://javafx.com/javafx/23.0.1"
+<ScrollPane fitToHeight="true" fitToWidth="true"
+	hbarPolicy="AS_NEEDED" stylesheets="@/styles/schedule.css"
+	vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/23.0.1"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="controllers.Staff.MyScheduleController">
 
 	<content>
-		<BorderPane 
-			prefWidth="1024" prefHeight="768" minWidth="800" minHeight="600">
+		<BorderPane minHeight="600" minWidth="800" prefHeight="768"
+			prefWidth="1024">
 
 			<top>
 				<VBox spacing="5" BorderPane.alignment="CENTER">
@@ -50,7 +50,8 @@
 							</textFill>
 						</Label>
 
-						<Region HBox.hgrow="ALWAYS" />
+						<Region prefHeight="42.0" prefWidth="585.0"
+							HBox.hgrow="ALWAYS" />
 
 						<VBox alignment="CENTER_RIGHT" spacing="2">
 							<Label fx:id="staffNameLabel"
@@ -67,13 +68,13 @@
 			</top>
 
 			<center>
-				<ScrollPane fitToWidth="true" fitToHeight="true"
+				<ScrollPane fitToHeight="true" fitToWidth="true"
 					hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
 					<TabPane tabClosingPolicy="UNAVAILABLE">
 						<tabs>
-							<Tab text="Lịch làm việc">
+							<Tab fx:id="scheduleTab" text="Lịch làm việc">
 								<content>
-									<ScrollPane fitToWidth="true" fitToHeight="true"
+									<ScrollPane fitToHeight="true" fitToWidth="true"
 										hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
 										<BorderPane>
 											<top>
@@ -82,31 +83,33 @@
 														<Insets bottom="10" left="15" right="15" top="10" />
 													</padding>
 
-													<GridPane hgap="10" vgap="10" maxWidth="1920">
+													<GridPane hgap="10" maxWidth="1920" vgap="10">
 														<columnConstraints>
-															<ColumnConstraints hgrow="NEVER" />
+															<ColumnConstraints hgrow="NEVER" /> <!-- Cột 0 - Chọn ngày -->
 															<ColumnConstraints hgrow="SOMETIMES"
-																minWidth="120" />
+																minWidth="120.0" /> <!-- Cột 1 - DatePicker -->
+															<ColumnConstraints hgrow="NEVER" /> <!-- Cột 2 - chế độ -->
 															<ColumnConstraints hgrow="SOMETIMES"
-																minWidth="150" />
-															<ColumnConstraints hgrow="ALWAYS"
-																minWidth="150" />
-															<ColumnConstraints hgrow="NEVER" />
-															<ColumnConstraints hgrow="NEVER" />
+																maxWidth="368.0" minWidth="150.0" prefWidth="151.0" /> <!-- Cột 3 - ComboBox -->
+															<ColumnConstraints hgrow="NEVER" /> <!-- Cột 4 - lọc ngày -->
+															<ColumnConstraints hgrow="NEVER"
+																maxWidth="365.0" minWidth="153.0" prefWidth="346.0" /> <!-- Cột 5 - ComboBox -->
+															<ColumnConstraints hgrow="NEVER" /> <!-- Cột 6 - Button -->
 														</columnConstraints>
 														<rowConstraints>
 															<RowConstraints minHeight="40" />
 														</rowConstraints>
 
-														<Label style="-fx-font-weight: bold;"
-															text="Chọn ngày:" GridPane.columnIndex="0"
-															GridPane.rowIndex="0" />
+														<Label fx:id="selectDateLabel"
+															style="-fx-font-weight: bold;" text="Chọn ngày:"
+															GridPane.columnIndex="0" GridPane.rowIndex="0" />
 														<DatePicker fx:id="datePicker"
 															GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
+														<Label fx:id="viewModeSelector1"
+															style="-fx-font-weight: bold;" text="Chế độ:"
+															GridPane.columnIndex="2" GridPane.rowIndex="0" />
 														<ComboBox fx:id="viewModeSelector"
-															prefWidth="150" promptText="Chế độ xem"
-															GridPane.columnIndex="2" GridPane.rowIndex="0">
+															GridPane.columnIndex="3" GridPane.rowIndex="0">
 															<items>
 																<FXCollections
 																	fx:factory="observableArrayList">
@@ -116,12 +119,14 @@
 																</FXCollections>
 															</items>
 														</ComboBox>
-
-														<ComboBox fx:id="shiftFilter" prefWidth="150"
-															promptText="Lọc ca" GridPane.columnIndex="3"
-															GridPane.rowIndex="0" />
-														<Button onAction="#applyFilter" text="Áp dụng"
+														<Label fx:id="shiftFilter1"
+															style="-fx-font-weight: bold;" text="Lọc ngày:"
 															GridPane.columnIndex="4" GridPane.rowIndex="0" />
+														<ComboBox fx:id="shiftFilter"
+															GridPane.columnIndex="5" GridPane.rowIndex="0" />
+														<Button fx:id="applyFilterButton"
+															onAction="#applyFilter" text="Áp dụng"
+															GridPane.columnIndex="6" GridPane.rowIndex="0" />
 													</GridPane>
 												</VBox>
 											</top>
@@ -141,22 +146,26 @@
 																<TableView fx:id="scheduleTable">
 																	<columns>
 																		<TableColumn fx:id="idColumn"
-																			prefWidth="75" text="Mã lịch" />
+																			text="Mã lịch" />
 																		<TableColumn fx:id="dateColumn"
-																			prefWidth="120" text="Ngày" />
+																			text="Ngày" />
 																		<TableColumn fx:id="shiftColumn"
-																			prefWidth="120" text="Ca làm việc" />
+																			text="Ca làm việc" />
 																		<TableColumn fx:id="startTimeColumn"
-																			prefWidth="100" text="Giờ bắt đầu" />
+																			text="Giờ bắt đầu" />
 																		<TableColumn fx:id="endTimeColumn"
-																			prefWidth="100" text="Giờ kết thúc" />
+																			text="Giờ kết thúc" />
 																		<TableColumn fx:id="locationColumn"
-																			prefWidth="150" text="Địa điểm" />
+																			text="Địa điểm" />
 																		<TableColumn fx:id="taskColumn"
-																			minWidth="200" text="Công việc" />
+																			text="Công việc" />
 																		<TableColumn fx:id="noteColumn"
-																			minWidth="250" text="Ghi chú" />
+																			text="Ghi chú" />
 																	</columns>
+																	<columnResizePolicy>
+																		<TableView
+																			fx:constant="CONSTRAINED_RESIZE_POLICY" />
+																	</columnResizePolicy>
 																</TableView>
 															</ScrollPane>
 														</VBox>
@@ -164,8 +173,8 @@
 														<!-- Week view -->
 														<VBox fx:id="weekView" managed="false"
 															visible="false">
-															<ScrollPane fitToWidth="true"
-																fitToHeight="true" hbarPolicy="AS_NEEDED"
+															<ScrollPane fitToHeight="true"
+																fitToWidth="true" hbarPolicy="AS_NEEDED"
 																vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
 																<GridPane alignment="CENTER" hgap="1"
 																	style="-fx-background-color: #e0e0e0;" vgap="1">
@@ -306,14 +315,14 @@
 																	<rowConstraints>
 																		<RowConstraints vgrow="NEVER" />
 																		<RowConstraints vgrow="NEVER" />
-																		<RowConstraints vgrow="ALWAYS"
-																			minHeight="100" />
+																		<RowConstraints minHeight="100"
+																			vgrow="ALWAYS" />
 																		<RowConstraints vgrow="NEVER" />
-																		<RowConstraints vgrow="ALWAYS"
-																			minHeight="100" />
+																		<RowConstraints minHeight="100"
+																			vgrow="ALWAYS" />
 																		<RowConstraints vgrow="NEVER" />
-																		<RowConstraints vgrow="ALWAYS"
-																			minHeight="100" />
+																		<RowConstraints minHeight="100"
+																			vgrow="ALWAYS" />
 																	</rowConstraints>
 																</GridPane>
 															</ScrollPane>
@@ -338,33 +347,35 @@
 															<RowConstraints minHeight="40" />
 														</rowConstraints>
 
-														<Label style="-fx-font-weight: bold;"
-															text="Thông tin chi tiết:" GridPane.columnIndex="0"
-															GridPane.rowIndex="0" />
+														<!-- Trong phần thông tin chi tiết -->
+														<Label fx:id="additionalInfoLabel"
+															style="-fx-font-weight: bold;" text="Thông tin chi tiết:"
+															GridPane.columnIndex="0" GridPane.rowIndex="0" />
 
 														<TextArea fx:id="additionalInfoArea"
 															prefHeight="60" wrapText="true" GridPane.columnIndex="1"
 															GridPane.rowIndex="0" />
 
-														<Label style="-fx-font-weight: bold;"
-															text="Tổng ca làm việc:" GridPane.columnIndex="0"
-															GridPane.rowIndex="1" />
+														<Label fx:id="totalShiftsText"
+															style="-fx-font-weight: bold;" text="Tổng ca làm việc:"
+															GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
 														<HBox alignment="CENTER_LEFT" spacing="15"
 															GridPane.columnIndex="1" GridPane.rowIndex="1">
+															<!-- Trong phần tổng ca làm việc -->
 															<Label fx:id="totalShiftsLabel"
 																style="-fx-font-size: 14;" text="0" />
 															<Separator orientation="VERTICAL" />
-															<Label style="-fx-font-weight: bold;"
-																text="Ca sáng:" />
+															<Label fx:id="morningShiftsText"
+																style="-fx-font-weight: bold;" text="Ca sáng:" />
 															<Label fx:id="morningShiftsLabel" text="0" />
 															<Separator orientation="VERTICAL" />
-															<Label style="-fx-font-weight: bold;"
-																text="Ca chiều:" />
+															<Label fx:id="afternoonShiftsText"
+																style="-fx-font-weight: bold;" text="Ca chiều:" />
 															<Label fx:id="afternoonShiftsLabel" text="0" />
 															<Separator orientation="VERTICAL" />
-															<Label style="-fx-font-weight: bold;"
-																text="Ca tối:" />
+															<Label fx:id="eveningShiftsText"
+																style="-fx-font-weight: bold;" text="Ca tối:" />
 															<Label fx:id="eveningShiftsLabel" text="0" />
 														</HBox>
 													</GridPane>
@@ -376,7 +387,9 @@
 															text="Yêu cầu nghỉ phép" />
 														<Button fx:id="requestShiftChangeButton"
 															onAction="#requestShiftChange" text="Đổi ca" />
-														<Button onAction="#refreshSchedule" text="Làm mới" />
+														<!-- In your FXML where the other buttons are -->
+														<Button fx:id="refreshButton"
+															onAction="#refreshSchedule" text="Làm mới" />
 													</HBox>
 												</VBox>
 											</bottom>
@@ -385,9 +398,9 @@
 								</content>
 							</Tab>
 
-							<Tab text="Đăng ký ca làm">
+							<Tab fx:id="shiftRegistrationTab" text="Đăng ký ca làm">
 								<content>
-									<ScrollPane fitToWidth="true" fitToHeight="true"
+									<ScrollPane fitToHeight="true" fitToWidth="true"
 										hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
 										<BorderPane>
 											<top>
@@ -396,7 +409,8 @@
 														<Insets bottom="15" left="15" right="15" top="15" />
 													</padding>
 
-													<Label
+													<!-- Trong tab Đăng ký ca làm -->
+													<Label fx:id="registrationLabel"
 														style="-fx-font-size: 16; -fx-font-weight: bold;"
 														text="Đăng ký lịch làm việc" />
 													<Separator />
@@ -404,7 +418,7 @@
 											</top>
 
 											<center>
-												<ScrollPane fitToWidth="true" fitToHeight="true"
+												<ScrollPane fitToHeight="true" fitToWidth="true"
 													hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
 													<GridPane alignment="CENTER" hgap="15" vgap="15">
 														<padding>
@@ -420,12 +434,12 @@
 															<RowConstraints minHeight="40" />
 															<RowConstraints minHeight="40" />
 															<RowConstraints minHeight="40" />
-															<RowConstraints vgrow="ALWAYS"
-																minHeight="100" />
+															<RowConstraints minHeight="100"
+																vgrow="ALWAYS" />
 															<RowConstraints minHeight="50" />
 														</rowConstraints>
 
-														<Label text="Ngày làm việc:"
+														<Label fx:id="workDateLabel" text="Ngày làm việc:"
 															GridPane.columnIndex="0" GridPane.rowIndex="0" />
 														<HBox spacing="10" GridPane.columnIndex="1"
 															GridPane.rowIndex="0">
@@ -435,19 +449,18 @@
 																onAction="#selectSchedule" text="Lựa chọn" />
 														</HBox>
 
-														<Label text="Ca làm việc:" GridPane.columnIndex="0"
-															GridPane.rowIndex="1" />
+														<Label fx:id="shiftLabel" text="Ca làm việc:"
+															GridPane.columnIndex="0" GridPane.rowIndex="1" />
 														<ComboBox fx:id="shiftSelector" prefWidth="200"
 															GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-														<Label text="Loại yêu cầu:" GridPane.columnIndex="0"
-															GridPane.rowIndex="2" />
-														<ComboBox fx:id="typeSelector"
-															prefWidth="200" GridPane.columnIndex="1"
-															GridPane.rowIndex="2" />
+														<Label fx:id="requestTypeLabel" text="Loại yêu cầu:"
+															GridPane.columnIndex="0" GridPane.rowIndex="2" />
+														<ComboBox fx:id="typeSelector" prefWidth="200"
+															GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-														<Label text="Ghi chú:" GridPane.columnIndex="0"
-															GridPane.rowIndex="3" />
+														<Label fx:id="notesLabel" text="Ghi chú:"
+															GridPane.columnIndex="0" GridPane.rowIndex="3" />
 														<TextArea fx:id="registrationNotes"
 															prefHeight="100" wrapText="true" GridPane.columnIndex="1"
 															GridPane.rowIndex="3" />
@@ -459,7 +472,12 @@
 																onAction="#registerShift"
 																style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
 																text="Đăng ký ca làm" />
-															<Button onAction="#cancelRegistration" text="Hủy" />
+															<Button fx:id="cancelRegistrationButton"
+																onAction="#cancelRegistration">
+																<text>
+																	Hủy
+																</text>
+															</Button>
 														</HBox>
 													</GridPane>
 												</ScrollPane>
@@ -471,9 +489,12 @@
 														<Insets bottom="15" left="15" right="15" top="15" />
 													</padding>
 
-													<Label style="-fx-font-style: italic;"
+													<Label fx:id="noteLabel1"
+														style="-fx-font-style: italic;"
 														text="Lưu ý: Đăng ký ca làm cần được quản lý xác nhận trước khi có hiệu lực." />
-													<Label style="-fx-font-style: italic;"
+
+													<Label fx:id="noteLabel2"
+														style="-fx-font-style: italic;"
 														text="Hạn đăng ký: Trước 48 giờ so với ca làm việc." />
 												</VBox>
 											</bottom>
@@ -482,17 +503,65 @@
 								</content>
 							</Tab>
 							<Tab fx:id="myRequestsTab" text="Yêu cầu của tôi">
-							    <VBox spacing="10">
-							        <TableView fx:id="tblRequests">
-							            <columns>
-							                <TableColumn fx:id="colDate" minWidth="100" text="Ngày" />
-							                <TableColumn fx:id="colShift" minWidth="100" text="Ca" />
-							                <TableColumn fx:id="colType" minWidth="300" text="Loại" />
-							                <TableColumn fx:id="colStatus" minWidth="300" text="Trạng thái" />
-							                <TableColumn fx:id="colReason" minWidth="100" text="Lý do" />
-							            </columns>
-							        </TableView>
-							    </VBox>
+								<content>
+									<VBox styleClass="my-requests-tab" spacing="10">
+										<padding>
+											<Insets bottom="15" left="15" right="15" top="15" />
+										</padding>
+
+										<ScrollPane fitToWidth="true"
+											hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+											VBox.vgrow="ALWAYS">
+											<TableView fx:id="tblRequests"
+												styleClass="my-requests-table">
+												<columns>
+													<TableColumn fx:id="colDate" text="Ngày"
+														style="-fx-alignment: CENTER;">
+														<cellValueFactory>
+															<PropertyValueFactory
+																property="date" />
+														</cellValueFactory>
+													</TableColumn>
+													<TableColumn fx:id="colShift" text="Ca"
+														style="-fx-alignment: CENTER;">
+														<cellValueFactory>
+															<PropertyValueFactory
+																property="shift" />
+														</cellValueFactory>
+													</TableColumn>
+													<TableColumn fx:id="colType"
+														text="Loại yêu cầu">
+														<cellValueFactory>
+															<PropertyValueFactory
+																property="requestType" />
+														</cellValueFactory>
+													</TableColumn>
+													<TableColumn fx:id="colStatus"
+														text="Trạng thái">
+														<cellValueFactory>
+															<PropertyValueFactory
+																property="status" />
+														</cellValueFactory>
+													</TableColumn>
+													<TableColumn fx:id="colReason" text="Lý do">
+														<cellValueFactory>
+															<PropertyValueFactory
+																property="reason" />
+														</cellValueFactory>
+													</TableColumn>
+												</columns>
+												<columnResizePolicy>
+													<TableView
+														fx:constant="CONSTRAINED_RESIZE_POLICY" />
+												</columnResizePolicy>
+											</TableView>
+										</ScrollPane>
+
+										<!-- <HBox alignment="CENTER_RIGHT" spacing="10"> <Button onAction="#refreshRequests" 
+											text="Làm mới" /> <Button onAction="#cancelRequest" style="-fx-background-color: 
+											-fx-danger; -fx-text-fill: white;" text="Hủy yêu cầu" /> </HBox> -->
+									</VBox>
+								</content>
 							</Tab>
 						</tabs>
 					</TabPane>
@@ -500,20 +569,24 @@
 			</center>
 
 			<bottom>
-				<HBox alignment="CENTER_RIGHT" spacing="10"
-					style="-fx-background-color: #f0f0f0;" minHeight="60">
+				<!-- In the bottom section of the FXML, update the HBox with the new 
+					buttons -->
+				<HBox alignment="CENTER" styleClass="footer-container">
 					<padding>
-						<Insets bottom="10" left="15" right="15" top="10" />
+						<Insets bottom="10" left="20" right="20" top="10" />
 					</padding>
 
-					<Label fx:id="statusLabel"
+					<Label fx:id="statusLabel" styleClass="footer-label"
 						text="Trạng thái: Đã tải lịch làm việc" />
+
 					<Region HBox.hgrow="ALWAYS" />
-					<Button fx:id="homeButton" onAction="#goToHome"
-						style="-fx-background-color: #d88e3f; -fx-text-fill: white;"
-						text="Về trang chủ" />
-					<Button onAction="#showHelp" text="Trợ giúp" />
-					<Button onAction="#exitApplication" text="Thoát" />
+
+					<Button fx:id="homeButton" styleClass="footer-button"
+						onAction="#goToHome" text="Về trang chủ" />
+					<Button fx:id="helpButton" styleClass="footer-button"
+						onAction="#showHelp" text="Trợ giúp" />
+					<Button fx:id="exitButton" styleClass="footer-button"
+						onAction="#exitApplication" text="Thoát" />
 				</HBox>
 			</bottom>
 		</BorderPane>
