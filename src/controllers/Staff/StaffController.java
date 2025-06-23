@@ -2,10 +2,12 @@ package controllers.Staff;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import controllers.SceneSwitcher;
 import enums.Shift;
@@ -50,6 +52,12 @@ public class StaffController implements Initializable, LanguageChangeListener {
 
 	@FXML
 	private Label staffRoleLabel;
+	
+	@FXML
+	private Label staffAppTitle;
+
+	@FXML
+	private Label staffWelcomeSubtitle;
 
 	@FXML
 	private Button myScheduleButton;
@@ -96,6 +104,19 @@ public class StaffController implements Initializable, LanguageChangeListener {
 
 	private final ScheduleService scheduleService = new ScheduleService();
 	private Staff currentStaff;
+	
+	@FXML
+	private Label staffWorkShiftLabel, staffWorkShiftValue;
+	@FXML
+	private Label staffAppointmentsLabel, staffAppointmentsValue;
+	@FXML
+	private Label staffCompletedLabel, staffCompletedValue;
+	
+	@FXML
+	private Label appointmentBadgeLabel;
+	@FXML
+	private Label scheduleBadgeLabel;
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -116,6 +137,7 @@ public class StaffController implements Initializable, LanguageChangeListener {
 			staffRoleLabel.setText(currentStaff.getRole().getRoleName());
 		}
 
+		
 		// Cập nhật tên giao diện với đa ngôn ngữ
 		updateWelcomeLabel();
 
@@ -140,6 +162,9 @@ public class StaffController implements Initializable, LanguageChangeListener {
 			}
 		});
 
+		// Thêm dòng này ở cuối phương thức initialize
+	    updateStats();
+	    
 		loadTodaySchedule();
 		loadTodayAppointments();
 	}
@@ -180,6 +205,8 @@ public class StaffController implements Initializable, LanguageChangeListener {
 		try {
 			// Update all UI text with current language
 			staffLabelText.setText(LanguageManagerStaff.getString("staff.label"));
+			staffAppTitle.setText(LanguageManagerStaff.getString("staff.apptitle"));
+			staffWelcomeSubtitle.setText(LanguageManagerStaff.getString("staff.WelcomeSubtitle"));
 			roleLabelText.setText(LanguageManagerStaff.getString("role.label"));
 			logoutButton.setText(LanguageManagerStaff.getString("logout.button"));
 			editProfileButton.setText(LanguageManagerStaff.getString("edit.profile.button"));
@@ -189,6 +216,18 @@ public class StaffController implements Initializable, LanguageChangeListener {
 			bookingViewButton.setText(LanguageManagerStaff.getString("booking.view.button"));
 			invoiceViewButton.setText(LanguageManagerStaff.getString("invoice.view.button"));
 			
+			// Thêm các dòng này
+	        staffWorkShiftLabel.setText(LanguageManagerStaff.getString("staff.workshift"));
+	        staffAppointmentsLabel.setText(LanguageManagerStaff.getString("staff.appointments"));
+	        staffCompletedLabel.setText(LanguageManagerStaff.getString("staff.completed"));
+	        
+	     // Cập nhật text cho badge
+	        appointmentBadgeLabel.setText(LanguageManagerStaff.getString("badge.appointment"));
+	        scheduleBadgeLabel.setText(LanguageManagerStaff.getString("badge.schedule"));
+	        
+	        // Cập nhật lại stats khi ngôn ngữ thay đổi
+	        updateStats();
+	        
 			// Update welcome label
 			updateWelcomeLabel();
 			
@@ -203,19 +242,41 @@ public class StaffController implements Initializable, LanguageChangeListener {
 		}
 	}
 
+//	private void updateWelcomeLabel() {
+//		try {
+//			String welcomeText = LanguageManagerStaff.getString("welcome.message");
+//			if (currentStaff != null) {
+//				welcomeText = String.format(welcomeText, 
+//					currentStaff.getFullName(),
+//					currentStaff.getRole() != null ? currentStaff.getRole().getRoleName() : LanguageManagerStaff.getString("staff.default"));
+//			}
+//			welcomeLabel.setText(welcomeText);
+//		} catch (Exception e) {
+//			System.err.println("Error updating welcome label: " + e.getMessage());
+//			welcomeLabel.setText("Welcome"); // Fallback
+//		}
+//	}
+	
 	private void updateWelcomeLabel() {
-		try {
-			String welcomeText = LanguageManagerStaff.getString("welcome.message");
-			if (currentStaff != null) {
-				welcomeText = String.format(welcomeText, 
-					currentStaff.getFullName(),
-					currentStaff.getRole() != null ? currentStaff.getRole().getRoleName() : LanguageManagerStaff.getString("staff.default"));
-			}
-			welcomeLabel.setText(welcomeText);
-		} catch (Exception e) {
-			System.err.println("Error updating welcome label: " + e.getMessage());
-			welcomeLabel.setText("Welcome"); // Fallback
-		}
+	    try {
+	        String welcomePattern = LanguageManagerStaff.getString("welcome.message");
+	        if (currentStaff != null) {
+	            String roleName = currentStaff.getRole() != null 
+	                ? currentStaff.getRole().getRoleName() 
+	                : LanguageManagerStaff.getString("staff.default");
+	            
+	            welcomeLabel.setText(MessageFormat.format(welcomePattern, 
+	                currentStaff.getFullName(),
+	                roleName));
+	        } else {
+	            welcomeLabel.setText(MessageFormat.format(welcomePattern, 
+	                LanguageManagerStaff.getString("unknown.user"),
+	                LanguageManagerStaff.getString("unknown.role")));
+	        }
+	    } catch (Exception e) {
+	        System.err.println("Error updating welcome label: " + e.getMessage());
+	        welcomeLabel.setText("Welcome"); // Fallback
+	    }
 	}
 
 	/**
@@ -282,7 +343,13 @@ public class StaffController implements Initializable, LanguageChangeListener {
 					String petName = (pet != null) ? pet.getName() : LanguageManagerStaff.getString("unknown");
 					String customerName = (customer != null) ? customer.getFullName() : LanguageManagerStaff.getString("unknown");
 
-					String displayText = String.format(LanguageManagerStaff.getString("appointment.format"), time, petName, customerName);
+					String displayText = MessageFormat.format(
+						    LanguageManagerStaff.getString("appointment.format"), 
+						    time, 
+						    petName, 
+						    customerName
+						);
+
 					appointments.add(displayText);
 				}
 			}
@@ -312,6 +379,52 @@ public class StaffController implements Initializable, LanguageChangeListener {
 		invoiceViewButton.setVisible(RoleChecker.hasPermission("VIEW_INVOICE"));
 	}
 
+	private void updateStats() {
+	    try {
+	        currentStaff = Session.getCurrentStaff();
+	        if (currentStaff == null) return;
+
+	        LocalDate today = LocalDate.now();
+	        
+	        // 1. Cập nhật số ca làm việc
+	        List<WorkSchedule> todaySchedules = scheduleService.getSchedulesByStaffAndDate(currentStaff.getId(), today);
+	        int totalShiftsToday = todaySchedules.size();
+	        int totalWeeklyShifts = getTotalShiftsPerWeek();
+	        staffWorkShiftValue.setText(totalShiftsToday + "/" + totalWeeklyShifts);
+	        
+	        // 2. Cập nhật số khách hẹn
+	        BookingService bookingService = new BookingService();
+	        List<Booking> todayBookings = bookingService.getBookingsByStaffId(currentStaff.getId()).stream()
+	                .filter(b -> b.getBookingTime().toLocalDate().equals(today))
+	                .collect(Collectors.toList());
+	        int totalAppointments = todayBookings.size();
+	        staffAppointmentsValue.setText(String.valueOf(totalAppointments));
+	        
+	        // 3. Cập nhật số hoàn thành (sử dụng enum đúng cách)
+	        long completedCount = todayBookings.stream()
+	                .filter(b -> b.getStatus() != null && b.getStatus().isCompleted())
+	                .count();
+	        staffCompletedValue.setText(completedCount + "/" + totalAppointments);
+	        
+	    } catch (Exception e) {
+	        System.err.println("Error updating stats: " + e.getMessage());
+	        e.printStackTrace();
+	        staffWorkShiftValue.setText("0/0");
+	        staffAppointmentsValue.setText("0");
+	        staffCompletedValue.setText("0/0");
+	    }
+	}
+
+	private int getTotalShiftsPerWeek() {
+	    // Giả sử mỗi nhân viên làm 7 ca/tuần (có thể điều chỉnh theo logic nghiệp vụ)
+	    return 7;
+	    
+	    // Hoặc tính toán thực tế hơn:
+	    // LocalDate startOfWeek = LocalDate.now().with(DayOfWeek.MONDAY);
+	    // LocalDate endOfWeek = startOfWeek.plusDays(6);
+	    // return scheduleService.getSchedulesByStaffAndDateRange(currentStaff.getId(), startOfWeek, endOfWeek).size();
+	}
+	
 	@FXML
 	private void showMySchedule(ActionEvent event) {
 		SceneSwitcher.switchScene("staff/my_schedule.fxml");
