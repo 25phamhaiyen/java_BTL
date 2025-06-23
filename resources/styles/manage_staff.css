@@ -6,9 +6,24 @@ VBox {
 
 /* Tiêu đề */
 .header-label {
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #d9822b; /* cam đậm */
+     -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00); /* Cam rực hơn */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.5, 0, 3); /* Đổ bóng mạnh hơn */
+
+    /* Thêm nền mờ giúp chữ nổi bật trên nền ảnh */
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 10;
+
+    /* Viền cam rực */
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+
+    /* Căn chỉnh và khoảng cách */
+    -fx-padding: 14 28;
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
 }
 
 /* Ô tìm kiếm */

@@ -1,327 +1,114 @@
-/* ===== SCHEDULE CSS - HARMONIZED WITH MAIN THEME ===== */
-/* Import main theme variables */
-.root {
-    -fx-primary: #d88e3f; /* Main orange */
-    -fx-primary-light: #f1d6a1; /* Light orange */
-    -fx-primary-dark: #b06a20; /* Dark orange */
-    -fx-secondary: #4d7fa8; /* Blue */
-    -fx-accent: #4CAF50; /* Green */
-    -fx-danger: #e65c5c; /* Red */
-    -fx-background: #f9f3e6; /* Cream background */
-    -fx-text-primary: #5a3d2a; /* Dark brown text */
-    -fx-text-light: white; /* White text */
-    -fx-border-color: #d88e3f; /* Orange border */
-}
-
-/* ===== MAIN CONTAINER ===== */
-.schedule-container {
-    -fx-background-color: -fx-background;
-    -fx-padding: 15;
-}
-
-/* ===== HEADER SECTION ===== */
-.schedule-header {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary, derive(-fx-primary, -10%));
-    -fx-padding: 12 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
-    -fx-background-radius: 10 10 0 0;
-}
 
 .schedule-title {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-light;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);
-}
+    -fx-background-color: linear-gradient(to bottom, #fff3e0, #ffe0b2);
+    -fx-border-color: #ffcc80;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
 
-.staff-info {
-    -fx-text-fill: -fx-text-light;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-text-fill: #5a3000;
+
+    -fx-padding: 8px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;  /* QUAN TRỌNG để hiển thị xuống dòng */
+
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-min-width: 110px;
+    -fx-min-height: 60px;
 }
 
-/* ===== FILTER CONTROLS ===== */
-.filter-container {
-    -fx-background-color: white;
-    -fx-padding: 15;
-    -fx-background-radius: 0 0 10 10;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 0 1px 1px 1px;
-    -fx-border-radius: 0 0 10 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
-}
+#lblTitle {
+     -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00); /* Cam rực hơn */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.5, 0, 3); /* Đổ bóng mạnh hơn */
 
-.filter-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.date-picker, .combo-box {
-    -fx-background-color: white;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 8;
-    -fx-font-size: 14px;
-}
-
-.date-picker .arrow-button, .combo-box .arrow-button {
-    -fx-background-color: -fx-primary;
-    -fx-background-radius: 0 5 5 0;
-}
-
-.date-picker .arrow, .combo-box .arrow {
-    -fx-background-color: -fx-text-light;
-}
-
-.filter-button {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-    -fx-padding: 8 15;
-    -fx-background-radius: 5;
-}
-
-.filter-button:hover {
-    -fx-background-color: -fx-primary-light;
-}
-
-/* ===== SCHEDULE TABLE ===== */
-.schedule-table {
-    -fx-background-color: white;
-    -fx-border-color: -fx-border-color;
-    -fx-border-radius: 10;
+    /* Thêm nền mờ giúp chữ nổi bật trên nền ảnh */
+    -fx-background-color: rgba(255, 255, 255, 0.6);
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
-}
 
-.schedule-table .column-header {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
-    -fx-border-color: derive(-fx-primary, 20%);
-    -fx-border-width: 0 1px 0 0;
-}
-
-.schedule-table .table-row-cell {
-    -fx-background-color: white;
-    -fx-border-color: derive(-fx-border-color, 50%);
-    -fx-border-width: 0 0 1px 0;
-}
-
-.schedule-table .table-row-cell:odd {
-    -fx-background-color: derive(-fx-background, -5%);
-}
-
-.schedule-table .table-row-cell:selected {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-}
-
-.schedule-table .table-cell {
-    -fx-padding: 10 8;
-    -fx-alignment: CENTER_LEFT;
-}
-
-/* ===== WEEK VIEW ===== */
-.week-grid {
-    -fx-background-color: #e0e0e0;
-    -fx-hgap: 1;
-    -fx-vgap: 1;
-    -fx-padding: 1;
+    /* Viền cam rực */
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
     -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
+
+    /* Căn chỉnh và khoảng cách */
+    -fx-padding: 14 28;
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
 }
 
-.day-header {
-    -fx-background-color: -fx-primary-light;
-    -fx-text-fill: -fx-text-primary;
+.main-title {
+    -fx-font-size: 40px;
+    -fx-font-weight: 900;
+    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 0, 2);
+
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 12;
+    -fx-border-color: #ff9800;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+
+    -fx-padding: 30 40; /* Tăng chiều cao và không gian xung quanh */
+    -fx-alignment: center;
+    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
+}
+.picker-bar .label {
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 10;
-    -fx-alignment: CENTER;
+    -fx-text-fill: #333333;
 }
 
-.shift-header {
+.date-picker {
+    -fx-background-color: #fffbe6;
+    -fx-border-color: -fx-primary;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6;
     -fx-font-weight: bold;
-    -fx-padding: 8 10;
-    -fx-alignment: CENTER;
+    -fx-border-color: #f7c948;
 }
 
-.morning-shift-header {
-    -fx-background-color: #d0e8f2; /* Light blue */
+.date-picker .arrow-button {
+    -fx-background-color: #f7c948;
+    -fx-background-radius: 0 6 6 0;
 }
 
-.afternoon-shift-header {
-    -fx-background-color: #ffecc7; /* Light orange */
-}
-
-.evening-shift-header {
-    -fx-background-color: #e8d0f2; /* Light purple */
-}
-
-.shift-cell {
+.date-picker .arrow-button .arrow {
     -fx-background-color: white;
-    -fx-min-height: 100;
-    -fx-padding: 5;
-    -fx-border-color: derive(-fx-border-color, 20%);
-    -fx-border-width: 0.5;
 }
-
-/* ===== DETAILS SECTION ===== */
-.details-container {
-    -fx-background-color: white;
-    -fx-padding: 15;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
-}
-
-.details-label {
+.button {
+    -fx-background-color: linear-gradient(to right, #ffa726, #fb8c00); /* Gradient cam */
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.info-textarea {
-    -fx-background-color: white;
-    -fx-border-color: -fx-border-color;
-    -fx-border-radius: 5;
-    -fx-padding: 8;
-    -fx-font-size: 14px;
-}
-
-.stats-container {
-    -fx-padding: 10 0;
-    -fx-spacing: 15;
-}
-
-.stat-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.stat-value {
-    -fx-font-size: 14px;
-    -fx-text-fill: -fx-text-primary;
-}
-
-.stat-separator {
-    -fx-background-color: -fx-border-color;
-    -fx-pref-height: 20;
-    -fx-pref-width: 1;
-}
-
-/* ===== ACTION BUTTONS ===== */
-.action-buttons {
-    -fx-spacing: 10;
-    -fx-padding: 15 0 0 0;
-}
-
-.action-button {
-    -fx-padding: 8 15;
-    -fx-background-radius: 5;
-    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 10 20;
+    -fx-border-color: #ef6c00; /* Viền cam đậm */
+    -fx-border-width: 2px;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.3, 0, 2);
+    -fx-font-size: 15px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 }
 
-.primary-action {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #ffb74d, #ffa000); /* Sáng hơn khi hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 6, 0.4, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
-.primary-action:hover {
-    -fx-background-color: -fx-primary-light;
+.button:pressed {
+    -fx-background-color: linear-gradient(to right, #ef6c00, #e65100); /* Tối hơn khi nhấn */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0.2, 0, 1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
 }
 
-.secondary-action {
-    -fx-background-color: -fx-primary-light;
-    -fx-text-fill: -fx-text-primary;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1;
-}
-
-.secondary-action:hover {
-    -fx-background-color: derive(-fx-primary-light, -10%);
-}
-
-/* ===== FOOTER ===== */
-.schedule-footer {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-    -fx-padding: 10 15;
-    -fx-background-radius: 0 0 10 10;
-    -fx-border-color: -fx-border-color;
-    -fx-border-width: 1px 0 0 0;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
-}
-
-.status-label {
-    -fx-text-fill: -fx-text-light;
-    -fx-font-style: italic;
-}
-
-.footer-button {
-    -fx-background-color: -fx-primary;
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-    -fx-padding: 8 15;
-    -fx-background-radius: 5;
-}
-
-.footer-button:hover {
-    -fx-background-color: -fx-primary-light;
-}
-
-/* ===== TAB STYLING ===== */
-.tab-pane {
-    -fx-tab-min-width: 120px;
-    -fx-tab-max-width: 200px;
-}
-
-.tab-pane .tab-header-area {
-    -fx-background-color: transparent;
-}
-
-.tab-pane .tab-header-background {
-    -fx-background-color: linear-gradient(to bottom, -fx-primary-light, -fx-primary);
-}
-
-.tab {
-    -fx-background-color: derive(-fx-primary, 80%);
-    -fx-background-radius: 5 5 0 0;
-    -fx-padding: 5 15;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
-    -fx-border-width: 1 1 0 1;
-}
-.tab:selected {
-    -fx-background-color: white;
-    -fx-text-fill: -fx-text-primary;
-    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
-    -fx-border-width: 1 1 0 1;
-}
-
-.tab-label {
-    -fx-text-fill: -fx-text-light;
-    -fx-font-weight: bold;
-}
-
-.tab:selected .tab-label {
-    -fx-text-fill: -fx-text-primary;
-}
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== 
-@media (max-width: 800px) {
-    .filter-container {
-        -fx-padding: 10;
-    }
-    
-    .filter-label {
-        -fx-font-size: 12px;
-    }
-    
-    .date-picker, .combo-box {
-        -fx-pref-width: 120px;
-    }
-} */

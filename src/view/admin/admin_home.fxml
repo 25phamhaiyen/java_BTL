@@ -89,7 +89,7 @@
 
     <center>
         <ScrollPane fitToWidth="true" fitToHeight="true">
-            <VBox fx:id="centerContent" style="-fx-alignment: CENTER; -fx-spacing: 20;">
+            <VBox styleClass="root" fx:id="centerContent" style="-fx-alignment: CENTER; -fx-spacing: 20;">
                 <Label styleClass="welcome-label" fx:id="lblWelcome"/>
                 <ImageView fitWidth="600" fitHeight="400">
                     <Image url="@/images/welcome.png"/>
