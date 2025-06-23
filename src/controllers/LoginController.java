@@ -15,13 +15,11 @@ import javafx.scene.image.ImageView;
 import model.Account;
 import model.Role;
 import service.AccountService;
-
-
-import utils.I18nUtil;
-import utils.LanguageManager;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerAd;
 import utils.Session;
 
-public class LoginController implements I18nUtil.I18nUpdatable {
+public class LoginController implements LanguageChangeListener {
     @FXML
     private TextField usernameField;
     @FXML
@@ -45,54 +43,63 @@ public class LoginController implements I18nUtil.I18nUpdatable {
 
     @FXML
     public void initialize() {
-        // Register for language updates
-        I18nUtil.register(this);
+        // Register for language updates with LanguageManagerAd
+        LanguageManagerAd.addListener(this);
         
         // Load images
-        logoImage.setImage(new Image(getClass().getResourceAsStream("/images/logo.png")));
-        togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
+        try {
+            logoImage.setImage(new Image(getClass().getResourceAsStream("/images/logo.png")));
+            togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
+        } catch (Exception e) {
+            System.err.println("Error loading images: " + e.getMessage());
+        }
         
         // Initial language setup
-        updateLanguage();
-        
+        loadTexts();
     }
     
     @Override
-    public void updateLanguage() {
-        LanguageManager langManager = LanguageManager.getInstance();
-        
-        // Update title label
-        titleLabel.setText(langManager.getString("login.title"));
-        
-        // Update button texts
-        btnLogin.setText(langManager.getString("login.button"));
-        
-        // Update placeholder texts
-        usernameField.setPromptText(langManager.getString("login.username"));
-        passwordField.setPromptText(langManager.getString("login.password"));
-        passwordTextField.setPromptText(langManager.getString("login.password"));
-        
-        // Clear any existing messages when language changes
-        if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
-            messageLabel.setText("");
+    public void onLanguageChanged() {
+        // Được gọi khi ngôn ngữ thay đổi từ HomeController hoặc bất kỳ đâu
+        System.out.println("Language changed event received in LoginController");
+        loadTexts();
+    }
+    
+    private void loadTexts() {
+        try {
+            // Update title label
+            titleLabel.setText(LanguageManagerAd.getString("login.title"));
+            
+            // Update button texts
+            btnLogin.setText(LanguageManagerAd.getString("login.button"));
+            
+            // Update placeholder texts
+            usernameField.setPromptText(LanguageManagerAd.getString("login.username"));
+            passwordField.setPromptText(LanguageManagerAd.getString("login.password"));
+            passwordTextField.setPromptText(LanguageManagerAd.getString("login.password"));
+            
+            // Clear any existing messages when language changes
+            if (messageLabel.getText() != null && !messageLabel.getText().isEmpty()) {
+                messageLabel.setText("");
+                messageLabel.setStyle("");
+            }
+            
+            System.out.println("Login texts updated successfully");
+        } catch (Exception e) {
+            System.err.println("Error updating login texts: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     public void handleLogin() {
-        LanguageManager langManager = LanguageManager.getInstance();
         String username = usernameField.getText().trim();
         String password = passwordField.isVisible() ? passwordField.getText().trim()
                 : passwordTextField.getText().trim();
-//
-//		try {
-//			Optional<Account> user = accountService.login(username, password);
-//	        Account account = user.orElseThrow(() -> new BusinessException(LanguageManager.getString("login.error.invalid_credentials")));
 
         try {
             Optional<Account> user = accountService.login(username, password);
-            Account account = user.orElseThrow(() -> new BusinessException(langManager.getString("login.error")));
-
+            Account account = user.orElseThrow(() -> new BusinessException(LanguageManagerAd.getString("login.error")));
 
             // Reset failed login attempts on successful login
             failedLoginAttempts = 0;
@@ -100,10 +107,10 @@ public class LoginController implements I18nUtil.I18nUpdatable {
 
             // Check if account is active
             if (!account.isActive()) {
-                throw new BusinessException(langManager.getString("login.account.locked"));
+                throw new BusinessException(LanguageManagerAd.getString("login.account.locked"));
             }
 
-            messageLabel.setText(langManager.getString("login.success"));
+            messageLabel.setText(LanguageManagerAd.getString("login.success"));
             messageLabel.setStyle("-fx-text-fill: green;");
             Session.setCurrentAccount(account);
 
@@ -115,69 +122,78 @@ public class LoginController implements I18nUtil.I18nUpdatable {
             messageLabel.setText(e.getMessage());
             messageLabel.setStyle("-fx-text-fill: red;");
 
-			// Kiểm tra nếu đạt đến ngưỡng đăng nhập thất bại
-			if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
-				// Gọi service để khóa tài khoản
-				accountService.lockAccount(username);
-				messageLabel.setText(langManager.getString("login.account.locked.attempts", username));
-				messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-				failedLoginAttempts = 0; // Reset lại sau khi khóa
-				lastFailedUsername = null;
-			} else {
-				lastFailedUsername = username; // Cập nhật username thất bại gần nhất
-			}
-		}
-	}
-        
+            // Kiểm tra nếu đạt đến ngưỡng đăng nhập thất bại
+            if (failedLoginAttempts >= 5 && username.equals(lastFailedUsername)) {
+                // Gọi service để khóa tài khoản
+                try {
+                    accountService.lockAccount(username);
+                    messageLabel.setText(LanguageManagerAd.getString("login.account.locked.attempts", username));
+                    messageLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                    failedLoginAttempts = 0; // Reset lại sau khi khóa
+                    lastFailedUsername = null;
+                } catch (Exception lockException) {
+                    System.err.println("Error locking account: " + lockException.getMessage());
+                }
+            } else {
+                lastFailedUsername = username; // Cập nhật username thất bại gần nhất
+            }
+        } catch (Exception e) {
+            messageLabel.setText(LanguageManagerAd.getString("login.error.general"));
+            messageLabel.setStyle("-fx-text-fill: red;");
+            System.err.println("Unexpected error during login: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void routeBasedOnRole(Role role) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        
         if (role == null) {
             SceneSwitcher.switchScene("dashboard.fxml");
             return;
         }
         
-        switch (role.getRoleName().toUpperCase()) {
-        case "ADMIN":
-            SceneSwitcher.switchScene("dashboard.fxml");
-            break;
-        case "STAFF_CARE":
-        case "STAFF_CASHIER":
-        case "STAFF_RECEPTION":
-            SceneSwitcher.switchScene("dashboard.fxml");
-            break;
-        case "OUT":
-            throw new BusinessException(langManager.getString("login.account.out"));
-        default:
-            break;
+        try {
+            switch (role.getRoleName().toUpperCase()) {
+                case "ADMIN":
+                    SceneSwitcher.switchScene("dashboard.fxml");
+                    break;
+                case "STAFF_CARE":
+                case "STAFF_CASHIER":
+                case "STAFF_RECEPTION":
+                    SceneSwitcher.switchScene("dashboard.fxml");
+                    break;
+                case "OUT":
+                    throw new BusinessException(LanguageManagerAd.getString("login.account.out"));
+                default:
+                    SceneSwitcher.switchScene("dashboard.fxml");
+                    break;
+            }
+        } catch (BusinessException e) {
+            messageLabel.setText(e.getMessage());
+            messageLabel.setStyle("-fx-text-fill: red;");
+        } catch (Exception e) {
+            messageLabel.setText(LanguageManagerAd.getString("login.error.navigation"));
+            messageLabel.setStyle("-fx-text-fill: red;");
+            System.err.println("Error during navigation: " + e.getMessage());
         }
     }
 
     @FXML
     public void togglePasswordVisibility() {
-        if (passwordField.isVisible()) {
-            passwordField.setVisible(false);
-            passwordTextField.setVisible(true);
-            passwordTextField.setText(passwordField.getText());
-            togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/show.png")));
-        } else {
-            passwordField.setVisible(true);
-            passwordTextField.setVisible(false);
-            passwordField.setText(passwordTextField.getText());
-            togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
+        try {
+            if (passwordField.isVisible()) {
+                passwordField.setVisible(false);
+                passwordTextField.setVisible(true);
+                passwordTextField.setText(passwordField.getText());
+                togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/show.png")));
+            } else {
+                passwordField.setVisible(true);
+                passwordTextField.setVisible(false);
+                passwordField.setText(passwordTextField.getText());
+                togglePasswordVisibilityIcon.setImage(new Image(getClass().getResourceAsStream("/images/hide.png")));
+            }
+        } catch (Exception e) {
+            System.err.println("Error toggling password visibility: " + e.getMessage());
         }
     }
     
-    private void toggleLanguage(ActionEvent event) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        Locale currentLocale = langManager.getCurrentLocale();
-        
-        // Toggle between Vietnamese and English
-        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
-            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
-        } else {
-            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
-        }
-    }
 }

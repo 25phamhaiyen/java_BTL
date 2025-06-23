@@ -12,6 +12,31 @@ public class ValidatorUtil {
 	private static final Pattern PHONE_PATTERN = Pattern.compile("^0\\d{9}$");
 	private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-ZÀ-ỹ\\s]+$");
 	private static final Pattern PET_NAME_PATTERN = Pattern.compile("^[a-zA-ZÀ-ỹ0-9\\s]+$");
+	private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_.]+$");
+
+	// Validation cho username
+	public static void validateUsername(String username) {
+		if (username == null || username.trim().isEmpty()) {
+			throw new IllegalArgumentException("Tên đăng nhập không được để trống.");
+		}
+		if (username.length() < 3) {
+			throw new IllegalArgumentException("Tên đăng nhập phải có ít nhất 3 ký tự.");
+		}
+		if (username.length() > 50) {
+			throw new IllegalArgumentException("Tên đăng nhập không được quá 50 ký tự.");
+		}
+		if (!USERNAME_PATTERN.matcher(username.trim()).matches()) {
+			throw new IllegalArgumentException(
+				"Tên đăng nhập không hợp lệ!\n\n" +
+				"Quy tắc username:\n" +
+				"• Chỉ chứa chữ cái (a-z, A-Z)\n" +
+				"• Chỉ chứa số (0-9)\n" +
+				"• Chỉ chứa dấu gạch dưới (_) và dấu chấm (.)\n" +
+				"• Không được chứa khoảng trắng\n" +
+				"• Không được chứa ký tự đặc biệt khác"
+			);
+		}
+	}
 
 	// Validation cho tên người
 	public static void validatePersonName(String name) {

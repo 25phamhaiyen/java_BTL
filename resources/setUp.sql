@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS bestpets;
 USE bestpets;
 
 -- Vai trò trong hệ thống
-CREATE TABLE role (
+CREATE TABLE `role` (
     role_id INT PRIMARY KEY AUTO_INCREMENT,
     role_name VARCHAR(50) NOT NULL UNIQUE COMMENT 'Tên vai trò: ADMIN, STAFF_CARE,...'
 );

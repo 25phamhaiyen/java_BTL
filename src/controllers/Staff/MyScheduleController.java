@@ -997,52 +997,56 @@ public class MyScheduleController implements Initializable {
 
 	@FXML
 	private void registerShift() {
-		if (!RoleChecker.hasPermission("REGISTER_SHIFT")) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không có quyền", "Bạn không có quyền đăng ký ca làm việc.");
-			return;
-		}
+	    if (!RoleChecker.hasPermission("REGISTER_SHIFT")) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không có quyền", "Bạn không có quyền đăng ký ca làm việc.");
+	        return;
+	    }
 
-		LocalDate date = registrationDatePicker.getValue();
-		Shift shift = shiftSelector.getValue();
-		RequestType type = typeSelector.getValue();
-		String notes = registrationNotes.getText().trim();
+	    LocalDate date = registrationDatePicker.getValue();
+	    Shift shift = shiftSelector.getValue();
+	    RequestType type = typeSelector.getValue(); // Luôn là WORK do bạn đã khóa
+	    String notes = registrationNotes.getText().trim();
 
-		if (date == null || shift == null) {
-			showAlert(AlertType.WARNING, "Cảnh báo", "Chưa đủ thông tin", "Vui lòng chọn ngày, ca làm.");
-			return;
-		}
+	    // Kiểm tra điều kiện
+	    if (date == null || shift == null) {
+	        showAlert(AlertType.WARNING, "Cảnh báo", "Chưa đủ thông tin", "Vui lòng chọn ngày và ca làm.");
+	        return;
+	    }
 
-		if (date.isBefore(LocalDate.now())) {
-			showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", "Không thể đăng ký cho ngày đã qua.");
-			return;
-		}
+	    if (date.isBefore(LocalDate.now().plusDays(1))) { // Phải đăng ký trước 1 ngày
+	        showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", 
+	            "Phải đăng ký trước ít nhất 1 ngày so với ngày làm việc.");
+	        return;
+	    }
 
-		try {
-			boolean success = scheduleService.sendShiftRequest(currentStaffId, date, shift, type, notes);
+	    try {
+	        // Kiểm tra xem đã có đăng ký cho ca này chưa
+	        if (scheduleService.isScheduleExists(currentStaffId, date, shift.name())) {
+	            showAlert(AlertType.WARNING, "Cảnh báo", "Đã đăng ký", 
+	                "Bạn đã đăng ký ca này rồi. Vui lòng chọn ca khác.");
+	            return;
+	        }
 
-			if (success) {
-				showAlert(AlertType.INFORMATION, "Thành công", "Đã đăng ký ca làm", "Ca làm " + shift.name() + " ngày "
-						+ date.format(dateFormatter) + " đã được đăng ký.");
+	        boolean success = scheduleService.registerShift(currentStaffId, date, shift, "Cửa hàng chính", notes);
 
-				registrationDatePicker.setValue(LocalDate.now().plusDays(1));
-				shiftSelector.setValue(null);
-				typeSelector.setValue(null);
-				registrationNotes.clear();
+	        if (success) {
+	            showAlert(AlertType.INFORMATION, "Thành công", "Đã đăng ký ca làm", 
+	                "Ca làm " + shift + " ngày " + date.format(dateFormatter) + " đã được đăng ký.");
 
-				statusLabel.setText("Trạng thái: Đã đăng ký ca làm thành công");
+	            // Reset form
+	            registrationDatePicker.setValue(LocalDate.now().plusDays(1));
+	            shiftSelector.setValue(null);
+	            registrationNotes.clear();
 
-				if (date.equals(datePicker.getValue())) {
-					loadScheduleByDate(date);
-				}
-			} else {
-				showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm",
-						"Ca làm này đã được đăng ký, ngày không hợp lệ, hoặc có lỗi khác. Vui lòng kiểm tra lại.");
-				statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm");
-			}
-		} catch (Exception e) {
-			showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", e.getMessage());
-			statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm: " + e.getMessage());
-		}
+	            statusLabel.setText("Trạng thái: Đã đăng ký ca làm thành công");
+	        } else {
+	            showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", 
+	                "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.");
+	        }
+	    } catch (Exception e) {
+	        showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", e.getMessage());
+	        e.printStackTrace();
+	    }
 	}
 
 	@FXML

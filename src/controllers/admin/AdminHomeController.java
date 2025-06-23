@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.LanguageChangeListener;
 import utils.LanguageManagerAd;
+import utils.LanguageManagerStaff;
 
 public class AdminHomeController implements LanguageChangeListener{
 
@@ -53,8 +54,10 @@ public class AdminHomeController implements LanguageChangeListener{
             String lang = languageCombo.getValue();
             if (lang.equals("English")) {
                 LanguageManagerAd.setLocale(new Locale("en", "US"));
+                LanguageManagerStaff.setLocale(new Locale("en", "US"));
             } else {
                 LanguageManagerAd.setLocale(new Locale("vi", "VN"));
+                LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
             }
         });
         

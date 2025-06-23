@@ -7,8 +7,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import utils.LanguageChangeListener;
-import utils.LanguageManager;
 import utils.LanguageManagerAd;
+import utils.LanguageManagerStaff;
 
 import java.util.Locale;
 
@@ -22,14 +22,17 @@ public class HomeController implements LanguageChangeListener {
 	public void initialize() {
 		LanguageManagerAd.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
 		
+		
 		languageCombo.getItems().addAll("Tiếng Việt", "English");
         languageCombo.setValue("Tiếng Việt");
         languageCombo.setOnAction(e -> {
             String lang = languageCombo.getValue();
             if (lang.equals("English")) {
                 LanguageManagerAd.setLocale(new Locale("en", "US"));
+                LanguageManagerStaff.setLocale(new Locale("en", "US"));
             } else {
                 LanguageManagerAd.setLocale(new Locale("vi", "VN"));
+                LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
             }
         });
 

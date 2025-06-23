@@ -1,0 +1,2006 @@
+Jun 19, 2025 3:16:12 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:17:22 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:17:44 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:18:24 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:18:50 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:32:02 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:34:26 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CLIENT_ID, sử dụng giá trị mặc định
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_API_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CHECKSUM_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger error
+SEVERE: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger error
+SEVERE: Lỗi tải cấu hình PayOS: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+java.lang.IllegalStateException: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+	at utils.PaymentConfig.validateConfiguration(PaymentConfig.java:158)
+	at utils.PaymentConfig.loadConfiguration(PaymentConfig.java:68)
+	at utils.PaymentConfig.<clinit>(PaymentConfig.java:33)
+	at service.QRPaymentService.<init>(QRPaymentService.java:45)
+	at service.QRPaymentService.getInstance(QRPaymentService.java:55)
+	at service.InvoiceService.initQRPaymentService(InvoiceService.java:76)
+	at service.InvoiceService.<init>(InvoiceService.java:71)
+	at service.InvoiceService.getInstance(InvoiceService.java:132)
+	at controllers.Staff.InvoiceViewController.<init>(InvoiceViewController.java:109)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:928)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:970)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:217)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2823)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2619)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2533)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2503)
+	at controllers.SceneSwitcher.switchScene(SceneSwitcher.java:54)
+	at controllers.Staff.StaffController.showInvoiceView(StaffController.java:282)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:65)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base@24.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:112)
+	at javafx.fxml@24.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:78)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1845)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1718)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Node.fireEvent(Node.java:9005)
+	at javafx.controls@24.0.1/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:4005)
+	at javafx.graphics@24.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1934)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2763)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:352)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:254)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:386)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:560)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.notifyMouse(View.java:946)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication.lambda$runLoop$0(WinApplication.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger info
+INFO: PayOSService initialized
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger info
+INFO: Cấu hình PayOS hợp lệ: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN]
+Jun 19, 2025 3:48:29 AM utils.PaymentLogger info
+INFO: QRPaymentService initialized
+Jun 19, 2025 3:48:39 AM utils.PaymentLogger info
+INFO: Found 0 pending QR payments
+Jun 19, 2025 3:49:09 AM utils.PaymentLogger info
+INFO: Found 0 pending QR payments
+Jun 19, 2025 3:49:39 AM utils.PaymentLogger info
+INFO: Found 0 pending QR payments
+Jun 19, 2025 3:50:09 AM utils.PaymentLogger info
+INFO: Found 0 pending QR payments
+Jun 19, 2025 4:01:14 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CLIENT_ID, sử dụng giá trị mặc định
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_API_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CHECKSUM_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger error
+SEVERE: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger error
+SEVERE: Lỗi tải cấu hình PayOS: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+java.lang.IllegalStateException: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+	at utils.PaymentConfig.validateConfiguration(PaymentConfig.java:158)
+	at utils.PaymentConfig.loadConfiguration(PaymentConfig.java:68)
+	at utils.PaymentConfig.<clinit>(PaymentConfig.java:33)
+	at service.QRPaymentService.<init>(QRPaymentService.java:45)
+	at service.QRPaymentService.getInstance(QRPaymentService.java:55)
+	at service.InvoiceService.initQRPaymentService(InvoiceService.java:76)
+	at service.InvoiceService.<init>(InvoiceService.java:71)
+	at service.InvoiceService.getInstance(InvoiceService.java:132)
+	at controllers.Staff.InvoiceViewController.<init>(InvoiceViewController.java:109)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:928)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:970)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:217)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2823)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2619)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2533)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2503)
+	at controllers.SceneSwitcher.switchScene(SceneSwitcher.java:54)
+	at controllers.Staff.StaffController.showInvoiceView(StaffController.java:282)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:65)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base@24.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:112)
+	at javafx.fxml@24.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:78)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1845)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1718)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Node.fireEvent(Node.java:9005)
+	at javafx.controls@24.0.1/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:4005)
+	at javafx.graphics@24.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1934)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2763)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:352)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:254)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:386)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:560)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.notifyMouse(View.java:946)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication.lambda$runLoop$0(WinApplication.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger info
+INFO: PayOSService initialized
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger info
+INFO: Cấu hình PayOS hợp lệ: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN]
+Jun 19, 2025 4:01:22 AM utils.PaymentLogger info
+INFO: QRPaymentService initialized
+Jun 19, 2025 4:01:32 AM utils.PaymentLogger info
+INFO: Found 26 pending QR payments
+Jun 19, 2025 4:01:32 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_87_026
+Jun 19, 2025 4:01:33 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): No such host is known (api.payos.vn)
+java.net.UnknownHostException: No such host is known (api.payos.vn)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1128)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1697)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1056)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:34 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_87_026
+Jun 19, 2025 4:01:34 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:36 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_87_026
+Jun 19, 2025 4:01:36 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:36 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_84_025
+Jun 19, 2025 4:01:36 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:37 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_84_025
+Jun 19, 2025 4:01:37 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:39 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_84_025
+Jun 19, 2025 4:01:39 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:39 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_82_024
+Jun 19, 2025 4:01:39 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:40 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_82_024
+Jun 19, 2025 4:01:40 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:42 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_82_024
+Jun 19, 2025 4:01:42 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:42 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_79_023
+Jun 19, 2025 4:01:42 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:43 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_79_023
+Jun 19, 2025 4:01:43 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): No such host is known (api.payos.vn)
+java.net.UnknownHostException: No such host is known (api.payos.vn)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1128)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1697)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1056)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:45 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_79_023
+Jun 19, 2025 4:01:45 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:45 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_77_022
+Jun 19, 2025 4:01:45 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:46 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_77_022
+Jun 19, 2025 4:01:46 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:48 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_77_022
+Jun 19, 2025 4:01:48 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:48 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_74_021
+Jun 19, 2025 4:01:48 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:49 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_74_021
+Jun 19, 2025 4:01:49 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:51 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_74_021
+Jun 19, 2025 4:01:51 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:51 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_72_020
+Jun 19, 2025 4:01:51 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:52 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_72_020
+Jun 19, 2025 4:01:52 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:54 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_72_020
+Jun 19, 2025 4:01:54 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): No such host is known (api.payos.vn)
+java.net.UnknownHostException: No such host is known (api.payos.vn)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1128)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1697)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1056)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:54 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_69_019
+Jun 19, 2025 4:01:54 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:55 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_69_019
+Jun 19, 2025 4:01:55 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:57 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_69_019
+Jun 19, 2025 4:01:57 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:57 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_67_018
+Jun 19, 2025 4:01:57 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:01:58 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_67_018
+Jun 19, 2025 4:01:58 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:00 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_67_018
+Jun 19, 2025 4:02:00 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:00 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_64_017
+Jun 19, 2025 4:02:00 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:01 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_64_017
+Jun 19, 2025 4:02:01 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_64_017
+Jun 19, 2025 4:02:03 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:03 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_62_016
+Jun 19, 2025 4:02:03 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:04 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_62_016
+Jun 19, 2025 4:02:04 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): No such host is known (api.payos.vn)
+java.net.UnknownHostException: No such host is known (api.payos.vn)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1128)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1697)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1056)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:06 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_62_016
+Jun 19, 2025 4:02:06 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:06 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_59_015
+Jun 19, 2025 4:02:06 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:07 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_59_015
+Jun 19, 2025 4:02:07 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:09 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_59_015
+Jun 19, 2025 4:02:09 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:09 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_57_014
+Jun 19, 2025 4:02:09 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:10 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_57_014
+Jun 19, 2025 4:02:10 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:12 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_57_014
+Jun 19, 2025 4:02:12 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:12 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_54_013
+Jun 19, 2025 4:02:12 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:02:13 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_54_013
+Jun 19, 2025 4:02:13 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:03:53 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CLIENT_ID, sử dụng giá trị mặc định
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_API_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger warning
+WARNING: Không tìm thấy biến môi trường PAYOS_CHECKSUM_KEY, sử dụng giá trị mặc định
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger error
+SEVERE: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger error
+SEVERE: Lỗi tải cấu hình PayOS: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+java.lang.IllegalStateException: Cấu hình PayOS không hợp lệ: returnUrlSuccess trống
+	at utils.PaymentConfig.validateConfiguration(PaymentConfig.java:158)
+	at utils.PaymentConfig.loadConfiguration(PaymentConfig.java:68)
+	at utils.PaymentConfig.<clinit>(PaymentConfig.java:33)
+	at service.QRPaymentService.<init>(QRPaymentService.java:45)
+	at service.QRPaymentService.getInstance(QRPaymentService.java:55)
+	at service.InvoiceService.initQRPaymentService(InvoiceService.java:76)
+	at service.InvoiceService.<init>(InvoiceService.java:71)
+	at service.InvoiceService.getInstance(InvoiceService.java:132)
+	at controllers.Staff.InvoiceViewController.<init>(InvoiceViewController.java:109)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:483)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:928)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:970)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:217)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2823)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2619)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2533)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2503)
+	at controllers.SceneSwitcher.switchScene(SceneSwitcher.java:54)
+	at controllers.Staff.StaffController.showInvoiceView(StaffController.java:282)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:65)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base@24.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:112)
+	at javafx.fxml@24.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:78)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1845)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1718)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Node.fireEvent(Node.java:9005)
+	at javafx.controls@24.0.1/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:4005)
+	at javafx.graphics@24.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1934)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2763)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:352)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:254)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:386)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:560)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.notifyMouse(View.java:946)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication.lambda$runLoop$0(WinApplication.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger info
+INFO: PayOSService initialized
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger info
+INFO: Cấu hình PayOS hợp lệ: clientId=cd779b5a-a3c9-41c2-946f-728303006b95, apiKey=[HIDDEN], checksumKey=[HIDDEN]
+Jun 19, 2025 4:03:59 AM utils.PaymentLogger info
+INFO: QRPaymentService initialized
+Jun 19, 2025 4:04:09 AM utils.PaymentLogger info
+INFO: Found 26 pending QR payments
+Jun 19, 2025 4:04:09 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_87_026
+Jun 19, 2025 4:04:10 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): No such host is known (api.payos.vn)
+java.net.UnknownHostException: No such host is known (api.payos.vn)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1128)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1697)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1056)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:11 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_87_026
+Jun 19, 2025 4:04:11 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:13 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_87_026
+Jun 19, 2025 4:04:13 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:13 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_84_025
+Jun 19, 2025 4:04:13 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:14 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_84_025
+Jun 19, 2025 4:04:14 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:16 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_84_025
+Jun 19, 2025 4:04:16 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:16 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_82_024
+Jun 19, 2025 4:04:16 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:17 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 2/3): PAYOS_82_024
+Jun 19, 2025 4:04:17 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 2/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 3/3): PAYOS_82_024
+Jun 19, 2025 4:04:19 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 3/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:19 AM utils.PaymentLogger info
+INFO: Kiểm tra trạng thái thanh toán PayOS cho orderCode (lần 1/3): PAYOS_79_023
+Jun 19, 2025 4:04:19 AM utils.PaymentLogger error
+SEVERE: Lỗi kiểm tra trạng thái thanh toán PayOS (lần 1/3): api.payos.vn
+java.net.UnknownHostException: api.payos.vn
+	at java.base/java.net.InetAddress$CachedLookup.get(InetAddress.java:905)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1687)
+	at java.base/java.net.InetAddress.getAllByName(InetAddress.java:1568)
+	at org.apache.hc.client5.http.SystemDefaultDnsResolver.resolve(SystemDefaultDnsResolver.java:43)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:143)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:447)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:162)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:172)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:142)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:192)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:96)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:152)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:115)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:170)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:123)
+	at service.PayOSService.checkPaymentStatus(PayOSService.java:181)
+	at service.InvoiceService.checkPendingQRPayments(InvoiceService.java:108)
+	at service.InvoiceService$1.run(InvoiceService.java:95)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:572)
+	at java.base/java.util.TimerThread.run(Timer.java:522)
+
+Jun 19, 2025 4:04:20 AM utils.PaymentLogger error
+SEVERE: Lỗi chuyển về màn hình chính: Location is not set.
+java.lang.IllegalStateException: Location is not set.
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2526)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader.load(FXMLLoader.java:2503)
+	at controllers.Staff.InvoiceViewController.exitApplication(InvoiceViewController.java:1270)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:65)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at javafx.base@24.0.1/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:112)
+	at javafx.fxml@24.0.1/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:78)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1847)
+	at javafx.fxml@24.0.1/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1718)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Node.fireEvent(Node.java:9005)
+	at javafx.controls@24.0.1/javafx.scene.control.Button.fire(Button.java:203)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(ButtonBehavior.java:207)
+	at javafx.controls@24.0.1/com.sun.javafx.scene.control.inputmap.InputMap.handle(InputMap.java:274)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:247)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:232)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:189)
+	at javafx.base@24.0.1/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base@24.0.1/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base@24.0.1/javafx.event.Event.fireEvent(Event.java:199)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$MouseHandler.process(Scene.java:4005)
+	at javafx.graphics@24.0.1/javafx.scene.Scene.processMouseEvent(Scene.java:1934)
+	at javafx.graphics@24.0.1/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2763)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:352)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.get(GlassViewEventHandler.java:254)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:424)
+	at javafx.graphics@24.0.1/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:386)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.handleMouseEvent(View.java:560)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.View.notifyMouse(View.java:946)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics@24.0.1/com.sun.glass.ui.win.WinApplication.lambda$runLoop$0(WinApplication.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+
+Jun 19, 2025 4:34:08 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:35:35 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:40:58 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:43:28 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:45:49 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:48:03 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:48:59 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:54:45 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:56:42 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 4:58:29 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:02:24 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:05:30 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:07:52 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:08:41 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:10:27 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:11:54 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:13:12 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:16:54 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:17:21 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully
+Jun 19, 2025 5:24:33 AM utils.PaymentLogger info
+INFO: Database driver loaded successfully

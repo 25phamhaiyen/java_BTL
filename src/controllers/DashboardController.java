@@ -1,18 +1,22 @@
 package controllers;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import model.Role;
-import utils.I18nUtil;
-import utils.LanguageManager;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerAd;
+import utils.LanguageManagerStaff;
 import utils.Session;
 
-public class DashboardController implements I18nUtil.I18nUpdatable {
+public class DashboardController implements LanguageChangeListener {
     @FXML
     private Label lblWelcome;
     @FXML
@@ -24,40 +28,66 @@ public class DashboardController implements I18nUtil.I18nUpdatable {
     @FXML
     private Button btnLogout;
     @FXML
-    private Button btnLanguage;
+    private ComboBox<String> languageCombo;
 
     @FXML
     public void initialize() {
         // Register for language updates
-        I18nUtil.register(this);
+        LanguageManagerAd.addListener(this);
         
         System.out.println("Current User: " + Session.getCurrentAccount());
+        
+        // Set up language combo box
+        setupLanguageCombo();
         
         // Set up UI based on current user
         setupUserInterface();
         
         // Set up event handlers
         btnLogout.setOnAction(event -> handleLogout());
-        btnLanguage.setOnAction(this::toggleLanguage);
         
         // Initial language setup
-        updateLanguage();
+        loadTexts();
+    }
+    
+    private void setupLanguageCombo() {
+        languageCombo.getItems().addAll("Tiếng Việt", "English");
+        
+        // Set current language based on current locale
+        Locale currentLocale = LanguageManagerAd.getCurrentLocale();
+        if (currentLocale != null && currentLocale.getLanguage().equals("en")) {
+            languageCombo.setValue("English");
+        } else {
+            languageCombo.setValue("Tiếng Việt");
+        }
+        
+        // Handle language change
+        languageCombo.setOnAction(e -> {
+            String lang = languageCombo.getValue();
+            if (lang.equals("English")) {
+                LanguageManagerAd.setLocale(new Locale("en", "US"));
+                LanguageManagerStaff.setLocale(new Locale("en", "US"));
+            } else {
+                LanguageManagerAd.setLocale(new Locale("vi", "VN"));
+                LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
+            }
+        });
     }
     
     @Override
-    public void updateLanguage() {
-        LanguageManager langManager = LanguageManager.getInstance();
-        
+    public void onLanguageChanged() {
+        loadTexts();
+    }
+    
+    private void loadTexts() {
         // Update button texts
-        btnLogout.setText(langManager.getString("dashboard.logout"));
-        btnLanguage.setText(langManager.getString("dashboard.language.toggle"));
+        btnLogout.setText(LanguageManagerAd.getString("dashboard.logout"));
         
         // Update info message
-        lblMessage.setText(langManager.getString("dashboard.info.message"));
+        lblMessage.setText(LanguageManagerAd.getString("dashboard.info.message"));
        
-            btnAdminPanel.setText(langManager.getString("dashboard.continue"));
-        
-            btnEmployeePanel.setText(langManager.getString("dashboard.continue"));
+        btnAdminPanel.setText(LanguageManagerAd.getString("dashboard.continue"));
+        btnEmployeePanel.setText(LanguageManagerAd.getString("dashboard.continue"));
         
         // Update welcome message
         updateWelcomeMessage();
@@ -95,8 +125,6 @@ public class DashboardController implements I18nUtil.I18nUpdatable {
     }
     
     private void updateWelcomeMessage() {
-        LanguageManager langManager = LanguageManager.getInstance();
-        
         if (Session.getCurrentAccount() != null) {
             Role role = Session.getCurrentAccount().getRole();
             String username = Session.getCurrentAccount().getUserName();
@@ -104,26 +132,26 @@ public class DashboardController implements I18nUtil.I18nUpdatable {
             if (role != null) {
                 switch (role.getRoleID()) {
                 case 5: // OUT - terminated
-                    lblWelcome.setText(langManager.getString("dashboard.account.terminated"));
+                    lblWelcome.setText(LanguageManagerAd.getString("dashboard.account.terminated"));
                     break;
                 case 1: // admin
                 case 2: // STAFF_CARE
                 case 3: // STAFF_CASHIER
                 case 4: // STAFF_RECEPTION
-                    lblWelcome.setText(langManager.getString("dashboard.welcome", username));
+                    String welcomeMessage = LanguageManagerAd.getString("dashboard.welcome");
+                    lblWelcome.setText(MessageFormat.format(welcomeMessage, username));
                     break;
                 default:
-                    lblWelcome.setText(langManager.getString("dashboard.role.undefined"));
+                    lblWelcome.setText(LanguageManagerAd.getString("dashboard.role.undefined"));
                     break;
                 }
             } else {
-                lblWelcome.setText(langManager.getString("dashboard.role.undefined"));
+                lblWelcome.setText(LanguageManagerAd.getString("dashboard.role.undefined"));
             }
         } else {
-            lblWelcome.setText(langManager.getString("dashboard.please.login"));
+            lblWelcome.setText(LanguageManagerAd.getString("dashboard.please.login"));
         }
     }
-
     @FXML
     private void handleAdminPanel() {
         SceneSwitcher.switchScene("admin/admin_home.fxml");
@@ -137,21 +165,15 @@ public class DashboardController implements I18nUtil.I18nUpdatable {
     @FXML
     private void handleLogout() {
         // Show confirmation dialog
-        if (I18nUtil.showConfirmation("app.confirm", "msg.confirm.logout")) {
-            Session.logout();
-            SceneSwitcher.switchScene("login.fxml");
-        }
-    }
-    
-    private void toggleLanguage(ActionEvent event) {
-        LanguageManager langManager = LanguageManager.getInstance();
-        Locale currentLocale = langManager.getCurrentLocale();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(LanguageManagerAd.getString("app.confirm"));
+        alert.setContentText(LanguageManagerAd.getString("msg.confirm.logout"));
         
-        // Toggle between Vietnamese and English
-        if (currentLocale.equals(LanguageManager.VIETNAMESE)) {
-            I18nUtil.switchLanguage(LanguageManager.ENGLISH);
-        } else {
-            I18nUtil.switchLanguage(LanguageManager.VIETNAMESE);
-        }
+        alert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                Session.logout();
+                SceneSwitcher.switchScene("login.fxml");
+            }
+        });
     }
 }

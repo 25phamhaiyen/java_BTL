@@ -1,4 +1,4 @@
-/* staff_editpro5.css - Fixed Version */
+/* staff_editpro5.css - Updated Version with Enhanced Avatar */
 
 /* Define colors using JavaFX's color literals instead of CSS variables */
 .root {
@@ -139,16 +139,17 @@
     -fx-background-color: #A2D9A6; 
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10 25;
+    -fx-padding: 8 20;
     -fx-background-radius: 5;
     -fx-cursor: hand;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 0, 0, 0, 1);
-    -fx-max-width: Infinity;
+    -fx-pref-width: 160;
+    -fx-max-width: 160;
 }
 
 .btn-secondary:hover {
-    -fx-background-color: #A9A44E; /* Vàng nâu đậm hơn */
+    -fx-background-color: #8FBC8F; /* Xanh lá đậm hơn */
 }
 
 .btn-neutral {
@@ -162,6 +163,7 @@
     -fx-cursor: hand;
     -fx-font-size: 14px;
     -fx-max-width: Infinity;
+    -fx-border-radius: 5;
 }
 
 .btn-neutral:hover {
@@ -170,20 +172,22 @@
 
 /* Avatar Section */
 .avatar-section {
-    -fx-padding: 20;
+    -fx-padding: 25;
     -fx-alignment: center;
     -fx-background-color: white;
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 0);
     -fx-max-width: Infinity;
+    -fx-spacing: 20;
 }
 
 .avatar-image {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(255,140,105,0.4), 15, 0, 0, 0);
     -fx-background-radius: 75;
     -fx-border-radius: 75;
-    -fx-border-width: 3;
-    -fx-border-color: #FFA07A; /* Cam chủ đạo */
+    -fx-border-width: 4;
+    -fx-border-color: #FF6347; /* Đỏ cam nổi bật */
+    -fx-clip: true;
 }
 
 /* Footer */
@@ -243,9 +247,18 @@
     -fx-font-size: 12px;
 }
 
+.small-screen .avatar-image {
+    -fx-border-width: 3;
+}
+
 /* Large screen styles */
 .large-screen .root {
     -fx-font-size: 16px;
+}
+
+.large-screen .avatar-image {
+    -fx-border-width: 5;
+    -fx-effect: dropshadow(gaussian, rgba(255,140,105,0.5), 20, 0, 0, 0);
 }
 
 /* Đảm bảo tất cả các container chính đều mở rộng đúng cách */
