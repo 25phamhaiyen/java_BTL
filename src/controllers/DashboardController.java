@@ -1,10 +1,12 @@
 package controllers;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -136,9 +138,8 @@ public class DashboardController implements LanguageChangeListener {
                 case 2: // STAFF_CARE
                 case 3: // STAFF_CASHIER
                 case 4: // STAFF_RECEPTION
-                    // Sử dụng String.format hoặc MessageFormat để thay thế tham số username
                     String welcomeMessage = LanguageManagerAd.getString("dashboard.welcome");
-                    lblWelcome.setText(String.format(welcomeMessage, username));
+                    lblWelcome.setText(MessageFormat.format(welcomeMessage, username));
                     break;
                 default:
                     lblWelcome.setText(LanguageManagerAd.getString("dashboard.role.undefined"));
@@ -151,7 +152,6 @@ public class DashboardController implements LanguageChangeListener {
             lblWelcome.setText(LanguageManagerAd.getString("dashboard.please.login"));
         }
     }
-
     @FXML
     private void handleAdminPanel() {
         SceneSwitcher.switchScene("admin/admin_home.fxml");

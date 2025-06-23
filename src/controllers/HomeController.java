@@ -22,6 +22,7 @@ public class HomeController implements LanguageChangeListener {
 	public void initialize() {
 		LanguageManagerAd.addListener(this); // Đăng ký lắng nghe sự kiện đổi ngôn ngữ
 		
+		
 		languageCombo.getItems().addAll("Tiếng Việt", "English");
         languageCombo.setValue("Tiếng Việt");
         languageCombo.setOnAction(e -> {
