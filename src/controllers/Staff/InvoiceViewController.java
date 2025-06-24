@@ -53,6 +53,8 @@ import utils.DatabaseConnection;
 import utils.PaymentLogger;
 import utils.RoleChecker;
 import utils.Session;
+import utils.LanguageChangeListener;
+import utils.LanguageManagerStaff;
 import enums.PaymentMethodEnum;
 import enums.StatusEnum;
 import java.io.IOException;
@@ -61,10 +63,26 @@ import java.awt.Desktop;
 /**
  * Controller cho giao diện quản lý hóa đơn
  */
-public class InvoiceViewController implements Initializable {
+public class InvoiceViewController implements Initializable, LanguageChangeListener {
 
+    // Header Labels
+    @FXML private Label headerTitle;
     @FXML private Label dateTimeLabel;
     @FXML private Label staffNameLabel;
+    
+    // Filter Labels
+    @FXML private Label dateFilterLabel;
+    @FXML private Label statusFilterLabel;
+    @FXML private Label paymentMethodFilterLabel;
+    @FXML private Label searchLabel;
+    
+    // Summary Labels
+    @FXML private Label totalInvoicesTextLabel;
+    @FXML private Label paidInvoicesTextLabel;
+    @FXML private Label pendingInvoicesTextLabel;
+    @FXML private Label totalRevenueTextLabel;
+    
+    // Existing controls
     @FXML private DatePicker fromDatePicker;
     @FXML private Button searchButton;
     @FXML private TextField searchField;
@@ -94,6 +112,9 @@ public class InvoiceViewController implements Initializable {
     @FXML private Button homeButton;
     @FXML private Button createBookingButton;
     @FXML private Button qrPaymentButton;
+    @FXML private Button resetFilterButton;
+    @FXML private Button helpButton;
+    @FXML private Button exitButton;
 
     private final InvoiceRepository invoiceRepository;
     private final OrderRepository orderRepository;
@@ -111,18 +132,26 @@ public class InvoiceViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Register for language change notifications
+        LanguageManagerStaff.addListener(this);
+        
         if (!RoleChecker.hasPermission("VIEW_INVOICE")) {
-            showAlert(AlertType.ERROR, "Lỗi", "Không có quyền truy cập",
-                    "Bạn không có quyền truy cập vào màn hình quản lý hóa đơn.");
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.error.noPermission"),
+                LanguageManagerStaff.getString("invoice.error.noPermissionMessage"));
             Stage stage = (Stage) dateTimeLabel.getScene().getWindow();
             stage.close();
             return;
         }
 
+        // Initialize UI text
+        loadTexts();
+        
         updateDateTime();
         Staff currentStaff = Session.getCurrentStaff();
         String staffName = currentStaff != null ? currentStaff.getFullName() : "N/A";
-        staffNameLabel.setText("Thu ngân: " + staffName);
+        updateStaffNameLabel(staffName);
 
         initializeTableColumns();
         setupDatePickers();
@@ -151,6 +180,139 @@ public class InvoiceViewController implements Initializable {
                 Platform.runLater(() -> updateDateTime());
             }
         }, 0, 60000);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        loadTexts();
+        setupComboBoxes(); // Reload combo box items with new language
+        updateSummaryLabels(); // Update summary labels
+        
+        // Update staff name label
+        Staff currentStaff = Session.getCurrentStaff();
+        String staffName = currentStaff != null ? currentStaff.getFullName() : "N/A";
+        updateStaffNameLabel(staffName);
+        
+        // Update status message if exists
+        if (statusMessageLabel.getText() != null && !statusMessageLabel.getText().isEmpty()) {
+            statusMessageLabel.setText(LanguageManagerStaff.getString("invoice.status.ready"));
+        }
+    }
+
+    /**
+     * Load all text elements with current language
+     */
+    private void loadTexts() {
+        // Header
+        if (headerTitle != null) {
+            headerTitle.setText(LanguageManagerStaff.getString("invoice.title"));
+        }
+        
+        // Filter labels
+        if (dateFilterLabel != null) {
+            dateFilterLabel.setText(LanguageManagerStaff.getString("invoice.filter.date"));
+        }
+        if (statusFilterLabel != null) {
+            statusFilterLabel.setText(LanguageManagerStaff.getString("invoice.filter.status"));
+        }
+        if (paymentMethodFilterLabel != null) {
+            paymentMethodFilterLabel.setText(LanguageManagerStaff.getString("invoice.filter.paymentMethod"));
+        }
+        if (searchLabel != null) {
+            searchLabel.setText(LanguageManagerStaff.getString("invoice.filter.search"));
+        }
+        
+        // Table columns
+        if (idColumn != null) {
+            idColumn.setText(LanguageManagerStaff.getString("invoice.table.id"));
+        }
+        if (orderIdColumn != null) {
+            orderIdColumn.setText(LanguageManagerStaff.getString("invoice.table.orderId"));
+        }
+        if (customerColumn != null) {
+            customerColumn.setText(LanguageManagerStaff.getString("invoice.table.customer"));
+        }
+        if (phoneColumn != null) {
+            phoneColumn.setText(LanguageManagerStaff.getString("invoice.table.phone"));
+        }
+        if (dateColumn != null) {
+            dateColumn.setText(LanguageManagerStaff.getString("invoice.table.date"));
+        }
+        if (serviceColumn != null) {
+            serviceColumn.setText(LanguageManagerStaff.getString("invoice.table.service"));
+        }
+        if (totalColumn != null) {
+            totalColumn.setText(LanguageManagerStaff.getString("invoice.table.total"));
+        }
+        if (paymentMethodColumn != null) {
+            paymentMethodColumn.setText(LanguageManagerStaff.getString("invoice.table.paymentMethod"));
+        }
+        if (statusColumn != null) {
+            statusColumn.setText(LanguageManagerStaff.getString("invoice.table.status"));
+        }
+        
+        // Summary labels
+        if (totalInvoicesTextLabel != null) {
+            totalInvoicesTextLabel.setText(LanguageManagerStaff.getString("invoice.summary.totalInvoices"));
+        }
+        if (paidInvoicesTextLabel != null) {
+            paidInvoicesTextLabel.setText(LanguageManagerStaff.getString("invoice.summary.paidInvoices"));
+        }
+        if (pendingInvoicesTextLabel != null) {
+            pendingInvoicesTextLabel.setText(LanguageManagerStaff.getString("invoice.summary.pendingInvoices"));
+        }
+        if (totalRevenueTextLabel != null) {
+            totalRevenueTextLabel.setText(LanguageManagerStaff.getString("invoice.summary.totalRevenue"));
+        }
+        
+        // Buttons
+        if (searchButton != null) {
+            searchButton.setText(LanguageManagerStaff.getString("invoice.button.search"));
+        }
+        if (resetFilterButton != null) {
+            resetFilterButton.setText(LanguageManagerStaff.getString("invoice.button.resetFilter"));
+        }
+        if (createBookingButton != null) {
+            createBookingButton.setText(LanguageManagerStaff.getString("invoice.button.createBooking"));
+        }
+        if (applyDiscountButton != null) {
+            applyDiscountButton.setText(LanguageManagerStaff.getString("invoice.button.applyDiscount"));
+        }
+        if (viewDetailsButton != null) {
+            viewDetailsButton.setText(LanguageManagerStaff.getString("invoice.button.viewDetails"));
+        }
+        if (processPaymentButton != null) {
+            processPaymentButton.setText(LanguageManagerStaff.getString("invoice.button.processPayment"));
+        }
+        if (processPaymentAndPrintButton != null) {
+            processPaymentAndPrintButton.setText(LanguageManagerStaff.getString("invoice.button.processPaymentAndPrint"));
+        }
+        if (qrPaymentButton != null) {
+            qrPaymentButton.setText(LanguageManagerStaff.getString("invoice.button.qrPayment"));
+        }
+        if (refundButton != null) {
+            refundButton.setText(LanguageManagerStaff.getString("invoice.button.refund"));
+        }
+        if (homeButton != null) {
+            homeButton.setText(LanguageManagerStaff.getString("invoice.button.home"));
+        }
+        if (helpButton != null) {
+            helpButton.setText(LanguageManagerStaff.getString("invoice.button.help"));
+        }
+        if (exitButton != null) {
+            exitButton.setText(LanguageManagerStaff.getString("invoice.button.exit"));
+        }
+        
+        // Prompt texts
+        if (searchField != null) {
+            searchField.setPromptText(LanguageManagerStaff.getString("invoice.search.placeholder"));
+        }
+    }
+
+    private void updateStaffNameLabel(String staffName) {
+        if (staffNameLabel != null) {
+            staffNameLabel.setText(LanguageManagerStaff.getString("invoice.staff.cashier") + ": " + staffName);
+        }
     }
 
     private void updateDateTime() {
@@ -215,13 +377,13 @@ public class InvoiceViewController implements Initializable {
                             serviceNames.append(rs.getString("name")).append(", ");
                         }
                         String result = serviceNames.length() > 0 ? serviceNames.substring(0, serviceNames.length() - 2)
-                                : "Không có dịch vụ";
+                                : LanguageManagerStaff.getString("invoice.noService");
                         return new SimpleStringProperty(result);
                     }
                 }
             } catch (SQLException e) {
                 PaymentLogger.error("Lỗi khi lấy danh sách dịch vụ: " + e.getMessage(), e);
-                return new SimpleStringProperty("Lỗi: " + e.getMessage());
+                return new SimpleStringProperty(LanguageManagerStaff.getString("error.title") + ": " + e.getMessage());
             }
         });
 
@@ -236,11 +398,38 @@ public class InvoiceViewController implements Initializable {
         });
 
         paymentMethodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-                cellData.getValue().getPaymentMethod() != null ? cellData.getValue().getPaymentMethod().toString()
-                        : "N/A"));
+                cellData.getValue().getPaymentMethod() != null ? 
+                getLocalizedPaymentMethod(cellData.getValue().getPaymentMethod()) : "N/A"));
 
         statusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-                cellData.getValue().getStatus() != null ? cellData.getValue().getStatus().name() : "N/A"));
+                cellData.getValue().getStatus() != null ? 
+                getLocalizedStatus(cellData.getValue().getStatus()) : "N/A"));
+    }
+
+    private String getLocalizedPaymentMethod(PaymentMethodEnum paymentMethod) {
+        switch (paymentMethod) {
+            case CASH:
+                return LanguageManagerStaff.getString("invoice.paymentMethod.cash");
+            case QR:
+                return LanguageManagerStaff.getString("invoice.paymentMethod.qr");
+            case CARD:
+                return LanguageManagerStaff.getString("invoice.paymentMethod.card");
+            default:
+                return paymentMethod.toString();
+        }
+    }
+
+    private String getLocalizedStatus(StatusEnum status) {
+        switch (status) {
+            case PENDING:
+                return LanguageManagerStaff.getString("invoice.status.pending");
+            case COMPLETED:
+                return LanguageManagerStaff.getString("invoice.status.completed");
+            case CANCELLED:
+                return LanguageManagerStaff.getString("invoice.status.cancelled");
+            default:
+                return status.toString();
+        }
     }
 
     private void setupDatePickers() {
@@ -270,19 +459,21 @@ public class InvoiceViewController implements Initializable {
     }
 
     private void setupComboBoxes() {
-        ObservableList<String> statusList = FXCollections.observableArrayList("Tất cả");
+        ObservableList<String> statusList = FXCollections.observableArrayList();
+        statusList.add(LanguageManagerStaff.getString("invoice.filter.all"));
         for (StatusEnum status : StatusEnum.values()) {
-            statusList.add(status.name());
+            statusList.add(getLocalizedStatus(status));
         }
         statusFilter.setItems(statusList);
-        statusFilter.setValue("Tất cả");
+        statusFilter.setValue(LanguageManagerStaff.getString("invoice.filter.all"));
 
-        ObservableList<String> paymentMethodList = FXCollections.observableArrayList("Tất cả");
+        ObservableList<String> paymentMethodList = FXCollections.observableArrayList();
+        paymentMethodList.add(LanguageManagerStaff.getString("invoice.filter.all"));
         for (PaymentMethodEnum method : PaymentMethodEnum.values()) {
-            paymentMethodList.add(method.name());
+            paymentMethodList.add(getLocalizedPaymentMethod(method));
         }
         paymentMethodFilter.setItems(paymentMethodList);
-        paymentMethodFilter.setValue("Tất cả");
+        paymentMethodFilter.setValue(LanguageManagerStaff.getString("invoice.filter.all"));
     }
 
     private void setupSearchField() {
@@ -388,11 +579,16 @@ public class InvoiceViewController implements Initializable {
 
             LocalDate displayDate = fromDatePicker.getValue();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            statusMessageLabel.setText("Đã tải " + invoices.size() + " hóa đơn ngày " + displayDate.format(formatter));
+            statusMessageLabel.setText(LanguageManagerStaff.getString("invoice.status.loaded") + " " + 
+                invoices.size() + " " + LanguageManagerStaff.getString("invoice.status.invoicesOn") + " " + 
+                displayDate.format(formatter));
         } catch (Exception e) {
             progressBar.setVisible(false);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể tải danh sách hóa đơn", e.getMessage());
-            statusMessageLabel.setText("Lỗi: " + e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.error.loadFailed"), 
+                e.getMessage());
+            statusMessageLabel.setText(LanguageManagerStaff.getString("error.title") + ": " + e.getMessage());
             PaymentLogger.error("Lỗi tải danh sách hóa đơn: " + e.getMessage(), e);
         }
     }
@@ -416,9 +612,10 @@ public class InvoiceViewController implements Initializable {
     private void applyFilters() {
         String statusValue = statusFilter.getValue();
         String paymentMethodValue = paymentMethodFilter.getValue();
+        String allText = LanguageManagerStaff.getString("invoice.filter.all");
 
-        if (statusValue == null || statusValue.equals("Tất cả") &&
-                (paymentMethodValue == null || paymentMethodValue.equals("Tất cả"))) {
+        if (statusValue == null || statusValue.equals(allText) &&
+                (paymentMethodValue == null || paymentMethodValue.equals(allText))) {
             invoiceTable.setItems(invoiceList);
             updateSummaryLabels();
             return;
@@ -427,12 +624,12 @@ public class InvoiceViewController implements Initializable {
         ObservableList<Invoice> filteredList = FXCollections.observableArrayList();
 
         for (Invoice invoice : invoiceList) {
-            boolean statusMatch = statusValue == null || statusValue.equals("Tất cả")
-                    || (invoice.getStatus() != null && invoice.getStatus().name().equals(statusValue));
+            boolean statusMatch = statusValue == null || statusValue.equals(allText)
+                    || (invoice.getStatus() != null && getLocalizedStatus(invoice.getStatus()).equals(statusValue));
 
-            boolean paymentMethodMatch = paymentMethodValue == null || paymentMethodValue.equals("Tất cả")
-                    || (invoice.getPaymentMethod() != null
-                    && invoice.getPaymentMethod().name().equals(paymentMethodValue));
+            boolean paymentMethodMatch = paymentMethodValue == null || paymentMethodValue.equals(allText)
+                    || (invoice.getPaymentMethod() != null &&
+                    getLocalizedPaymentMethod(invoice.getPaymentMethod()).equals(paymentMethodValue));
 
             if (statusMatch && paymentMethodMatch) {
                 filteredList.add(invoice);
@@ -474,7 +671,10 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void searchInvoices() {
         if (fromDatePicker.getValue() == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", "Vui lòng chọn ngày để tìm kiếm.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.warning.invalidDate"), 
+                LanguageManagerStaff.getString("invoice.warning.selectDate"));
             return;
         }
 
@@ -492,12 +692,13 @@ public class InvoiceViewController implements Initializable {
                             invoice.getOrder().getCustomer().getPhone().toLowerCase().contains(searchQuery));
 
             if (matchesFilter) {
-                boolean statusMatch = statusFilter.getValue().equals("Tất cả") ||
-                        (invoice.getStatus() != null && invoice.getStatus().name().equals(statusFilter.getValue()));
+                String allText = LanguageManagerStaff.getString("invoice.filter.all");
+                boolean statusMatch = statusFilter.getValue().equals(allText) ||
+                        (invoice.getStatus() != null && getLocalizedStatus(invoice.getStatus()).equals(statusFilter.getValue()));
 
-                boolean paymentMethodMatch = paymentMethodFilter.getValue().equals("Tất cả") ||
+                boolean paymentMethodMatch = paymentMethodFilter.getValue().equals(allText) ||
                         (invoice.getPaymentMethod() != null &&
-                                invoice.getPaymentMethod().name().equals(paymentMethodFilter.getValue()));
+                                getLocalizedPaymentMethod(invoice.getPaymentMethod()).equals(paymentMethodFilter.getValue()));
 
                 if (statusMatch && paymentMethodMatch) {
                     filteredList.add(invoice);
@@ -507,13 +708,17 @@ public class InvoiceViewController implements Initializable {
 
         invoiceTable.setItems(filteredList);
         updateSummaryLabels(filteredList);
-        statusMessageLabel.setText("Tìm thấy " + filteredList.size() + " kết quả");
+        statusMessageLabel.setText(LanguageManagerStaff.getString("invoice.status.found") + " " + 
+            filteredList.size() + " " + LanguageManagerStaff.getString("invoice.status.results"));
     }
 
     @FXML
     private void onSearchButtonClick() {
         if (fromDatePicker.getValue() == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Chưa chọn ngày", "Vui lòng chọn ngày để tìm kiếm.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.warning.noDateSelected"), 
+                LanguageManagerStaff.getString("invoice.warning.selectDateToSearch"));
             return;
         }
 
@@ -527,8 +732,10 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void viewDetails() {
         if (selectedInvoice == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
-                    "Vui lòng chọn một hóa đơn để xem chi tiết.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.warning.noInvoiceSelected"),
+                LanguageManagerStaff.getString("invoice.warning.selectInvoiceToView"));
             return;
         }
         displayInvoiceDetails(selectedInvoice, true, false);
@@ -537,7 +744,7 @@ public class InvoiceViewController implements Initializable {
     private void displayInvoiceDetails(Invoice invoice, boolean showPrintButton, boolean fromPayment) {
         try {
             Stage detailStage = new Stage();
-            detailStage.setTitle("Chi tiết hóa đơn #" + invoice.getInvoiceId());
+            detailStage.setTitle(LanguageManagerStaff.getString("invoice.details.title") + " #" + invoice.getInvoiceId());
 
             VBox root = new VBox(10);
             root.setPadding(new Insets(20));
@@ -546,12 +753,12 @@ public class InvoiceViewController implements Initializable {
             Label storeNameLabel = new Label("PET CARE CENTER");
             storeNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-            Label storeAddressLabel = new Label("Địa chỉ: 123 Đường ABC, Quận XYZ, TP. HCM");
-            Label storePhoneLabel = new Label("Điện thoại: (028) 1234 5678");
+            Label storeAddressLabel = new Label(LanguageManagerStaff.getString("invoice.details.address") + ": 123 Đường ABC, Quận XYZ, TP. HCM");
+            Label storePhoneLabel = new Label(LanguageManagerStaff.getString("invoice.details.phone") + ": (028) 1234 5678");
 
             Separator sep1 = new Separator();
 
-            Label invoiceHeaderLabel = new Label("HÓA ĐƠN BÁN HÀNG");
+            Label invoiceHeaderLabel = new Label(LanguageManagerStaff.getString("invoice.details.header"));
             invoiceHeaderLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
             GridPane infoGrid = new GridPane();
@@ -562,28 +769,28 @@ public class InvoiceViewController implements Initializable {
             Staff currentStaff = Session.getCurrentStaff();
             String staffName = currentStaff != null ? currentStaff.getFullName() : "N/A";
 
-            infoGrid.add(new Label("Số hóa đơn:"), 0, 0);
+            infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.invoiceNumber") + ":"), 0, 0);
             infoGrid.add(new Label("#" + invoice.getInvoiceId()), 1, 0);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime paymentDate = invoice.getPaymentDate() != null ?
                     invoice.getPaymentDate().toLocalDateTime() : LocalDateTime.now();
 
-            infoGrid.add(new Label("Ngày:"), 0, 1);
+            infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.date") + ":"), 0, 1);
             infoGrid.add(new Label(paymentDate.format(formatter)), 1, 1);
 
-            infoGrid.add(new Label("Thu ngân:"), 0, 2);
+            infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.cashier") + ":"), 0, 2);
             infoGrid.add(new Label(staffName), 1, 2);
 
             Customer customer = invoice.getOrder() != null && invoice.getOrder().getCustomer() != null ?
                     invoice.getOrder().getCustomer() : null;
 
             if (customer != null) {
-                infoGrid.add(new Label("Khách hàng:"), 2, 0);
+                infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.customer") + ":"), 2, 0);
                 infoGrid.add(new Label(customer.getFullName()), 3, 0);
-                infoGrid.add(new Label("Số điện thoại:"), 2, 1);
+                infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.customerPhone") + ":"), 2, 1);
                 infoGrid.add(new Label(customer.getPhone()), 3, 1);
-                infoGrid.add(new Label("Mã KH:"), 2, 2);
+                infoGrid.add(new Label(LanguageManagerStaff.getString("invoice.details.customerId") + ":"), 2, 2);
                 infoGrid.add(new Label("KH-" + String.format("%05d", customer.getId())), 3, 2);
             }
 
@@ -592,19 +799,19 @@ public class InvoiceViewController implements Initializable {
             TableView<InvoiceDetailItem> detailTable = new TableView<>();
             detailTable.setPrefHeight(200);
 
-            TableColumn<InvoiceDetailItem, Integer> sttCol = new TableColumn<>("STT");
+            TableColumn<InvoiceDetailItem, Integer> sttCol = new TableColumn<>(LanguageManagerStaff.getString("invoice.details.stt"));
             sttCol.setCellValueFactory(new PropertyValueFactory<>("stt"));
             sttCol.setPrefWidth(50);
 
-            TableColumn<InvoiceDetailItem, String> nameCol = new TableColumn<>("Tên dịch vụ");
+            TableColumn<InvoiceDetailItem, String> nameCol = new TableColumn<>(LanguageManagerStaff.getString("invoice.details.serviceName"));
             nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
             nameCol.setPrefWidth(300);
 
-            TableColumn<InvoiceDetailItem, Integer> qtyCol = new TableColumn<>("SL");
+            TableColumn<InvoiceDetailItem, Integer> qtyCol = new TableColumn<>(LanguageManagerStaff.getString("invoice.details.quantity"));
             qtyCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
             qtyCol.setPrefWidth(50);
 
-            TableColumn<InvoiceDetailItem, Double> priceCol = new TableColumn<>("Đơn giá");
+            TableColumn<InvoiceDetailItem, Double> priceCol = new TableColumn<>(LanguageManagerStaff.getString("invoice.details.unitPrice"));
             priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
             priceCol.setPrefWidth(100);
             priceCol.setCellFactory(tc -> new TableCell<InvoiceDetailItem, Double>() {
@@ -615,7 +822,7 @@ public class InvoiceViewController implements Initializable {
                 }
             });
 
-            TableColumn<InvoiceDetailItem, Double> totalCol = new TableColumn<>("Thành tiền");
+            TableColumn<InvoiceDetailItem, Double> totalCol = new TableColumn<>(LanguageManagerStaff.getString("invoice.details.amount"));
             totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
             totalCol.setPrefWidth(120);
             totalCol.setCellFactory(tc -> new TableCell<InvoiceDetailItem, Double>() {
@@ -668,14 +875,14 @@ public class InvoiceViewController implements Initializable {
             summaryGrid.setAlignment(Pos.CENTER_RIGHT);
             Separator sep3 = new Separator();
 
-            Label subtotalLabel = new Label("Tổng tiền hàng:");
-            Label discountLabel = new Label("Giảm giá:");
-            Label pointsLabel = new Label("Điểm quy đổi:");
-            Label grandTotalLabel = new Label("Tổng cộng:");
-            Label amountPaidLabel = new Label("Tiền khách trả:");
-            Label changeLabel = new Label("Tiền thối lại:");
-            Label paymentMethodLabel = new Label("Phương thức thanh toán:");
-            Label thanksLabel = new Label("Cảm ơn quý khách đã sử dụng dịch vụ!");
+            Label subtotalLabel = new Label(LanguageManagerStaff.getString("invoice.details.subtotal") + ":");
+            Label discountLabel = new Label(LanguageManagerStaff.getString("invoice.details.discount") + ":");
+            Label pointsLabel = new Label(LanguageManagerStaff.getString("invoice.details.pointsUsed") + ":");
+            Label grandTotalLabel = new Label(LanguageManagerStaff.getString("invoice.details.grandTotal") + ":");
+            Label amountPaidLabel = new Label(LanguageManagerStaff.getString("invoice.details.amountPaid") + ":");
+            Label changeLabel = new Label(LanguageManagerStaff.getString("invoice.details.change") + ":");
+            Label paymentMethodLabel = new Label(LanguageManagerStaff.getString("invoice.details.paymentMethod") + ":");
+            Label thanksLabel = new Label(LanguageManagerStaff.getString("invoice.details.thanks"));
             thanksLabel.setStyle("-fx-font-style: italic; -fx-font-size: 14px;");
             grandTotalLabel.setStyle("-fx-font-weight: bold;");
 
@@ -685,12 +892,12 @@ public class InvoiceViewController implements Initializable {
 
             HBox discountBox = new HBox(5);
             TextField discountCodeField = new TextField();
-            discountCodeField.setPromptText("Nhập mã KM");
+            discountCodeField.setPromptText(LanguageManagerStaff.getString("invoice.details.enterPromotionCode"));
             discountCodeField.setPrefWidth(100);
             Label discountValue = new Label(String.format("%,.0f VND", discount[0]));
-            Button applyDiscountButton = new Button("Áp dụng");
+            Button applyDiscountButton = new Button(LanguageManagerStaff.getString("invoice.details.apply"));
 
-            Label pointsValueLabel = new Label(String.format("%,d điểm (%,.0f VND)", pointsUsed[0], pointsValue[0]));
+            Label pointsValueLabel = new Label(String.format("%,d " + LanguageManagerStaff.getString("invoice.details.points") + " (%,.0f VND)", pointsUsed[0], pointsValue[0]));
             Label grandTotalValue = new Label(String.format("%,.0f VND", grandTotal[0]));
             grandTotalValue.setStyle("-fx-font-weight: bold;");
             Label changeValue = new Label(String.format("%,.0f VND", change[0]));
@@ -703,8 +910,10 @@ public class InvoiceViewController implements Initializable {
             applyDiscountButton.setOnAction(e -> {
                 String code = discountCodeField.getText().trim();
                 if (code.isEmpty()) {
-                    showAlert(AlertType.WARNING, "Cảnh báo", "Chưa nhập mã khuyến mãi",
-                            "Vui lòng nhập mã khuyến mãi để áp dụng.");
+                    showAlert(AlertType.WARNING, 
+                        LanguageManagerStaff.getString("warning.title"), 
+                        LanguageManagerStaff.getString("invoice.details.warning.noPromotionCode"),
+                        LanguageManagerStaff.getString("invoice.details.warning.enterPromotionCode"));
                     return;
                 }
 
@@ -718,8 +927,10 @@ public class InvoiceViewController implements Initializable {
                             if (rs.next()) {
                                 discountPercent = rs.getDouble("discount_percent");
                             } else {
-                                showAlert(AlertType.WARNING, "Cảnh báo", "Mã khuyến mãi không hợp lệ",
-                                        "Mã khuyến mãi không tồn tại hoặc đã hết hạn.");
+                                showAlert(AlertType.WARNING, 
+                                    LanguageManagerStaff.getString("warning.title"), 
+                                    LanguageManagerStaff.getString("invoice.details.warning.invalidPromotionCode"),
+                                    LanguageManagerStaff.getString("invoice.details.warning.promotionCodeNotExist"));
                                 return;
                             }
                         }
@@ -744,12 +955,19 @@ public class InvoiceViewController implements Initializable {
                     grandTotalValue.setText(String.format("%,.0f VND", grandTotal[0]));
                     changeValue.setText(String.format("%,.0f VND", change[0]));
 
-                    showAlert(AlertType.INFORMATION, "Thành công", "Đã áp dụng mã khuyến mãi",
-                            "Mã khuyến mãi " + code + " đã được áp dụng với " + discountPercent + "% giảm giá.");
+                    showAlert(AlertType.INFORMATION, 
+                        LanguageManagerStaff.getString("success.title"), 
+                        LanguageManagerStaff.getString("invoice.details.success.promotionApplied"),
+                        LanguageManagerStaff.getString("invoice.details.promotionCode") + " " + code + " " + 
+                        LanguageManagerStaff.getString("invoice.details.appliedWith") + " " + discountPercent + "% " + 
+                        LanguageManagerStaff.getString("invoice.details.discount"));
                     loadInvoices();
                 } catch (SQLException ex) {
                     PaymentLogger.error("Lỗi áp dụng mã khuyến mãi: " + ex.getMessage(), ex);
-                    showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng mã khuyến mãi", ex.getMessage());
+                    showAlert(AlertType.ERROR, 
+                        LanguageManagerStaff.getString("error.title"), 
+                        LanguageManagerStaff.getString("invoice.details.error.cannotApplyPromotion"), 
+                        ex.getMessage());
                 }
             });
 
@@ -761,7 +979,7 @@ public class InvoiceViewController implements Initializable {
             TextField amountPaidField = new TextField();
             amountPaidField.setText(String.format("%,.0f", amountPaid[0]));
             amountPaidField.setPrefWidth(120);
-            amountPaidField.setPromptText("Nhập tiền khách trả");
+            amountPaidField.setPromptText(LanguageManagerStaff.getString("invoice.details.enterAmountPaid"));
 
             boolean isPending = invoice.getStatus() == StatusEnum.PENDING;
             boolean isCash = paymentMethod[0] == PaymentMethodEnum.CASH;
@@ -778,7 +996,8 @@ public class InvoiceViewController implements Initializable {
                     change[0] = newAmountPaid - grandTotal[0];
 
                     if (change[0] < 0) {
-                        changeValue.setText("Thiếu " + String.format("%,.0f VND", -change[0]));
+                        changeValue.setText(LanguageManagerStaff.getString("invoice.details.shortage") + " " + 
+                            String.format("%,.0f VND", -change[0]));
                         changeValue.setStyle("-fx-text-fill: red;");
                     } else {
                         changeValue.setText(String.format("%,.0f VND", change[0]));
@@ -798,14 +1017,41 @@ public class InvoiceViewController implements Initializable {
             paymentMethodComboBox.setValue(paymentMethod[0]);
             paymentMethodComboBox.setDisable(!isPending || !RoleChecker.hasPermission("MANAGE_PAYMENT"));
 
+            // Custom cell factory for payment method combo box
+            paymentMethodComboBox.setCellFactory(listView -> new ListCell<PaymentMethodEnum>() {
+                @Override
+                protected void updateItem(PaymentMethodEnum item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(getLocalizedPaymentMethod(item));
+                    }
+                }
+            });
+
+            paymentMethodComboBox.setButtonCell(new ListCell<PaymentMethodEnum>() {
+                @Override
+                protected void updateItem(PaymentMethodEnum item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(getLocalizedPaymentMethod(item));
+                    }
+                }
+            });
+
             paymentMethodComboBox.setOnAction(e -> {
                 PaymentMethodEnum selectedMethod = paymentMethodComboBox.getValue();
                 paymentMethod[0] = selectedMethod;
                 amountPaidField.setDisable(selectedMethod != PaymentMethodEnum.CASH || !isPending);
 
                 if (selectedMethod == PaymentMethodEnum.QR) {
-                    showAlert(AlertType.INFORMATION, "Thông báo", "Sử dụng thanh toán QR",
-                            "Vui lòng sử dụng nút 'Thanh toán QR' để tạo mã QR PayOS.");
+                    showAlert(AlertType.INFORMATION, 
+                        LanguageManagerStaff.getString("info.title"), 
+                        LanguageManagerStaff.getString("invoice.details.info.useQRPayment"),
+                        LanguageManagerStaff.getString("invoice.details.info.useQRButton"));
                     openQRPaymentWindow();
                 }
             });
@@ -834,23 +1080,23 @@ public class InvoiceViewController implements Initializable {
             summaryGrid.add(changeValue, 1, row++);
 
             if (fromPayment && invoice.getStatus() == StatusEnum.PENDING && RoleChecker.hasPermission("MANAGE_PAYMENT")) {
-                Button paymentButton = new Button("Thanh toán");
+                Button paymentButton = new Button(LanguageManagerStaff.getString("invoice.details.payment"));
                 paymentButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
                 paymentButton.setOnAction(e -> processPaymentAction(invoice, paymentMethod[0], amountPaid[0], false, detailStage));
 
-                Button paymentAndPrintButton = new Button("Thanh toán và in");
+                Button paymentAndPrintButton = new Button(LanguageManagerStaff.getString("invoice.details.paymentAndPrint"));
                 paymentAndPrintButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
                 paymentAndPrintButton.setOnAction(e -> processPaymentAction(invoice, paymentMethod[0], amountPaid[0], true, detailStage));
 
                 buttonBox.getChildren().addAll(paymentButton, paymentAndPrintButton);
             }
 
-            Button closeButton = new Button("Đóng");
+            Button closeButton = new Button(LanguageManagerStaff.getString("common.close"));
             closeButton.setOnAction(e -> detailStage.close());
             buttonBox.getChildren().add(closeButton);
 
             if (showPrintButton) {
-                Button printButton = new Button("In lại");
+                Button printButton = new Button(LanguageManagerStaff.getString("invoice.details.reprint"));
                 printButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
                 printButton.setOnAction(e -> reprintInvoice());
                 buttonBox.getChildren().add(printButton);
@@ -866,7 +1112,10 @@ public class InvoiceViewController implements Initializable {
             detailStage.show();
         } catch (Exception e) {
             PaymentLogger.error("Lỗi hiển thị chi tiết hóa đơn: " + e.getMessage(), e);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể hiển thị chi tiết hóa đơn", e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.details.error.cannotDisplay"), 
+                e.getMessage());
         }
     }
 
@@ -877,8 +1126,10 @@ public class InvoiceViewController implements Initializable {
             int invoiceId = invoice.getInvoiceId();
 
             if (paymentMethod == PaymentMethodEnum.CASH && amountPaid < invoice.getTotal().doubleValue()) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Tiền khách trả không đủ",
-                        "Tiền khách trả phải lớn hơn hoặc bằng tổng cộng.");
+                showAlert(AlertType.WARNING, 
+                    LanguageManagerStaff.getString("warning.title"), 
+                    LanguageManagerStaff.getString("invoice.payment.warning.insufficientAmount"),
+                    LanguageManagerStaff.getString("invoice.payment.warning.amountMustBeGreater"));
                 return;
             }
 
@@ -895,8 +1146,10 @@ public class InvoiceViewController implements Initializable {
                     if (rs.next()) {
                         String currentStatus = rs.getString("status");
                         if (!StatusEnum.PENDING.name().equals(currentStatus)) {
-                            showAlert(AlertType.WARNING, "Cảnh báo", "Hóa đơn đã được thanh toán",
-                                    "Hóa đơn này đã được thanh toán hoặc đã bị hủy.");
+                            showAlert(AlertType.WARNING, 
+                                LanguageManagerStaff.getString("warning.title"), 
+                                LanguageManagerStaff.getString("invoice.payment.warning.alreadyPaid"),
+                                LanguageManagerStaff.getString("invoice.payment.warning.invoiceAlreadyProcessed"));
                             return;
                         }
                     }
@@ -931,20 +1184,27 @@ public class InvoiceViewController implements Initializable {
                 if (file.exists()) {
                     Desktop.getDesktop().open(file);
                 } else {
-                    showAlert(AlertType.ERROR, "Lỗi", "Không thể mở file hóa đơn",
-                            "File không tồn tại: " + fileName);
+                    showAlert(AlertType.ERROR, 
+                        LanguageManagerStaff.getString("error.title"), 
+                        LanguageManagerStaff.getString("invoice.payment.error.cannotOpenFile"),
+                        LanguageManagerStaff.getString("invoice.payment.error.fileNotExist") + ": " + fileName);
                 }
             }
 
-            showAlert(AlertType.INFORMATION, "Thành công", "Thanh toán thành công",
-                    "Hóa đơn #" + invoiceId + " đã được thanh toán bằng " + paymentMethod.toString() +
-                            (print ? " và đã được in." : "."));
+            showAlert(AlertType.INFORMATION, 
+                LanguageManagerStaff.getString("success.title"), 
+                LanguageManagerStaff.getString("invoice.payment.success.paymentCompleted"),
+                LanguageManagerStaff.getString("invoice.payment.invoice") + " #" + invoiceId + " " + 
+                LanguageManagerStaff.getString("invoice.payment.paidWith") + " " + getLocalizedPaymentMethod(paymentMethod) +
+                        (print ? " " + LanguageManagerStaff.getString("invoice.payment.andPrinted") : "."));
             loadInvoices();
             detailStage.close();
         } catch (SQLException | IOException ex) {
             PaymentLogger.error("Lỗi thực hiện thanh toán" + (print ? " và in" : "") + ": " + ex.getMessage(), ex);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể thực hiện thanh toán" + (print ? " hoặc in hóa đơn" : ""),
-                    ex.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.payment.error.cannotProcess") + (print ? " " + LanguageManagerStaff.getString("invoice.payment.error.orPrint") : ""),
+                ex.getMessage());
         }
     }
 
@@ -955,42 +1215,55 @@ public class InvoiceViewController implements Initializable {
             File file = new File(fileName);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã mở file hóa đơn",
-                        "Hóa đơn đã được mở bằng ứng dụng mặc định.");
+                showAlert(AlertType.INFORMATION, 
+                    LanguageManagerStaff.getString("success.title"), 
+                    LanguageManagerStaff.getString("invoice.reprint.success.fileOpened"),
+                    LanguageManagerStaff.getString("invoice.reprint.success.openedWithDefault"));
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Không thể mở file hóa đơn",
-                        "File không tồn tại: " + fileName);
+                showAlert(AlertType.ERROR, 
+                    LanguageManagerStaff.getString("error.title"), 
+                    LanguageManagerStaff.getString("invoice.reprint.error.cannotOpen"),
+                    LanguageManagerStaff.getString("invoice.reprint.error.fileNotExist") + ": " + fileName);
             }
         } catch (Exception e) {
             PaymentLogger.error("Lỗi in lại hóa đơn: " + e.getMessage(), e);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể in hóa đơn", e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.reprint.error.cannotPrint"), 
+                e.getMessage());
         }
     }
 
     @FXML
     public void applyDiscount() {
         if (selectedInvoice == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
-                    "Vui lòng chọn một hóa đơn để áp dụng khuyến mãi.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.discount.warning.noInvoiceSelected"),
+                LanguageManagerStaff.getString("invoice.discount.warning.selectInvoiceToApply"));
             return;
         }
 
         if (selectedInvoice.getStatus() != StatusEnum.PENDING) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Trạng thái hóa đơn không hợp lệ",
-                    "Chỉ có thể áp dụng khuyến mãi cho hóa đơn đang chờ thanh toán.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.discount.warning.invalidStatus"),
+                LanguageManagerStaff.getString("invoice.discount.warning.onlyPendingInvoices"));
             return;
         }
 
         TextInputDialog dialog = new TextInputDialog("");
-        dialog.setTitle("Áp dụng khuyến mãi");
-        dialog.setHeaderText("Nhập mã khuyến mãi");
-        dialog.setContentText("Mã khuyến mãi:");
+        dialog.setTitle(LanguageManagerStaff.getString("invoice.discount.dialog.title"));
+        dialog.setHeaderText(LanguageManagerStaff.getString("invoice.discount.dialog.header"));
+        dialog.setContentText(LanguageManagerStaff.getString("invoice.discount.dialog.content"));
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(code -> {
             if (code.trim().isEmpty()) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Mã khuyến mãi trống",
-                        "Vui lòng nhập mã khuyến mãi hợp lệ.");
+                showAlert(AlertType.WARNING, 
+                    LanguageManagerStaff.getString("warning.title"), 
+                    LanguageManagerStaff.getString("invoice.discount.warning.emptyCode"),
+                    LanguageManagerStaff.getString("invoice.discount.warning.enterValidCode"));
                 return;
             }
 
@@ -1004,8 +1277,10 @@ public class InvoiceViewController implements Initializable {
                         if (rs.next()) {
                             discountPercent = rs.getDouble("discount_percent");
                         } else {
-                            showAlert(AlertType.WARNING, "Cảnh báo", "Mã khuyến mãi không hợp lệ",
-                                    "Mã khuyến mãi không tồn tại, đã hết hạn hoặc không hoạt động.");
+                            showAlert(AlertType.WARNING, 
+                                LanguageManagerStaff.getString("warning.title"), 
+                                LanguageManagerStaff.getString("invoice.discount.warning.invalidCode"),
+                                LanguageManagerStaff.getString("invoice.discount.warning.codeNotExistOrExpired"));
                             return;
                         }
                     }
@@ -1019,14 +1294,16 @@ public class InvoiceViewController implements Initializable {
                         if (rs.next()) {
                             subtotal = rs.getDouble("subtotal");
                         } else {
-                            throw new SQLException("Không tìm thấy hóa đơn: " + selectedInvoice.getInvoiceId());
+                            throw new SQLException(LanguageManagerStaff.getString("invoice.discount.error.invoiceNotFound") + ": " + selectedInvoice.getInvoiceId());
                         }
                     }
                 }
 
                 if (subtotal <= 0) {
-                    showAlert(AlertType.WARNING, "Cảnh báo", "Tổng tiền không hợp lệ",
-                            "Tổng tiền hàng phải lớn hơn 0 để áp dụng khuyến mãi.");
+                    showAlert(AlertType.WARNING, 
+                        LanguageManagerStaff.getString("warning.title"), 
+                        LanguageManagerStaff.getString("invoice.discount.warning.invalidTotal"),
+                        LanguageManagerStaff.getString("invoice.discount.warning.totalMustBeGreaterThanZero"));
                     return;
                 }
 
@@ -1050,13 +1327,20 @@ public class InvoiceViewController implements Initializable {
                 selectedInvoice.setDiscountAmount(new BigDecimal(discountAmount));
                 selectedInvoice.setTotal(new BigDecimal(newTotal));
 
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã áp dụng khuyến mãi",
-                        "Đã áp dụng mã khuyến mãi " + code + " với " + discountPercent + "% giảm giá.\nSố tiền giảm: " +
-                                String.format("%,.0f VND", discountAmount));
+                showAlert(AlertType.INFORMATION, 
+                    LanguageManagerStaff.getString("success.title"), 
+                    LanguageManagerStaff.getString("invoice.discount.success.applied"),
+                    LanguageManagerStaff.getString("invoice.discount.success.appliedCode") + " " + code + " " + 
+                    LanguageManagerStaff.getString("invoice.discount.success.withDiscount") + " " + discountPercent + "% " + 
+                    LanguageManagerStaff.getString("invoice.discount.success.discountAmount") + ": " +
+                            String.format("%,.0f VND", discountAmount));
                 loadInvoices();
             } catch (SQLException e) {
                 PaymentLogger.error("Lỗi áp dụng khuyến mãi: " + e.getMessage(), e);
-                showAlert(AlertType.ERROR, "Lỗi", "Không thể áp dụng mã khuyến mãi", e.getMessage());
+                showAlert(AlertType.ERROR, 
+                    LanguageManagerStaff.getString("error.title"), 
+                    LanguageManagerStaff.getString("invoice.discount.error.cannotApply"), 
+                    e.getMessage());
             }
         });
     }
@@ -1064,21 +1348,25 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void openQRPaymentWindow() {
         if (selectedInvoice == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
-                    "Vui lòng chọn một hóa đơn để thanh toán bằng QR.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.qr.warning.noInvoiceSelected"),
+                LanguageManagerStaff.getString("invoice.qr.warning.selectInvoiceForQR"));
             return;
         }
 
         if (selectedInvoice.getStatus() != StatusEnum.PENDING) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Trạng thái hóa đơn không phù hợp",
-                    "Chỉ có thể thanh toán hóa đơn đang ở trạng thái chờ.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.qr.warning.invalidStatus"),
+                LanguageManagerStaff.getString("invoice.qr.warning.onlyPendingInvoices"));
             return;
         }
 
         try {
             // Cập nhật phương thức thanh toán của hóa đơn thành QR nếu chưa phải
             if (selectedInvoice.getPaymentMethod() != PaymentMethodEnum.QR) {
-            	System.out.println(selectedInvoice.getInvoiceId());
+                System.out.println(selectedInvoice.getInvoiceId());
                 invoiceService.updatePaymentMethod(selectedInvoice.getInvoiceId(), PaymentMethodEnum.QR);
                 // Tải lại thông tin hóa đơn
                 selectedInvoice = invoiceService.getInvoiceById(selectedInvoice.getInvoiceId());
@@ -1092,7 +1380,8 @@ public class InvoiceViewController implements Initializable {
             controller.setParentController(this);
 
             Stage stage = new Stage();
-            stage.setTitle("Thanh toán QR PayOS - Hóa đơn #" + selectedInvoice.getInvoiceId());
+            stage.setTitle(LanguageManagerStaff.getString("invoice.qr.title") + " - " + 
+                LanguageManagerStaff.getString("invoice.qr.invoice") + " #" + selectedInvoice.getInvoiceId());
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -1101,9 +1390,13 @@ public class InvoiceViewController implements Initializable {
             loadInvoices();
         } catch (IOException e) {
             PaymentLogger.error("Lỗi mở cửa sổ thanh toán QR PayOS: " + e.getMessage(), e);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể mở cửa sổ thanh toán QR PayOS", e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.qr.error.cannotOpen"), 
+                e.getMessage());
         }
     }
+
     @FXML
     private void processPayment() {
         processPaymentLogic(false);
@@ -1116,14 +1409,18 @@ public class InvoiceViewController implements Initializable {
 
     private void processPaymentLogic(boolean print) {
         if (selectedInvoice == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
-                    "Vui lòng chọn một hóa đơn để xử lý thanh toán.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.payment.warning.noInvoiceSelected"),
+                LanguageManagerStaff.getString("invoice.payment.warning.selectInvoiceToProcess"));
             return;
         }
 
         if (!StatusEnum.PENDING.equals(selectedInvoice.getStatus())) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Hóa đơn không thể thanh toán",
-                    "Chỉ có thể thanh toán cho hóa đơn ở trạng thái chờ.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.payment.warning.cannotPay"),
+                LanguageManagerStaff.getString("invoice.payment.warning.onlyPendingInvoices"));
             return;
         }
 
@@ -1133,21 +1430,26 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void processRefund() {
         if (selectedInvoice == null) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Không có hóa đơn được chọn",
-                    "Vui lòng chọn một hóa đơn để hoàn tiền.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.refund.warning.noInvoiceSelected"),
+                LanguageManagerStaff.getString("invoice.refund.warning.selectInvoiceToRefund"));
             return;
         }
 
         if (!StatusEnum.COMPLETED.equals(selectedInvoice.getStatus())) {
-            showAlert(AlertType.WARNING, "Cảnh báo", "Hóa đơn chưa thanh toán",
-                    "Chỉ có thể hoàn tiền cho hóa đơn đã thanh toán.");
+            showAlert(AlertType.WARNING, 
+                LanguageManagerStaff.getString("warning.title"), 
+                LanguageManagerStaff.getString("invoice.refund.warning.notPaid"),
+                LanguageManagerStaff.getString("invoice.refund.warning.onlyPaidInvoices"));
             return;
         }
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận hoàn tiền");
-        alert.setHeaderText("Bạn có chắc chắn muốn hoàn tiền?");
-        alert.setContentText("Hoàn tiền cho hóa đơn #" + selectedInvoice.getInvoiceId() + " với số tiền " +
+        alert.setTitle(LanguageManagerStaff.getString("invoice.refund.confirmation.title"));
+        alert.setHeaderText(LanguageManagerStaff.getString("invoice.refund.confirmation.header"));
+        alert.setContentText(LanguageManagerStaff.getString("invoice.refund.confirmation.content") + " #" + 
+            selectedInvoice.getInvoiceId() + " " + LanguageManagerStaff.getString("invoice.refund.confirmation.withAmount") + " " +
                 selectedInvoice.getTotal() + " VND?");
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -1180,12 +1482,17 @@ public class InvoiceViewController implements Initializable {
                     }
                 }
 
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã hoàn tiền",
-                        "Hóa đơn đã được đánh dấu là đã hoàn tiền.");
+                showAlert(AlertType.INFORMATION, 
+                    LanguageManagerStaff.getString("success.title"), 
+                    LanguageManagerStaff.getString("invoice.refund.success.refunded"),
+                    LanguageManagerStaff.getString("invoice.refund.success.markedAsRefunded"));
                 loadInvoices();
             } catch (SQLException e) {
                 PaymentLogger.error("Lỗi hoàn tiền: " + e.getMessage(), e);
-                showAlert(AlertType.ERROR, "Lỗi", "Không thể hoàn tiền", e.getMessage());
+                showAlert(AlertType.ERROR, 
+                    LanguageManagerStaff.getString("error.title"), 
+                    LanguageManagerStaff.getString("invoice.refund.error.cannotRefund"), 
+                    e.getMessage());
             }
         }
     }
@@ -1194,7 +1501,10 @@ public class InvoiceViewController implements Initializable {
     private void createBooking() {
         try {
             if (!RoleChecker.hasPermission("CREATE_BOOKING")) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Không có quyền", "Bạn không có quyền tạo lịch hẹn mới.");
+                showAlert(AlertType.WARNING, 
+                    LanguageManagerStaff.getString("warning.title"), 
+                    LanguageManagerStaff.getString("invoice.booking.warning.noPermission"), 
+                    LanguageManagerStaff.getString("invoice.booking.warning.noPermissionToCreate"));
                 return;
             }
 
@@ -1211,23 +1521,26 @@ public class InvoiceViewController implements Initializable {
 
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.setTitle("Tạo lịch hẹn mới");
+            modalStage.setTitle(LanguageManagerStaff.getString("invoice.booking.title"));
             modalStage.setScene(new Scene(root));
             modalStage.showAndWait();
 
             Session.getInstance().removeAttribute("selectedCustomerId");
-            statusMessageLabel.setText("Đã mở form đặt lịch hẹn mới.");
+            statusMessageLabel.setText(LanguageManagerStaff.getString("invoice.booking.success.opened"));
         } catch (Exception e) {
             PaymentLogger.error("Lỗi mở màn hình đặt lịch: " + e.getMessage(), e);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể mở màn hình đặt lịch", e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.booking.error.cannotOpen"), 
+                e.getMessage());
         }
     }
 
     @FXML
     private void resetFilter() {
         fromDatePicker.setValue(LocalDate.now());
-        statusFilter.setValue("Tất cả");
-        paymentMethodFilter.setValue("Tất cả");
+        statusFilter.setValue(LanguageManagerStaff.getString("invoice.filter.all"));
+        paymentMethodFilter.setValue(LanguageManagerStaff.getString("invoice.filter.all"));
         searchField.clear();
         loadInvoices();
     }
@@ -1235,17 +1548,17 @@ public class InvoiceViewController implements Initializable {
     @FXML
     private void showHelp() {
         Alert helpAlert = new Alert(AlertType.INFORMATION);
-        helpAlert.setTitle("Trợ giúp");
-        helpAlert.setHeaderText("Hướng dẫn sử dụng màn hình Quản lý hóa đơn");
-        String helpContent = "1. Xem danh sách hóa đơn: Chọn ngày và nhấn 'Tìm kiếm' để xem danh sách hóa đơn.\n\n" +
-                "2. Tìm kiếm hóa đơn: Nhập mã hóa đơn, mã đơn hàng, tên khách hàng hoặc số điện thoại.\n\n" +
-                "3. Lọc hóa đơn: Sử dụng bộ lọc trạng thái và phương thức thanh toán.\n\n" +
-                "4. Đặt lịch hẹn mới: Nhấn 'Đặt lịch mới' để mở form đặt lịch hẹn.\n\n" +
-                "5. Xem chi tiết: Nhấn 'Xem chi tiết' để xem thông tin chi tiết và in lại hóa đơn.\n\n" +
-                "6. Thanh toán: Chọn hóa đơn chờ thanh toán và nhấn 'Thanh toán' hoặc 'Thanh toán và in'.\n\n" +
-                "7. Thanh toán QR: Nhấn 'Thanh toán QR' để tạo mã QR PayOS.\n\n" +
-                "8. Hoàn tiền: Chọn hóa đơn đã thanh toán và nhấn 'Hoàn tiền'.\n\n" +
-                "Liên hệ quản trị viên để được hỗ trợ thêm.";
+        helpAlert.setTitle(LanguageManagerStaff.getString("invoice.help.title"));
+        helpAlert.setHeaderText(LanguageManagerStaff.getString("invoice.help.header"));
+        String helpContent = LanguageManagerStaff.getString("invoice.help.content1") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content2") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content3") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content4") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content5") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content6") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content7") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.content8") + "\n\n" +
+                LanguageManagerStaff.getString("invoice.help.contact");
         helpAlert.setContentText(helpContent);
         helpAlert.showAndWait();
     }
@@ -1289,7 +1602,10 @@ public class InvoiceViewController implements Initializable {
             stage.show();
         } catch (Exception e) {
             PaymentLogger.error("Lỗi chuyển về trang chủ: " + e.getMessage(), e);
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể trở về trang chủ", "Đã xảy ra lỗi: " + e.getMessage());
+            showAlert(AlertType.ERROR, 
+                LanguageManagerStaff.getString("error.title"), 
+                LanguageManagerStaff.getString("invoice.error.cannotGoHome"), 
+                LanguageManagerStaff.getString("invoice.error.occurred") + ": " + e.getMessage());
         }
     }
 

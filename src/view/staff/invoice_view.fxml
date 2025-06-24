@@ -32,7 +32,7 @@
          </padding>
          
          <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="Quản lý hóa đơn" style="-fx-font-size: 24; -fx-font-weight: bold;">
+            <Label fx:id="headerTitle" text="Quản lý hóa đơn" style="-fx-font-size: 24; -fx-font-weight: bold;">
                <textFill>
                   <Color red="0.2" green="0.6" blue="0.8" />
                </textFill>
@@ -64,24 +64,24 @@
                         </padding>
                      
                         <VBox spacing="5">
-                           <Label text="Ngày hóa đơn:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="dateFilterLabel" text="Ngày hóa đơn:" style="-fx-font-weight: bold;" />
                            <DatePicker fx:id="fromDatePicker" />
                         </VBox>
                         
                         <Separator orientation="VERTICAL" />
                         
                         <VBox spacing="5">
-                           <Label text="Trạng thái:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="statusFilterLabel" text="Trạng thái:" style="-fx-font-weight: bold;" />
                            <ComboBox fx:id="statusFilter" promptText="Tất cả" prefWidth="150" />
                         </VBox>
                         
                         <VBox spacing="5">
-                           <Label text="Phương thức TT:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="paymentMethodFilterLabel" text="Phương thức TT:" style="-fx-font-weight: bold;" />
                            <ComboBox fx:id="paymentMethodFilter" promptText="Tất cả" prefWidth="150" />
                         </VBox>
                         
                         <VBox spacing="5">
-                           <Label text="Tìm kiếm:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="searchLabel" text="Tìm kiếm:" style="-fx-font-weight: bold;" />
                            <TextField fx:id="searchField" promptText="Mã HĐ/tên KH/SĐT" prefWidth="200" />
                         </VBox>
                         
@@ -91,7 +91,7 @@
                            <Button fx:id="searchButton" text="Tìm kiếm" onAction="#onSearchButtonClick" 
                                    prefWidth="120" prefHeight="35"
                                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" />
-                           <Button text="Làm mới" onAction="#resetFilter" 
+                           <Button fx:id="resetFilterButton" text="Làm mới" onAction="#resetFilter" 
                                    prefWidth="120" prefHeight="35"
                                    style="-fx-background-color: #757575; -fx-text-fill: white; -fx-background-radius: 5;" />
                         </VBox>
@@ -155,22 +155,22 @@
                         </columnConstraints>
                         
                         <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                           <Label text="Tổng số hóa đơn:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="totalInvoicesTextLabel" text="Tổng số hóa đơn:" style="-fx-font-weight: bold;" />
                            <Label fx:id="totalInvoicesLabel" text="0" />
                         </HBox>
                         
                         <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                           <Label text="Đã thanh toán:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="paidInvoicesTextLabel" text="Đã thanh toán:" style="-fx-font-weight: bold;" />
                            <Label fx:id="paidInvoicesLabel" text="0" style="-fx-text-fill: #4CAF50; -fx-font-weight: bold;" />
                         </HBox>
                         
                         <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                           <Label text="Chờ thanh toán:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="pendingInvoicesTextLabel" text="Chờ thanh toán:" style="-fx-font-weight: bold;" />
                            <Label fx:id="pendingInvoicesLabel" text="0" style="-fx-text-fill: #F57C00; -fx-font-weight: bold;" />
                         </HBox>
                         
                         <HBox spacing="5" alignment="CENTER_LEFT" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                           <Label text="Tổng doanh thu:" style="-fx-font-weight: bold;" />
+                           <Label fx:id="totalRevenueTextLabel" text="Tổng doanh thu:" style="-fx-font-weight: bold;" />
                            <Label fx:id="totalRevenueLabel" text="0 VND" style="-fx-text-fill: #2196F3; -fx-font-weight: bold;" />
                         </HBox>
                      </GridPane>
@@ -246,7 +246,7 @@
             </graphic>
          </Button>
          
-         <Button text="Trợ giúp" onAction="#showHelp" 
+         <Button fx:id="helpButton" text="Trợ giúp" onAction="#showHelp" 
                  prefHeight="35"
                  style="-fx-background-color: #757575; -fx-text-fill: white; -fx-background-radius: 5;">
             <graphic>
@@ -254,7 +254,7 @@
             </graphic>
          </Button>
          
-         <Button text="Thoát" onAction="#exitApplication" 
+         <Button fx:id="exitButton" text="Thoát" onAction="#exitApplication" 
                  prefHeight="35"
                  style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-background-radius: 5;">
             <graphic>
