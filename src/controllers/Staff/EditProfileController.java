@@ -673,17 +673,6 @@ public class EditProfileController implements Initializable, LanguageChangeListe
 		}
 	}
 
-//	@FXML
-//	private void toggleLanguage(ActionEvent event) {
-//		Locale currentLocale = LanguageManagerStaff.getCurrentLocale();
-//		
-//		// Toggle between Vietnamese and English
-//		if (currentLocale.equals(new Locale("vi", "VN"))) {
-//			LanguageManagerStaff.setLocale(new Locale("en", "US"));
-//		} else {
-//			LanguageManagerStaff.setLocale(new Locale("vi", "VN"));
-//		}
-//	}
 
 	private void showAlert(Alert.AlertType type, String title, String message) {
 		Alert alert = new Alert(type);

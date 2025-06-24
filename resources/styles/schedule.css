@@ -1,114 +1,318 @@
-
-.schedule-title {
-    -fx-background-color: linear-gradient(to bottom, #fff3e0, #ffe0b2);
-    -fx-border-color: #ffcc80;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #5a3000;
-
-    -fx-padding: 8px;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
-    -fx-wrap-text: true;  /* QUAN TRỌNG để hiển thị xuống dòng */
-
-    -fx-max-width: Infinity;
-    -fx-max-height: Infinity;
-    -fx-min-width: 110px;
-    -fx-min-height: 60px;
+/* ===== SCHEDULE CSS - HARMONIZED WITH MAIN THEME ===== */
+.root {
+    /* Define color variables */
+    -primary-color: #d88e3f; /* Main orange */
+    -primary-light: #f1d6a1; /* Light orange */
+    -primary-dark: #b06a20; /* Dark orange */
+    -secondary-color: #4d7fa8; /* Blue */
+    -accent-color: #4CAF50; /* Green */
+    -danger-color: #e65c5c; /* Red */
+    -background-color: #f9f3e6; /* Cream background */
+    -text-primary: #5a3d2a; /* Dark brown text */
+    -text-light: white; /* White text */
+    -border-color: #d88e3f; /* Orange border */
 }
 
-#lblTitle {
-     -fx-font-size: 40px;
-    -fx-font-weight: 900;
-    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00); /* Cam rực hơn */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.5, 0, 3); /* Đổ bóng mạnh hơn */
-
-    /* Thêm nền mờ giúp chữ nổi bật trên nền ảnh */
-    -fx-background-color: rgba(255, 255, 255, 0.6);
-    -fx-background-radius: 10;
-
-    /* Viền cam rực */
-    -fx-border-color: #ff9800;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-
-    /* Căn chỉnh và khoảng cách */
-    -fx-padding: 14 28;
-    -fx-alignment: center;
-    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
+/* Thêm màu nền cho phần trống của ScrollPane */
+.scroll-pane > .viewport {
+    -fx-background-color: #f9f3e6; /* Màu kem nhẹ từ biến -background-color */
 }
 
-.main-title {
-    -fx-font-size: 40px;
-    -fx-font-weight: 900;
-    -fx-text-fill: linear-gradient(to right, #ff6f00, #ff3d00);
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 0, 2);
-
-    -fx-background-color: rgba(255, 255, 255, 0.6);
-    -fx-background-radius: 12;
-    -fx-border-color: #ff9800;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-
-    -fx-padding: 30 40; /* Tăng chiều cao và không gian xung quanh */
-    -fx-alignment: center;
-    -fx-font-family: "Segoe UI Black", "Arial Black", sans-serif;
-}
-.picker-bar .label {
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+/* ===== MAIN CONTAINER ===== */
+.schedule-container {
+    -fx-background-color: -background-color;
+    -fx-padding: 15;
 }
 
-.date-picker {
-    -fx-background-color: #fffbe6;
-    -fx-border-color: -fx-primary;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 6;
-    -fx-font-weight: bold;
-    -fx-border-color: #f7c948;
-}
-
-.date-picker .arrow-button {
-    -fx-background-color: #f7c948;
-    -fx-background-radius: 0 6 6 0;
-}
-
-.date-picker .arrow-button .arrow {
+/* ===== TABLE STYLES ===== */
+.table-view {
     -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
 }
-.button {
-    -fx-background-color: linear-gradient(to right, #ffa726, #fb8c00); /* Gradient cam */
+
+/* Column headers */
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, -primary-light, -primary-color);
+    -fx-text-fill: -text-light;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 5;
+    -fx-border-color: derive(-primary-color, 20%);
+    -fx-border-width: 0 1px 0 0;
+}
+
+/* Table rows */
+.table-view .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: derive(-border-color, 50%);
+    -fx-border-width: 0 0 1px 0;
+    -fx-cell-size: 40px;
+}
+
+/* Alternate row coloring */
+.table-view .table-row-cell:odd {
+    -fx-background-color: derive(-background-color, -3%);
+}
+
+/* Selected row */
+.table-view .table-row-cell:selected {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: -text-light;
+}
+
+/* Table cells */
+.table-view .table-cell {
+    -fx-padding: 8 10;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 13px;
+}
+
+/* Specific table styling */
+#scheduleTable {
+    -fx-table-cell-border-color: derive(-border-color, 50%);
+}
+
+#tblRequests {
+    -fx-table-cell-border-color: derive(-secondary-color, 50%);
+}
+
+/* ===== STATUS STYLES ===== */
+.status-pending {
+    -fx-text-fill: #FF9800;
+    -fx-font-weight: bold;
+}
+
+.status-approved {
+    -fx-text-fill: -accent-color;
+    -fx-font-weight: bold;
+}
+
+.status-rejected {
+    -fx-text-fill: -danger-color;
+    -fx-font-weight: bold;
+}
+
+
+/* ===== ĐĂNG KÝ CA LÀM TAB STYLES ===== */
+.shift-registration-tab {
+    -fx-background-color: -background-color;
+}
+
+#registrationLabel {
+    -fx-text-fill: -primary-dark;
+    -fx-font-size: 30px;
+}
+
+/* GridPane styling */
+#shiftRegistrationTab GridPane {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(216, 142, 63, 0.1), 5, 0, 0, 1);
+    -fx-padding: 20;
+}
+
+/* DatePicker styling */
+#registrationDatePicker {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-pref-height: 35;
+}
+
+/* ComboBox styling */
+#shiftSelector, #typeSelector {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-pref-height: 35;
+}
+
+/* TextArea styling */
+#registrationNotes {
+    -fx-background-color: white;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: derive(-text-primary, 50%);
+}
+
+/* Button styling */
+#registerShiftButton {
+    -fx-background-color: -accent-color;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-padding: 10 20;
-    -fx-border-color: #ef6c00; /* Viền cam đậm */
-    -fx-border-width: 2px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.3, 0, 2);
-    -fx-font-size: 15px;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+    -fx-font-size: 14px;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
 }
 
-.button:hover {
-    -fx-background-color: linear-gradient(to right, #ffb74d, #ffa000); /* Sáng hơn khi hover */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 6, 0.4, 0, 3);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+#registerShiftButton:hover {
+    -fx-background-color: derive(-accent-color, 10%);
 }
 
-.button:pressed {
-    -fx-background-color: linear-gradient(to right, #ef6c00, #e65100); /* Tối hơn khi nhấn */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0.2, 0, 1);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+#registerShiftButton:pressed {
+    -fx-background-color: derive(-accent-color, -10%);
 }
 
+#selectScheduleButton, #cancelRegistration {
+    -fx-background-color: white;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: -border-color;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+#selectScheduleButton:hover, #cancelRegistration:hover {
+    -fx-background-color: -primary-light;
+    -fx-text-fill: white;
+}
+
+#selectScheduleButton:pressed, #cancelRegistration:pressed {
+    -fx-background-color: -primary-dark;
+}
+
+/* Bottom note section */
+#shiftRegistrationTab .bottom VBox {
+    -fx-background-color: -primary-light;
+    -fx-background-radius: 0 0 10 10;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1 0 0 0;
+}
+
+#shiftRegistrationTab .bottom Label {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ScrollPane styling */
+#shiftRegistrationTab ScrollPane {
+    -fx-background-color: transparent;
+}
+
+#shiftRegistrationTab ScrollPane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ===== TAB STYLING ===== */
+.tab-pane {
+    -fx-tab-min-width: 120px;
+    -fx-tab-max-width: 200px;
+    -fx-focus-color: transparent; /* Loại bỏ viền focus màu xanh */
+    -fx-faint-focus-color: transparent; /* Loại bỏ viền focus nhạt */
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: linear-gradient(to bottom, #f8e3c5, #e6a756);
+}
+
+.tab {
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 5 15;
+    -fx-border-color: #d88e3f;
+    -fx-border-radius: 8 8 0 0;
+    -fx-border-width: 1 1 0 1;
+}
+
+.tab:selected {
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #d88e3f; /* Đảm bảo viền vẫn là màu cam khi selected */
+    -fx-border-width: 1 1 0 1;
+}
+
+.tab-label {
+    -fx-text-fill: #9c5b26;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #5a3d2b;
+}
+
+.tab:hover {
+    -fx-background-color: #e6a756;
+}
+
+.tab:hover .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab:hover {
+    -fx-border-color: #d88e3f;
+    -fx-border-insets: 0;
+}
+
+/* Loại bỏ hoàn toàn hiệu ứng focus */
+.tab:selected:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.date-picker, .combo-box, .button {
+    -fx-background-color: white;
+    -fx-border-color: #d88e3f; /* Sửa thành giá trị cụ thể */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+}
+
+
+/* Hiệu ứng hover */
+.date-picker:hover, .combo-box:hover, .button:hover {
+    -fx-background-color: #fff3e6; /* Màu cam nhạt khi hover */
+    -fx-border-color: #c67c2e;    /* Màu cam đậm hơn khi hover */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.5, 0, 1); /* Đổ bóng nhẹ */
+}
+
+/* Hiệu ứng khi nhấn */
+.date-picker:pressed, .combo-box:pressed, .button:pressed {
+    -fx-background-color: #ffe0b3; /* Màu cam đậm hơn khi nhấn */
+    -fx-border-color: #b56b25;     /* Màu cam đậm nhất */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.2), 5, 0.5, 0, 1); /* Hiệu ứng nhấn vào */
+}
+
+/* Hiệu ứng khi focus */
+.date-picker:focused, .combo-box:focused, .button:focused {
+    -fx-border-color: #e69138;     /* Màu cam sáng hơn khi focus */
+    -fx-effect: dropshadow(gaussian, rgba(230,145,56,0.4), 10, 0.5, 0, 0); /* Hiệu ứng focus nổi bật */
+}
+
+/* ===== FOOTER STYLES ===== */
+.footer-container {
+    -fx-background-color: linear-gradient(to bottom, -primary-light, -primary-color);
+    -fx-padding: 12 15;
+    -fx-border-color: derive(-primary-color, -20%);
+    -fx-border-width: 1px 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+}
+
+.footer-button {
+    -fx-background-color: -primary-dark;
+    -fx-text-fill: -text-light;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-min-width: 100;
+}
+
+.footer-button:hover {
+    -fx-background-color: derive(-primary-dark, 10%);
+}
+
+.footer-button:pressed {
+    -fx-background-color: derive(-primary-dark, -10%);
+}

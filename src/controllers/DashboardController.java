@@ -4,12 +4,13 @@ import java.text.MessageFormat;
 import java.util.Locale;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import model.Role;
 import utils.LanguageChangeListener;
 import utils.LanguageManagerAd;
@@ -46,8 +47,46 @@ public class DashboardController implements LanguageChangeListener {
         // Set up event handlers
         btnLogout.setOnAction(event -> handleLogout());
         
+        // Set up key event handlers
+        setupKeyHandlers();
+        
         // Initial language setup
         loadTexts();
+    }
+    
+    private void setupKeyHandlers() {
+        // Handle Enter key press on language combo box
+        languageCombo.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                // Focus the appropriate continue button based on user role
+                if (btnAdminPanel.isVisible()) {
+                    btnAdminPanel.requestFocus();
+                } else if (btnEmployeePanel.isVisible()) {
+                    btnEmployeePanel.requestFocus();
+                }
+            }
+        });
+        
+        // Handle Enter key press on admin panel button
+        btnAdminPanel.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleAdminPanel();
+            }
+        });
+        
+        // Handle Enter key press on employee panel button
+        btnEmployeePanel.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleEmployeePanel();
+            }
+        });
+        
+        // Handle Enter key press on logout button
+        btnLogout.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogout();
+            }
+        });
     }
     
     private void setupLanguageCombo() {
@@ -103,11 +142,13 @@ public class DashboardController implements LanguageChangeListener {
                     switch (role.getRoleID()) {
                     case 1: // admin
                         btnAdminPanel.setVisible(true);
+                        btnAdminPanel.requestFocus(); // Auto-focus the continue button
                         break;
                     case 2: // STAFF_CARE
                     case 3: // STAFF_CASHIER
                     case 4: // STAFF_RECEPTION
                         btnEmployeePanel.setVisible(true);
+                        btnEmployeePanel.requestFocus(); // Auto-focus the continue button
                         break;
                     case 5: // OUT - terminated
                         // This case will be handled in updateWelcomeMessage()
@@ -152,6 +193,7 @@ public class DashboardController implements LanguageChangeListener {
             lblWelcome.setText(LanguageManagerAd.getString("dashboard.please.login"));
         }
     }
+
     @FXML
     private void handleAdminPanel() {
         SceneSwitcher.switchScene("admin/admin_home.fxml");

@@ -40,7 +40,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.geometry.Insets;
 
-public class MyScheduleController implements Initializable {
+import utils.LanguageManagerStaff;
+import utils.LanguageChangeListener;
+
+public class MyScheduleController implements Initializable, LanguageChangeListener {
 
 	@FXML
 	private Label dateLabel;
@@ -115,10 +118,64 @@ public class MyScheduleController implements Initializable {
 	@FXML
 	private Tab myRequestsTab;
 	@FXML
+	private Tab scheduleTab, shiftRegistrationTab;
+	@FXML
 	private TableView<ShiftRequest> tblRequests;
 	@FXML
 	private TableColumn<ShiftRequest, String> colDate, colShift, colType, colStatus, colReason;
 	
+    // Bổ sung các @FXML cho các label mới
+    @FXML
+    private Label additionalInfoLabel;
+    
+    @FXML
+    private Label totalShiftsText;
+    
+    @FXML
+    private Label morningShiftsText;
+    
+    @FXML
+    private Label afternoonShiftsText;
+    
+    @FXML
+    private Label eveningShiftsText;
+    
+    @FXML
+    private Label registrationLabel;
+    
+    @FXML
+    private Label selectDateLabel;
+    
+    @FXML
+    private Label viewModeSelector1;
+    
+    @FXML
+    private Label shiftFilter1;
+
+    @FXML
+    private Button applyFilterButton;
+    
+ // Add these new button references to the controller
+    @FXML
+    private Button helpButton;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private Button refreshButton;
+    @FXML
+    private Button cancelRegistrationButton;
+    @FXML
+    private Label noteLabel1;
+    @FXML
+    private Label noteLabel2;
+    @FXML
+    private Label workDateLabel;
+    @FXML
+    private Label shiftLabel;
+    @FXML
+    private Label requestTypeLabel;
+    @FXML
+    private Label notesLabel;
 
 	private ScheduleService scheduleService;
 	private ObservableList<WorkSchedule> scheduleList;
@@ -127,6 +184,8 @@ public class MyScheduleController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		 // Đăng ký lắng nghe thay đổi ngôn ngữ
+        LanguageManagerStaff.addListener(this);
 	    scheduleService = new ScheduleService();
 
 	    // Get current staff information from Session
@@ -148,6 +207,10 @@ public class MyScheduleController implements Initializable {
 
 	    // Initialize table columns
 	    setupTableColumns();
+	    
+	 // Trong phương thức initialize()
+	    scheduleTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tblRequests.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 	    // Initialize ComboBoxes
 	    initializeComboBoxes();
@@ -194,11 +257,112 @@ public class MyScheduleController implements Initializable {
 	            };
 	        }
 	    });
-
+	    // Load text ban đầu
+        loadTexts();
 	    // Thiết lập hiển thị nút dựa trên quyền
 	    setupButtonVisibility();
 	}
 	
+	@Override
+    public void onLanguageChanged() {
+        loadTexts();
+    }
+	
+	private void loadTexts() {
+	    // Main labels
+	    dateLabel.setText(LanguageManagerStaff.getString("mySchedule.title"));
+	    staffNameLabel.setText(LanguageManagerStaff.getString("staff.label") + " " + 
+	        Session.getInstance().getCurrentStaff().getFullName());
+	    positionLabel.setText(LanguageManagerStaff.getString("role.label") + " " + 
+	        (Session.getInstance().getCurrentStaff().getPosition() != null ? 
+	            Session.getInstance().getCurrentStaff().getPosition() : 
+	            LanguageManagerStaff.getString("staff.default")));
+
+	    // Button texts
+	    requestLeaveButton.setText(LanguageManagerStaff.getString("mySchedule.requestLeave"));
+	    requestShiftChangeButton.setText(LanguageManagerStaff.getString("mySchedule.requestShiftChange"));
+	    registerShiftButton.setText(LanguageManagerStaff.getString("mySchedule.registerShift"));
+	    selectScheduleButton.setText(LanguageManagerStaff.getString("mySchedule.selectSchedule"));
+	    homeButton.setText(LanguageManagerStaff.getString("mySchedule.home"));
+	    refreshButton.setText(LanguageManagerStaff.getString("mySchedule.refresh"));
+	    helpButton.setText(LanguageManagerStaff.getString("mySchedule.help"));
+	    exitButton.setText(LanguageManagerStaff.getString("mySchedule.exit"));
+	    
+	    // Tab texts
+	    myRequestsTab.setText(LanguageManagerStaff.getString("mySchedule.myRequestsTab"));
+	    scheduleTab.setText(LanguageManagerStaff.getString("mySchedule.scheduleTab"));
+	    shiftRegistrationTab.setText(LanguageManagerStaff.getString("mySchedule.shiftRegistrationTab"));
+	    
+	    // Table column headers
+	    idColumn.setText(LanguageManagerStaff.getString("mySchedule.idColumn"));
+	    dateColumn.setText(LanguageManagerStaff.getString("mySchedule.dateColumn"));
+	    shiftColumn.setText(LanguageManagerStaff.getString("mySchedule.shiftColumn"));
+	    startTimeColumn.setText(LanguageManagerStaff.getString("mySchedule.startTimeColumn"));
+	    endTimeColumn.setText(LanguageManagerStaff.getString("mySchedule.endTimeColumn"));
+	    locationColumn.setText(LanguageManagerStaff.getString("mySchedule.locationColumn"));
+	    taskColumn.setText(LanguageManagerStaff.getString("mySchedule.taskColumn"));
+	    noteColumn.setText(LanguageManagerStaff.getString("mySchedule.noteColumn"));
+	    
+	    // Request table columns
+	    colDate.setText(LanguageManagerStaff.getString("mySchedule.colDate"));
+	    colShift.setText(LanguageManagerStaff.getString("mySchedule.colShift"));
+	    colType.setText(LanguageManagerStaff.getString("mySchedule.colType"));
+	    colStatus.setText(LanguageManagerStaff.getString("mySchedule.colStatus"));
+	    colReason.setText(LanguageManagerStaff.getString("mySchedule.colReason"));
+	    
+	    // ComboBox items
+	    
+	    viewModeSelector.getItems().setAll(
+	        LanguageManagerStaff.getString("mySchedule.today"),
+	        LanguageManagerStaff.getString("mySchedule.week"),
+	        LanguageManagerStaff.getString("mySchedule.month")
+	    );
+	    // Cập nhật prompt text cho ComboBox
+	    viewModeSelector.setPromptText(LanguageManagerStaff.getString("mySchedule.viewModePrompt"));
+	    viewModeSelector.setValue(LanguageManagerStaff.getString("mySchedule.today"));
+	    
+	    shiftFilter.getItems().setAll(
+	        LanguageManagerStaff.getString("mySchedule.allShifts"),
+	        LanguageManagerStaff.getString("shift.MORNING"),
+	        LanguageManagerStaff.getString("shift.AFTERNOON"),
+	        LanguageManagerStaff.getString("shift.EVENING")
+	    );
+	    shiftFilter.setPromptText(LanguageManagerStaff.getString("mySchedule.filterPrompt"));
+	    shiftFilter.setValue(LanguageManagerStaff.getString("mySchedule.allShifts"));
+	    // Shift selector
+	    shiftSelector.setPromptText(LanguageManagerStaff.getString("mySchedule.shiftPrompt"));
+	    
+	    // Other labels
+	 // Cập nhật label và button
+	    selectDateLabel.setText(LanguageManagerStaff.getString("mySchedule.selectDate"));
+	    applyFilterButton.setText(LanguageManagerStaff.getString("mySchedule.applyFilter"));
+	    
+	    viewModeSelector1.setText(LanguageManagerStaff.getString("mySchedule.viewModePrompt"));
+	    shiftFilter1.setText(LanguageManagerStaff.getString("mySchedule.filterPrompt"));
+	    
+	    additionalInfoLabel.setText(LanguageManagerStaff.getString("mySchedule.additionalInfo"));
+	    totalShiftsText.setText(LanguageManagerStaff.getString("mySchedule.totalShifts"));
+	    morningShiftsText.setText(LanguageManagerStaff.getString("mySchedule.morningShifts"));
+	    afternoonShiftsText.setText(LanguageManagerStaff.getString("mySchedule.afternoonShifts"));
+	    eveningShiftsText.setText(LanguageManagerStaff.getString("mySchedule.eveningShifts"));
+	    registrationLabel.setText(LanguageManagerStaff.getString("mySchedule.registration"));
+	    cancelRegistrationButton.setText(LanguageManagerStaff.getString("mySchedule.cancelButton"));
+	    noteLabel1.setText(LanguageManagerStaff.getString("mySchedule.note1"));
+	    noteLabel2.setText(LanguageManagerStaff.getString("mySchedule.note2"));
+	    // Thêm các dòng mới cho labels
+	    workDateLabel.setText(LanguageManagerStaff.getString("mySchedule.workDateLabel"));
+	    shiftLabel.setText(LanguageManagerStaff.getString("mySchedule.shiftLabel"));
+	    requestTypeLabel.setText(LanguageManagerStaff.getString("mySchedule.requestTypeLabel"));
+	    notesLabel.setText(LanguageManagerStaff.getString("mySchedule.notesLabel"));
+	    
+	    // Placeholder texts
+	    additionalInfoArea.setPromptText(LanguageManagerStaff.getString("mySchedule.additionalInfoPrompt"));
+	    registrationNotes.setPromptText(LanguageManagerStaff.getString("mySchedule.registrationNotesPrompt"));
+	    
+	    // Status label
+	    statusLabel.setText(LanguageManagerStaff.getString("mySchedule.defaultStatus"));
+	}
+    
 	private void setupButtonVisibility() {
 		if (requestLeaveButton != null) {
 			requestLeaveButton.setDisable(!RoleChecker.hasPermission("REQUEST_LEAVE"));
@@ -997,56 +1161,52 @@ public class MyScheduleController implements Initializable {
 
 	@FXML
 	private void registerShift() {
-	    if (!RoleChecker.hasPermission("REGISTER_SHIFT")) {
-	        showAlert(AlertType.ERROR, "Lỗi", "Không có quyền", "Bạn không có quyền đăng ký ca làm việc.");
-	        return;
-	    }
+		if (!RoleChecker.hasPermission("REGISTER_SHIFT")) {
+			showAlert(AlertType.ERROR, "Lỗi", "Không có quyền", "Bạn không có quyền đăng ký ca làm việc.");
+			return;
+		}
 
-	    LocalDate date = registrationDatePicker.getValue();
-	    Shift shift = shiftSelector.getValue();
-	    RequestType type = typeSelector.getValue(); // Luôn là WORK do bạn đã khóa
-	    String notes = registrationNotes.getText().trim();
+		LocalDate date = registrationDatePicker.getValue();
+		Shift shift = shiftSelector.getValue();
+		RequestType type = typeSelector.getValue();
+		String notes = registrationNotes.getText().trim();
 
-	    // Kiểm tra điều kiện
-	    if (date == null || shift == null) {
-	        showAlert(AlertType.WARNING, "Cảnh báo", "Chưa đủ thông tin", "Vui lòng chọn ngày và ca làm.");
-	        return;
-	    }
+		if (date == null || shift == null) {
+			showAlert(AlertType.WARNING, "Cảnh báo", "Chưa đủ thông tin", "Vui lòng chọn ngày, ca làm.");
+			return;
+		}
 
-	    if (date.isBefore(LocalDate.now().plusDays(1))) { // Phải đăng ký trước 1 ngày
-	        showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", 
-	            "Phải đăng ký trước ít nhất 1 ngày so với ngày làm việc.");
-	        return;
-	    }
+		if (date.isBefore(LocalDate.now())) {
+			showAlert(AlertType.WARNING, "Cảnh báo", "Ngày không hợp lệ", "Không thể đăng ký cho ngày đã qua.");
+			return;
+		}
 
-	    try {
-	        // Kiểm tra xem đã có đăng ký cho ca này chưa
-	        if (scheduleService.isScheduleExists(currentStaffId, date, shift.name())) {
-	            showAlert(AlertType.WARNING, "Cảnh báo", "Đã đăng ký", 
-	                "Bạn đã đăng ký ca này rồi. Vui lòng chọn ca khác.");
-	            return;
-	        }
+		try {
+			boolean success = scheduleService.sendShiftRequest(currentStaffId, date, shift, type, notes);
 
-	        boolean success = scheduleService.registerShift(currentStaffId, date, shift, "Cửa hàng chính", notes);
+			if (success) {
+				showAlert(AlertType.INFORMATION, "Thành công", "Đã đăng ký ca làm", "Ca làm " + shift.name() + " ngày "
+						+ date.format(dateFormatter) + " đã được đăng ký.");
 
-	        if (success) {
-	            showAlert(AlertType.INFORMATION, "Thành công", "Đã đăng ký ca làm", 
-	                "Ca làm " + shift + " ngày " + date.format(dateFormatter) + " đã được đăng ký.");
+				registrationDatePicker.setValue(LocalDate.now().plusDays(1));
+				shiftSelector.setValue(null);
+				typeSelector.setValue(null);
+				registrationNotes.clear();
 
-	            // Reset form
-	            registrationDatePicker.setValue(LocalDate.now().plusDays(1));
-	            shiftSelector.setValue(null);
-	            registrationNotes.clear();
+				statusLabel.setText("Trạng thái: Đã đăng ký ca làm thành công");
 
-	            statusLabel.setText("Trạng thái: Đã đăng ký ca làm thành công");
-	        } else {
-	            showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", 
-	                "Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.");
-	        }
-	    } catch (Exception e) {
-	        showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", e.getMessage());
-	        e.printStackTrace();
-	    }
+				if (date.equals(datePicker.getValue())) {
+					loadScheduleByDate(date);
+				}
+			} else {
+				showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm",
+						"Ca làm này đã được đăng ký, ngày không hợp lệ, hoặc có lỗi khác. Vui lòng kiểm tra lại.");
+				statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm");
+			}
+		} catch (Exception e) {
+			showAlert(AlertType.ERROR, "Lỗi", "Không thể đăng ký ca làm", e.getMessage());
+			statusLabel.setText("Trạng thái: Lỗi khi đăng ký ca làm: " + e.getMessage());
+		}
 	}
 
 	@FXML
@@ -1060,10 +1220,10 @@ public class MyScheduleController implements Initializable {
 
 	@FXML
 	private void showHelp() {
-		showAlert(AlertType.INFORMATION, "Trợ giúp", "Hướng dẫn sử dụng",
-				"Phần quản lý lịch làm việc cho phép bạn:\n\n" + "- Xem lịch làm việc theo ngày, tuần, tháng\n"
-						+ "- Đăng ký ca làm việc mới\n" + "- Yêu cầu nghỉ phép hoặc đổi ca\n\n"
-						+ "Liên hệ quản trị viên để được hỗ trợ thêm.");
+	    showAlert(AlertType.INFORMATION, 
+	              LanguageManagerStaff.getString("mySchedule.helpTitle"),
+	              LanguageManagerStaff.getString("mySchedule.helpHeader"),
+	              LanguageManagerStaff.getString("mySchedule.helpContent"));
 	}
 
 	@FXML
@@ -1082,9 +1242,9 @@ public class MyScheduleController implements Initializable {
 
 	@FXML
 	private void exitApplication() {
-		Stage stage = (Stage) scheduleTable.getScene().getWindow();
-		stage.close();
-	}
+	    Stage stage = (Stage) exitButton.getScene().getWindow();
+	    stage.close();
+	}	
 
 	private void showAlert(AlertType alertType, String title, String header, String content) {
 		Alert alert = new Alert(alertType);

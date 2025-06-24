@@ -42,7 +42,7 @@ public class HomeController implements LanguageChangeListener {
 	}
 
 	private void handleLogin(ActionEvent event) {
-		SceneSwitcher.switchScene("login.fxml");
+		SceneSwitcher.switchScene("login.fxml", true);
 	}
 
 	@Override

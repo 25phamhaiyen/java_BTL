@@ -1,9 +1,10 @@
 /* ===== BOOKING VIEW STYLES ===== */
 /* Kế thừa các thuộc tính chung từ giao diện cha */
-.root, #mainContainer {
+.root, #mainContainer, .scroll-pane, .scroll-pane > .viewport {
     -fx-background-color: #f9f3e6;
     -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
+
 
 /* ===== HEADER STYLES ===== */
 /* Tiêu đề chính */
@@ -25,49 +26,62 @@
     -fx-border-radius: 5;
 }
 
-/* ===== TAB PANE STYLES ===== */
+/* ===== TAB STYLING ===== */
 .tab-pane {
-    -fx-background-color: transparent;
     -fx-tab-min-width: 120px;
-}
-
-.tab-pane .tab-header-area {
-    -fx-background-color: transparent;
+    -fx-tab-max-width: 200px;
+    -fx-focus-color: transparent; /* Loại bỏ viền focus màu xanh */
+    -fx-faint-focus-color: transparent; /* Loại bỏ viền focus nhạt */
 }
 
 .tab-pane .tab-header-background {
-    -fx-background-color: #f1d6a1;
-    -fx-border-color: #d88e3f;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: linear-gradient(to bottom, #f8e3c5, #e6a756);
 }
 
 .tab {
-    -fx-background-color: #f1d6a1;
-    -fx-background-insets: 0;
-    -fx-background-radius: 5 5 0 0;
-    -fx-padding: 8 15;
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 5 15;
     -fx-border-color: #d88e3f;
+    -fx-border-radius: 8 8 0 0;
     -fx-border-width: 1 1 0 1;
-    -fx-border-radius: 5 5 0 0;
-}
-
-.tab:hover {
-    -fx-background-color: #e09c4d;
-    -fx-text-fill: white;
 }
 
 .tab:selected {
-    -fx-background-color: white;
-    -fx-border-color: #d88e3f;
+    -fx-background-color: #f5e5d0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #d88e3f; /* Đảm bảo viền vẫn là màu cam khi selected */
     -fx-border-width: 1 1 0 1;
-    -fx-text-fill: #5a3d2a;
+}
+
+.tab-label {
+    -fx-text-fill: #9c5b26;
     -fx-font-weight: bold;
 }
 
-.tab .tab-label {
-    -fx-text-fill: inherit;
-    -fx-font-size: 14px;
+.tab:selected .tab-label {
+    -fx-text-fill: #5a3d2b;
 }
+
+.tab:hover {
+    -fx-background-color: #e6a756;
+}
+
+.tab:hover .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab:hover {
+    -fx-border-color: #d88e3f;
+    -fx-border-insets: 0;
+}
+
+/* Loại bỏ hoàn toàn hiệu ứng focus */
+.tab:selected:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
 
 /* ===== FILTER CONTROLS STYLES ===== */
 /* DatePicker, ComboBox, TextField */
@@ -176,6 +190,7 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-table-cell-border-color: transparent;
 }
 
 .table-view .column-header-background {
@@ -198,18 +213,17 @@
     -fx-alignment: CENTER_LEFT;
 }
 
+.table-view .filler {
+    -fx-background-color: #f1d6a1;
+}
+
 .table-row-cell {
     -fx-background-color: white;
-    -fx-border-color: #e9e9e9;
-    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent;
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #fafafa;
-}
-
-.table-row-cell:hover {
-    -fx-background-color: #ffe9cc;
+    -fx-background-color: #faf6ee;
 }
 
 .table-row-cell:selected {
@@ -217,8 +231,12 @@
     -fx-text-fill: white;
 }
 
+.table-row-cell:hover {
+    -fx-background-color: #ffe9cc;
+}
+
 /* ===== NOTES SECTION ===== */
-.text-area {
+.text-area, .text-area .content {
     -fx-background-color: white;
     -fx-border-color: #d88e3f;
     -fx-border-radius: 5;
@@ -227,9 +245,10 @@
     -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 1, 0, 0, 0);
 }
 
-.text-area .content {
-    -fx-background-color: white;
-    -fx-background-radius: 5;
+/* Vùng chứa ghi chú */
+VBox.bottom-container {
+    -fx-background-color: #f9f3e6;
+    -fx-padding: 10 20;
 }
 
 /* ===== STATUS BAR ===== */
@@ -268,20 +287,3 @@ HBox.bottom {
     -fx-background-color: #EF9A9A;
     -fx-text-fill: #B71C1C;
 }
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
-/* @media (max-width: 800px) {
-    .tab {
-        -fx-padding: 8 10;
-        -fx-font-size: 12px;
-    }
-    
-    .button {
-        -fx-padding: 6 10;
-        -fx-font-size: 12px;
-    }
-    
-    .table-view .column-header .label {
-        -fx-font-size: 12px;
-    }
-} */
